@@ -1,0 +1,9 @@
+{
+  "name": "calen-api",
+  "dependencies": {
+    "hono": "^4.7.10"
+  },
+  "scripts": {
+    "start": "vercel dev"
+  }
+}
