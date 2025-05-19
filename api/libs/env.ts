@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 export const NODE_ENV = process.env.NODE_ENV!;
+export const FRONTEND_URL = process.env.FRONTEND_URL!;
 
 // Auth
 export const GOOGLE_CLIENT_PROD_ID = process.env.GOOGLE_CLIENT_PROD_ID!;
