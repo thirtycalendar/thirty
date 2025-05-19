@@ -1,9 +1,26 @@
 {
   "name": "calen-api",
-  "dependencies": {
-    "hono": "^4.7.10"
-  },
   "scripts": {
-    "start": "vercel dev"
+    "start": "vercel dev",
+    "auth:generate": "pnpx @better-auth/cli generate --config ./src/lib/server/auth/index.ts --output ./src/lib/server/db/schemas/auth-table.ts --y",
+    "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
+    "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
+    "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
+    "db:generate:prod": "cross-env NODE_ENV=production drizzle-kit generate",
+    "db:migrate:prod": "cross-env NODE_ENV=production drizzle-kit migrate",
+    "db:studio:prod": "cross-env NODE_ENV=production drizzle-kit studio"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0",
+    "better-auth": "^1.2.8",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "hono": "^4.7.10",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.2",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.31.1"
   }
 }
