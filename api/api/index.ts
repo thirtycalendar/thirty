@@ -13,7 +13,7 @@ const app = new Hono<Context>().basePath("/api");
 
 app.use("*", cors());
 
-// app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));
+app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));
 
 app.get("/", (c) => {
   return c.json({ message: "Hello Hono!" });
