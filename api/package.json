@@ -2,7 +2,7 @@
   "name": "calen-api",
   "scripts": {
     "start": "vercel dev",
-    "auth:generate": "pnpx @better-auth/cli generate --config ./src/lib/server/auth/index.ts --output ./src/lib/server/db/schemas/auth-table.ts --y",
+    "auth:generate": "npx @better-auth/cli generate --config ./libs/auth/index.ts --output ./libs/db/schemas/auth-table.ts --y",
     "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
     "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
