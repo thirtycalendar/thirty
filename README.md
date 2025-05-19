@@ -12,5 +12,6 @@
   - (5.19.01) - Added `api` and `web` folders. Deployed both to Vercel.
   - (5.19.02) - Added daisy ui and tailwind css.
   - (5.19.03) - Added drizzle orm and connected to NeonDB.
+  - (5.19.04) - Better way for db index file.
 - Sun May 18, 2025
   - (first-commit) - **Ko & Thae, 1.6 years anniversary**.

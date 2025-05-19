@@ -15,8 +15,7 @@
     "better-auth": "^1.2.8",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
-    "hono": "^4.7.10",
-    "pg": "^8.16.0"
+    "hono": "^4.7.10"
   },
   "devDependencies": {
     "@types/pg": "^8.15.2",
