@@ -1,27 +1,18 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { PanelRight } from "@lucide/svelte";
+  import { cn } from "$lib/utils/cn";
 
   interface ModalProps {
     sidebarId: string;
+    width?: string;
+    className: string;
     children: Snippet;
   }
 
-  let { sidebarId, children }: ModalProps = $props();
+  let { sidebarId, width = "260", className, children }: ModalProps = $props();
 </script>
 
-<div class="drawer drawer-end sidebar-open z-5000">
-  <input id={sidebarId} type="checkbox" class="drawer-toggle" />
-  <div class="drawer-content">
-    <!-- Sidebar icon -->
-    <label for={sidebarId} class="drawer-button sidebar-open-icon">
-      <PanelRight size="25" class="opacity-75" />
-    </label>
-  </div>
-  <div class="drawer-side">
-    <div class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-      <!-- Sidebar content here -->
-      {@render children()}
-    </div>
-  </div>
+<div class={cn(`w-[${width}px] shrink-0 bg-base-200 p-4`, className)}>
+  {@render children()}
 </div>

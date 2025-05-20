@@ -2,7 +2,7 @@
   let { children } = $props();
 </script>
 
-<div class="flex h-screen overflow-hidden">
+<div class="flex h-screen overflow-y-scroll">
   <!-- Left Sidebar -->
   <div class="w-[260px] shrink-0 bg-base-200 p-4">Left Sidebar</div>
 

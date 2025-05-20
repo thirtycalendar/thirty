@@ -10,6 +10,7 @@
 
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
+  - (5.20.02) - Trying to create custom sidebar.
 - Mon May 19, 2025
   - (5.19.01) - Added `api` and `web` folders. Deployed both to Vercel.
   - (5.19.02) - Added daisy ui and tailwind css.
