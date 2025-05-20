@@ -1,2 +1,47 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+
+  --color-base-100: oklch(18% 0.01 270); /* soft black */
+  --color-base-200: oklch(24% 0.01 270); /* card background */
+  --color-base-300: oklch(30% 0.015 270); /* hover/lift */
+  --color-base-content: oklch(94% 0.01 270); /* text white */
+
+  --color-primary: oklch(60% 0.21 280); /* futuristic violet */
+  --color-primary-content: oklch(98% 0.03 280); /* white-ish */
+
+  --color-secondary: oklch(55% 0.19 200); /* cyan-teal hybrid */
+  --color-secondary-content: oklch(98% 0.03 200);
+
+  --color-accent: oklch(70% 0.14 170); /* minty green */
+  --color-accent-content: oklch(18% 0.01 270);
+
+  --color-neutral: oklch(25% 0.01 270); /* card edge, muted UI */
+  --color-neutral-content: oklch(90% 0.01 270);
+
+  --color-info: oklch(70% 0.16 250);
+  --color-info-content: oklch(95% 0.03 250);
+
+  --color-success: oklch(72% 0.17 160);
+  --color-success-content: oklch(95% 0.03 160);
+
+  --color-warning: oklch(80% 0.18 90);
+  --color-warning-content: oklch(18% 0.01 270);
+
+  --color-error: oklch(60% 0.18 20);
+  --color-error-content: oklch(95% 0.03 20);
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0.5; /* subtle lift */
+  --noise: 0.05; /* for soft grain overlay if supported */
+}
