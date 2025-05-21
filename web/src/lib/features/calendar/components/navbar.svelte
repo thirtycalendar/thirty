@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    ChevronLeft,
-    ChevronRight,
-    MessageSquare,
-    PanelRight,
-  } from "@lucide/svelte";
+  import { MessageSquare, PanelRight } from "@lucide/svelte";
 
   import {
     calView,
@@ -12,11 +7,7 @@
     type CalView,
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
-  import {
-    goToNextWeek,
-    goToPreviousWeek,
-    goToToday,
-  } from "$lib/stores/change-date";
+  import { ChangeDateButtons } from ".";
 
   interface NavbarProps {
     mainSidebarId: string;
@@ -42,17 +33,7 @@
 
     <p class="text-lg font-semibold">{currentDate}</p>
 
-    <div>
-      <button class="btn btn-sm btn-square" onclick={goToPreviousWeek}>
-        <ChevronLeft size="20px" />
-      </button>
-
-      <button class="btn btn-sm" onclick={goToToday}>Today</button>
-
-      <button class="btn btn-sm btn-square" onclick={goToNextWeek}>
-        <ChevronRight size="20px" />
-      </button>
-    </div>
+    <ChangeDateButtons />
   </div>
 
   <div class="flex items-center gap-1">
