@@ -35,7 +35,7 @@
     {#each hours as hour}
       <!-- Time Label -->
       <div
-        class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70"
+        class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70 border-r border-base-200"
       >
         {format(setHours(new Date(), hour), "h a")}
       </div>
