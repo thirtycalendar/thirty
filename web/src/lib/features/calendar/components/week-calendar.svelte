@@ -29,11 +29,13 @@
 
 <!-- Time Grid -->
 <div
-  class="grid grid-cols-[50px_repeat(7,1fr)] text-xs bg-base-100 rounded-2xl"
+  class="h-screen overflow-y-scroll grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
 >
   {#each hours as hour}
     <!-- Time Label -->
-    <div class="h-15 flex justify-center items-center select-none leading-none">
+    <div
+      class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70"
+    >
       {format(setHours(new Date(), hour), "h a")}
     </div>
 

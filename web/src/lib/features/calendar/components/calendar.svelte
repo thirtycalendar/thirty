@@ -2,6 +2,6 @@
   import { WeekCalendar } from ".";
 </script>
 
-<div>
+<div class="">
   <WeekCalendar />
 </div>

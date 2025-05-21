@@ -10,7 +10,7 @@
   let chatSidebarOpen = $derived($sidebars[chatSidebarId]);
 </script>
 
-<div class="relative min-h-screen">
+<div class="relative h-screen">
   <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0" mainSidebar>
     Main Sidebar
   </Sidebar>
