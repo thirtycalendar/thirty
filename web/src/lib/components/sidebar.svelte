@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
 
+  import { onStorageKeyChange } from "$lib/utils/on-storage-key-change";
   import { cn } from "$lib/utils/cn";
-  import { sidebars } from "$lib/stores/sidebar";
 
   interface SidebarProps {
     sidebarId: string;
@@ -18,17 +18,30 @@
     children,
   }: SidebarProps = $props();
 
-  let isOpen = $state(true);
+  let isOpen = $derived(true);
+
+  function toggleSidebar() {
+    let toggleStatus = localStorage.getItem(sidebarId);
+
+    if (toggleStatus !== null) {
+      isOpen = toggleStatus === "true";
+    }
+  }
+
+  onMount(() => {
+    toggleSidebar();
+  });
 
   $effect(() => {
-    isOpen = $sidebars[sidebarId] ?? true;
+    onStorageKeyChange(sidebarId, toggleSidebar);
   });
 </script>
 
 <div
   class={cn(
-    `transition-transform duration-300 ease-in-out w-[${width}px] shrink-0 bg-base-200 p-4`,
-    isOpen ? "translate-x-0" : `-translate-x-[${width}px]`,
+    "bg-base-200 p-4 overflow-hidden duration-300 transform",
+    `w-[${width}px]`,
+    isOpen ? "" : "-translate-x-100 hidden",
     className,
   )}
 >
