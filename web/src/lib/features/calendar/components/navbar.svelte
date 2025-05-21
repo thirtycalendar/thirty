@@ -25,7 +25,7 @@
 
   let { mainSidebarId, chatSidebarId }: NavbarProps = $props();
 
-  let views: CalView[] = ["month", "week", "day"];
+  let views: CalView[] = ["year", "month", "week", "day"];
 
   let date = new Date();
   const currentDate = new Intl.DateTimeFormat("en-US", {

@@ -26,6 +26,7 @@
   - (5.21.15) - Added border to make better UI.
   - (5.21.16) - Show the current time with a red line.
   - (5.21.17) - Start the week from Sunday and automatically scroll the the current time on page load.
+  - (5.21.18) - Store the calendar view state in localStorage.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.
