@@ -1,10 +1,7 @@
-<div class="grid grid-cols-8 gap-2">
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
-  <div class="border"></div>
+<script lang="toggleSidebar">
+  import { WeekCalendar } from ".";
+</script>
+
+<div>
+  <WeekCalendar />
 </div>

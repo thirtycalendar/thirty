@@ -25,6 +25,7 @@
 		"@tailwindcss/vite": "^4.1.7",
 		"clsx": "^2.1.1",
 		"daisyui": "^5.0.35",
+		"date-fns": "^4.1.0",
 		"tailwind-merge": "^3.3.0",
 		"tailwindcss": "^4.1.7"
 	}

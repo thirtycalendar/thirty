@@ -16,6 +16,7 @@
   - (5.21.05) - Finished styling change cal view tabs.
   - (5.21.06) - Sidebar functionality working via calendar navbar.
   - (5.21.07) - Better navbar style for mobile responsive.
+  - (5.21.08) - Added week calendar component.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Sidebar } from "$lib/components";
-  import { Navbar } from "$lib/features/calendar/components";
-  import { toggleSidebar } from "$lib/stores/sidebar";
+  import { Calendar, Navbar } from "$lib/features/calendar/components";
   import { sidebars } from "$lib/stores/sidebar";
 
   let mainSidebarId = "main-side-bar";
@@ -20,6 +19,8 @@
     class={`max-h-screen min-h-screen bg-base-200 transition-all duration-300 pl-4 pr-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
   >
     <Navbar {mainSidebarId} {chatSidebarId} />
+
+    <Calendar />
   </div>
 
   <Sidebar
