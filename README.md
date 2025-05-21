@@ -13,6 +13,7 @@
   - (5.21.02) - Used sidebar store method again.
   - (5.21.03) - Both sidebar working.
   - (5.21.04) - Stared studying cal navbar.
+  - (5.21.05) - Finished styling change cal view tabs.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.

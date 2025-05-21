@@ -1,12 +1,13 @@
 <script lang="ts">
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 
-  let defaultCalView = $state("week");
+  import {
+    calView,
+    handleCalViewChange,
+    type CalView,
+  } from "$lib/stores/cal-view";
 
-  function handleCalViewChange(event: Event) {
-    const { name } = event.target as HTMLInputElement;
-    console.log(name);
-  }
+  const views: CalView[] = ["month", "week", "day"];
 </script>
 
 <div class="flex justify-between items-center py-3">
@@ -15,27 +16,16 @@
   </div>
 
   <div class="tabs tabs-box bg-base-300">
-    <input
-      type="radio"
-      name="month"
-      aria-label="Month"
-      onclick={handleCalViewChange}
-      class="tab"
-    />
-    <input
-      type="radio"
-      name="week"
-      aria-label="Week"
-      onclick={handleCalViewChange}
-      class="tab"
-    />
-    <input
-      type="radio"
-      name="day"
-      aria-label="Day"
-      onclick={handleCalViewChange}
-      class="tab"
-    />
+    {#each views as view}
+      <input
+        type="radio"
+        name={view}
+        aria-label={view[0].toUpperCase() + view.slice(1)}
+        onclick={handleCalViewChange}
+        class="tab"
+        checked={$calView === view}
+      />
+    {/each}
   </div>
 
   <div>
