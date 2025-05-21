@@ -12,6 +12,7 @@
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.
   - (5.21.03) - Both sidebar working.
+  - (5.21.04) - Stared studying cal navbar.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.

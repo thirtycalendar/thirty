@@ -2,7 +2,6 @@ import { writable } from "svelte/store";
 
 const initialState: Record<string, boolean> = {};
 
-// Load saved sidebar states from localStorage
 if (typeof localStorage !== "undefined") {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);

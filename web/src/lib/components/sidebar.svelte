@@ -16,7 +16,7 @@
 
 <div
   class={cn(
-    "bg-base-200 p-4  h-full fixed top-0 z-20 transition-transform duration-300",
+    "bg-base-100 p-4 h-full fixed top-0 z-20 transition-transform duration-300",
     isOpen
       ? "translate-x-0"
       : mainSidebar
