@@ -18,6 +18,7 @@
   - (5.21.07) - Better navbar style for mobile responsive.
   - (5.21.08) - Added week calendar component.
   - (5.21.09) - Added week date store.
+  - (5.21.10) - Designing week calendar.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.
