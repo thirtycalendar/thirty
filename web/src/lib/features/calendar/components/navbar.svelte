@@ -34,7 +34,7 @@
   }).format(date);
 </script>
 
-<div class="flex justify-between items-center py-3">
+<div class="flex justify-between items-center">
   <div class="flex items-center gap-2">
     <button class="btn btn-square" onclick={() => toggleSidebar(mainSidebarId)}>
       <PanelRight size="20px" />

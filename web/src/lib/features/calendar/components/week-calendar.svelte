@@ -11,39 +11,43 @@
   const hours = Array.from({ length: 24 }, (_, i) => i);
 </script>
 
-<!-- Day Headers -->
-<div class="grid grid-cols-[50px_repeat(7,1fr)] text-sm bg-base-200">
-  <div></div>
-  {#each $days as day}
-    <div
-      class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative"
-    >
-      <div class={`font-semibold ${isToday(day) ? "text-primary" : ""}`}>
-        {format(day, "EEE d")}
-      </div>
-    </div>
-  {/each}
-</div>
-
-<!-- Time Grid -->
-<div
-  class="max-h-screen overflow-y-scroll grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
->
-  {#each hours as hour}
-    <!-- Time Label -->
-    <div
-      class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70"
-    >
-      {format(setHours(new Date(), hour), "h a")}
-    </div>
-
-    <!-- Hour Blocks -->
+<div class="flex flex-col h-full py-3">
+  <!-- Day Headers -->
+  <div
+    class="grid grid-cols-[50px_repeat(7,1fr)] text-sm bg-base-200 sticky top-0 z-10"
+  >
+    <div></div>
     {#each $days as day}
       <div
-        class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
-        data-day={format(day, "yyyy-MM-dd")}
-        data-hour={hour}
-      ></div>
+        class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative"
+      >
+        <div class={`font-semibold ${isToday(day) ? "text-primary" : ""}`}>
+          {format(day, "EEE d")}
+        </div>
+      </div>
     {/each}
-  {/each}
+  </div>
+
+  <!-- Time Grid -->
+  <div
+    class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
+  >
+    {#each hours as hour}
+      <!-- Time Label -->
+      <div
+        class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70"
+      >
+        {format(setHours(new Date(), hour), "h a")}
+      </div>
+
+      <!-- Hour Blocks -->
+      {#each $days as day}
+        <div
+          class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
+          data-day={format(day, "yyyy-MM-dd")}
+          data-hour={hour}
+        ></div>
+      {/each}
+    {/each}
+  </div>
 </div>
