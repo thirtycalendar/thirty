@@ -11,7 +11,7 @@
     differenceInMinutes,
     startOfDay,
   } from "date-fns";
-  import { currentDate } from "$lib/stores/week-date";
+  import { currentDate } from "$lib/stores/change-date";
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate, { weekStartsOn: 7 });

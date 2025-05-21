@@ -16,7 +16,7 @@
     goToNextWeek,
     goToPreviousWeek,
     goToToday,
-  } from "$lib/stores/week-date";
+  } from "$lib/stores/change-date";
 
   interface NavbarProps {
     mainSidebarId: string;

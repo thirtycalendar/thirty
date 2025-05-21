@@ -7,8 +7,9 @@
     differenceInMinutes,
     startOfDay,
   } from "date-fns";
+  import { currentDate } from "$lib/stores/change-date";
 
-  let date = new Date();
+  let date = $currentDate;
 
   let scrollContainer: HTMLDivElement;
   let now = new Date();
@@ -28,16 +29,27 @@
     }
   }
 
+  const unsubscribe = currentDate.subscribe((value) => {
+    date = value;
+    if (isToday(date)) {
+      now = new Date();
+      scrollToCurrentTime();
+    }
+  });
+
   onMount(() => {
-    scrollToCurrentTime();
+    if (isToday(date)) scrollToCurrentTime();
 
     timer = setInterval(() => {
       now = new Date();
-      scrollToCurrentTime();
+      if (isToday(date)) scrollToCurrentTime();
     }, 60 * 1000);
   });
 
-  onDestroy(() => clearInterval(timer));
+  onDestroy(() => {
+    clearInterval(timer);
+    unsubscribe();
+  });
 </script>
 
 <div class="flex flex-col h-full py-3">
