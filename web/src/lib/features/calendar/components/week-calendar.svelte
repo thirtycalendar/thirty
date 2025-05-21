@@ -13,12 +13,12 @@
 
 <!-- Day Headers -->
 <div
-  class="grid grid-cols-[50px_repeat(7,1fr)] sticky top-0 z-10 bg-base-100/80 backdrop-blur border-b border-base-200 shadow-sm text-sm rounded-xl mb-2"
+  class="grid grid-cols-[50px_repeat(7,1fr)] sticky top-0 z-10 text-sm rounded-xl"
 >
   <div></div>
   {#each $days as day}
     <div
-      class="h-14 flex flex-col items-center justify-center border-l border-base-200 relative"
+      class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative"
     >
       <div class={`font-semibold ${isToday(day) ? "text-primary" : ""}`}>
         {format(day, "EEE d")}
@@ -33,27 +33,17 @@
 >
   {#each hours as hour}
     <!-- Time Label -->
-    <div
-      class="h-16 pr-2 pt-1 text-right text-base-content/40 font-mono select-none leading-none"
-    >
+    <div class="h-15 flex justify-center items-center select-none leading-none">
       {format(setHours(new Date(), hour), "h a")}
     </div>
 
     <!-- Hour Blocks -->
     {#each $days as day}
       <div
-        class={`relative h-16 border border-base-200
-          ${isToday(day) ? "bg-blue-500/5" : ""}
-          hover:bg-base-300/10 transition-colors`}
+        class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
         data-day={format(day, "yyyy-MM-dd")}
         data-hour={hour}
-      >
-        <div
-          class="absolute top-1 right-2 text-blue-500 text-xs opacity-0 group-hover:opacity-100 transition"
-        >
-          +
-        </div>
-      </div>
+      ></div>
     {/each}
   {/each}
 </div>
