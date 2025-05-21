@@ -21,6 +21,7 @@
   - (5.21.10) - Designing week calendar.
   - (5.21.11) - Committed for safety.
   - (5.21.12) - Safety.
+  - (5.21.13) - Styling.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.

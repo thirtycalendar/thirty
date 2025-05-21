@@ -12,9 +12,7 @@
 </script>
 
 <!-- Day Headers -->
-<div
-  class="grid grid-cols-[50px_repeat(7,1fr)] sticky top-0 z-10 text-sm rounded-xl"
->
+<div class="grid grid-cols-[50px_repeat(7,1fr)] text-sm bg-base-200">
   <div></div>
   {#each $days as day}
     <div
@@ -29,7 +27,7 @@
 
 <!-- Time Grid -->
 <div
-  class="h-screen overflow-y-scroll grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
+  class="max-h-screen overflow-y-scroll grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
 >
   {#each hours as hour}
     <!-- Time Label -->

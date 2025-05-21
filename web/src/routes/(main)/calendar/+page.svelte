@@ -16,7 +16,7 @@
   </Sidebar>
 
   <div
-    class={`max-h-screen min-h-screen bg-base-200 transition-all duration-300 pl-4 pr-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
+    class={`max-h-screen overflow-hidden bg-base-200 transition-all duration-300 pl-4 pr-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
   >
     <Navbar {mainSidebarId} {chatSidebarId} />
 
