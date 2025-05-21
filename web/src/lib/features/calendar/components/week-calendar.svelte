@@ -13,19 +13,6 @@
   } from "date-fns";
   import { currentDate } from "$lib/stores/week-date";
 
-  let scrollContainer: HTMLDivElement;
-  onMount(() => {
-    requestAnimationFrame(() => {
-      if (scrollContainer) {
-        scrollContainer.scrollTop = getLineOffset();
-      }
-    });
-
-    timer = setInterval(() => {
-      now = new Date();
-    }, 60 * 1000);
-  });
-
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate, { weekStartsOn: 7 });
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
@@ -35,8 +22,19 @@
 
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;
+  let scrollContainer: HTMLDivElement;
 
   onMount(() => {
+    requestAnimationFrame(() => {
+      if (scrollContainer) {
+        scrollContainer.scrollTop = getLineOffset();
+      }
+    });
+
+    setInterval(() => {
+      now = new Date();
+    }, 60 * 1000);
+
     timer = setInterval(() => {
       now = new Date();
     }, 60 * 1000); // update every minute

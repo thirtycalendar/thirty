@@ -1,6 +1,7 @@
 <script lang="ts">
   import { calView } from "$lib/stores/cal-view";
-  import { WeekCalendar } from ".";
+
+  import { DayCalendar, WeekCalendar } from ".";
 </script>
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
@@ -11,7 +12,7 @@
   {:else if $calView === "month"}
     <p>Month</p>
   {:else if $calView === "day"}
-    <p>Day</p>
+    <DayCalendar />
   {:else}
     <WeekCalendar />
   {/if}

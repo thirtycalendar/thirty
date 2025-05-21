@@ -28,6 +28,7 @@
   - (5.21.17) - Start the week from Sunday and automatically scroll the the current time on page load.
   - (5.21.18) - Store the calendar view state in localStorage.
   - (5.21.20) - Remove calendar view blink on refresh.
+  - (5.21.21) - Added Day calendar component.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.
