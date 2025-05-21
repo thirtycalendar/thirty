@@ -12,6 +12,11 @@
     type CalView,
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
+  import {
+    goToNextWeek,
+    goToPreviousWeek,
+    goToToday,
+  } from "$lib/stores/week-date";
 
   interface NavbarProps {
     mainSidebarId: string;
@@ -21,6 +26,12 @@
   let { mainSidebarId, chatSidebarId }: NavbarProps = $props();
 
   let views: CalView[] = ["month", "week", "day"];
+
+  let date = new Date();
+  const currentDate = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
 </script>
 
 <div class="flex justify-between items-center py-3">
@@ -29,16 +40,16 @@
       <PanelRight size="20px" />
     </button>
 
-    <p class="text-lg font-semibold">May 21, 2025</p>
+    <p class="text-lg font-semibold">{currentDate}</p>
 
     <div>
-      <button class="btn btn-sm btn-square">
+      <button class="btn btn-sm btn-square" onclick={goToPreviousWeek}>
         <ChevronLeft size="20px" />
       </button>
 
-      <button class="btn btn-sm">Today</button>
+      <button class="btn btn-sm" onclick={goToToday}>Today</button>
 
-      <button class="btn btn-sm btn-square">
+      <button class="btn btn-sm btn-square" onclick={goToNextWeek}>
         <ChevronRight size="20px" />
       </button>
     </div>
