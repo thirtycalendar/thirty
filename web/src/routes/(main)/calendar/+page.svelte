@@ -1,13 +1,15 @@
 <script lang="ts">
   import { Sidebar } from "$lib/components";
-  import { toggleSidebar } from "$lib/components/utils";
+  import { toggleSidebar } from "$lib/stores/sidebar";
 
   const mainSidebarId = "main-side-bar";
 </script>
 
 <div class="flex min-h-screen overflow-y-scroll">
   <!-- Left Sidebar -->
-  <Sidebar sidebarId={mainSidebarId}>Hello Main Sidebar</Sidebar>
+  <Sidebar sidebarId={mainSidebarId} className="w-[260px]"
+    >Hello Main Sidebar</Sidebar
+  >
 
   <!-- Main Content Area -->
   <div class="flex-1 overflow-y-auto p-4">
