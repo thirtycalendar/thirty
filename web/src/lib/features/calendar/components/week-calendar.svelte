@@ -1,6 +1,16 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte";
   import { derived } from "svelte/store";
-  import { startOfWeek, addDays, format, setHours, isToday } from "date-fns";
+
+  import {
+    startOfWeek,
+    addDays,
+    format,
+    setHours,
+    isToday,
+    differenceInMinutes,
+    startOfDay,
+  } from "date-fns";
   import { currentDate } from "$lib/stores/week-date";
 
   const days = derived(currentDate, ($currentDate) => {
@@ -9,6 +19,22 @@
   });
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  let now = new Date();
+  let timer: ReturnType<typeof setInterval>;
+
+  onMount(() => {
+    timer = setInterval(() => {
+      now = new Date();
+    }, 60 * 1000); // update every minute
+  });
+
+  onDestroy(() => clearInterval(timer));
+
+  const getLineOffset = () => {
+    const minutes = differenceInMinutes(now, startOfDay(now));
+    return (minutes / 60) * 60; // if 60px = 1 hour
+  };
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -30,7 +56,7 @@
 
   <!-- Time Grid -->
   <div
-    class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100"
+    class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100 relative"
   >
     {#each hours as hour}
       <!-- Time Label -->
@@ -46,7 +72,14 @@
           class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
           data-day={format(day, "yyyy-MM-dd")}
           data-hour={hour}
-        ></div>
+        >
+          {#if isToday(day) && hour === 0}
+            <div
+              class="absolute left-0 right-0 h-px bg-red-500"
+              style={`top: ${getLineOffset()}px`}
+            ></div>
+          {/if}
+        </div>
       {/each}
     {/each}
   </div>

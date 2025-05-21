@@ -24,6 +24,7 @@
   - (5.21.13) - Styling.
   - (5.21.14) - Margin bug is now fixed.
   - (5.21.15) - Added border to make better UI.
+  - (5.21.16) - Show the current time with a red line.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.
