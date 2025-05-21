@@ -19,15 +19,7 @@
   <div
     class={`max-h-screen min-h-screen bg-base-200 transition-all duration-300 pl-4 pr-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
   >
-    <!-- <button class="btn" onclick={() => toggleSidebar(mainSidebarId)}>
-      Toggle main sidebar
-    </button>
-
-    <button class="btn" onclick={() => toggleSidebar(chatSidebarId)}>
-      Toggle chat sidebar
-    </button> -->
-
-    <Navbar />
+    <Navbar {mainSidebarId} {chatSidebarId} />
   </div>
 
   <Sidebar
