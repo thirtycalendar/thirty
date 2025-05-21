@@ -13,8 +13,21 @@
   } from "date-fns";
   import { currentDate } from "$lib/stores/week-date";
 
+  let scrollContainer: HTMLDivElement;
+  onMount(() => {
+    requestAnimationFrame(() => {
+      if (scrollContainer) {
+        scrollContainer.scrollTop = getLineOffset();
+      }
+    });
+
+    timer = setInterval(() => {
+      now = new Date();
+    }, 60 * 1000);
+  });
+
   const days = derived(currentDate, ($currentDate) => {
-    const start = startOfWeek($currentDate, { weekStartsOn: 1 });
+    const start = startOfWeek($currentDate, { weekStartsOn: 7 });
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   });
 
@@ -56,6 +69,7 @@
 
   <!-- Time Grid -->
   <div
+    bind:this={scrollContainer}
     class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100 relative"
   >
     {#each hours as hour}
