@@ -15,7 +15,7 @@
   import { currentDate } from "$lib/stores/change-date";
 
   import { CalViewButtons, ChangeDateButtons } from ".";
-  import { isSm } from "$lib/stores/responsive";
+  import { isMd } from "$lib/stores/responsive";
 
   const date = $derived(
     new Intl.DateTimeFormat("en-US", {
@@ -70,7 +70,7 @@
 
     <CalViewButtons />
 
-    {#if $isSm}
+    {#if $isMd}
       <button
         class="btn btn-ghost btn-square"
         onclick={() => toggleSidebar(chatSidebarId)}
