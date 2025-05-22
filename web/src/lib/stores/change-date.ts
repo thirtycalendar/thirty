@@ -6,11 +6,17 @@ import {
   subWeeks,
   addMonths,
   subMonths,
+  addYears,
+  subYears,
 } from "date-fns";
 
 export const currentDate = writable(new Date());
 
 export const goToToday = () => currentDate.set(new Date());
+
+// Year
+export const goToNextYear = () => currentDate.update((d) => addYears(d, 1));
+export const goToPreviousYear = () => currentDate.update((d) => subYears(d, 1));
 
 // Month
 export const goToNextMonth = () => currentDate.update((d) => addMonths(d, 1));

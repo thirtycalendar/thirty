@@ -14,6 +14,7 @@
   - (5.22.03) - Faded the days that doesn't belong to the current month.
   - (5.22.04) - Added loading spinner for calendar loading.
   - (5.22.05) - Added year calendar.
+  - (5.22.06) - Made it responsive and change year functions.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.

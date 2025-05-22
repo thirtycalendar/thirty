@@ -5,17 +5,19 @@
     goToNextDay,
     goToNextMonth,
     goToNextWeek,
+    goToNextYear,
     goToPreviousDay,
     goToPreviousMonth,
     goToPreviousWeek,
+    goToPreviousYear,
     goToToday,
   } from "$lib/stores/change-date";
   import { calView } from "$lib/stores/cal-view";
 
   const navHandlers = {
     year: {
-      prev: goToPreviousWeek,
-      next: goToNextWeek,
+      prev: goToPreviousYear,
+      next: goToNextYear,
     },
     month: {
       prev: goToPreviousMonth,
