@@ -59,7 +59,10 @@
         class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative"
       >
         <div class={`font-semibold ${isToday(day) ? "text-primary" : ""}`}>
-          {format(day, "EEE d")}
+          <p>
+            {format(day, "EEE")}
+            <span class="block sm:inline mb-2 sm:mb-0">{format(day, "d")}</span>
+          </p>
         </div>
       </div>
     {/each}

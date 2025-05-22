@@ -38,7 +38,7 @@
       </button>
     {/if}
 
-    <p class="sm:text-lg font-semibold">{date}</p>
+    <p class="text-lg font-semibold">{date}</p>
 
     <ChangeDateButtons />
   </div>
