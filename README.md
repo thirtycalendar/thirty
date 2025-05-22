@@ -11,6 +11,7 @@
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.
+  - (5.22.03) - Faded the days that doesn't belong to the current month.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.

@@ -36,7 +36,7 @@
     {/each}
   </div>
 
-  <!-- Month Grid (auto-height rows, full width, no extra space) -->
+  <!-- Month Grid -->
   <div
     class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full"
   >
@@ -46,7 +46,15 @@
         data-day={format(day, "yyyy-MM-dd")}
       >
         <div class="text-xs font-medium text-right">
-          <span class={`select-none ${isToday(day) ? "text-primary" : ""}`}>
+          <span
+            class={`select-none ${
+              isToday(day)
+                ? "text-primary"
+                : !isSameMonth(day, $currentDate)
+                  ? "text-base-content/40"
+                  : ""
+            }`}
+          >
             {format(day, "d")}
           </span>
         </div>
