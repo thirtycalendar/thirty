@@ -35,7 +35,7 @@
 </script>
 
 {#if $calView !== null && $calView in navHandlers}
-  <div class="gap-0">
+  <div class="gap-0 text-center w-full">
     <button
       class="btn btn-ghost btn-sm btn-square"
       onclick={navHandlers[$calView].prev}

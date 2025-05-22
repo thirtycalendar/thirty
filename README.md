@@ -51,6 +51,7 @@
   - (5.21.22) - Added change day stores.
   - (5.21.23) - Extracted change date buttons as component.
   - (5.21.24) - Added month calendar.
+  - (5.21.25) - Trying to do responsive.
 - Tue May 20, 2025
   - (5.20.01) - Added custom dark theme for daisy ui.
   - (5.20.02) - Trying to create custom sidebar.

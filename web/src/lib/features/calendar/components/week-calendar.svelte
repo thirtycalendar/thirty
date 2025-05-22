@@ -51,7 +51,7 @@
 <div class="flex flex-col h-full py-3">
   <!-- Day Headers -->
   <div
-    class="grid grid-cols-[50px_repeat(7,1fr)] text-sm bg-base-200 sticky top-0 z-10"
+    class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10"
   >
     <div></div>
     {#each $days as day}

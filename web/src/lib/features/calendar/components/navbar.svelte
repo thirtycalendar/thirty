@@ -13,14 +13,14 @@
     toggleSidebar,
   } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
-  import { isHideChatIcon } from "$lib/stores/responsive";
+  import { isHideChatIcon, isLg, isSm } from "$lib/stores/responsive";
 
   import { CalViewButtons, ChangeDateButtons } from ".";
 
   const date = $derived(
     new Intl.DateTimeFormat("en-US", {
       month: "short",
-      year: "numeric",
+      year: $isSm ? "numeric" : undefined,
     }).format($currentDate),
   );
 
@@ -28,7 +28,7 @@
 </script>
 
 <div class="flex justify-between items-center">
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-1">
     {#if !mainSidebarOpen}
       <button
         class="btn btn-ghost btn-square"
@@ -38,14 +38,14 @@
       </button>
     {/if}
 
-    <p class="text-lg font-semibold">{date}</p>
+    <p class="sm:text-lg font-semibold">{date}</p>
 
     <ChangeDateButtons />
   </div>
 
   <div class="flex items-center gap-2">
     <div class="dropdown dropdown-end">
-      <button class="btn">
+      <button class="btn btn-sm sm:btn-md">
         <Plus size="20px" /> <span class="hidden lg:block">Create</span>
       </button>
       <ul
@@ -68,7 +68,9 @@
       </ul>
     </div>
 
-    <CalViewButtons />
+    {#if $isSm}
+      <CalViewButtons />
+    {/if}
 
     {#if $isHideChatIcon}
       <button

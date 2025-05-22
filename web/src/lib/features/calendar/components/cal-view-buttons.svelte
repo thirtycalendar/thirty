@@ -7,6 +7,13 @@
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
   import { isLg } from "$lib/stores/responsive";
+  import { cn } from "$lib/utils/cn";
+
+  interface CalViewButtonsProps {
+    className?: string;
+  }
+
+  let { className }: CalViewButtonsProps = $props();
 
   let views: CalView[] = ["year", "month", "week", "day"];
 </script>
@@ -25,8 +32,8 @@
     {/each}
   </div>
 {:else}
-  <div class=" dropdown dropdown-end">
-    <button class="btn flex items-center">
+  <div class="dropdown dropdown-end">
+    <button class={cn("btn btn-sm sm:btn-md flex items-center", className)}>
       {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
       <ChevronDown size="16" />
     </button>
