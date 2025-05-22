@@ -5,33 +5,24 @@
     CalSidebar,
     Navbar,
   } from "$lib/features/calendar/components";
-  import { sidebars } from "$lib/stores/sidebar";
+  import { chatSidebarId, mainSidebarId, sidebars } from "$lib/stores/sidebar";
 
-  let mainSidebarId = "main-side-bar";
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
-
-  let chatSidebarId = "chat-side-bar";
   let chatSidebarOpen = $derived($sidebars[chatSidebarId]);
 </script>
 
-<div class="relative h-screen">
-  <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0" mainSidebar>
-    <CalSidebar {mainSidebarId} />
-  </Sidebar>
+<div
+  class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
+>
+  <Navbar />
 
-  <div
-    class={`max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
-  >
-    <Navbar {mainSidebarId} {chatSidebarId} />
-
-    <Calendar />
-  </div>
-
-  <Sidebar
-    sidebarId={chatSidebarId}
-    className="w-[340px] right-0"
-    mainSidebar={false}
-  >
-    Chat Sidebar
-  </Sidebar>
+  <Calendar />
 </div>
+
+<Sidebar
+  sidebarId={chatSidebarId}
+  className="w-[340px] right-0"
+  mainSidebar={false}
+>
+  Chat Sidebar
+</Sidebar>

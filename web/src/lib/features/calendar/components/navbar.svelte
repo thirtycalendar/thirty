@@ -6,17 +6,14 @@
     handleCalViewChange,
     type CalView,
   } from "$lib/stores/cal-view";
-  import { toggleSidebar } from "$lib/stores/sidebar";
+  import {
+    chatSidebarId,
+    mainSidebarId,
+    toggleSidebar,
+  } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
 
   import { CalViewButtons, ChangeDateButtons } from ".";
-
-  interface NavbarProps {
-    mainSidebarId: string;
-    chatSidebarId: string;
-  }
-
-  let { mainSidebarId, chatSidebarId }: NavbarProps = $props();
 
   const date = $derived(
     new Intl.DateTimeFormat("en-US", {

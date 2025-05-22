@@ -43,7 +43,9 @@
       <ChevronLeft size="20px" />
     </button>
 
-    <button class="btn btn-sm" onclick={goToToday}>Today</button>
+    <button class="btn btn-outline border-base-300 btn-sm" onclick={goToToday}>
+      Today
+    </button>
 
     <button
       class="btn btn-ghost btn-sm btn-square"

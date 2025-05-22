@@ -1,5 +1,8 @@
 import { writable } from "svelte/store";
 
+export const mainSidebarId = "main-side-bar";
+export const chatSidebarId = "chat-side-bar";
+
 const initialState: Record<string, boolean> = {};
 
 if (typeof localStorage !== "undefined") {

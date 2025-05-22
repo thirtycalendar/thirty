@@ -13,5 +13,5 @@
 <div
   class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"}`}
 >
-  Chats
+  Settings
 </div>

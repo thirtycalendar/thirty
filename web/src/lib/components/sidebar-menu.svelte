@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { toggleSidebar } from "$lib/stores/sidebar";
-  import { Calendar, MessagesSquareIcon, PanelRight } from "@lucide/svelte";
-
-  interface SidebarMenuProps {
-    mainSidebarId: string;
-  }
-
-  let { mainSidebarId }: SidebarMenuProps = $props();
+  import { mainSidebarId, toggleSidebar } from "$lib/stores/sidebar";
+  import {
+    Calendar,
+    MessagesSquareIcon,
+    PanelRight,
+    Settings,
+  } from "@lucide/svelte";
 </script>
 
-<div class="flex items-center justify-between">
+<div class="flex items-center justify-between mb-2">
   <div>
     <div class="tooltip tooltip-bottom" data-tip="Hide">
       <button
@@ -31,6 +30,12 @@
     <div class="tooltip tooltip-bottom" data-tip="Calendar">
       <a href="/calendar" class={`btn btn-square btn-ghost`}>
         <Calendar size="20" />
+      </a>
+    </div>
+
+    <div class="tooltip tooltip-bottom" data-tip="Settings">
+      <a href="/settings" class={`btn btn-square btn-ghost `}>
+        <Settings size="20" />
       </a>
     </div>
   </div>
