@@ -12,7 +12,7 @@
 </script>
 
 <div
-  class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"} ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
+  class={`transition-all duration-300 ${chatSidebarOpen ? "mr-[340px]" : "mr-0"}`}
 >
   <Navbar />
 

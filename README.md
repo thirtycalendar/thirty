@@ -22,6 +22,7 @@
   - (5.22.11) - Added cal sidebar component.
   - (5.22.12) - Sidebar styling.
   - (5.22.13) - Added new page: settings.
+  - (5.22.14) - Cleaned codes.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.
