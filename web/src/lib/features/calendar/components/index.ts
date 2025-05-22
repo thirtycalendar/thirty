@@ -1,3 +1,4 @@
+export { default as CalSidebar } from "./cal-sidebar.svelte";
 export { default as CalViewButtons } from "./cal-view-buttons.svelte";
 export { default as Calendar } from "./calendar.svelte";
 export { default as ChangeDateButtons } from "./change-date-buttons.svelte";

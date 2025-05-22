@@ -28,7 +28,10 @@
 
 <div class="flex justify-between items-center">
   <div class="flex items-center gap-2">
-    <button class="btn btn-square" onclick={() => toggleSidebar(mainSidebarId)}>
+    <button
+      class="btn btn-ghost btn-square"
+      onclick={() => toggleSidebar(mainSidebarId)}
+    >
       <PanelRight size="20px" />
     </button>
 
@@ -37,7 +40,7 @@
     <ChangeDateButtons />
   </div>
 
-  <div class="flex items-center gap-3">
+  <div class="flex items-center gap-2">
     <div class="dropdown dropdown-end">
       <button class="btn">
         <Plus size="20px" /> <span class="hidden lg:block">Create</span>
@@ -64,7 +67,10 @@
 
     <CalViewButtons />
 
-    <button class="btn btn-square" onclick={() => toggleSidebar(chatSidebarId)}>
+    <button
+      class="btn btn-ghost btn-square"
+      onclick={() => toggleSidebar(chatSidebarId)}
+    >
       <MessageSquare size="20px" />
     </button>
   </div>

@@ -1,6 +1,10 @@
 <script lang="ts">
   import { Sidebar } from "$lib/components";
-  import { Calendar, Navbar } from "$lib/features/calendar/components";
+  import {
+    Calendar,
+    CalSidebar,
+    Navbar,
+  } from "$lib/features/calendar/components";
   import { sidebars } from "$lib/stores/sidebar";
 
   let mainSidebarId = "main-side-bar";
@@ -12,7 +16,7 @@
 
 <div class="relative h-screen">
   <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0" mainSidebar>
-    Main Sidebar
+    <CalSidebar />
   </Sidebar>
 
   <div
