@@ -45,8 +45,20 @@
       <ul
         class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 mt-1 p-2 shadow-md"
       >
-        <li><button>Event</button></li>
-        <li><button>Task</button></li>
+        <li>
+          <button
+            onclick={() => (document.activeElement as HTMLElement)?.blur()}
+          >
+            Event
+          </button>
+        </li>
+        <li>
+          <button
+            onclick={() => (document.activeElement as HTMLElement)?.blur()}
+          >
+            Task
+          </button>
+        </li>
       </ul>
     </div>
 

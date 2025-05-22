@@ -18,6 +18,7 @@
   - (5.22.07) - Better grid for year calendar.
   - (5.22.08) - Added create button.
   - (5.22.09) - Responsive cal view buttons.
+  - (5.22.10) - Hide dropdown automatically after click.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.

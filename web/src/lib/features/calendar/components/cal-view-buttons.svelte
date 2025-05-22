@@ -49,7 +49,10 @@
           type="radio"
           name={view}
           aria-label={view[0].toUpperCase() + view.slice(1)}
-          onclick={handleCalViewChange}
+          onclick={(e) => {
+            (document.activeElement as HTMLElement)?.blur();
+            handleCalViewChange(e);
+          }}
           class="tab w-full flex items-center justify-start"
           checked={$calView === view}
         />
