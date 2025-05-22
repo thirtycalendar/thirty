@@ -31,7 +31,7 @@
 </script>
 
 <div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-[10px] leading-tight p-4 h-full overflow-y-auto"
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4 h-full overflow-y-auto"
 >
   {#each $months as month}
     <div class="flex flex-col">

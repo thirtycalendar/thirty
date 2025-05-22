@@ -87,7 +87,7 @@
         >
           {#if isToday(day) && hour === 0}
             <div
-              class="absolute left-0 right-0 h-px bg-red-500"
+              class="z-10 absolute left-0 right-0 h-px bg-red-500"
               style={`top: ${getLineOffset()}px`}
             ></div>
           {/if}
