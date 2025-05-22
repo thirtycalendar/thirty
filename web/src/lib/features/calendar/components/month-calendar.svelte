@@ -13,8 +13,8 @@
   import { currentDate } from "$lib/stores/change-date";
 
   const days = derived(currentDate, ($currentDate) => {
-    const start = startOfWeek(startOfMonth($currentDate), { weekStartsOn: 7 });
-    const end = endOfWeek(endOfMonth($currentDate), { weekStartsOn: 7 });
+    const start = startOfWeek(startOfMonth($currentDate));
+    const end = endOfWeek(endOfMonth($currentDate));
 
     const result: Date[] = [];
     for (let d = start; d <= end; d = addDays(d, 1)) {

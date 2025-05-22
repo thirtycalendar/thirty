@@ -7,6 +7,8 @@
     type CalView,
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
+  import { currentDate } from "$lib/stores/change-date";
+
   import { ChangeDateButtons } from ".";
 
   interface NavbarProps {
@@ -18,11 +20,10 @@
 
   let views: CalView[] = ["year", "month", "week", "day"];
 
-  let date = new Date();
-  const currentDate = new Intl.DateTimeFormat("en-US", {
+  const date = new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
-  }).format(date);
+  }).format($currentDate);
 </script>
 
 <div class="flex justify-between items-center">
@@ -31,7 +32,7 @@
       <PanelRight size="20px" />
     </button>
 
-    <p class="text-lg font-semibold">{currentDate}</p>
+    <p class="text-lg font-semibold">{date}</p>
 
     <ChangeDateButtons />
   </div>

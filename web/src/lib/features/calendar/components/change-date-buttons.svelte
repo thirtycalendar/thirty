@@ -3,8 +3,10 @@
 
   import {
     goToNextDay,
+    goToNextMonth,
     goToNextWeek,
     goToPreviousDay,
+    goToPreviousMonth,
     goToPreviousWeek,
     goToToday,
   } from "$lib/stores/change-date";
@@ -16,8 +18,8 @@
       next: goToNextWeek,
     },
     month: {
-      prev: goToPreviousDay,
-      next: goToNextDay,
+      prev: goToPreviousMonth,
+      next: goToNextMonth,
     },
     week: {
       prev: goToPreviousWeek,
