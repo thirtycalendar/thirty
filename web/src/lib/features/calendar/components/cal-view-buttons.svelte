@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { ChevronDown, MessageSquare } from "@lucide/svelte";
   import {
     calView,
@@ -7,22 +6,12 @@
     type CalView,
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
+  import { isLg } from "$lib/stores/responsive";
 
   let views: CalView[] = ["year", "month", "week", "day"];
-  let isLg = false;
-
-  function updateSize() {
-    isLg = window.innerWidth >= 1024;
-  }
-
-  onMount(() => {
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  });
 </script>
 
-{#if isLg}
+{#if $isLg}
   <div class="tabs tabs-sm tabs-box bg-base-300">
     {#each views as view}
       <input

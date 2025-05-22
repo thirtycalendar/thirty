@@ -9,11 +9,13 @@
   import {
     chatSidebarId,
     mainSidebarId,
+    sidebars,
     toggleSidebar,
   } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
 
   import { CalViewButtons, ChangeDateButtons } from ".";
+  import { isSm } from "$lib/stores/responsive";
 
   const date = $derived(
     new Intl.DateTimeFormat("en-US", {
@@ -21,16 +23,20 @@
       year: "numeric",
     }).format($currentDate),
   );
+
+  let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
 </script>
 
 <div class="flex justify-between items-center">
   <div class="flex items-center gap-2">
-    <button
-      class="btn btn-ghost btn-square"
-      onclick={() => toggleSidebar(mainSidebarId)}
-    >
-      <PanelRight size="20px" />
-    </button>
+    {#if !mainSidebarOpen}
+      <button
+        class="btn btn-ghost btn-square"
+        onclick={() => toggleSidebar(mainSidebarId)}
+      >
+        <PanelRight size="20px" />
+      </button>
+    {/if}
 
     <p class="text-lg font-semibold">{date}</p>
 
@@ -64,11 +70,13 @@
 
     <CalViewButtons />
 
-    <button
-      class="btn btn-ghost btn-square"
-      onclick={() => toggleSidebar(chatSidebarId)}
-    >
-      <MessageSquare size="20px" />
-    </button>
+    {#if $isSm}
+      <button
+        class="btn btn-ghost btn-square"
+        onclick={() => toggleSidebar(chatSidebarId)}
+      >
+        <MessageSquare size="20px" />
+      </button>
+    {/if}
   </div>
 </div>

@@ -23,6 +23,7 @@
   - (5.22.12) - Sidebar styling.
   - (5.22.13) - Added new page: settings.
   - (5.22.14) - Cleaned codes.
+  - (5.22.15) - Added responsive store to get screen sizes.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.
