@@ -1,14 +1,16 @@
 <script lang="ts">
   import { calView } from "$lib/stores/cal-view";
 
-  import { DayCalendar, MonthCalendar, WeekCalendar } from ".";
+  import { DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 </script>
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $calView === null}
-    <p class="text-sm text-gray-400 p-4">Loading calendar view…</p>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+      <span class="loading loading-spinner loading-md"></span>
+    </div>
   {:else if $calView === "year"}
-    <p>Year</p>
+    <YearCalendar />
   {:else if $calView === "month"}
     <MonthCalendar />
   {:else if $calView === "day"}
