@@ -28,6 +28,7 @@
   - (5.22.17) - Updated.
   - (5.22.18) - Automatically close the chat sidebar when chat icon hidden.
   - (5.22.19) - Almost finished.
+  - (4.22.20) - Responsive working now.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.

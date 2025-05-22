@@ -10,14 +10,18 @@
 
 <div class="max-h-screen overflow-y-scroll">
   <div class="relative h-screen">
-    <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0" mainSidebar>
+    <Sidebar
+      sidebarId={mainSidebarId}
+      className="w-[260px] left-0 lg:absolute"
+      mainSidebar
+    >
       <SidebarMenu />
 
       <CalSidebar />
     </Sidebar>
 
     <div
-      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "ml-[260px]" : "ml-0"}`}
+      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "lg:ml-[260px]" : "ml-0"}`}
     >
       {@render children()}
     </div>
