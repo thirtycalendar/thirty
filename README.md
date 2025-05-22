@@ -25,6 +25,7 @@
   - (5.22.14) - Cleaned codes.
   - (5.22.15) - Added responsive store to get screen sizes.
   - (5.22.16) - Updated responsive store.
+  - (5.22.17) - Updated.
 - Wed May 21, 2025
   - (5.21.01) - Sidebar toggle is now working.
   - (5.21.02) - Used sidebar store method again.
