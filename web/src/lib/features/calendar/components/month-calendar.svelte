@@ -30,9 +30,7 @@
   <!-- Day Headers -->
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
     {#each dayLabels as label}
-      <div
-        class="h-8 flex items-center justify-center font-semibold border-b border-base-300"
-      >
+      <div class="h-8 flex items-center justify-center font-semibold">
         {label}
       </div>
     {/each}

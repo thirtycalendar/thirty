@@ -20,10 +20,12 @@
 
   let views: CalView[] = ["year", "month", "week", "day"];
 
-  const date = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    year: "numeric",
-  }).format($currentDate);
+  const date = $derived(
+    new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      year: "numeric",
+    }).format($currentDate),
+  );
 </script>
 
 <div class="flex justify-between items-center">
