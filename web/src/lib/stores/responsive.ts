@@ -1,33 +1,33 @@
 import { readable } from "svelte/store";
 
-export const isSm = readable(true, (set) => {
-  const media = window.matchMedia("(min-width: 425px)");
-  const update = () => set(media.matches);
-  media.addEventListener("change", update);
-  update();
-  return () => media.removeEventListener("change", update);
-});
+import { chatSidebarId, sidebars } from "$lib/stores/sidebar";
 
-export const isMd = readable(true, (set) => {
-  const media = window.matchMedia("(min-width: 768px)");
-  const update = () => set(media.matches);
-  media.addEventListener("change", update);
-  update();
-  return () => media.removeEventListener("change", update);
-});
+function mediaQueryStore(query: string, onMatch?: (match: boolean) => void) {
+  return readable(false, (set) => {
+    const media = window.matchMedia(query);
+    const update = () => {
+      set(media.matches);
+      onMatch?.(media.matches);
+    };
+    media.addEventListener("change", update);
+    update();
+    return () => media.removeEventListener("change", update);
+  });
+}
 
-export const isHideChatIcon = readable(true, (set) => {
-  const media = window.matchMedia("(min-width: 884px)");
-  const update = () => set(media.matches);
-  media.addEventListener("change", update);
-  update();
-  return () => media.removeEventListener("change", update);
-});
+export const isSm = mediaQueryStore("(min-width: 425px)");
+export const isMd = mediaQueryStore("(min-width: 768px)");
+export const isLg = mediaQueryStore("(min-width: 1024px)");
 
-export const isLg = readable(true, (set) => {
-  const media = window.matchMedia("(min-width: 1024px)");
-  const update = () => set(media.matches);
-  media.addEventListener("change", update);
-  update();
-  return () => media.removeEventListener("change", update);
+export const isHideChatIcon = mediaQueryStore("(min-width: 884px)", (match) => {
+  const isMatch = !match;
+  if (isMatch) {
+    sidebars.update((state) => {
+      if (state[chatSidebarId]) {
+        localStorage.setItem(chatSidebarId, "false");
+        return { ...state, [chatSidebarId]: false };
+      }
+      return state;
+    });
+  }
 });
