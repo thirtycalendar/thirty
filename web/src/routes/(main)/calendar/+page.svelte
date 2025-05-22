@@ -16,7 +16,7 @@
 
 <div class="relative h-screen">
   <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0" mainSidebar>
-    <CalSidebar />
+    <CalSidebar {mainSidebarId} />
   </Sidebar>
 
   <div
