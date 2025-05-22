@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageSquare, PanelRight } from "@lucide/svelte";
+  import { MessageSquare, PanelRight, Plus } from "@lucide/svelte";
 
   import {
     calView,
@@ -9,7 +9,7 @@
   import { toggleSidebar } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
 
-  import { ChangeDateButtons } from ".";
+  import { CalViewButtons, ChangeDateButtons } from ".";
 
   interface NavbarProps {
     mainSidebarId: string;
@@ -17,8 +17,6 @@
   }
 
   let { mainSidebarId, chatSidebarId }: NavbarProps = $props();
-
-  let views: CalView[] = ["year", "month", "week", "day"];
 
   const date = $derived(
     new Intl.DateTimeFormat("en-US", {
@@ -39,24 +37,22 @@
     <ChangeDateButtons />
   </div>
 
-  <div class="flex items-center gap-1">
-    <div class="tabs tabs-sm tabs-box bg-base-300">
-      {#each views as view}
-        <input
-          type="radio"
-          name={view}
-          aria-label={view[0].toUpperCase() + view.slice(1)}
-          onclick={handleCalViewChange}
-          class="tab px-3 text-sm"
-          checked={$calView === view}
-        />
-      {/each}
+  <div class="flex items-center gap-3">
+    <div class="dropdown dropdown-end">
+      <button class="btn">
+        <Plus size="20px" /> <span class="hidden lg:block">Create</span>
+      </button>
+      <ul
+        class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 mt-1 p-2 shadow-md"
+      >
+        <li><button>Event</button></li>
+        <li><button>Task</button></li>
+      </ul>
     </div>
 
-    <button
-      class="ml-2 btn btn-square"
-      onclick={() => toggleSidebar(chatSidebarId)}
-    >
+    <CalViewButtons />
+
+    <button class="btn btn-square" onclick={() => toggleSidebar(chatSidebarId)}>
       <MessageSquare size="20px" />
     </button>
   </div>
