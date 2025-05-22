@@ -17,11 +17,11 @@
 
   import { CalViewButtons, ChangeDateButtons } from ".";
 
-  const date = $derived(
-    new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      year: $isSm ? "numeric" : undefined,
-    }).format($currentDate),
+  const month = $derived(
+    new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate),
+  );
+  const year = $derived(
+    new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate),
   );
 
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
@@ -38,7 +38,15 @@
       </button>
     {/if}
 
-    <p class="text-lg font-semibold">{date}</p>
+    <div>
+      <p class="text-lg font-semibold flex gap-1">
+        {#if $calView === "year"}
+          {year}
+        {:else}
+          {month} <span class="hidden sm:flex">{year}</span>
+        {/if}
+      </p>
+    </div>
 
     <ChangeDateButtons />
   </div>
