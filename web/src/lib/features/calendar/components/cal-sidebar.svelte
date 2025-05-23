@@ -4,6 +4,8 @@
   import { CalList, MiniCalendar } from ".";
 </script>
 
-<MiniCalendar />
+<div class="max-h-screen overflow-y-scroll">
+  <MiniCalendar />
 
-<CalList />
+  <CalList />
+</div>
