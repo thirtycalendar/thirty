@@ -1,5 +1,6 @@
 <script lang="ts">
   import { derived } from "svelte/store";
+  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
   import {
     startOfMonth,
     endOfMonth,
@@ -10,7 +11,12 @@
     format,
     isSameMonth,
   } from "date-fns";
-  import { currentDate } from "$lib/stores/change-date";
+
+  import {
+    currentDate,
+    goToNextMonth,
+    goToPreviousMonth,
+  } from "$lib/stores/change-date";
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -26,9 +32,22 @@
   });
 </script>
 
-<div class="text-[10px] w-full select-none">
-  <div class="text-center font-semibold mb-2 text-sm">
-    {format($currentDate, "MMMM yyyy")}
+<div class="text-[10px] w-full select-none my-3">
+  <div class="flex justify-between items-center font-semibold mb-2 text-sm">
+    <p>{format($currentDate, "MMMM yyyy")}</p>
+
+    <div>
+      <button
+        class="btn btn-xs btn-square btn-ghost"
+        onclick={goToPreviousMonth}
+      >
+        <ChevronLeft size="18" />
+      </button>
+
+      <button class="btn btn-xs btn-square btn-ghost" onclick={goToNextMonth}>
+        <ChevronRight size="18" />
+      </button>
+    </div>
   </div>
 
   <!-- Day labels -->
@@ -41,15 +60,16 @@
   <!-- Mini month grid -->
   <div class="grid grid-cols-7 gap-1 text-center">
     {#each $days as day}
-      <div
+      <button
         class={`rounded-md py-[2px] transition-colors
           ${isToday(day) ? "bg-base-300 text-primary-content font-semibold" : ""}
           ${!isSameMonth(day, $currentDate) ? "text-base-content/30" : ""}
           hover:bg-base-300/50 cursor-pointer`}
         title={format(day, "PPP")}
+        onclick={() => currentDate.set(day)}
       >
         {format(day, "d")}
-      </div>
+      </button>
     {/each}
   </div>
 </div>
