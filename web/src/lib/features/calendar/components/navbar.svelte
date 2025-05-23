@@ -22,9 +22,9 @@
 </script>
 
 <div class="flex justify-between items-center">
-  <ToggleSidebarIcon />
-
   <div class="flex items-center gap-1">
+    <ToggleSidebarIcon />
+
     <div>
       <p class="text-lg font-semibold flex gap-1">
         {#if $calView === "year"}

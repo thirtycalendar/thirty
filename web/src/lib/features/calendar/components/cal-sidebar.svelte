@@ -1,7 +1,7 @@
 <script lang="ts">
   import { isSm } from "$lib/stores/responsive";
 
-  import { CalViewButtons } from ".";
+  import { CalViewButtons, MiniCalendar } from ".";
 </script>
 
 {#if !$isSm}
@@ -10,4 +10,4 @@
   </div>
 {/if}
 
-Cal Sidebar
+<MiniCalendar />

@@ -14,6 +14,7 @@
   - (5.23.03) - Movied up problem solved.
   - (5.23.04) - Created toggle sidebar icon component for better use.
   - (5.23.05) - Change the sidebar conents based on url.
+  - (5.23.06) - Added mini calendar component.
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.
