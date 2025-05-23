@@ -18,8 +18,10 @@
       type="radio"
       name={view}
       aria-label={view[0].toUpperCase() + view.slice(1)}
+      value={view}
       onclick={handleCalViewChange}
-      class="tab px-3 text-sm"
+      class="tab px-3 text-sm focus:bg-primary"
+      class:bg-primary={$calView === view}
       checked={$calView === view}
     />
   {/each}

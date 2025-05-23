@@ -33,7 +33,7 @@
     </Sidebar>
 
     <div
-      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "lg:ml-[260px]" : ""}`}
+      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "xl:ml-[260px]" : ""}`}
     >
       {@render children()}
     </div>
