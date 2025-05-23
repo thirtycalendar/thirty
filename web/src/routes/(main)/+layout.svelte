@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { Sidebar, SidebarMenu } from "$lib/components";
   import { CalSidebar } from "$lib/features/calendar/components";
   import { mainSidebarId, sidebars } from "$lib/stores/sidebar";
@@ -6,6 +7,11 @@
   let { children } = $props();
 
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
+  let pathSegment = $derived("");
+
+  $effect(() => {
+    pathSegment = $page.url.pathname.split("/").filter(Boolean)[0];
+  });
 </script>
 
 <div class="max-h-screen overflow-y-scroll">
@@ -17,7 +23,13 @@
     >
       <SidebarMenu />
 
-      <CalSidebar />
+      {#if pathSegment === "calendar"}
+        <CalSidebar />
+      {:else if pathSegment === "chat"}
+        <p>Chat sidebar</p>
+      {:else if pathSegment === "settings"}
+        <p>Settings sidebar</p>
+      {/if}
     </Sidebar>
 
     <div
