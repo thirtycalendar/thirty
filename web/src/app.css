@@ -17,11 +17,11 @@
   --color-base-300: oklch(28% 0 0); /* hover/lift */
   --color-base-content: oklch(95% 0 0); /* pure white text */
 
-  --color-primary: oklch(95% 0 0); /* white buttons, links */
-  --color-primary-content: oklch(15% 0 0); /* black text on white */
+  --color-primary: oklch(15% 0 0); /* black buttons, links */
+  --color-primary-content: oklch(95% 0 0); /* white text on white */
 
-  --color-secondary: oklch(65% 0 0); /* mid-gray */
-  --color-secondary-content: oklch(15% 0 0); /* readable on gray */
+  --color-secondary: oklch(15% 0 0); /* readable on gray */
+  --color-secondary-content: oklch(65% 0 0); /* mid-gray  */
 
   --color-accent: oklch(35% 0 0); /* dark accent UI */
   --color-accent-content: oklch(95% 0 0);
@@ -62,11 +62,11 @@
   --color-base-300: oklch(92% 0 0); /* hover/lift */
   --color-base-content: oklch(12% 0 0); /* near black text */
 
-  --color-primary: oklch(12% 0 0); /* black buttons, links */
-  --color-primary-content: oklch(98% 0 0); /* white text on black */
+  --color-primary: oklch(98% 0 0); /* white buttons, links */
+  --color-primary-content: oklch(12% 0 0); /* black text on black */
 
-  --color-secondary: oklch(70% 0 0); /* mid-light gray */
-  --color-secondary-content: oklch(12% 0 0);
+  --color-secondary: oklch(12% 0 0);
+  --color-secondary-content: oklch(70% 0 0); /* mid-light gray */
 
   --color-accent: oklch(35% 0 0); /* dark gray for accents */
   --color-accent-content: oklch(98% 0 0);

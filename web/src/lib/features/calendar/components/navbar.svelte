@@ -53,7 +53,7 @@
 
   <div class="flex items-center gap-2">
     <div class="dropdown dropdown-end">
-      <button class="btn btn-sm sm:btn-md">
+      <button class="btn btn-sm sm:btn-md btn-primary">
         <Plus size="20px" /> <span class="hidden lg:block">Create</span>
       </button>
       <ul

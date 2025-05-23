@@ -57,7 +57,7 @@
   <div
     class="h-8 flex items-center justify-center text-sm bg-base-200 border-b border-base-200 sticky top-0 z-10"
   >
-    <div class={`font-semibold ${isToday(date) ? "text-primary" : ""}`}>
+    <div class={`font-semibold ${isToday(date) ? "text-primary-content" : ""}`}>
       {format(date, "EEEE, MMM d")}
     </div>
   </div>
