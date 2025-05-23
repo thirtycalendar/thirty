@@ -39,9 +39,8 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <!-- <div class={`dropdown ${!$isSm && "dropdown-top"} dropdown-end`}> -->
     <div
-      class="z-100 absolute right-8 bottom-8 sm:static sm:right-0 sm:bottom-0 dropdown dropdown-top sm:dropdown-bottom dropdown-end"
+      class="z-100 absolute right-8 bottom-8 sm:relative sm:bottom-0 sm:right-0 dropdown dropdown-top sm:dropdown-bottom dropdown-end"
     >
       <button
         class="btn btn-md bg-base-200 sm:bg-primary shadow-sm shadow-base-300 sm:shadow-none"
