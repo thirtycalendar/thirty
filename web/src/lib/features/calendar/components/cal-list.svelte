@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
-  import { onMount } from "svelte";
+  import { slide } from "svelte/transition";
 
   const calendars = [
     { name: "Sithu Khant", color: "text-blue-400" },
@@ -24,7 +24,7 @@
       </button>
 
       <button
-        class={`btn btn-xs btn-ghost btn-square opacity-75 transition-all duration-300 ${showCalendars && "rotate-180"}`}
+        class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${showCalendars && "rotate-180"}`}
         onclick={() => (showCalendars = !showCalendars)}
       >
         <ChevronDown size="16" />
@@ -33,7 +33,7 @@
   </div>
 
   {#if showCalendars}
-    <div class="my-1">
+    <div class="my-1" transition:slide>
       {#each calendars as { name, color }}
         <label
           class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"

@@ -25,6 +25,7 @@
   - (5.23.14) - Added cal list component. Fixed create dropdown bug.
   - (5.23.15) - Styled cal list component.
   - (5.23.16) - Show and hide calendars.
+  - (5.23.17) - Added animation on cal list hide. Added modal component.
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.
