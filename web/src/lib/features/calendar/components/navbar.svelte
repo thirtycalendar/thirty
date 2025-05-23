@@ -6,14 +6,10 @@
     handleCalViewChange,
     type CalView,
   } from "$lib/stores/cal-view";
-  import {
-    chatSidebarId,
-    mainSidebarId,
-    sidebars,
-    toggleSidebar,
-  } from "$lib/stores/sidebar";
+  import { chatSidebarId, toggleSidebar } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
-  import { isHideChatIcon, isLg, isSm } from "$lib/stores/responsive";
+  import { isHideChatIcon, isSm } from "$lib/stores/responsive";
+  import { ToggleSidebarIcon } from "$lib/components";
 
   import { CalViewButtons, ChangeDateButtons } from ".";
 
@@ -23,28 +19,12 @@
   const year = $derived(
     new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate),
   );
-
-  let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
 </script>
 
 <div class="flex justify-between items-center">
+  <ToggleSidebarIcon />
+
   <div class="flex items-center gap-1">
-    {#if !mainSidebarOpen}
-      <button
-        class="hidden sm:block btn btn-ghost btn-square"
-        onclick={() => toggleSidebar(mainSidebarId)}
-      >
-        <PanelRight size="20px" />
-      </button>
-    {/if}
-
-    <button
-      class="sm:hidden btn btn-ghost btn-square"
-      onclick={() => toggleSidebar(mainSidebarId)}
-    >
-      <PanelRight size="20px" />
-    </button>
-
     <div>
       <p class="text-lg font-semibold flex gap-1">
         {#if $calView === "year"}
