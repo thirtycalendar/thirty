@@ -9,10 +9,10 @@
 </script>
 
 <div class="max-h-screen overflow-y-scroll">
-  <div class="relative h-screen">
+  <div class="relative h-screen overflow-hidden">
     <Sidebar
       sidebarId={mainSidebarId}
-      className="w-[260px] left-0 lg:absolute"
+      className="w-[260px] left-0 absolute z-20"
       mainSidebar
     >
       <SidebarMenu />
@@ -21,7 +21,7 @@
     </Sidebar>
 
     <div
-      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "lg:ml-[260px]" : "ml-0"}`}
+      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "lg:ml-[260px]" : ""}`}
     >
       {@render children()}
     </div>

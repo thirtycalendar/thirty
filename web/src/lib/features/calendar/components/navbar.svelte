@@ -31,12 +31,19 @@
   <div class="flex items-center gap-1">
     {#if !mainSidebarOpen}
       <button
-        class="btn btn-ghost btn-square"
+        class="hidden sm:block btn btn-ghost btn-square"
         onclick={() => toggleSidebar(mainSidebarId)}
       >
         <PanelRight size="20px" />
       </button>
     {/if}
+
+    <button
+      class="sm:hidden btn btn-ghost btn-square"
+      onclick={() => toggleSidebar(mainSidebarId)}
+    >
+      <PanelRight size="20px" />
+    </button>
 
     <div>
       <p class="text-lg font-semibold flex gap-1">

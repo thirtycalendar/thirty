@@ -11,6 +11,7 @@
 - Fri May 23, 2025
   - (5.23.01) - Fixed window store bug and added white theme.
   - (5.23.02) - Fixed theme.
+  - (5.23.03) - Movied up problem solved.
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.
