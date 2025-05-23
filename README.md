@@ -20,6 +20,7 @@
   - (5.23.09) - Moved create calendar button to bottom.
   - (5.23.10) - Better styling.
   - (5.23.11) - Change to day view after month grid click.
+  - (5.23.12) - Change to day view after year grid click.
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.

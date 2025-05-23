@@ -11,6 +11,7 @@
     isToday,
   } from "date-fns";
   import { currentDate } from "$lib/stores/change-date";
+  import { changeToDayView } from "$lib/stores/cal-view";
 
   const months = derived(currentDate, ($currentDate) => {
     const year = $currentDate.getFullYear();
@@ -48,13 +49,17 @@
           class="grid grid-cols-7 text-center gap-1 items-center justify-center"
         >
           {#each getDays(month) as day}
-            <div
+            <button
               class={`p-[2px] rounded-md ${
                 isToday(day) ? "bg-base-300 font-semibold" : ""
               } ${!isSameMonth(day, month) ? "text-base-content/30" : ""}`}
+              onclick={() => {
+                currentDate.set(day);
+                changeToDayView();
+              }}
             >
               {format(day, "d")}
-            </div>
+            </button>
           {/each}
         </div>
       </div>
