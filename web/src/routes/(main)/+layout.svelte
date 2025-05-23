@@ -18,7 +18,7 @@
   <div class="relative h-screen overflow-hidden">
     <Sidebar
       sidebarId={mainSidebarId}
-      className="w-[260px] left-0 absolute z-20"
+      className="w-[260px] left-0 absolute z-200"
       mainSidebar
     >
       <SidebarMenu />

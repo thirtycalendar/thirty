@@ -26,7 +26,7 @@
     <ToggleSidebarIcon />
 
     <div>
-      <p class="text-lg font-semibold flex gap-1">
+      <p class="sm:text-lg font-semibold flex gap-1">
         {#if $calView === "year"}
           {year}
         {:else}
@@ -39,12 +39,15 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <div class="dropdown dropdown-end">
-      <button class="btn btn-sm sm:btn-md btn-primary">
+    <!-- <div class={`dropdown ${!$isSm && "dropdown-top"} dropdown-end`}> -->
+    <div
+      class="z-100 absolute right-8 bottom-8 sm:static sm:right-0 sm:bottom-0 dropdown dropdown-top sm:dropdown-bottom dropdown-end"
+    >
+      <button class="btn btn-md bg-base-200 sm:bg-primary">
         <Plus size="20px" /> <span class="hidden lg:block">Create</span>
       </button>
       <ul
-        class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 mt-1 p-2 shadow-md"
+        class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
       >
         <li>
           <button
