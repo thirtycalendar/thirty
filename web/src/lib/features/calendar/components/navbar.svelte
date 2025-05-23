@@ -11,7 +11,7 @@
   import { isHideChatIcon, isSm } from "$lib/stores/responsive";
   import { ToggleSidebarIcon } from "$lib/components";
 
-  import { CalViewButtons, ChangeDateButtons } from ".";
+  import { ChangeCalViewButtons, ChangeDateButtons } from ".";
 
   const month = $derived(
     new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate),
@@ -63,9 +63,7 @@
       </ul>
     </div>
 
-    {#if $isSm}
-      <CalViewButtons />
-    {/if}
+    <ChangeCalViewButtons />
 
     {#if $isHideChatIcon}
       <button

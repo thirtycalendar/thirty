@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronDown, MessageSquare } from "@lucide/svelte";
+
   import {
     calView,
     handleCalViewChange,
@@ -7,13 +8,6 @@
   } from "$lib/stores/cal-view";
   import { toggleSidebar } from "$lib/stores/sidebar";
   import { isLg } from "$lib/stores/responsive";
-  import { cn } from "$lib/utils/cn";
-
-  interface CalViewButtonsProps {
-    className?: string;
-  }
-
-  let { className }: CalViewButtonsProps = $props();
 
   let views: CalView[] = ["year", "month", "week", "day"];
 </script>
@@ -33,7 +27,7 @@
   </div>
 {:else}
   <div class="dropdown dropdown-end">
-    <button class={cn("btn btn-sm sm:btn-md flex items-center", className)}>
+    <button class="btn btn-sm sm:btn-md btn-secondary flex items-center">
       {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
       <ChevronDown size="16" />
     </button>
