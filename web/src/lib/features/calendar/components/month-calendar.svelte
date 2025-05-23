@@ -49,7 +49,7 @@
           <span
             class={`select-none ${
               isToday(day)
-                ? "text-primary"
+                ? "text-primary bg-primary-content font-bold rounded p-[1px]"
                 : !isSameMonth(day, $currentDate)
                   ? "text-base-content/40"
                   : ""

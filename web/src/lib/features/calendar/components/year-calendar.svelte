@@ -30,32 +30,34 @@
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 </script>
 
-<div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4 h-full overflow-y-auto"
->
-  {#each $months as month}
-    <div class="flex flex-col">
-      <div class="text-center font-semibold mb-1 text-xs">
-        {format(month, "MMMM")}
+<div class="bg-base-100/70 my-3 rounded-2xl h-full overflow-y-auto">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4"
+  >
+    {#each $months as month}
+      <div class="flex flex-col">
+        <div class="text-center font-semibold mb-1 text-xs">
+          {format(month, "MMMM")}
+        </div>
+        <div class="grid grid-cols-7 text-center mb-1 opacity-60">
+          {#each dayLabels as d}
+            <div>{d}</div>
+          {/each}
+        </div>
+        <div
+          class="grid grid-cols-7 text-center gap-1 items-center justify-center"
+        >
+          {#each getDays(month) as day}
+            <div
+              class={`p-[2px] rounded-md ${
+                isToday(day) ? "bg-base-300 font-semibold" : ""
+              } ${!isSameMonth(day, month) ? "text-base-content/30" : ""}`}
+            >
+              {format(day, "d")}
+            </div>
+          {/each}
+        </div>
       </div>
-      <div class="grid grid-cols-7 text-center mb-1 opacity-60">
-        {#each dayLabels as d}
-          <div>{d}</div>
-        {/each}
-      </div>
-      <div
-        class="grid grid-cols-7 text-center gap-1 items-center justify-center"
-      >
-        {#each getDays(month) as day}
-          <div
-            class={`p-[2px] rounded-md ${
-              isToday(day) ? "text-primary font-semibold" : ""
-            } ${!isSameMonth(day, month) ? "text-base-content/30" : ""}`}
-          >
-            {format(day, "d")}
-          </div>
-        {/each}
-      </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
 </div>

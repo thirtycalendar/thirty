@@ -18,6 +18,7 @@
   - (5.23.07) - Added mini calendar date change buttons.
   - (5.23.08) - Cal view buttons named to change cal view button.
   - (5.23.09) - Moved create calendar button to bottom.
+  - (5.23.10) - Better styling.
 - Thu May 22, 2025
   - (5.22.01) - Added change month buttons.
   - (5.22.02) - Automatically change the navbar date based on date button change.
