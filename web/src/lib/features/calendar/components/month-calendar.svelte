@@ -10,7 +10,9 @@
     format,
     isSameMonth,
   } from "date-fns";
+
   import { currentDate } from "$lib/stores/change-date";
+  import { changeToDayView } from "$lib/stores/cal-view";
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));
@@ -38,14 +40,18 @@
 
   <!-- Month Grid -->
   <div
-    class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full"
+    class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full relative"
   >
     {#each $days as day}
-      <div
+      <button
         class="border border-base-200 px-2 py-1 relative hover:bg-base-300/10 transition-colors"
         data-day={format(day, "yyyy-MM-dd")}
+        onclick={() => {
+          currentDate.set(day);
+          changeToDayView();
+        }}
       >
-        <div class="text-xs font-medium text-right">
+        <div class="text-xs font-medium absolute top-1 right-1">
           <span
             class={`select-none ${
               isToday(day)
@@ -65,7 +71,7 @@
         >
           <!-- Inject events here -->
         </div>
-      </div>
+      </button>
     {/each}
   </div>
 </div>

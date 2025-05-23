@@ -27,3 +27,13 @@ export function handleCalViewChange(event: Event) {
 
   calView.set(name as CalView);
 }
+
+export function changeToDayView() {
+  const day = "day" as CalView;
+
+  if (browser) {
+    localStorage.setItem("cal-view", day);
+  }
+
+  calView.set(day);
+}
