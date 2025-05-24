@@ -16,10 +16,13 @@
   let value = $state(new Date()); // The source of truth Date object (datetime)
   let open = $state(false);
   let currentInputText = $state(""); // Initialize with empty string
+  let filterText = $state(""); // Text used for filtering time slots
   
   // Initialize currentInputText
   $effect(() => {
-    currentInputText = formatDateFns(value, "h:mm aa");
+    if (!open || (open && !filterText)) {
+      currentInputText = formatDateFns(value, "h:mm aa");
+    }
   });
 
   // DOM element references
@@ -28,84 +31,7 @@
 
   const timeSlotInterval = 30; // Interval for time slots in minutes
   
-  // --- Derived State ---
-  // Generate time slots when value changes
-  const timeSlots = $derived(generateTimeSlots());
-
-  // --- Effects ---
-  // Effect to prevent resetting input while user is typing valid time
-  $effect(() => {
-    const formattedValue = formatDateFns(value, "h:mm aa");
-    // Don't update if user is typing a valid time format
-    // or if the current text already matches the formatted value
-    if (currentInputText !== formattedValue) {
-      let textWouldParseToCurrentValue = false;
-      const formatsToTest = ["h:mm aa", "HH:mm", "h:m aa", "H:m"];
-      for (const fmt of formatsToTest) {
-        try {
-          const d = parseDateFns(currentInputText, fmt, value);
-          if (
-            isValidDate(d) &&
-            d.getHours() === value.getHours() &&
-            d.getMinutes() === value.getMinutes()
-          ) {
-            textWouldParseToCurrentValue = true;
-            break;
-          }
-        } catch (e) {
-          /* ignore parse error */
-        }
-      }
-
-      if (!textWouldParseToCurrentValue) {
-        currentInputText = formattedValue;
-      }
-    }
-  });
-
-  // Effect to scroll the dropdown when it opens
-  $effect(() => {
-    if (open && timeSlotsDropdown) {
-      const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>(
-        `[data-selected="true"]`,
-      );
-      if (selectedItem) {
-        selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      } else {
-        // Scroll to a time slot at or just after the current `value`'s time
-        const currentHour = value.getHours();
-        const currentMinute = value.getMinutes();
-        let bestMatchIndex = -1;
-        
-        const slots = generateTimeSlots();
-        for (let i = 0; i < slots.length; i++) {
-          const slot = slots[i];
-          if (
-            slot.getHours() > currentHour ||
-            (slot.getHours() === currentHour &&
-              slot.getMinutes() >= currentMinute)
-          ) {
-            bestMatchIndex = i;
-            break;
-          }
-        }
-        if (bestMatchIndex === -1 && slots.length > 0)
-          bestMatchIndex = slots.length - 1; // scroll to last if past all
-
-        if (bestMatchIndex !== -1) {
-          const itemToScroll = timeSlotsDropdown.children[
-            bestMatchIndex
-          ] as HTMLElement;
-          itemToScroll?.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
-          });
-        }
-      }
-    }
-  });
-
-  // --- Time Slots Generation ---
+  // --- Functions ---
   function generateTimeSlots(): Date[] {
     const slots: Date[] = [];
     // Generate slots based on the date part of the current `value`
@@ -116,25 +42,121 @@
     }
     return slots;
   }
+  
+  // --- Derived State ---
+  // Generate all time slots
+  const allTimeSlots: Date[] = $derived(generateTimeSlots());
+  
+  // Filter time slots based on user input
+  const filteredTimeSlots: Date[] = $derived((() => {
+    if (!filterText) return allTimeSlots;
+    
+    const lowercaseFilter = filterText.toLowerCase();
+    return allTimeSlots.filter(slot => {
+      const timeString = formatDateFns(slot, "h:mm aa").toLowerCase();
+      return timeString.includes(lowercaseFilter);
+    });
+  })());
 
-  // --- Functions ---
-  function selectTime(slotDate: Date) {
+  // --- Effects ---
+  // Effect to try auto-detecting time format as user types
+  $effect(() => {
+    if (open && filterText) {
+      tryAutoDetectTime();
+    }
+  });
+
+  // Effect to scroll the dropdown when it opens
+  $effect(() => {
+    if (open && timeSlotsDropdown) {
+      // Delay to ensure DOM is updated
+      setTimeout(() => {
+        if (!timeSlotsDropdown) return;
+        
+        const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>(
+          `[data-selected="true"]`
+        );
+        
+        if (selectedItem) {
+          selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        } else {
+          // Scroll to a time slot at or just after the current `value`'s time
+          const currentHour = value.getHours();
+          const currentMinute = value.getMinutes();
+          let bestMatchIndex = -1;
+          
+          const slots: Date[] = filteredTimeSlots.length > 0 ? filteredTimeSlots : allTimeSlots;
+          for (let i = 0; i < slots.length; i++) {
+            const slot = slots[i];
+            if (
+              slot.getHours() > currentHour ||
+              (slot.getHours() === currentHour &&
+                slot.getMinutes() >= currentMinute)
+            ) {
+              bestMatchIndex = i;
+              break;
+            }
+          }
+          
+          if (bestMatchIndex === -1 && slots.length > 0) {
+            bestMatchIndex = slots.length - 1; // scroll to last if past all
+          }
+
+          if (bestMatchIndex !== -1 && timeSlotsDropdown.children.length > bestMatchIndex) {
+            const itemToScroll = timeSlotsDropdown.children[
+              bestMatchIndex
+            ] as HTMLElement;
+            
+            if (itemToScroll) {
+              itemToScroll.scrollIntoView({
+                block: "nearest",
+                behavior: "smooth",
+              });
+            }
+          }
+        }
+      }, 10);
+    }
+  });
+
+  function selectTime(slotDate: Date): void {
     let newDate = setHours(value, slotDate.getHours());
     newDate = setMinutes(newDate, slotDate.getMinutes());
     newDate = setSeconds(newDate, 0); // Clear seconds for consistency
     value = newDate;
+    filterText = ""; // Clear filter text
     open = false; // Close dropdown after selection
     triggerButtonElement?.focus(); // Return focus to the input field
   }
 
-  function parseAndSetTime() {
-    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha"]; // e.g., "5pm", "17"
+  function tryAutoDetectTime(): boolean {
+    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
+    
+    for (const fmt of formatsToTry) {
+      try {
+        // Use `value` as the reference date to keep the date part consistent
+        const parsed = parseDateFns(filterText, fmt, value);
+        if (isValidDate(parsed)) {
+          // Update displayed time in the input field
+          currentInputText = filterText;
+          return true;
+        }
+      } catch (e) {
+        /* Try next format */
+      }
+    }
+    
+    return false;
+  }
+
+  function parseAndSetTime(): void {
+    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
     let parsedDateSuccessfully = false;
 
     for (const fmt of formatsToTry) {
       try {
         // Use `value` as the reference date to keep the date part consistent
-        const parsed = parseDateFns(currentInputText, fmt, value);
+        const parsed = parseDateFns(filterText || currentInputText, fmt, value);
         if (isValidDate(parsed)) {
           let newDate = setHours(value, parsed.getHours());
           newDate = setMinutes(newDate, parsed.getMinutes());
@@ -152,14 +174,15 @@
       // If parsing fails for all formats, revert input to last valid time
       currentInputText = formatDateFns(value, "h:mm aa");
     }
+    
+    filterText = ""; // Clear filter after parsing
   }
 
-  function handleInputFocus() {
+  function handleInputFocus(): void {
     open = true;
-    triggerButtonElement?.select(); // Select text in input on focus
   }
 
-  function handleInputBlur() {
+  function handleInputBlur(): void {
     // Delay blur processing to allow click on dropdown items to register first
     setTimeout(() => {
       // Check if focus is still within the component (input or dropdown)
@@ -184,7 +207,18 @@
     }, 150); // Adjust delay if needed
   }
 
-  function handleInputKeydown(event: KeyboardEvent) {
+  function handleInputChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    filterText = input.value;
+    currentInputText = input.value;
+    
+    // If input is empty, show all time slots
+    if (!input.value) {
+      filterText = "";
+    }
+  }
+
+  function handleInputKeydown(event: KeyboardEvent): void {
     if (event.key === "Enter") {
       event.preventDefault();
       parseAndSetTime();
@@ -192,6 +226,7 @@
       triggerButtonElement?.blur(); // Remove focus to signify completion
     } else if (event.key === "Escape") {
       event.preventDefault();
+      filterText = ""; // Clear filter
       currentInputText = formatDateFns(value, "h:mm aa"); // Revert input
       open = false; // Close dropdown
       triggerButtonElement?.blur();
@@ -209,7 +244,7 @@
     }
   }
 
-  function handleTimeSlotKeyDown(event: KeyboardEvent, slot: Date) {
+  function handleTimeSlotKeyDown(event: KeyboardEvent, slot: Date): void {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       selectTime(slot);
@@ -238,7 +273,7 @@
     return isSameHour(slot, value) && isSameMinute(slot, value);
   }
 
-  function handleClickOutside(event: MouseEvent) {
+  function handleClickOutside(event: MouseEvent): void {
     if (open && timeSlotsDropdown && triggerButtonElement) {
       const target = event.target as Node;
       if (
@@ -251,7 +286,7 @@
     }
   }
 
-  function toggleDropdown() {
+  function toggleDropdown(): void {
     open = !open;
     if (open) {
       setTimeout(() => {
@@ -274,9 +309,11 @@
     onfocus={handleInputFocus}
     onblur={handleInputBlur}
     onkeydown={handleInputKeydown}
+    oninput={handleInputChange}
     onclick={toggleDropdown}
     class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none"
     autocomplete="off"
+    placeholder="Select time"
   />
 
   {#if open}
@@ -286,25 +323,35 @@
       role="listbox"
       aria-labelledby={triggerButtonElement?.id || undefined}
     >
-      <div class="text-sm font-semibold mb-2 px-2">Select time</div>
-      <div class="space-y-0.5">
-        {#each timeSlots as slot (slot.toISOString())}
-          <button
-            type="button"
-            role="option"
-            aria-selected={isSelectedTime(slot)}
-            data-selected={isSelectedTime(slot)}
-            class={`w-full text-left px-3 py-1.5 text-sm rounded-md transition-colors
-              ${isSelectedTime(slot) ? "bg-base-200 text-primary-content font-semibold" : ""}
-              hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none`}
-            onclick={() => selectTime(slot)}
-            onkeydown={(e) => handleTimeSlotKeyDown(e, slot)}
-            tabindex="-1"
-          >
-            {formatDateFns(slot, "h:mm aa")}
-          </button>
-        {/each}
+      <div class="text-sm font-semibold mb-2 px-2">
+        {filterText ? `Matching times` : `Select time`}
       </div>
+      
+      {#if filteredTimeSlots.length === 0}
+        <div class="text-sm text-center py-4 text-base-content/70">
+          No matching times found
+        </div>
+      {:else}
+        <div class="space-y-0.5">
+          {#each filteredTimeSlots as slot (formatDateFns(slot, "HH:mm"))}
+            {@const timeSlot = slot as Date}
+            <button
+              type="button"
+              role="option"
+              aria-selected={isSelectedTime(timeSlot)}
+              data-selected={isSelectedTime(timeSlot)}
+              class={`w-full text-left px-3 py-1.5 text-sm rounded-md transition-colors
+                ${isSelectedTime(timeSlot) ? "bg-base-200 text-primary-content font-semibold" : ""}
+                hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none`}
+              onclick={() => selectTime(timeSlot)}
+              onkeydown={(e) => handleTimeSlotKeyDown(e, timeSlot)}
+              tabindex="-1"
+            >
+              {formatDateFns(timeSlot, "h:mm aa")}
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
   {/if}
 </div>
