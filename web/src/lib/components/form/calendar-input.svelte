@@ -16,6 +16,8 @@
 
   let value: Date = $state(new Date());
   let open = $state(false);
+  let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
+  let triggerButton = $state<HTMLButtonElement | undefined>(undefined);
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -32,6 +34,13 @@
   function selectDay(day: Date) {
     value = day;
     open = false;
+    
+    // Return focus to the button after selection
+    setTimeout(() => {
+      if (triggerButton) {
+        triggerButton.focus();
+      }
+    }, 0);
   }
 
   function prevMonth() {
@@ -41,20 +50,81 @@
   function nextMonth() {
     value = addMonths(value, 1);
   }
+
+  function handleClickOutside(event: MouseEvent): void {
+    if (!open) return;
+    
+    if (calendarDropdown && triggerButton) {
+      const target = event.target as Node;
+      if (
+        !calendarDropdown.contains(target) &&
+        !triggerButton.contains(target)
+      ) {
+        open = false;
+      }
+    }
+  }
+
+  function handleKeydown(event: KeyboardEvent): void {
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      open = false;
+      triggerButton?.focus();
+    }
+  }
+
+  function handleDayKeydown(event: KeyboardEvent, day: Date): void {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectDay(day);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      open = false;
+      triggerButton?.focus();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      const nextDay = addDays(day, 1);
+      value = nextDay;
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      const prevDay = addDays(day, -1);
+      value = prevDay;
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      const prevWeekDay = addDays(day, -7);
+      value = prevWeekDay;
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      const nextWeekDay = addDays(day, 7);
+      value = nextWeekDay;
+    }
+  }
 </script>
+
+<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
 <div class="relative w-full">
   <!-- Trigger Button -->
   <button
     type="button"
+    bind:this={triggerButton}
     class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left"
-    onclick={() => (open = !open)}
+    onclick={() => open = true}
+    onkeydown={(e) => {
+      if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
+        e.preventDefault();
+        open = true;
+      }
+    }}
+    aria-haspopup="dialog"
+    aria-expanded={open}
   >
     {format(value, "EEE d, MMM")}
   </button>
 
   {#if open}
     <div
+      bind:this={calendarDropdown}
       class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
       <!-- Month Navigation -->
@@ -69,7 +139,14 @@
           type="button"
           class="btn btn-ghost btn-xs btn-square"
           onclick={prevMonth}
+          onkeydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              prevMonth();
+            }
+          }}
           aria-label="Previous Month"
+          tabindex="0"
         >
           <ChevronLeft size="15" />
         </button>
@@ -77,7 +154,14 @@
           type="button"
           class="btn btn-ghost btn-xs btn-square"
           onclick={nextMonth}
+          onkeydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              nextMonth();
+            }
+          }}
           aria-label="Next Month"
+          tabindex="0"
         >
           <ChevronRight size="15" />
         </button>
@@ -100,7 +184,14 @@
               ${!isSameMonth(day, value) ? "text-base-content/30" : ""}
               ${isToday(day) && isSameDay(day, value) ? "text-primary font-medium" : ""}
               hover:bg-base-300/60`}
-            onclick={() => selectDay(day)}
+            onclick={(e) => {
+              e.preventDefault();
+              selectDay(day);
+            }}
+            onkeydown={(e) => handleDayKeydown(e, day)}
+            tabindex="0"
+            role="gridcell"
+            aria-selected={isSameDay(day, value)}
           >
             {format(day, "d")}
           </button>
