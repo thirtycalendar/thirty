@@ -3,7 +3,7 @@
   import {
     Calendar,
     MessagesSquareIcon,
-    PanelRight,
+    PanelLeft,
     Settings,
   } from "@lucide/svelte";
 </script>
@@ -15,7 +15,7 @@
         class="btn btn-square btn-ghost"
         onclick={() => toggleSidebar(mainSidebarId)}
       >
-        <PanelRight size="20" />
+        <PanelLeft size="20" />
       </button>
     </div>
   </div>

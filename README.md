@@ -8,12 +8,14 @@
 
 ## Logs
 
+- Sat May 24, 2025
+  - (5.24.01) - Changed fixed icon.
 - Fri May 23, 2025
   - (5.23.01) - Fixed window store bug and added white theme.
   - (5.23.02) - Fixed theme.
-  - (5.23.03) - Movied up problem solved.
+  - (5.23.03) - Moved up problem solved.
   - (5.23.04) - Created toggle sidebar icon component for better use.
-  - (5.23.05) - Change the sidebar conents based on url.
+  - (5.23.05) - Change the sidebar contents based on url.
   - (5.23.06) - Added mini calendar component.
   - (5.23.07) - Added mini calendar date change buttons.
   - (5.23.08) - Cal view buttons named to change cal view button.

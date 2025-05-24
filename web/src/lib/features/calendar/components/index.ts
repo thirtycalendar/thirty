@@ -3,6 +3,7 @@ export { default as CalSidebar } from "./cal-sidebar.svelte";
 export { default as ChangeCalViewButtons } from "./change-cal-view-buttons.svelte";
 export { default as Calendar } from "./calendar.svelte";
 export { default as ChangeDateButtons } from "./change-date-buttons.svelte";
+export { default as CreateButton } from "./create-button.svelte";
 export { default as DayCalendar } from "./day-calendar.svelte";
 export { default as MiniCalendar } from "./mini-calendar.svelte";
 export { default as MonthCalendar } from "./month-calendar.svelte";

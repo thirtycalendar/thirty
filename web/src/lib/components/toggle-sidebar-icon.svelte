@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PanelRight } from "@lucide/svelte";
+  import { PanelLeft } from "@lucide/svelte";
 
   import { mainSidebarId, sidebars, toggleSidebar } from "$lib/stores/sidebar";
 
@@ -11,7 +11,7 @@
     class="hidden lg:block btn btn-ghost btn-square"
     onclick={() => toggleSidebar(mainSidebarId)}
   >
-    <PanelRight size="20px" />
+    <PanelLeft size="20px" />
   </button>
 {/if}
 
@@ -19,5 +19,5 @@
   class="lg:hidden btn btn-ghost btn-square"
   onclick={() => toggleSidebar(mainSidebarId)}
 >
-  <PanelRight size="20px" />
+  <PanelLeft size="20px" />
 </button>

@@ -1,14 +1,10 @@
 <script lang="ts">
-  import { MessageSquare, PanelRight, Plus } from "@lucide/svelte";
+  import { MessageSquare, Plus } from "@lucide/svelte";
 
-  import {
-    calView,
-    handleCalViewChange,
-    type CalView,
-  } from "$lib/stores/cal-view";
+  import { calView } from "$lib/stores/cal-view";
   import { chatSidebarId, toggleSidebar } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
-  import { isHideChatIcon, isSm } from "$lib/stores/responsive";
+  import { isHideChatIcon } from "$lib/stores/responsive";
   import { ToggleSidebarIcon } from "$lib/components";
 
   import { ChangeCalViewButtons, ChangeDateButtons } from ".";
