@@ -28,7 +28,10 @@
 </div>
 
 <div class="lg:hidden dropdown dropdown-end">
-  <button class="btn btn-sm sm:btn-md btn-secondary flex items-center">
+  <button
+    tabindex="0"
+    class="btn btn-sm sm:btn-md btn-secondary flex items-center"
+  >
     {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
     <ChevronDown size="16" />
   </button>

@@ -11,6 +11,7 @@
 - Sat May 24, 2025
   - (5.24.01) - Changed fixed icon.
   - (5.24.02) - Separated create button.
+  - (5.24.03) - Fixed safari bug.
 - Fri May 23, 2025
   - (5.23.01) - Fixed window store bug and added white theme.
   - (5.23.02) - Fixed theme.

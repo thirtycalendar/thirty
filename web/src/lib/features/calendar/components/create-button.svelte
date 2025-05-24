@@ -3,7 +3,7 @@
 </script>
 
 <div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">
-  <button class="btn btn-md bg-primary shadow-none">
+  <button tabindex="0" class="btn btn-md bg-primary shadow-none">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
@@ -25,7 +25,7 @@
 <div
   class="z-100 absolute sm:hidden right-8 bottom-8 dropdown dropdown-top dropdown-end"
 >
-  <button class="btn btn-md bg-base-200 shadow-sm shadow-base-300">
+  <button tabindex="0" class="btn btn-md bg-base-200 shadow-sm shadow-base-300">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
