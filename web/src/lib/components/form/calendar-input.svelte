@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
   import {
     format,
     startOfMonth,
@@ -6,8 +7,11 @@
     startOfWeek,
     endOfWeek,
     addDays,
+    addMonths,
+    subMonths,
     isToday,
     isSameDay,
+    isSameMonth,
   } from "date-fns";
 
   let value: Date = $state(new Date());
@@ -29,6 +33,14 @@
     value = day;
     open = false;
   }
+
+  function prevMonth() {
+    value = subMonths(value, 1);
+  }
+
+  function nextMonth() {
+    value = addMonths(value, 1);
+  }
 </script>
 
 <div class="relative w-full">
@@ -45,8 +57,30 @@
     <div
       class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
-      <div class="text-center font-semibold text-sm mb-2">
-        {format(value, "MMMM yyyy")}
+      <!-- Month Navigation -->
+      <div
+        class="flex items-center justify-between px-2 mb-2 text-sm font-semibold"
+      >
+        <div class=" w-full">
+          {format(value, "MMMM yyyy")}
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-ghost btn-xs btn-square"
+          onclick={prevMonth}
+          aria-label="Previous Month"
+        >
+          <ChevronLeft size="15" />
+        </button>
+        <button
+          type="button"
+          class="btn btn-ghost btn-xs btn-square"
+          onclick={nextMonth}
+          aria-label="Next Month"
+        >
+          <ChevronRight size="15" />
+        </button>
       </div>
 
       <!-- Day Labels -->
@@ -60,8 +94,10 @@
       <div class="grid grid-cols-7 gap-1 text-center text-sm">
         {#each getDays() as day}
           <button
-            class={`py-1 rounded-md cursor-pointer transition-colors
+            type="button"
+            class={`py-1 rounded-md cursor-pointer transition-colors w-full
               ${isSameDay(day, value) ? "bg-base-200 text-primary-content font-semibold" : ""}
+              ${!isSameMonth(day, value) ? "text-base-content/30" : ""}
               ${isToday(day) && isSameDay(day, value) ? "text-primary font-medium" : ""}
               hover:bg-base-300/60`}
             onclick={() => selectDay(day)}
