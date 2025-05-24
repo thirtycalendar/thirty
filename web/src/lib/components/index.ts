@@ -1,4 +1,5 @@
 export { default as CalendarInput } from "./form/calendar-input.svelte";
+export { default as TimeInput } from "./form/time-input.svelte";
 export { default as Modal } from "./modal.svelte";
 export { default as Sidebar } from "./sidebar.svelte";
 export { default as SidebarMenu } from "./sidebar-menu.svelte";

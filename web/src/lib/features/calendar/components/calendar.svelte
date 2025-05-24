@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CalendarInput } from "$lib/components";
+  import { CalendarInput, TimeInput } from "$lib/components";
   import { calView } from "$lib/stores/cal-view";
 
   import { DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
@@ -7,6 +7,7 @@
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   <CalendarInput />
+  <TimeInput />
 
   {#if $calView === null}
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
