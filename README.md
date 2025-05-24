@@ -18,6 +18,7 @@
   - (5.24.08) - Coding time input component.
   - (5.24.09) - Kinda working.
   - (5.24.10) - Improvement 2.
+  - (5.24.11) - Improvement 3.
 - Fri May 23, 2025
   - (5.23.01) - Fixed window store bug and added white theme.
   - (5.23.02) - Fixed theme.

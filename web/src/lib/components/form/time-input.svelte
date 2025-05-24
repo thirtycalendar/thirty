@@ -179,7 +179,17 @@
   }
 
   function handleInputFocus(): void {
+    // Always ensure dropdown is open on focus
     open = true;
+    setTimeout(() => {
+      // Force scroll to selected time after DOM update
+      if (timeSlotsDropdown) {
+        const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>('[data-selected="true"]');
+        if (selectedItem) {
+          selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
+    }, 10);
   }
 
   function handleInputBlur(): void {
@@ -287,13 +297,12 @@
   }
 
   function toggleDropdown(): void {
-    open = !open;
-    if (open) {
-      setTimeout(() => {
-        triggerButtonElement?.focus();
-        triggerButtonElement?.select();
-      }, 0);
-    }
+    // Always open the dropdown when toggled from input
+    open = true;
+    setTimeout(() => {
+      triggerButtonElement?.focus();
+      triggerButtonElement?.select();
+    }, 0);
   }
 </script>
 
@@ -310,7 +319,10 @@
     onblur={handleInputBlur}
     onkeydown={handleInputKeydown}
     oninput={handleInputChange}
-    onclick={toggleDropdown}
+    onclick={() => {
+      open = true;
+      setTimeout(() => triggerButtonElement?.select(), 0);
+    }}
     class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none"
     autocomplete="off"
     placeholder="Select time"
