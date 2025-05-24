@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageSquare, Plus } from "@lucide/svelte";
+  import { MessageSquare } from "@lucide/svelte";
 
   import { calView } from "$lib/stores/cal-view";
   import { chatSidebarId, toggleSidebar } from "$lib/stores/sidebar";
@@ -7,7 +7,7 @@
   import { isHideChatIcon } from "$lib/stores/responsive";
   import { ToggleSidebarIcon } from "$lib/components";
 
-  import { ChangeCalViewButtons, ChangeDateButtons } from ".";
+  import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
 
   const month = $derived(
     new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate),
@@ -35,33 +35,7 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <div
-      class="z-100 absolute right-8 bottom-8 sm:relative sm:bottom-0 sm:right-0 dropdown dropdown-top sm:dropdown-bottom dropdown-end"
-    >
-      <button
-        class="btn btn-md bg-base-200 sm:bg-primary shadow-sm shadow-base-300 sm:shadow-none"
-      >
-        <Plus size="20px" /> <span class="hidden lg:block">Create</span>
-      </button>
-      <ul
-        class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
-      >
-        <li>
-          <button
-            onclick={() => (document.activeElement as HTMLElement)?.blur()}
-          >
-            Event
-          </button>
-        </li>
-        <li>
-          <button
-            onclick={() => (document.activeElement as HTMLElement)?.blur()}
-          >
-            Task
-          </button>
-        </li>
-      </ul>
-    </div>
+    <CreateButton />
 
     <ChangeCalViewButtons />
 
