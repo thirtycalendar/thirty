@@ -16,6 +16,7 @@
   - (5.24.05) - Updated style.
   - (5.24.07) - Finished calendar input component.
   - (5.24.08) - Coding time input component.
+  - (5.24.09) - Kinda working.
 - Fri May 23, 2025
   - (5.23.01) - Fixed window store bug and added white theme.
   - (5.23.02) - Fixed theme.
