@@ -8,7 +8,6 @@
     addDays,
     isToday,
     isSameDay,
-    isSameMonth,
   } from "date-fns";
 
   let value: Date = $state(new Date());
@@ -26,10 +25,10 @@
     return days;
   };
 
-  const selectDay = (day: Date) => {
+  function selectDay(day: Date) {
     value = day;
     open = false;
-  };
+  }
 </script>
 
 <div class="relative w-full">
@@ -62,9 +61,8 @@
         {#each getDays() as day}
           <button
             class={`py-1 rounded-md cursor-pointer transition-colors
-              ${isSameDay(day, value) ? "bg-primary text-primary-content font-semibold" : ""}
-              ${!isSameMonth(day, value) ? "text-base-content/30" : ""}
-              ${isToday(day) && !isSameDay(day, value) ? "text-primary font-medium" : ""}
+              ${isSameDay(day, value) ? "bg-base-200 text-primary-content font-semibold" : ""}
+              ${isToday(day) && isSameDay(day, value) ? "text-primary font-medium" : ""}
               hover:bg-base-300/60`}
             onclick={() => selectDay(day)}
           >
