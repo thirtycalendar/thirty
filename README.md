@@ -13,6 +13,7 @@
   - (5.25.02) - Added create form validation util.
   - (5.25.03) - Created required component files.
   - (5.25.04) - Linked event and task modals with create buttons.
+  - (5.25.05) - Added borders for dropdown for better ui.
 - Sat May 24, 2025
   - (5.24.01) - Changed fixed icon.
   - (5.24.02) - Separated create button.

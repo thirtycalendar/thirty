@@ -9,7 +9,7 @@
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
-    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
+    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 border border-base-200"
   >
     <li>
       <button
@@ -37,11 +37,11 @@
 <div
   class="z-100 absolute sm:hidden right-8 bottom-8 dropdown dropdown-top dropdown-end"
 >
-  <button tabindex="0" class="btn btn-md bg-base-200 shadow-sm shadow-base-300">
+  <button tabindex="0" class="btn btn-md bg-base-200 border border-base-300">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
-    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
+    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 border border-base-200"
   >
     <li>
       <button
