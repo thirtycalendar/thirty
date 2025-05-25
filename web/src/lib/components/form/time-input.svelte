@@ -310,39 +310,29 @@
   {#if open}
     <div
       bind:this={timeSlotsDropdown}
-      class="absolute mt-1 z-50 w-64 max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
+      class={`${filteredTimeSlots.length === 0 && "hidden"} absolute mt-1 z-50 w-64 max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl`}
       role="listbox"
       aria-labelledby={triggerButtonElement?.id || undefined}
     >
-      <div class="text-sm font-semibold mb-2 px-2">
-        {filterText ? `Matching times` : `Select time`}
-      </div>
-
-      {#if filteredTimeSlots.length === 0}
-        <div class="text-sm text-center py-4 text-base-content/70">
-          No matching times found
-        </div>
-      {:else}
-        <div class="space-y-0.5">
-          {#each filteredTimeSlots as slot (formatDateFns(slot, "HH:mm"))}
-            {@const timeSlot = slot as Date}
-            <button
-              type="button"
-              role="option"
-              aria-selected={isSelectedTime(timeSlot)}
-              data-selected={isSelectedTime(timeSlot)}
-              class={`w-full text-left px-3 py-1.5 text-sm rounded-md transition-colors
+      <div class="space-y-0.5">
+        {#each filteredTimeSlots as slot (formatDateFns(slot, "HH:mm"))}
+          {@const timeSlot = slot as Date}
+          <button
+            type="button"
+            role="option"
+            aria-selected={isSelectedTime(timeSlot)}
+            data-selected={isSelectedTime(timeSlot)}
+            class={`w-full text-left px-3 py-1.5 text-sm rounded-md transition-colors
                 ${isSelectedTime(timeSlot) ? "bg-base-200 text-primary-content font-semibold" : ""}
                 hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none`}
-              onclick={() => selectTime(timeSlot)}
-              onkeydown={(e) => handleTimeSlotKeyDown(e, timeSlot)}
-              tabindex="-1"
-            >
-              {formatDateFns(timeSlot, "h:mm aa")}
-            </button>
-          {/each}
-        </div>
-      {/if}
+            onclick={() => selectTime(timeSlot)}
+            onkeydown={(e) => handleTimeSlotKeyDown(e, timeSlot)}
+            tabindex="-1"
+          >
+            {formatDateFns(timeSlot, "h:mm aa")}
+          </button>
+        {/each}
+      </div>
     </div>
   {/if}
 </div>

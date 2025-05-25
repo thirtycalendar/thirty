@@ -4,7 +4,9 @@ export { default as ChangeCalViewButtons } from "./change-cal-view-buttons.svelt
 export { default as Calendar } from "./calendar.svelte";
 export { default as ChangeDateButtons } from "./change-date-buttons.svelte";
 export { default as CreateButton } from "./create-button.svelte";
+export { default as CreateEvent } from "./create-event.svelte";
 export { default as DayCalendar } from "./day-calendar.svelte";
+export { default as EventForm } from "./event-form.svelte";
 export { default as MiniCalendar } from "./mini-calendar.svelte";
 export { default as MonthCalendar } from "./month-calendar.svelte";
 export { default as Navbar } from "./navbar.svelte";
