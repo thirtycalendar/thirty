@@ -10,6 +10,7 @@
 
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
+  - (5.25.02) - Added create form validation util.
 - Sat May 24, 2025
   - (5.24.01) - Changed fixed icon.
   - (5.24.02) - Separated create button.

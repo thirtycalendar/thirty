@@ -27,6 +27,7 @@
 		"daisyui": "^5.0.35",
 		"date-fns": "^4.1.0",
 		"tailwind-merge": "^3.3.0",
-		"tailwindcss": "^4.1.7"
+		"tailwindcss": "^4.1.7",
+		"zod": "^3.25.28"
 	}
 }
