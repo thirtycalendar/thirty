@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { toggleEventModal } from "$lib/stores/event";
+  import { toggleTaskModal } from "$lib/stores/task";
   import { Plus } from "@lucide/svelte";
 </script>
 
@@ -10,12 +12,22 @@
     class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
   >
     <li>
-      <button onclick={() => (document.activeElement as HTMLElement)?.blur()}>
+      <button
+        onclick={() => {
+          toggleEventModal();
+          (document.activeElement as HTMLElement)?.blur();
+        }}
+      >
         Event
       </button>
     </li>
     <li>
-      <button onclick={() => (document.activeElement as HTMLElement)?.blur()}>
+      <button
+        onclick={() => {
+          toggleTaskModal();
+          (document.activeElement as HTMLElement)?.blur();
+        }}
+      >
         Task
       </button>
     </li>
@@ -32,12 +44,22 @@
     class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 shadow-md"
   >
     <li>
-      <button onclick={() => (document.activeElement as HTMLElement)?.blur()}>
+      <button
+        onclick={() => {
+          toggleEventModal();
+          (document.activeElement as HTMLElement)?.blur();
+        }}
+      >
         Event
       </button>
     </li>
     <li>
-      <button onclick={() => (document.activeElement as HTMLElement)?.blur()}>
+      <button
+        onclick={() => {
+          toggleTaskModal();
+          (document.activeElement as HTMLElement)?.blur();
+        }}
+      >
         Task
       </button>
     </li>
