@@ -12,15 +12,17 @@ export const config = {
 
 const app = new Hono<Context>().basePath("/api");
 
-app.use("*", cors({ origin: FRONTEND_URL }));
-
-app.options("/auth/*", (c) => {
-  return c.text("ok", 200, {
-    "Access-Control-Allow-Origin": FRONTEND_URL,
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  });
-});
+app.use(
+  "*",
+  cors({
+    origin: [FRONTEND_URL],
+    allowHeaders: ["Content-Type", "Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  }),
+);
 
 app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));
 
