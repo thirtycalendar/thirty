@@ -13,6 +13,7 @@
   - (5.26.02) - Added input field. Added event title.
   - (5.26.03) - Testing form.
   - (5.26.04) - Added auth page.
+  - (5.26.05) - Designed auth page.
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
   - (5.25.02) - Added create form validation util.
