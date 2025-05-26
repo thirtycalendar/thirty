@@ -14,8 +14,8 @@ export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
   queryRegistry.get(key)?.delete(refetchFn);
 }
 
-export function refetchQueries(keys: QueryKey[]) {
-  keys.forEach((key) => {
+export function refetchQueries(keys?: QueryKey[]) {
+  keys?.forEach((key) => {
     queryRegistry.get(key)?.forEach((fn) => fn());
   });
 }

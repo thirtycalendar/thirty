@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@lucide/svelte": "^0.511.0",
 		"@tailwindcss/vite": "^4.1.7",
+		"better-auth": "^1.2.8",
 		"clsx": "^2.1.1",
 		"daisyui": "^5.0.35",
 		"date-fns": "^4.1.0",

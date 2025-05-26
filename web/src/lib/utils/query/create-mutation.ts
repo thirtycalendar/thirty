@@ -2,9 +2,13 @@ import { writable } from "svelte/store";
 
 import { refetchQueries } from "./query-client";
 
-type CreateMutationOptions<ErrorType, ReturnType, InputType> = {
-  mutationFn: (data: InputType) => Promise<ReturnType>;
-  queryKeys: string[];
+type CreateMutationOptions<
+  ErrorType,
+  ReturnType,
+  Fn extends (...args: any) => Promise<ReturnType>,
+> = {
+  mutationFn: Fn;
+  queryKeys?: string[];
   onPending?: () => void;
   onSuccess?: (data: ReturnType) => void;
   onError?: (err: ErrorType) => void;
@@ -13,8 +17,10 @@ type CreateMutationOptions<ErrorType, ReturnType, InputType> = {
 export function createMutation<
   ErrorType = unknown,
   ReturnType = unknown,
-  InputType = unknown,
->(opts: CreateMutationOptions<ErrorType, ReturnType, InputType>) {
+  Fn extends (...args: any) => Promise<ReturnType> = (
+    ...args: any
+  ) => Promise<ReturnType>,
+>(opts: CreateMutationOptions<ErrorType, ReturnType, Fn>) {
   const { mutationFn, queryKeys, onPending, onSuccess, onError } = opts;
 
   const data = writable<ReturnType | null>(null);
@@ -23,20 +29,18 @@ export function createMutation<
   const isSuccess = writable(false);
   const isError = writable(false);
 
-  async function mutate(payload: InputType) {
+  async function mutate(...args: Parameters<Fn>): Promise<void> {
     isPending.set(true);
     isSuccess.set(false);
     isError.set(false);
     onPending?.();
 
     try {
-      const result = await mutationFn(payload);
+      const result = await mutationFn(...args);
       data.set(result);
       isSuccess.set(true);
       error.set(null);
       onSuccess?.(result);
-
-      // Refetch any queries that match mutation queryKeys
       refetchQueries(queryKeys);
     } catch (err: any) {
       error.set(err);

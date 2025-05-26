@@ -1,24 +1,31 @@
 <script lang="ts">
   import { GoogleIcon } from "$lib/components";
+  import { createMutation } from "$lib/utils/query/create-mutation";
+  import { authClient } from "$lib/utils/rpc";
 
-  // onMount(() => {
-  //   isAuthLoading.set(false);
-  //   authSuccessMessage.set("");
-  //   authErrorMessage.set("");
-  // });
+  async function googleAuth() {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/calendar",
+    });
+  }
+
+  const { mutate, isPending } = createMutation({
+    mutationFn: async (input: string) => {
+      console.log("Output:", input);
+      await googleAuth();
+    },
+  });
 
   async function onclick() {
-    // await googleAuth();
+    mutate("Hello");
   }
 </script>
-
-<!-- <p class="text-sm my-2 {$authErrorMessage ? 'text-error' : 'text-success'}">
-  {$authErrorMessage || $authSuccessMessage}
-</p> -->
 
 <button
   class="btn btn-lg btn-soft btn-info w-full my-2 font-semibold"
   {onclick}
+  disabled={$isPending}
 >
   <GoogleIcon />
   Continue with Google

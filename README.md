@@ -15,6 +15,7 @@
   - (5.26.04) - Added auth page.
   - (5.26.05) - Designed auth page.
   - (5.25.06) - Created my own custom query utils.
+  - (5.25.07) - Updated query functions. Trying to link with backend.
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
   - (5.25.02) - Added create form validation util.

@@ -4,7 +4,7 @@ import { registerQuery } from "./query-client";
 
 type CreateQueryOptions<ErrorType, ReturnType> = {
   queryFn: () => Promise<ReturnType>;
-  queryKeys: string[];
+  queryKeys?: string[];
   onPending?: () => void;
   onSuccess?: (data: ReturnType) => void;
   onError?: (err: ErrorType) => void;
@@ -41,7 +41,7 @@ export function createQuery<ErrorType = unknown, ReturnType = unknown>(
     }
   }
 
-  queryKeys.forEach((key) => registerQuery(key, fetchData));
+  queryKeys?.forEach((key) => registerQuery(key, fetchData));
   fetchData();
 
   return { data, error, isPending, isSuccess, isError };

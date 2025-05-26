@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { handle } from "hono/vercel";
 
 import { auth } from "../libs/auth";
+import { FRONTEND_URL } from "../libs/env";
 import { Context } from "./context";
 
 export const config = {
@@ -11,7 +12,15 @@ export const config = {
 
 const app = new Hono<Context>().basePath("/api");
 
-app.use("*", cors());
+app.use("*", cors({ origin: FRONTEND_URL }));
+
+app.options("/auth/*", (c) => {
+  return c.text("ok", 200, {
+    "Access-Control-Allow-Origin": FRONTEND_URL,
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  });
+});
 
 app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));
 
