@@ -5,4 +5,4 @@
   import { CreateEvent } from ".";
 </script>
 
-<Modal modalId={eventModalId}><CreateEvent /></Modal>
+<Modal modalId={eventModalId} title="Event"><CreateEvent /></Modal>

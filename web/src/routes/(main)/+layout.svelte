@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
+
   import { Sidebar, SidebarMenu } from "$lib/components";
   import { CalSidebar } from "$lib/features/calendar/components";
   import { mainSidebarId, sidebars } from "$lib/stores/sidebar";

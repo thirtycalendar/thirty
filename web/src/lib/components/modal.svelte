@@ -19,7 +19,7 @@
 </script>
 
 <dialog id={String(modalId)} class="modal z-6000">
-  <div class="modal-box max-h-[85vh]">
+  <div class="modal-box max-h-[85vh] border border-base-200">
     <!-- <div class="modal-action"> -->
     <form method="dialog">
       <button
@@ -32,7 +32,7 @@
     <!-- </div> -->
 
     {#if title}
-      <h3 class="font-bold text-lg mb-1">{title}</h3>
+      <p class="mb-1 font-semibold">{title}</p>
     {/if}
 
     <div class="overflow-y-scroll">
