@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Mon May 26, 2025
+  - (5.26.01) - Fixed button inline.
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
   - (5.25.02) - Added create form validation util.

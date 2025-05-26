@@ -276,14 +276,6 @@
       }
     }
   }
-
-  function toggleDropdown(): void {
-    open = true;
-    setTimeout(() => {
-      triggerButtonElement?.focus();
-      triggerButtonElement?.select();
-    }, 0);
-  }
 </script>
 
 <svelte:window onclick={handleClickOutside} />

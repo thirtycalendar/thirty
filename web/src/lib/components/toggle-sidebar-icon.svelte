@@ -8,7 +8,7 @@
 
 {#if !mainSidebarOpen}
   <button
-    class="hidden lg:block btn btn-ghost btn-square"
+    class="hidden lg:flex btn btn-ghost btn-square"
     onclick={() => toggleSidebar(mainSidebarId)}
   >
     <PanelLeft size="20px" />
