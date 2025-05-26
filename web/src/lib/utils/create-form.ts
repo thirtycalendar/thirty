@@ -122,6 +122,8 @@ export const createForm = <T>({
         } finally {
           isSubmitting.set(false);
         }
+      } else {
+        console.log("Form validation failed");
       }
     };
   }

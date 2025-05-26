@@ -10,8 +10,9 @@
 
 - Mon May 26, 2025
   - (5.26.01) - Fixed button inline.
-  - (5.25.02) - Added input field. Added event title.
-  - (5.25.03) - Testing form.
+  - (5.26.02) - Added input field. Added event title.
+  - (5.26.03) - Testing form.
+  - (5.26.04) - Added auth page.
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
   - (5.25.02) - Added create form validation util.
