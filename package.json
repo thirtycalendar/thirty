@@ -1,0 +1,16 @@
+{
+  "name": "calen",
+  "private": true,
+  "workspaces": [
+    "web",
+    "api"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n WEB,API -c blue,green \"npm run dev --workspace calen-web\" \"npm run start --workspace calen-api\"",
+    "web:deploy": "npm run deploy --workspace calen-web",
+    "api:deploy": "npm run deploy --workspace calen-api"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

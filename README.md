@@ -17,6 +17,7 @@
   - (5.26.06) - Created my own custom query utils.
   - (5.26.07) - Updated query functions. Trying to link with backend.
   - (5.26.08) - Auth is working now.
+  - (5.25.09) - Used mini workspace project style for better dev.
 - Sun May 25, 2025
   - (5.25.01) - Updated time input component.
   - (5.25.02) - Added create form validation util.
