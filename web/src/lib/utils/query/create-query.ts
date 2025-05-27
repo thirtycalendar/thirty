@@ -32,6 +32,7 @@ export function createQuery<ErrorType = unknown, ReturnType = unknown>(
       error.set(null);
       isSuccess.set(true);
       onSuccess?.(result);
+      // biome-ignore lint:
     } catch (err: any) {
       error.set(err);
       isError.set(true);
@@ -41,7 +42,12 @@ export function createQuery<ErrorType = unknown, ReturnType = unknown>(
     }
   }
 
-  queryKeys?.forEach((key) => registerQuery(key, fetchData));
+  if (queryKeys) {
+    for (const key of queryKeys) {
+      registerQuery(key, fetchData);
+    }
+  }
+
   fetchData();
 
   return { data, error, isPending, isSuccess, isError };

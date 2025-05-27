@@ -7,7 +7,7 @@ export function registerQuery(key: QueryKey, refetchFn: RefetchFn) {
   if (!queryRegistry.has(key)) {
     queryRegistry.set(key, new Set());
   }
-  queryRegistry.get(key)!.add(refetchFn);
+  queryRegistry.get(key)?.add(refetchFn);
 }
 
 export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
@@ -15,7 +15,14 @@ export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
 }
 
 export function refetchQueries(keys?: QueryKey[]) {
-  keys?.forEach((key) => {
-    queryRegistry.get(key)?.forEach((fn) => fn());
-  });
+  if (!keys) return;
+
+  for (const key of keys) {
+    const fns = queryRegistry.get(key);
+    if (fns) {
+      for (const fn of fns) {
+        fn();
+      }
+    }
+  }
 }

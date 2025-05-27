@@ -5,6 +5,7 @@ import { refetchQueries } from "./query-client";
 type CreateMutationOptions<
   ErrorType,
   ReturnType,
+  // biome-ignore lint:
   Fn extends (...args: any) => Promise<ReturnType>
 > = {
   mutationFn: Fn;
@@ -17,6 +18,7 @@ type CreateMutationOptions<
 export function createMutation<
   ErrorType = unknown,
   ReturnType = unknown,
+  // biome-ignore lint:
   Fn extends (...args: any) => Promise<ReturnType> = (...args: any) => Promise<ReturnType>
 >(opts: CreateMutationOptions<ErrorType, ReturnType, Fn>) {
   const { mutationFn, queryKeys, onPending, onSuccess, onError } = opts;
@@ -40,6 +42,7 @@ export function createMutation<
       error.set(null);
       onSuccess?.(result);
       refetchQueries(queryKeys);
+      // biome-ignore lint:
     } catch (err: any) {
       error.set(err);
       isError.set(true);
