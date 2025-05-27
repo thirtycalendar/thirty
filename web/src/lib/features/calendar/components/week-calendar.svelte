@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
   import { derived } from "svelte/store";
 
   import {
@@ -10,7 +11,6 @@
     startOfDay,
     startOfWeek
   } from "date-fns";
-  import { onDestroy, onMount } from "svelte";
 
   import { currentDate } from "$lib/stores/change-date";
 

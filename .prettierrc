@@ -5,18 +5,22 @@
   "printWidth": 100,
   "plugins": ["prettier-plugin-svelte", "@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
-    "^(svelte|@sveltejs)/",
+    "^svelte",
+    "^@sveltejs/",
     "^\\$app/",
 
     "",
 
     "^@lucide/",
-    "^@zod/",
+    "^@zod",
     "^hono",
     "^drizzle-orm",
-    "^@better-auth/",
-    "^@polar-sh/",
-    "^@resend/",
+    "^@better-auth",
+    "^@polar-sh",
+    "^@resend",
+
+    "",
+
     "<THIRD_PARTY_MODULES>",
 
     "",
