@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
   import { slide } from "svelte/transition";
+
+  import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
   const calendars = [
     { name: "Sithu Khant", color: "text-blue-400" },

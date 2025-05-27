@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
   import { derived } from "svelte/store";
 
   import {
-    startOfWeek,
     addDays,
-    format,
-    setHours,
-    isToday,
     differenceInMinutes,
-    startOfDay
+    format,
+    isToday,
+    setHours,
+    startOfDay,
+    startOfWeek
   } from "date-fns";
+  import { onDestroy, onMount } from "svelte";
+
   import { currentDate } from "$lib/stores/change-date";
 
   const days = derived(currentDate, ($currentDate) => {

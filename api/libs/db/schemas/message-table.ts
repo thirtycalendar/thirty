@@ -1,7 +1,7 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
-import { timestamps, userSystemEnum } from "./utils";
 import { chats } from "./chat-table";
+import { timestamps, userSystemEnum } from "./utils";
 
 export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),

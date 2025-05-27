@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 
+  import { calView } from "$lib/stores/cal-view";
   import {
     goToNextDay,
     goToNextMonth,
@@ -12,7 +13,6 @@
     goToPreviousYear,
     goToToday
   } from "$lib/stores/change-date";
-  import { calView } from "$lib/stores/cal-view";
 
   const navHandlers = {
     year: {

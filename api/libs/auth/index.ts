@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
+import { db } from "../db";
+import { account, session, user, verification } from "../db/schemas/auth-table";
 import {
   FRONTEND_URL,
   GOOGLE_CLIENT_DEV_ID,
@@ -9,8 +11,6 @@ import {
   GOOGLE_CLIENT_PROD_SECRET,
   NODE_ENV
 } from "../env";
-import { db } from "../db";
-import { account, session, user, verification } from "../db/schemas/auth-table";
 
 const isProd = NODE_ENV === "production";
 

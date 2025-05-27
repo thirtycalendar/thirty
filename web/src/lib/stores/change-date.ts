@@ -1,12 +1,13 @@
 import { writable } from "svelte/store";
+
 import {
   addDays,
-  addWeeks,
-  subDays,
-  subWeeks,
   addMonths,
-  subMonths,
+  addWeeks,
   addYears,
+  subDays,
+  subMonths,
+  subWeeks,
   subYears
 } from "date-fns";
 

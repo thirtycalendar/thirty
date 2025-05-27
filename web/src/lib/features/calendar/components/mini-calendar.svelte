@@ -1,15 +1,16 @@
 <script lang="ts">
   import { derived } from "svelte/store";
+
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
   import {
-    startOfMonth,
-    endOfMonth,
-    startOfWeek,
-    endOfWeek,
     addDays,
-    isToday,
+    endOfMonth,
+    endOfWeek,
     format,
-    isSameMonth
+    isSameMonth,
+    isToday,
+    startOfMonth,
+    startOfWeek
   } from "date-fns";
 
   import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/stores/change-date";

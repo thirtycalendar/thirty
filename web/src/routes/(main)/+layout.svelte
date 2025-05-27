@@ -1,10 +1,10 @@
 <script lang="ts">
   import { page } from "$app/state";
 
-  import { Sidebar, SidebarMenu } from "$lib/components";
   import { CalSidebar } from "$lib/features/calendar/components";
   import { SettingsSidebar } from "$lib/features/settings/components";
   import { mainSidebarId, sidebars } from "$lib/stores/sidebar";
+  import { Sidebar, SidebarMenu } from "$lib/components";
 
   let { children } = $props();
 

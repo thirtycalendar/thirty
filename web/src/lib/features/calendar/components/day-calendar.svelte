@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { onMount, onDestroy, tick } from "svelte";
-  import { format, setHours, isToday, differenceInMinutes, startOfDay } from "date-fns";
+  import { differenceInMinutes, format, isToday, setHours, startOfDay } from "date-fns";
+  import { onDestroy, onMount, tick } from "svelte";
+
   import { currentDate } from "$lib/stores/change-date";
 
   let date = $currentDate;

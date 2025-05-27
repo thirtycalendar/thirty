@@ -1,18 +1,19 @@
 <script lang="ts">
   import { derived } from "svelte/store";
+
   import {
-    startOfMonth,
-    endOfMonth,
-    startOfWeek,
-    endOfWeek,
     addDays,
-    isToday,
+    endOfMonth,
+    endOfWeek,
     format,
-    isSameMonth
+    isSameMonth,
+    isToday,
+    startOfMonth,
+    startOfWeek
   } from "date-fns";
 
-  import { currentDate } from "$lib/stores/change-date";
   import { changeToDayView } from "$lib/stores/cal-view";
+  import { currentDate } from "$lib/stores/change-date";
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));

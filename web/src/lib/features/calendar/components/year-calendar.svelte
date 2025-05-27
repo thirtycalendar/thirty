@@ -1,17 +1,19 @@
 <script lang="ts">
   import { derived } from "svelte/store";
+
   import {
-    startOfMonth,
-    endOfMonth,
-    startOfWeek,
-    endOfWeek,
     addDays,
+    endOfMonth,
+    endOfWeek,
     format,
     isSameMonth,
-    isToday
+    isToday,
+    startOfMonth,
+    startOfWeek
   } from "date-fns";
-  import { currentDate } from "$lib/stores/change-date";
+
   import { changeToDayView } from "$lib/stores/cal-view";
+  import { currentDate } from "$lib/stores/change-date";
 
   const months = derived(currentDate, ($currentDate) => {
     const year = $currentDate.getFullYear();

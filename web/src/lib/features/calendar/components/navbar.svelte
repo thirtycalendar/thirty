@@ -1,13 +1,12 @@
 <script lang="ts">
   import { MessageSquare } from "@lucide/svelte";
+  import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
 
   import { calView } from "$lib/stores/cal-view";
-  import { chatSidebarId, toggleSidebar } from "$lib/stores/sidebar";
   import { currentDate } from "$lib/stores/change-date";
   import { isHideChatIcon } from "$lib/stores/responsive";
+  import { chatSidebarId, toggleSidebar } from "$lib/stores/sidebar";
   import { ToggleSidebarIcon } from "$lib/components";
-
-  import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
 
   const month = $derived(new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate));
   const year = $derived(new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate));

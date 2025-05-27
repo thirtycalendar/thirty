@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Modal } from "$lib/components";
-  import { taskModalId } from "$lib/stores/task";
-
   import { CreateTask } from ".";
+
+  import { taskModalId } from "$lib/stores/task";
+  import { Modal } from "$lib/components";
 </script>
 
 <Modal modalId={taskModalId}><CreateTask /></Modal>

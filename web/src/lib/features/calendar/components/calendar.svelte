@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { calView } from "$lib/stores/cal-view";
-
   import { DayCalendar, EventModal, MonthCalendar, TaskModal, WeekCalendar, YearCalendar } from ".";
+
+  import { calView } from "$lib/stores/cal-view";
 </script>
 
 <EventModal />
