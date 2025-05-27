@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   import { Sidebar, SidebarMenu } from "$lib/components";
   import { CalSidebar } from "$lib/features/calendar/components";
@@ -11,7 +11,7 @@
   let pathSegment = $derived("");
 
   $effect(() => {
-    pathSegment = $page.url.pathname.split("/").filter(Boolean)[0];
+    pathSegment = page.url.pathname.split("/").filter(Boolean)[0];
   });
 </script>
 
