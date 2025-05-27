@@ -16,6 +16,7 @@
   - (5.27.05) - Better prettier config file. Auto sort importing.
   - (5.27.06) - Committed for safety.
   - (5.27.07) - Removed eslint again.
+  - (5.27.08) - Added biomejs and linted some files.
 - Mon May 26, 2025
   - (5.26.01) - Fixed button inline.
   - (5.26.02) - Added input field. Added event title.

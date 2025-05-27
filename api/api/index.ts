@@ -4,7 +4,7 @@ import { handle } from "hono/vercel";
 
 import { auth } from "../libs/auth";
 import { FRONTEND_URL } from "../libs/env";
-import { Context } from "./context";
+import type { Context } from "./context";
 
 export const config = {
   runtime: "edge"

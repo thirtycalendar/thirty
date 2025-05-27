@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 @plugin "daisyui" {
+  /* biome-ignore lint: */
   themes:
     ai-light --default,
     ai-dark --prefersdark;
 }
 
 @plugin "daisyui/theme" {
+  /* biome-ignore lint: */
   name: "ai-dark";
+  /* biome-ignore lint: */
   default: false;
+  /* biome-ignore lint: */
   prefersdark: true;
   color-scheme: "ai-dark";
 
@@ -52,8 +56,11 @@
 }
 
 @plugin "daisyui/theme" {
+  /* biome-ignore lint: */
   name: "ai-light";
+  /* biome-ignore lint: */
   default: true;
+  /* biome-ignore lint: */
   prefersdark: false;
   color-scheme: "ai-light";
 
