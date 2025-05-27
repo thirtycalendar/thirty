@@ -5,7 +5,7 @@ import { refetchQueries } from "./query-client";
 type CreateMutationOptions<
   ErrorType,
   ReturnType,
-  Fn extends (...args: any) => Promise<ReturnType>,
+  Fn extends (...args: any) => Promise<ReturnType>
 > = {
   mutationFn: Fn;
   queryKeys?: string[];
@@ -17,9 +17,7 @@ type CreateMutationOptions<
 export function createMutation<
   ErrorType = unknown,
   ReturnType = unknown,
-  Fn extends (...args: any) => Promise<ReturnType> = (
-    ...args: any
-  ) => Promise<ReturnType>,
+  Fn extends (...args: any) => Promise<ReturnType> = (...args: any) => Promise<ReturnType>
 >(opts: CreateMutationOptions<ErrorType, ReturnType, Fn>) {
   const { mutationFn, queryKeys, onPending, onSuccess, onError } = opts;
 

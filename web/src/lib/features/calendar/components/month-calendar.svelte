@@ -8,7 +8,7 @@
     addDays,
     isToday,
     format,
-    isSameMonth,
+    isSameMonth
   } from "date-fns";
 
   import { currentDate } from "$lib/stores/change-date";
@@ -39,9 +39,7 @@
   </div>
 
   <!-- Month Grid -->
-  <div
-    class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full relative"
-  >
+  <div class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full relative">
     {#each $days as day}
       <button
         class="border border-base-200 px-2 py-1 relative hover:bg-base-300/10 transition-colors"
@@ -66,9 +64,7 @@
         </div>
 
         <!-- Event slot -->
-        <div
-          class="absolute inset-x-1 top-6 space-y-1 text-[10px] leading-tight"
-        >
+        <div class="absolute inset-x-1 top-6 space-y-1 text-[10px] leading-tight">
           <!-- Inject events here -->
         </div>
       </button>

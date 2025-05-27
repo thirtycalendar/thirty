@@ -9,7 +9,7 @@
     setHours,
     isToday,
     differenceInMinutes,
-    startOfDay,
+    startOfDay
   } from "date-fns";
   import { currentDate } from "$lib/stores/change-date";
 
@@ -50,17 +50,11 @@
 
 <div class="flex flex-col h-full py-3">
   <!-- Day Headers -->
-  <div
-    class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10"
-  >
+  <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
     <div></div>
     {#each $days as day}
-      <div
-        class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative"
-      >
-        <div
-          class={`font-semibold ${isToday(day) ? "text-secondary-content" : ""}`}
-        >
+      <div class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative">
+        <div class={`font-semibold ${isToday(day) ? "text-secondary-content" : ""}`}>
           <p>
             {format(day, "EEE")}
             <span class="block sm:inline mb-2 sm:mb-0">{format(day, "d")}</span>

@@ -13,14 +13,13 @@
     timeTo: "",
     location: "",
     description: "",
-    notifyIn: "",
+    notifyIn: ""
   };
 
-  let { formData, formErrors, isSubmitting, handleInput, handleSubmit } =
-    createForm({
-      schema: eventSchema,
-      defaultValues,
-    });
+  let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
+    schema: eventSchema,
+    defaultValues
+  });
 
   function onSubmit() {
     console.log("Submitted...");
@@ -29,19 +28,9 @@
 </script>
 
 <form onsubmit={handleSubmit(onSubmit)}>
-  <InputField
-    name="name"
-    placeholder="Name"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
+  <InputField name="name" placeholder="Name" {handleInput} {formData} {formErrors} />
 
-  <button
-    type="submit"
-    class="btn bg-base-200 font-bold flex-grow"
-    disabled={$isSubmitting}
-  >
+  <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save
   </button>
 </form>

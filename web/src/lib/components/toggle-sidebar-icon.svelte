@@ -15,9 +15,6 @@
   </button>
 {/if}
 
-<button
-  class="lg:hidden btn btn-ghost btn-square"
-  onclick={() => toggleSidebar(mainSidebarId)}
->
+<button class="lg:hidden btn btn-ghost btn-square" onclick={() => toggleSidebar(mainSidebarId)}>
   <PanelLeft size="20px" />
 </button>

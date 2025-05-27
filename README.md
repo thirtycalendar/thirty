@@ -12,6 +12,7 @@
   - (5.27.01) - Removed package files from web and api.
   - (5.27.02) - Updated.
   - (5.27.03) - Coding settings page. But bored.
+  - (5.27.04) - Added prettier.
 - Mon May 26, 2025
   - (5.26.01) - Fixed button inline.
   - (5.26.02) - Added input field. Added event title.

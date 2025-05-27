@@ -1,11 +1,7 @@
 <script lang="ts">
   import { ChevronDown } from "@lucide/svelte";
 
-  import {
-    calView,
-    handleCalViewChange,
-    type CalView,
-  } from "$lib/stores/cal-view";
+  import { calView, handleCalViewChange, type CalView } from "$lib/stores/cal-view";
 
   let views: CalView[] = ["year", "month", "week", "day"];
 </script>
@@ -26,16 +22,11 @@
 </div>
 
 <div class="lg:hidden dropdown dropdown-end">
-  <button
-    tabindex="0"
-    class="btn btn-sm sm:btn-md btn-secondary flex items-center"
-  >
+  <button tabindex="0" class="btn btn-sm sm:btn-md btn-secondary flex items-center">
     {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
     <ChevronDown size="16" />
   </button>
-  <ul
-    class="dropdown-content menu bg-base-100 rounded-box z-1 w-auto mt-1 border border-base-200"
-  >
+  <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-auto mt-1 border border-base-200">
     {#each views as view}
       <input
         type="radio"

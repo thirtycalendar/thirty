@@ -9,9 +9,7 @@ if (browser) {
   const stored = localStorage.getItem("cal-view") as CalView | null;
 
   const validViews: CalView[] = ["month", "week", "day", "year"];
-  const initialView = validViews.includes(stored as CalView)
-    ? (stored as CalView)
-    : "week";
+  const initialView = validViews.includes(stored as CalView) ? (stored as CalView) : "week";
 
   calView.set(initialView);
 }

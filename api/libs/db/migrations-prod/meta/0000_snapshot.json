@@ -105,12 +105,8 @@
           "name": "messages_chat_id_chats_id_fk",
           "tableFrom": "messages",
           "tableTo": "chats",
-          "columnsFrom": [
-            "chat_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["chat_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -126,10 +122,7 @@
     "public.user_system_enum": {
       "name": "user_system_enum",
       "schema": "public",
-      "values": [
-        "system",
-        "user"
-      ]
+      "values": ["system", "user"]
     }
   },
   "schemas": {},

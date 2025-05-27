@@ -9,7 +9,7 @@
     isSameHour,
     isSameMinute,
     parse as parseDateFns,
-    isValid as isValidDate,
+    isValid as isValidDate
   } from "date-fns";
 
   let value = $state(new Date());
@@ -49,7 +49,7 @@
         const timeString = formatDateFns(slot, "h:mm aa").toLowerCase();
         return timeString.includes(lowercaseFilter);
       });
-    })(),
+    })()
   );
 
   $effect(() => {
@@ -62,23 +62,19 @@
     if (open && timeSlotsDropdown) {
       setTimeout(() => {
         if (!timeSlotsDropdown) return;
-        const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>(
-          `[data-selected="true"]`,
-        );
+        const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>(`[data-selected="true"]`);
         if (selectedItem) {
           selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
         } else {
           const currentHour = value.getHours();
           const currentMinute = value.getMinutes();
           let bestMatchIndex = -1;
-          const slots: Date[] =
-            filteredTimeSlots.length > 0 ? filteredTimeSlots : allTimeSlots;
+          const slots: Date[] = filteredTimeSlots.length > 0 ? filteredTimeSlots : allTimeSlots;
           for (let i = 0; i < slots.length; i++) {
             const slot = slots[i];
             if (
               slot.getHours() > currentHour ||
-              (slot.getHours() === currentHour &&
-                slot.getMinutes() >= currentMinute)
+              (slot.getHours() === currentHour && slot.getMinutes() >= currentMinute)
             ) {
               bestMatchIndex = i;
               break;
@@ -87,16 +83,11 @@
           if (bestMatchIndex === -1 && slots.length > 0) {
             bestMatchIndex = slots.length - 1;
           }
-          if (
-            bestMatchIndex !== -1 &&
-            timeSlotsDropdown.children.length > bestMatchIndex
-          ) {
-            const itemToScroll = timeSlotsDropdown.children[
-              bestMatchIndex
-            ] as HTMLElement;
+          if (bestMatchIndex !== -1 && timeSlotsDropdown.children.length > bestMatchIndex) {
+            const itemToScroll = timeSlotsDropdown.children[bestMatchIndex] as HTMLElement;
             itemToScroll?.scrollIntoView({
               block: "nearest",
-              behavior: "smooth",
+              behavior: "smooth"
             });
           }
         }
@@ -118,16 +109,7 @@
   }
 
   function tryAutoDetectTime(): boolean {
-    const formatsToTry = [
-      "h:mm aa",
-      "HH:mm",
-      "h:m aa",
-      "H:m",
-      "ha",
-      "Ha",
-      "h a",
-      "H",
-    ];
+    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
     for (const fmt of formatsToTry) {
       try {
         const parsed = parseDateFns(filterText, fmt, value);
@@ -141,16 +123,7 @@
   }
 
   function parseAndSetTime(): void {
-    const formatsToTry = [
-      "h:mm aa",
-      "HH:mm",
-      "h:m aa",
-      "H:m",
-      "ha",
-      "Ha",
-      "h a",
-      "H",
-    ];
+    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
     let parsedDateSuccessfully = false;
     for (const fmt of formatsToTry) {
       try {
@@ -178,9 +151,7 @@
     }
     open = true;
     setTimeout(() => {
-      const selectedItem = timeSlotsDropdown?.querySelector<HTMLElement>(
-        '[data-selected="true"]',
-      );
+      const selectedItem = timeSlotsDropdown?.querySelector<HTMLElement>('[data-selected="true"]');
       selectedItem?.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }, 10);
   }
@@ -189,10 +160,7 @@
     setTimeout(() => {
       const activeEl = document.activeElement;
       if (triggerButtonElement && timeSlotsDropdown) {
-        if (
-          activeEl !== triggerButtonElement &&
-          !timeSlotsDropdown.contains(activeEl)
-        ) {
+        if (activeEl !== triggerButtonElement && !timeSlotsDropdown.contains(activeEl)) {
           if (open) {
             parseAndSetTime();
             open = false;
@@ -245,8 +213,7 @@
       selectTime(slot);
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
-      const nextSibling = (event.target as HTMLElement)
-        .nextElementSibling as HTMLElement | null;
+      const nextSibling = (event.target as HTMLElement).nextElementSibling as HTMLElement | null;
       nextSibling?.focus();
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -267,10 +234,7 @@
   function handleClickOutside(event: MouseEvent): void {
     if (open && timeSlotsDropdown && triggerButtonElement) {
       const target = event.target as Node;
-      if (
-        !timeSlotsDropdown.contains(target) &&
-        !triggerButtonElement.contains(target)
-      ) {
+      if (!timeSlotsDropdown.contains(target) && !triggerButtonElement.contains(target)) {
         parseAndSetTime();
         open = false;
       }

@@ -7,7 +7,7 @@ import { FRONTEND_URL } from "../libs/env";
 import { Context } from "./context";
 
 export const config = {
-  runtime: "edge",
+  runtime: "edge"
 };
 
 const app = new Hono<Context>().basePath("/api");
@@ -20,8 +20,8 @@ app.use(
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
     maxAge: 600,
-    credentials: true,
-  }),
+    credentials: true
+  })
 );
 
 app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));

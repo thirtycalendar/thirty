@@ -9,12 +9,8 @@
 
   import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
 
-  const month = $derived(
-    new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate),
-  );
-  const year = $derived(
-    new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate),
-  );
+  const month = $derived(new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate));
+  const year = $derived(new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate));
 </script>
 
 <div class="flex justify-between items-center">
@@ -40,10 +36,7 @@
     <ChangeCalViewButtons />
 
     {#if $isHideChatIcon}
-      <button
-        class="btn btn-ghost btn-square"
-        onclick={() => toggleSidebar(chatSidebarId)}
-      >
+      <button class="btn btn-ghost btn-square" onclick={() => toggleSidebar(chatSidebarId)}>
         <MessageSquare size="20px" />
       </button>
     {/if}

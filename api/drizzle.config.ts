@@ -9,8 +9,8 @@ export default defineConfig({
   schema: "./libs/db/schemas/*",
   dialect: "postgresql",
   dbCredentials: {
-    url: isProd ? process.env.DB_URL_PROD! : process.env.DB_URL_DEV!,
+    url: isProd ? process.env.DB_URL_PROD! : process.env.DB_URL_DEV!
   },
   verbose: true,
-  strict: true,
+  strict: true
 });

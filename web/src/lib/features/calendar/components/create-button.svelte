@@ -34,9 +34,7 @@
   </ul>
 </div>
 
-<div
-  class="z-100 absolute sm:hidden right-8 bottom-8 dropdown dropdown-top dropdown-end"
->
+<div class="z-100 absolute sm:hidden right-8 bottom-8 dropdown dropdown-top dropdown-end">
   <button tabindex="0" class="btn btn-md bg-base-200 border border-base-300">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>

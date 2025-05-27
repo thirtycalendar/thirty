@@ -10,33 +10,28 @@
   }
 
   const { data, error, isPending } = createQuery<{}, User[]>({
-    queryFn: () =>
-      fetch("https://jsonplaceholder.typicode.com/posts").then((res) =>
-        res.json(),
-      ),
+    queryFn: () => fetch("https://jsonplaceholder.typicode.com/posts").then((res) => res.json()),
     queryKeys: ["posts"],
-    onSuccess: () => console.log("Posts loaded"),
+    onSuccess: () => console.log("Posts loaded")
   });
 
-  const { mutate, isPending: mutationPending } = createMutation<{}, User, User>(
-    {
-      mutationFn: (data) =>
-        fetch("https://jsonplaceholder.typicode.com/posts", {
-          method: "PUT",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        }).then((r) => r.json()),
-      queryKeys: ["posts"],
-      onSuccess: (d) => console.log("Post updated", d),
-    },
-  );
+  const { mutate, isPending: mutationPending } = createMutation<{}, User, User>({
+    mutationFn: (data) =>
+      fetch("https://jsonplaceholder.typicode.com/posts", {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      }).then((r) => r.json()),
+    queryKeys: ["posts"],
+    onSuccess: (d) => console.log("Post updated", d)
+  });
 
   function onclick() {
     mutate({
       userId: 1,
       id: 1,
       title: "New Title",
-      body: "New Body Content",
+      body: "New Body Content"
     });
   }
 </script>

@@ -26,7 +26,7 @@
     disabled,
     formData,
     formErrors,
-    handleInput,
+    handleInput
   }: InputFieldProps = $props();
 
   let error = $derived($formErrors[name]);
@@ -41,11 +41,7 @@
   <input
     {type}
     {name}
-    class={cn(
-      "input w-full focus:outline-none",
-      error ? "input-error" : "",
-      className,
-    )}
+    class={cn("input w-full focus:outline-none", error ? "input-error" : "", className)}
     oninput={handleInput}
     {value}
     {placeholder}

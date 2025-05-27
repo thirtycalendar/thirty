@@ -18,11 +18,7 @@
 
 <div class="max-h-screen overflow-y-scroll">
   <div class="relative h-screen overflow-hidden">
-    <Sidebar
-      sidebarId={mainSidebarId}
-      className="w-[260px] left-0 absolute z-200"
-      mainSidebar
-    >
+    <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0 absolute z-200" mainSidebar>
       <SidebarMenu />
 
       {#if pathSegment === "calendar"}

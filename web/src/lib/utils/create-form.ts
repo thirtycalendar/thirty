@@ -11,15 +11,13 @@ type CreateFormReturn<T> = {
   formErrors: Writable<Partial<Record<keyof T, string>>>;
   isSubmitting: Writable<boolean>;
   handleInput: (event: Event) => void;
-  handleSubmit: (
-    callback: (data: T) => Promise<void> | void,
-  ) => (event: Event) => void;
+  handleSubmit: (callback: (data: T) => Promise<void> | void) => (event: Event) => void;
   setDisabledFields: (fields: (keyof T)[]) => void;
 };
 
 export const createForm = <T>({
   schema,
-  defaultValues,
+  defaultValues
 }: CreateFormParams<T>): CreateFormReturn<T> => {
   const formData = writable<T>({ ...defaultValues });
   const formErrors = writable<Partial<Record<keyof T, string>>>({});
@@ -41,13 +39,10 @@ export const createForm = <T>({
     const result = schema.safeParse({ ...get(formData), [field]: value });
 
     if (!result.success) {
-      const fieldErrors = result.error.formErrors.fieldErrors as Record<
-        keyof T,
-        string[]
-      >;
+      const fieldErrors = result.error.formErrors.fieldErrors as Record<keyof T, string[]>;
       formErrors.update((e) => ({
         ...e,
-        [field]: fieldErrors[field]?.[0] || "",
+        [field]: fieldErrors[field]?.[0] || ""
       }));
     } else {
       formErrors.update((e) => ({ ...e, [field]: "" }));
@@ -59,17 +54,14 @@ export const createForm = <T>({
     const result = schema.safeParse(data);
 
     if (!result.success) {
-      const fieldErrors = result.error.formErrors.fieldErrors as Record<
-        keyof T,
-        string[]
-      >;
+      const fieldErrors = result.error.formErrors.fieldErrors as Record<keyof T, string[]>;
 
       formErrors.set(
         Object.fromEntries(
           Object.entries(fieldErrors)
             .filter(([key]) => !disabled.has(key as keyof T))
-            .map(([key, value]) => [key, (value as string[])[0]]),
-        ) as Partial<Record<keyof T, string>>,
+            .map(([key, value]) => [key, (value as string[])[0]])
+        ) as Partial<Record<keyof T, string>>
       );
 
       // Check if there are any remaining errors after filtering out disabled fields
@@ -134,6 +126,6 @@ export const createForm = <T>({
     isSubmitting,
     handleInput,
     handleSubmit,
-    setDisabledFields,
+    setDisabledFields
   };
 };

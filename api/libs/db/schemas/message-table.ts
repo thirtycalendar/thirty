@@ -11,5 +11,5 @@ export const messages = pgTable("messages", {
   content: text("content").notNull(),
   role: userSystemEnum("role").notNull(),
 
-  ...timestamps,
+  ...timestamps
 });

@@ -9,14 +9,10 @@
     addDays,
     isToday,
     format,
-    isSameMonth,
+    isSameMonth
   } from "date-fns";
 
-  import {
-    currentDate,
-    goToNextMonth,
-    goToPreviousMonth,
-  } from "$lib/stores/change-date";
+  import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/stores/change-date";
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -37,10 +33,7 @@
     <p>{format($currentDate, "MMMM yyyy")}</p>
 
     <div>
-      <button
-        class="btn btn-xs btn-square btn-ghost"
-        onclick={goToPreviousMonth}
-      >
+      <button class="btn btn-xs btn-square btn-ghost" onclick={goToPreviousMonth}>
         <ChevronLeft size="18" />
       </button>
 

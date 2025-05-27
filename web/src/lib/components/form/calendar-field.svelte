@@ -11,7 +11,7 @@
     subMonths,
     isToday,
     isSameDay,
-    isSameMonth,
+    isSameMonth
   } from "date-fns";
 
   let value: Date = $state(new Date());
@@ -34,7 +34,7 @@
   function selectDay(day: Date) {
     value = day;
     open = false;
-    
+
     // Return focus to the button after selection
     setTimeout(() => {
       if (triggerButton) {
@@ -53,13 +53,10 @@
 
   function handleClickOutside(event: MouseEvent): void {
     if (!open) return;
-    
+
     if (calendarDropdown && triggerButton) {
       const target = event.target as Node;
-      if (
-        !calendarDropdown.contains(target) &&
-        !triggerButton.contains(target)
-      ) {
+      if (!calendarDropdown.contains(target) && !triggerButton.contains(target)) {
         open = false;
       }
     }
@@ -109,7 +106,7 @@
     type="button"
     bind:this={triggerButton}
     class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left"
-    onclick={() => open = true}
+    onclick={() => (open = true)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
         e.preventDefault();
@@ -128,9 +125,7 @@
       class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
       <!-- Month Navigation -->
-      <div
-        class="flex items-center justify-between px-2 mb-2 text-sm font-semibold"
-      >
+      <div class="flex items-center justify-between px-2 mb-2 text-sm font-semibold">
         <div class=" w-full">
           {format(value, "MMMM yyyy")}
         </div>

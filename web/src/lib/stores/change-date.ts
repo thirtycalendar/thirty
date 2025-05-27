@@ -7,7 +7,7 @@ import {
   addMonths,
   subMonths,
   addYears,
-  subYears,
+  subYears
 } from "date-fns";
 
 export const currentDate = writable(new Date());
@@ -20,8 +20,7 @@ export const goToPreviousYear = () => currentDate.update((d) => subYears(d, 1));
 
 // Month
 export const goToNextMonth = () => currentDate.update((d) => addMonths(d, 1));
-export const goToPreviousMonth = () =>
-  currentDate.update((d) => subMonths(d, 1));
+export const goToPreviousMonth = () => currentDate.update((d) => subMonths(d, 1));
 
 // Week
 export const goToNextWeek = () => currentDate.update((d) => addWeeks(d, 1));

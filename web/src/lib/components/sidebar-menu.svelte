@@ -1,11 +1,6 @@
 <script lang="ts">
   import { mainSidebarId, toggleSidebar } from "$lib/stores/sidebar";
-  import {
-    Calendar,
-    MessagesSquareIcon,
-    PanelLeft,
-    Settings,
-  } from "@lucide/svelte";
+  import { Calendar, MessagesSquareIcon, PanelLeft, Settings } from "@lucide/svelte";
 </script>
 
 <div class="flex items-center justify-between mb-2">
@@ -31,10 +26,7 @@
 
   <div>
     <div class="tooltip tooltip-bottom" data-tip="Hide">
-      <button
-        class="btn btn-square btn-ghost"
-        onclick={() => toggleSidebar(mainSidebarId)}
-      >
+      <button class="btn btn-square btn-ghost" onclick={() => toggleSidebar(mainSidebarId)}>
         <PanelLeft size="20" />
       </button>
     </div>

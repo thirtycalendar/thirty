@@ -8,7 +8,7 @@
   async function googleAuth() {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: `${PUBLIC_BASE_URL}/calendar`,
+      callbackURL: `${PUBLIC_BASE_URL}/calendar`
     });
   }
 
@@ -16,7 +16,7 @@
     mutationFn: async (input: string) => {
       console.log("Output:", input);
       await googleAuth();
-    },
+    }
   });
 
   async function onclick() {
