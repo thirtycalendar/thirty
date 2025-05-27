@@ -3,6 +3,7 @@
 
   import { Sidebar, SidebarMenu } from "$lib/components";
   import { CalSidebar } from "$lib/features/calendar/components";
+  import { SettingsSidebar } from "$lib/features/settings/components";
   import { mainSidebarId, sidebars } from "$lib/stores/sidebar";
 
   let { children } = $props();
@@ -29,7 +30,7 @@
       {:else if pathSegment === "chat"}
         <p>Chat sidebar</p>
       {:else if pathSegment === "settings"}
-        <p>Settings sidebar</p>
+        <SettingsSidebar />
       {/if}
     </Sidebar>
 
