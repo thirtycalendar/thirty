@@ -11,8 +11,8 @@
 
   const links = [
     { href: "general", icon: Settings2, label: "General" },
-    { href: "appearance", icon: SunMoon, label: "Appearance" },
     { href: "billing", icon: ReceiptText, label: "Billing" },
+    { href: "appearance", icon: SunMoon, label: "Appearance" },
     { href: "feedback", icon: MessageCircleMore, label: "Feedback" },
     { href: "delete-account", icon: TriangleAlert, label: "Delete Account" }
   ];
