@@ -1,16 +1,11 @@
 <script lang="ts">
   import { page } from "$app/state";
 
-  import {
-    MessageCircleMore,
-    ReceiptText,
-    Settings2,
-    SunMoon,
-    TriangleAlert
-  } from "@lucide/svelte";
+  import { MessageCircleMore, ReceiptText, SunMoon, TriangleAlert } from "@lucide/svelte";
+
+  import { UserProfile } from "$lib/features/auth/components";
 
   const links = [
-    { href: "general", icon: Settings2, label: "General" },
     { href: "billing", icon: ReceiptText, label: "Billing" },
     { href: "appearance", icon: SunMoon, label: "Appearance" },
     { href: "feedback", icon: MessageCircleMore, label: "Feedback" },
@@ -21,6 +16,8 @@
 </script>
 
 <div class="flex flex-col mt-5">
+  <UserProfile />
+
   {#each links as { href, icon: Icon, label }}
     <a
       href={`/settings/${href}`}
