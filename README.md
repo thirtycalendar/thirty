@@ -11,6 +11,7 @@
 - Wed May 28, 2025
   - (5.28.01) - Added settings sidebar.
   - (5.28.02) - Added settings pages.
+  - (5.28.03) - Highlight the active and redirect to general for settings.
 - Tue May 27, 2025
   - (5.27.01) - Removed package files from web and api.
   - (5.27.02) - Updated.
