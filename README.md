@@ -14,6 +14,7 @@
   - (5.28.03) - Highlight the active and redirect to general for settings.
   - (5.28.04) - Added navbar.
   - (5.28.05) - Added user profile.
+  - (5.28.06) - Used profile info from Google.
 - Tue May 27, 2025
   - (5.27.01) - Removed package files from web and api.
   - (5.27.02) - Updated.

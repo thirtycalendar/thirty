@@ -10,6 +10,7 @@
       <img
         class="rounded-lg w-10 border border-base-100"
         src={$session?.data?.user?.image}
+        referrerpolicy="no-referrer"
         alt="Img"
       />
     </div>
