@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { LogOut } from "@lucide/svelte";
-
+  import { LogoutButton } from "$lib/features/auth/components";
   import { ToggleSidebarIcon } from "$lib/components";
 
   interface NavbarProps {
@@ -8,8 +7,6 @@
   }
 
   let { title }: NavbarProps = $props();
-
-  function handleLogout() {}
 </script>
 
 <div class="flex items-center justify-between">
@@ -19,12 +16,6 @@
   </div>
 
   <div>
-    <button class="btn" onclick={handleLogout}>
-      <div class="sm:hidden tooltip tooltip-bottom" data-tip="Logout">
-        <LogOut size="18" />
-      </div>
-
-      <span class="hidden sm:flex">Logout</span>
-    </button>
+    <LogoutButton />
   </div>
 </div>

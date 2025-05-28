@@ -15,6 +15,7 @@
   - (5.28.04) - Added navbar.
   - (5.28.05) - Added user profile.
   - (5.28.06) - Used profile info from Google.
+  - (5.29.07) - Signout button.
 - Tue May 27, 2025
   - (5.27.01) - Removed package files from web and api.
   - (5.27.02) - Updated.
