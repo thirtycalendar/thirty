@@ -1,23 +1,39 @@
-import { redirect } from "@sveltejs/kit";
+import { get } from "svelte/store";
 
-import { authClient } from "./rpc";
+import { PUBLIC_API } from "$env/static/public";
+import type { Session, User } from "better-auth";
 
-export async function requireAuth() {
-  const session = await authClient.getSession();
+import type { SuccessResponse } from "$lib/types";
 
-  console.log(session);
+import { createQuery } from "./query/create-query";
 
-  if (!session) {
-    redirect(302, "/auth");
-  } else {
-    console.log("Didn't pass...");
-  }
+interface SuccessType {
+  session: Session;
+  user: User;
 }
 
-export async function redirectIfAuthenticated() {
-  const session = await authClient.getSession();
+export async function requireAuth() {
+  const { data } = createQuery<SuccessType>({
+    queryFn: async () => {
+      const res = await fetch(`${PUBLIC_API}/authorize/current`, {
+        method: "POST",
+        credentials: "include"
+      });
 
-  if (session?.data?.user) {
-    redirect(302, "/calendar");
-  }
+      if (!res.ok) {
+        console.error("Failed to authorize", res.status);
+        throw new Error("Unauthorized");
+      }
+
+      const json = (await res.json()) as SuccessResponse<SuccessType>;
+
+      return {
+        session: json.data.session,
+        user: json.data.user
+      };
+    }
+  });
+
+  const user = get(data)?.user;
+  console.log("data user", user);
 }

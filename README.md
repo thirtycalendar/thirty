@@ -18,6 +18,7 @@
   - (5.28.07) - Signout button.
   - (5.28.08) - Stored user session in the local storage.
   - (5.28.09) - Added custom authorize api route.
+  - (5.28.10) - Added auth helper linked with backend.
 - Tue May 27, 2025
   - (5.27.01) - Removed package files from web and api.
   - (5.27.02) - Updated.

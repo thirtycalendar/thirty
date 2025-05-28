@@ -16,8 +16,8 @@ type CreateMutationOptions<
 };
 
 export function createMutation<
-  ErrorType = unknown,
   ReturnType = unknown,
+  ErrorType = unknown,
   // biome-ignore lint:
   Fn extends (...args: any) => Promise<ReturnType> = (...args: any) => Promise<ReturnType>
 >(opts: CreateMutationOptions<ErrorType, ReturnType, Fn>) {

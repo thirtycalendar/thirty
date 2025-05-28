@@ -10,7 +10,7 @@ type CreateQueryOptions<ErrorType, ReturnType> = {
   onError?: (err: ErrorType) => void;
 };
 
-export function createQuery<ErrorType = unknown, ReturnType = unknown>(
+export function createQuery<ReturnType = unknown, ErrorType = unknown>(
   opts: CreateQueryOptions<ErrorType, ReturnType>
 ) {
   const { queryFn, queryKeys, onPending, onSuccess, onError } = opts;
