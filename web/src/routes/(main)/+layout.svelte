@@ -1,15 +1,21 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { page } from "$app/state";
 
   import { CalSidebar } from "$lib/features/calendar/components";
   import { SettingsSidebar } from "$lib/features/settings/components";
   import { mainSidebarId, sidebars } from "$lib/stores/sidebar";
+  import { initUserSession } from "$lib/stores/user-session";
   import { Sidebar, SidebarMenu } from "$lib/components";
 
   let { children } = $props();
 
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
   let pathSegment = $derived("");
+
+  onMount(async () => {
+    await initUserSession();
+  });
 
   $effect(() => {
     pathSegment = page.url.pathname.split("/").filter(Boolean)[0];
