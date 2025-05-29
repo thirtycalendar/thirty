@@ -5,38 +5,51 @@
   "printWidth": 100,
   "plugins": ["prettier-plugin-svelte", "@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
+    // Svelte core & official
     "^svelte",
-    "^@sveltejs/",
-    "^\\$app/",
+    "^@sveltejs",
+    "^\\$app",
 
     "",
 
-    "^@lucide/",
-    "^@zod",
-    "^hono",
-    "^drizzle-orm",
-    "^@better-auth",
-    "^@polar-sh",
-    "^@resend",
+    // External scoped packages (grouped together)
+    "^@[^/]+/",
 
-    "",
-
+    // Other third-party modules (non-scoped)
     "<THIRD_PARTY_MODULES>",
 
     "",
 
-    "^\\$lib/features/",
-    "^\\$lib/components/",
-    "^\\$lib/server/",
-    "^\\$lib/stores/",
-    "^\\$lib/contexts/",
-    "^\\$lib/actions/",
-    "^\\$lib/assets/",
-    "^\\$lib/utils/",
-    "^\\$lib/",
+    // Internal UI aliases (specific to general)
+    "^\\$lib/ui/features/",
+    "^\\$lib/ui/components/",
+    "^\\$lib/ui/stores/",
+    "^\\$lib/ui/contexts/",
+    "^\\$lib/ui/actions/",
+    "^\\$lib/ui/utils/",
+    "^\\$lib/ui/assets/",
+    "^\\$lib/ui",
 
     "",
 
+    // Internal server aliases (specific to general)
+    "^\\$lib/server/api/",
+    "^\\$lib/server/services/",
+    "^\\$lib/server/auth/",
+    "^\\$lib/server/db/",
+    "^\\$lib/server/email/",
+    "^\\$lib/server",
+
+    "",
+
+    // Internal shared aliases
+    "^\\$lib/types/",
+    "^\\$lib/utils/",
+    "^\\$lib",
+
+    "",
+
+    // Relative imports
     "^\\.\\./\\.\\./\\.\\./",
     "^\\.\\./\\.\\./",
     "^\\.\\./",

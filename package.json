@@ -1,25 +1,47 @@
 {
-  "name": "calen",
+  "name": "calen-web",
   "private": true,
-  "workspaces": [
-    "web",
-    "api"
-  ],
+  "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "concurrently -k -n WEB,API -c blue,green \"npm run dev --workspace calen-web\" \"npm run start --workspace calen-api\"",
-    "web:deploy": "npm run deploy --workspace calen-web",
-    "api:deploy": "npm run deploy --workspace calen-api",
+    "dev": "vite dev",
+    "deploy": "vercel --prod",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lf": "concurrently -k -n LINT,FORMAT -c blue,green \"npm run lint:write\" \"npm run format:write\"",
     "lint:check": "npx @biomejs/biome lint .",
     "lint:write": "npx @biomejs/biome lint --write .",
     "format:check": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:write": "prettier --write .",
+    "auth:generate": "npx @better-auth/cli generate --config ./libs/auth/index.ts --output ./libs/db/schemas/auth-table.ts --y",
+    "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
+    "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
+    "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
+    "db:generate:prod": "cross-env NODE_ENV=production drizzle-kit generate",
+    "db:migrate:prod": "cross-env NODE_ENV=production drizzle-kit migrate",
+    "db:studio:prod": "cross-env NODE_ENV=production drizzle-kit studio"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
-    "concurrently": "^8.2.0",
-    "prettier": "3.5.3",
-    "prettier-plugin-svelte": "^3.4.0"
+    "@sveltejs/adapter-auto": "^6.0.0",
+    "@sveltejs/kit": "^2.16.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.2.6"
+  },
+  "dependencies": {
+    "@lucide/svelte": "^0.511.0",
+    "@tailwindcss/vite": "^4.1.7",
+    "better-auth": "^1.2.8",
+    "clsx": "^2.1.1",
+    "daisyui": "^5.0.35",
+    "date-fns": "^4.1.0",
+    "tailwind-merge": "^3.3.0",
+    "tailwindcss": "^4.1.7",
+    "zod": "^3.25.28"
   }
 }

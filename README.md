@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Thu May 29, 2025
+  - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
 - Wed May 28, 2025
   - (5.28.01) - Added settings sidebar.
   - (5.28.02) - Added settings pages.
