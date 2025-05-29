@@ -10,6 +10,7 @@
 
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
+  - (5.29.02) - Fixed server folder.
 - Wed May 28, 2025
   - (5.28.01) - Added settings sidebar.
   - (5.28.02) - Added settings pages.

@@ -1,8 +1,8 @@
-import { drizzle } from "drizzle-orm/neon-http";
+import { DB_URL_DEV, DB_URL_PROD, NODE_ENV } from "$env/static/private";
 
 import { neon } from "@neondatabase/serverless";
 
-import { DB_URL_DEV, DB_URL_PROD, NODE_ENV } from "../env";
+import { drizzle } from "drizzle-orm/neon-http";
 
 const isProd = NODE_ENV === "production";
 

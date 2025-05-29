@@ -1,10 +1,10 @@
 import type { Env } from "hono";
 
-import type { auth } from "../libs/auth";
+import type { Session, User } from "$lib/types";
 
 export interface Context extends Env {
   Variables: {
-    user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
+    user: User | null;
+    session: Session | null;
   };
 }

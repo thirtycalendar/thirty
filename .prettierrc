@@ -5,22 +5,21 @@
   "printWidth": 100,
   "plugins": ["prettier-plugin-svelte", "@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
-    // Svelte core & official
     "^svelte",
     "^@sveltejs",
     "^\\$app",
+    "^\\$env",
 
     "",
 
-    // External scoped packages (grouped together)
     "^@[^/]+/",
 
-    // Other third-party modules (non-scoped)
+    "",
+
     "<THIRD_PARTY_MODULES>",
 
     "",
 
-    // Internal UI aliases (specific to general)
     "^\\$lib/ui/features/",
     "^\\$lib/ui/components/",
     "^\\$lib/ui/stores/",
@@ -32,7 +31,6 @@
 
     "",
 
-    // Internal server aliases (specific to general)
     "^\\$lib/server/api/",
     "^\\$lib/server/services/",
     "^\\$lib/server/auth/",
@@ -42,14 +40,12 @@
 
     "",
 
-    // Internal shared aliases
     "^\\$lib/types/",
     "^\\$lib/utils/",
     "^\\$lib",
 
     "",
 
-    // Relative imports
     "^\\.\\./\\.\\./\\.\\./",
     "^\\.\\./\\.\\./",
     "^\\.\\./",

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { type Snippet } from "svelte";
 
-  import { sidebars } from "$lib/stores/sidebar";
   import { cn } from "$lib/utils/cn";
+  import { sidebars } from "$lib/stores/sidebar";
 
   interface SidebarProps {
     sidebarId: string;

@@ -1,35 +1,19 @@
+import { NODE_ENV } from "$env/static/private";
+
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
-import { handle } from "hono/vercel";
 
-import { auth } from "../libs/auth";
-import { FRONTEND_URL, NODE_ENV } from "../libs/env";
-import type { ErrorResponse } from "../libs/types";
+import type { ErrorResponse } from "$lib/types";
+
 import type { Context } from "./context";
-import authroize from "./routes/authorize";
-
-export const config = {
-  runtime: "edge"
-};
+import auth from "./routes/auth";
 
 const app = new Hono<Context>().basePath("/api");
 
-app.use(
-  "*",
-  cors({
-    origin: [FRONTEND_URL],
-    allowHeaders: ["Content-Type", "Authorization"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length"],
-    maxAge: 600,
-    credentials: true
-  })
-);
+app.use("*", cors());
 
-app.on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw));
-
-app.route("/authorize", authroize);
+app.route("/auth", auth);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
@@ -59,4 +43,4 @@ app.onError((err, c) => {
   );
 });
 
-export default handle(app);
+export default app;

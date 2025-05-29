@@ -1,3 +1,5 @@
+import type { auth } from "$lib/server/auth";
+
 export interface EventForm {
   name: string;
   calendar: string;
@@ -8,6 +10,9 @@ export interface EventForm {
   description?: string;
   notifyIn?: string;
 }
+
+export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session.session;
 
 export type SuccessResponse<T = void> = {
   success: true;

@@ -1,7 +1,9 @@
 import { createMiddleware } from "hono/factory";
 
-import { auth } from "../../libs/auth";
-import type { ErrorResponse } from "../../libs/types";
+import { auth } from "$lib/server/auth";
+
+import type { ErrorResponse } from "$lib/types";
+
 import type { Context } from "../context";
 
 export const loggedIn = createMiddleware<Context>(async (c, next) => {
