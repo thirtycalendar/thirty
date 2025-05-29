@@ -20,7 +20,13 @@
   let { isPending } = createMutation({ mutationFn: async () => await handleLogout() });
 </script>
 
-<div class="tooltip tooltip-bottom" data-tip="Logout">
+<div class="sm:hidden tooltip tooltip-bottom" data-tip="Logout">
+  <button class="btn" onclick={handleLogout} disabled={$isPending}>
+    <LogOut size="18" />
+  </button>
+</div>
+
+<div class="hidden sm:flex">
   <button class="btn" onclick={handleLogout} disabled={$isPending}>
     <LogOut size="18" />
 

@@ -30,5 +30,5 @@
   disabled={$isPending || $isSuccess}
 >
   <GoogleIcon />
-  Continue with Google
+  <span class="text-sm sm:text-base">Continue with Google</span>
 </button>

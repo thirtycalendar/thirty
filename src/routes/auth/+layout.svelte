@@ -11,7 +11,5 @@
     </a>
   </nav>
 
-  <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-    {@render children()}
-  </div>
+  {@render children()}
 </main>

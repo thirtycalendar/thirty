@@ -2,8 +2,10 @@
   import { GoogleAuthButton } from "$lib/ui/features/auth/components";
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
-  <div class="w-full max-w-md bg-base-100 rounded-2xl shadow-2xl p-8 md:p-10 text-center space-y-6">
+<div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-auto p-5">
+  <div
+    class="w-full sm:w-[400px] m-auto bg-base-100 rounded-2xl shadow-2xl p-8 md:p-10 text-center space-y-6"
+  >
     <div>
       <GoogleAuthButton />
       <p class="text-xs text-base-content mt-3 opacity-60">
