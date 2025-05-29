@@ -13,7 +13,7 @@ const app = new Hono<Context>().basePath("/api");
 
 app.use("*", cors());
 
-app.route("/auth", auth);
+const routes = app.route("/auth", auth);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
@@ -42,5 +42,7 @@ app.onError((err, c) => {
     500
   );
 });
+
+export type AppType = typeof routes;
 
 export default app;

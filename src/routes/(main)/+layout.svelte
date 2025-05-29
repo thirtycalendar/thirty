@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
   import { page } from "$app/state";
 
-  import { CalSidebar } from "$lib/features/calendar/components";
-  import { SettingsSidebar } from "$lib/features/settings/components";
-  import { mainSidebarId, sidebars } from "$lib/stores/sidebar";
-  import { initUserSession } from "$lib/stores/user-session";
-  import { Sidebar, SidebarMenu } from "$lib/components";
+  import { CalSidebar } from "$lib/ui/features/calendar/components";
+  import { SettingsSidebar } from "$lib/ui/features/settings/components";
+  import { mainSidebarId, sidebars } from "$lib/ui/stores/sidebar";
+  import { initUserSession } from "$lib/ui/stores/user-session";
+  import { Sidebar, SidebarMenu } from "$lib/ui/components";
 
   let { children } = $props();
 

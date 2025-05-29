@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-import { authClient } from "$lib/utils/rpc";
+import { authClient } from "$lib/ui/utils/rpc";
 
 type UserSession = {
   name: string;

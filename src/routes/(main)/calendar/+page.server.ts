@@ -1,9 +1,9 @@
-import { requireAuth } from "$lib/utils/auth-helpers";
+import { requireAuth } from "$lib/server/auth/auth-helpers";
 
 import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async () => {
-  await requireAuth();
+export const load: PageServerLoad = async ({ request }) => {
+  await requireAuth(request);
 
   const seo = {
     title: "Calendar",

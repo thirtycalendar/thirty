@@ -31,6 +31,7 @@
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.1",
     "prettier": "3.5.3",
     "prettier-plugin-svelte": "^3.4.0",

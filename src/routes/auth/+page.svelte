@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { GoogleAuthButton } from "$lib/features/auth/components";
+  import { GoogleAuthButton } from "$lib/ui/features/auth/components";
 </script>
 
 <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">

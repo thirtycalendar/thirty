@@ -1,7 +1,7 @@
 import { readable } from "svelte/store";
 import { browser } from "$app/environment";
 
-import { chatSidebarId, sidebars } from "$lib/stores/sidebar";
+import { chatSidebarId, sidebars } from "$lib/ui/stores/sidebar";
 
 function mediaQueryStore(query: string, onMatch?: (match: boolean) => void) {
   return readable(false, (set) => {
