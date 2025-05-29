@@ -36,6 +36,7 @@ export function createQuery<ReturnType = unknown, ErrorType = unknown>(
     } catch (err: any) {
       error.set(err);
       isError.set(true);
+      isSuccess.set(false);
       onError?.(err);
     } finally {
       isPending.set(false);

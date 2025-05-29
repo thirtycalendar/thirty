@@ -46,6 +46,7 @@ export function createMutation<
     } catch (err: any) {
       error.set(err);
       isError.set(true);
+      isSuccess.set(false);
       onError?.(err);
     } finally {
       isPending.set(false);

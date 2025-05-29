@@ -15,6 +15,7 @@
   - (5.29.04) - Almost finished fixing.
   - (5.29.05) - Deployed to Vercel.
   - (5.29.06) - Protected all routes and fixed bugs.
+  - (5.29.07) - Updated query and mutation utils.
 - Wed May 28, 2025
   - (5.28.01) - Added settings sidebar.
   - (5.28.02) - Added settings pages.
