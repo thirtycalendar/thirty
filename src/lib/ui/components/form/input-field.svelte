@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn } from "$lib/utils/cn";
+  import { cn } from "$lib/ui/utils/cn";
 
   interface InputFieldProps {
     name: string;

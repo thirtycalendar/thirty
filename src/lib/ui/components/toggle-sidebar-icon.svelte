@@ -1,7 +1,7 @@
 <script lang="ts">
   import { PanelLeft } from "@lucide/svelte";
 
-  import { mainSidebarId, sidebars, toggleSidebar } from "$lib/stores/sidebar";
+  import { mainSidebarId, sidebars, toggleSidebar } from "$lib/ui/stores/sidebar";
 
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
 </script>

@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { createForm } from "$lib/utils/create-form";
-  import { InputField } from "$lib/components";
+  import { createForm } from "$lib/ui/utils/create-form";
+  import { InputField } from "$lib/ui/components";
+
   import type { EventForm } from "$lib/types";
 
   import { eventSchema } from "../schema";

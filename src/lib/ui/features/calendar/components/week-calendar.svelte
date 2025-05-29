@@ -12,7 +12,7 @@
     startOfWeek
   } from "date-fns";
 
-  import { currentDate } from "$lib/stores/change-date";
+  import { currentDate } from "$lib/ui/stores/change-date";
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);

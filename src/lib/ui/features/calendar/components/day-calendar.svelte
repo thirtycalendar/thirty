@@ -3,7 +3,7 @@
 
   import { differenceInMinutes, format, isToday, setHours, startOfDay } from "date-fns";
 
-  import { currentDate } from "$lib/stores/change-date";
+  import { currentDate } from "$lib/ui/stores/change-date";
 
   let date = $currentDate;
 

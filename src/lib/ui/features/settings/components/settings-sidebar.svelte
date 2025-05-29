@@ -3,7 +3,7 @@
 
   import { MessageCircleMore, ReceiptText, SunMoon, TriangleAlert } from "@lucide/svelte";
 
-  import { UserProfile } from "$lib/features/auth/components";
+  import { UserProfile } from "$lib/ui/features/auth/components";
 
   const links = [
     { href: "billing", icon: ReceiptText, label: "Billing" },

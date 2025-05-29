@@ -1,9 +1,9 @@
 <script lang="ts">
   import { PUBLIC_BASE_URL } from "$env/static/public";
 
-  import { createMutation } from "$lib/utils/query/create-mutation";
-  import { authClient } from "$lib/utils/rpc";
-  import { GoogleIcon } from "$lib/components";
+  import { createMutation } from "$lib/ui/utils/query/create-mutation";
+  import { authClient } from "$lib/ui/utils/rpc";
+  import { GoogleIcon } from "$lib/ui/components";
 
   async function googleAuth() {
     await authClient.signIn.social({

@@ -3,8 +3,8 @@
 
   import { LogOut } from "@lucide/svelte";
 
-  import { createMutation } from "$lib/utils/query/create-mutation";
-  import { authClient } from "$lib/utils/rpc";
+  import { createMutation } from "$lib/ui/utils/query/create-mutation";
+  import { authClient } from "$lib/ui/utils/rpc";
 
   async function handleLogout() {
     await authClient.signOut({

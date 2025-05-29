@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Plus } from "@lucide/svelte";
 
-  import { toggleEventModal } from "$lib/stores/event";
-  import { toggleTaskModal } from "$lib/stores/task";
+  import { toggleEventModal } from "$lib/ui/stores/event";
+  import { toggleTaskModal } from "$lib/ui/stores/task";
 </script>
 
 <div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">

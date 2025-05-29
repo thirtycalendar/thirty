@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Calendar, MessagesSquareIcon, PanelLeft, Settings } from "@lucide/svelte";
 
-  import { mainSidebarId, toggleSidebar } from "$lib/stores/sidebar";
+  import { mainSidebarId, toggleSidebar } from "$lib/ui/stores/sidebar";
 </script>
 
 <div class="flex items-center justify-between mb-2">

@@ -14,7 +14,7 @@
     startOfWeek
   } from "date-fns";
 
-  import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/stores/change-date";
+  import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/ui/stores/change-date";
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 

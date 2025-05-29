@@ -12,8 +12,8 @@
     startOfWeek
   } from "date-fns";
 
-  import { changeToDayView } from "$lib/stores/cal-view";
-  import { currentDate } from "$lib/stores/change-date";
+  import { changeToDayView } from "$lib/ui/stores/cal-view";
+  import { currentDate } from "$lib/ui/stores/change-date";
 
   const months = derived(currentDate, ($currentDate) => {
     const year = $currentDate.getFullYear();

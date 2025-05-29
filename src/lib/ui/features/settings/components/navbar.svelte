@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { LogoutButton } from "$lib/features/auth/components";
-  import { ToggleSidebarIcon } from "$lib/components";
+  import { LogoutButton } from "$lib/ui/features/auth/components";
+  import { ToggleSidebarIcon } from "$lib/ui/components";
 
   interface NavbarProps {
     title: string;
