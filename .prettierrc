@@ -20,28 +20,28 @@
 
     "",
 
-    "^\\$lib/ui/features/",
-    "^\\$lib/ui/components/",
-    "^\\$lib/ui/stores/",
-    "^\\$lib/ui/contexts/",
-    "^\\$lib/ui/actions/",
-    "^\\$lib/ui/utils/",
-    "^\\$lib/ui/assets/",
+    "^\\$lib/ui/features",
+    "^\\$lib/ui/components",
+    "^\\$lib/ui/stores",
+    "^\\$lib/ui/contexts",
+    "^\\$lib/ui/actions",
+    "^\\$lib/ui/utils",
+    "^\\$lib/ui/assets",
     "^\\$lib/ui",
 
     "",
 
-    "^\\$lib/server/api/",
-    "^\\$lib/server/services/",
-    "^\\$lib/server/auth/",
-    "^\\$lib/server/db/",
-    "^\\$lib/server/email/",
+    "^\\$lib/server/api",
+    "^\\$lib/server/services",
+    "^\\$lib/server/auth",
+    "^\\$lib/server/db",
+    "^\\$lib/server/email",
     "^\\$lib/server",
 
     "",
 
-    "^\\$lib/types/",
-    "^\\$lib/utils/",
+    "^\\$lib/types",
+    "^\\$lib/utils",
     "^\\$lib",
 
     "",

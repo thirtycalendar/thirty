@@ -1,26 +1,17 @@
 <script lang="ts">
-  import { PUBLIC_BASE_URL } from "$env/static/public";
-
-  import { createMutation } from "$lib/ui/utils/query/create-mutation";
-  import { authClient } from "$lib/ui/utils/rpc";
   import { GoogleIcon } from "$lib/ui/components";
+  import { createMutation } from "$lib/ui/utils/query/create-mutation";
 
-  async function googleAuth() {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${PUBLIC_BASE_URL}/calendar`
-    });
-  }
+  import { googleAuth } from "../api";
 
   const { mutate, isSuccess, isPending } = createMutation({
-    mutationFn: async (input: string) => {
-      console.log("Output:", input);
+    mutationFn: async () => {
       await googleAuth();
     }
   });
 
   async function onclick() {
-    mutate("Hello");
+    mutate();
   }
 </script>
 
