@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createMutation } from "$lib/utils/query/create-mutation";
-  import { createQuery } from "$lib/utils/query/create-query";
+  import { createMutation } from "$lib/ui/utils/query/create-mutation";
+  import { createQuery } from "$lib/ui/utils/query/create-query";
 
   interface User {
     userId: number;
@@ -9,13 +9,13 @@
     body: string;
   }
 
-  const { data, error, isPending } = createQuery<{}, User[]>({
+  const { data, error, isPending } = createQuery<User[]>({
     queryFn: () => fetch("https://jsonplaceholder.typicode.com/posts").then((res) => res.json()),
     queryKeys: ["posts"],
     onSuccess: () => console.log("Posts loaded")
   });
 
-  const { mutate, isPending: mutationPending } = createMutation<{}, User, User>({
+  const { mutate, isPending: mutationPending } = createMutation<User>({
     mutationFn: (data) =>
       fetch("https://jsonplaceholder.typicode.com/posts", {
         method: "PUT",

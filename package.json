@@ -1,5 +1,5 @@
 {
-  "name": "calen-web",
+  "name": "calen",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -17,6 +17,7 @@
     "format:write": "prettier --write .",
     "lf": "concurrently -k -n LINT,FORMAT -c blue,green \"npm run lint:write\" \"npm run format:write\"",
     "auth:generate": "npx @better-auth/cli generate --config ./libs/auth/index.ts --output ./libs/db/schemas/auth-table.ts --y",
+    "db:reset": "npx tsx ./src/lib/server/scripts/reset-db.ts --url $DATABASE_URL",
     "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
     "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
@@ -30,6 +31,7 @@
     "@sveltejs/adapter-auto": "^6.0.0",
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@types/pg": "^8.15.2",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.1",
@@ -51,6 +53,7 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.0",
     "hono": "^4.7.10",
+    "pg": "^8.16.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
     "zod": "^3.25.28"

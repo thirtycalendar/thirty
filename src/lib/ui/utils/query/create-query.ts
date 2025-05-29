@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 import { registerQuery } from "./query-client";
 
-type CreateQueryOptions<ErrorType, ReturnType> = {
+type CreateQueryOptions<ReturnType, ErrorType> = {
   queryFn: () => Promise<ReturnType>;
   queryKeys?: string[];
   onPending?: () => void;
@@ -11,7 +11,7 @@ type CreateQueryOptions<ErrorType, ReturnType> = {
 };
 
 export function createQuery<ReturnType = unknown, ErrorType = unknown>(
-  opts: CreateQueryOptions<ErrorType, ReturnType>
+  opts: CreateQueryOptions<ReturnType, ErrorType>
 ) {
   const { queryFn, queryKeys, onPending, onSuccess, onError } = opts;
 

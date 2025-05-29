@@ -12,7 +12,7 @@
     });
   }
 
-  const { mutate, isSuccess, isPending, isError } = createMutation({
+  const { mutate, isSuccess, isPending } = createMutation({
     mutationFn: async (input: string) => {
       console.log("Output:", input);
       await googleAuth();
@@ -27,7 +27,7 @@
 <button
   class="btn btn-lg btn-soft btn-info w-full my-2 font-semibold"
   {onclick}
-  disabled={$isPending || ($isSuccess && !$isError)}
+  disabled={$isPending || $isSuccess}
 >
   <GoogleIcon />
   Continue with Google

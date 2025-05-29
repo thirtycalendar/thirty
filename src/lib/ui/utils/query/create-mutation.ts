@@ -3,8 +3,8 @@ import { writable } from "svelte/store";
 import { refetchQueries } from "./query-client";
 
 type CreateMutationOptions<
-  ErrorType,
   ReturnType,
+  ErrorType,
   // biome-ignore lint:
   Fn extends (...args: any) => Promise<ReturnType>
 > = {
@@ -20,7 +20,7 @@ export function createMutation<
   ErrorType = unknown,
   // biome-ignore lint:
   Fn extends (...args: any) => Promise<ReturnType> = (...args: any) => Promise<ReturnType>
->(opts: CreateMutationOptions<ErrorType, ReturnType, Fn>) {
+>(opts: CreateMutationOptions<ReturnType, ErrorType, Fn>) {
   const { mutationFn, queryKeys, onPending, onSuccess, onError } = opts;
 
   const data = writable<ReturnType | null>(null);
