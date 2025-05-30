@@ -4,11 +4,13 @@ import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { getOAuthClient, googleCalClient } from "$lib/server/calendars/google";
 
+import type { SuccessResponse } from "$lib/types";
+
 const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
   try {
     const oAuthClient = await getOAuthClient(c);
 
-    const events = await googleCalClient.events.list({
+    const data = await googleCalClient.events.list({
       calendarId: "primary",
       eventTypes: ["default"],
       singleEvents: true,
@@ -16,9 +18,15 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
       auth: oAuthClient
     });
 
+    const events = data.data.items ?? [];
+
     console.log("Events:", events);
 
-    return c.json({ success: true });
+    return c.json<SuccessResponse<typeof data.data.items>>({
+      success: true,
+      message: "Success",
+      data: events
+    });
     // biome-ignore lint:
   } catch (err: any) {
     console.log("error:", err);
