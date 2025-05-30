@@ -1,11 +1,10 @@
-// import calendar_v3 from "@googleapis/calendar";
+import calendar_v3 from "@googleapis/calendar";
 
-// import { auth } from "$lib/server/auth";
+export async function googleCalClient(accessToken: string) {
+  const oauth2 = new calendar_v3.auth.OAuth2();
+  oauth2.setCredentials({ access_token: accessToken });
 
-// const accesstoken = auth.api.getAccessToken({ body: { providerId: "google" } });
+  const googleCal = calendar_v3.calendar({ version: "v3", auth: oauth2 });
 
-// const oauth2Client = new calendar_v3.auth.OAuth2().setCredentials({access_token: })
-
-// export const googleCalClient = calendar_v3.calendar("v3");
-
-// googleCalClient.events.list({ calendarId: "primary", auth: auth });
+  return googleCal;
+}

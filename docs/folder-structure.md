@@ -1,7 +1,7 @@
 ```text
 src/
 ├── lib/
-│   ├── ui/                       # Frontend UI-related code
+│   ├── client/                   # Frontend client-related code
 │   │   ├── components/           # Reusable Svelte components
 │   │   ├── features/             # Feature-based UI logic (pages, modules)
 │   │   ├── stores/               # Svelte stores for state management
