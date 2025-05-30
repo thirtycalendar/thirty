@@ -1,8 +1,8 @@
 import {
-  GOOGLE_CLIENT_DEV_ID,
-  GOOGLE_CLIENT_DEV_SECRET,
-  GOOGLE_CLIENT_PROD_ID,
-  GOOGLE_CLIENT_PROD_SECRET
+  GOOGLE_CLIENT_ID_DEV,
+  GOOGLE_CLIENT_ID_PROD,
+  GOOGLE_CLIENT_SECRET_DEV,
+  GOOGLE_CLIENT_SECRET_PROD
 } from "$env/static/private";
 
 import { betterAuth } from "better-auth";
@@ -17,8 +17,8 @@ import { googleScopes } from "./scopes/google";
 export const auth = betterAuth({
   socialProviders: {
     google: {
-      clientId: isProd ? GOOGLE_CLIENT_PROD_ID : GOOGLE_CLIENT_DEV_ID,
-      clientSecret: isProd ? GOOGLE_CLIENT_PROD_SECRET : GOOGLE_CLIENT_DEV_SECRET,
+      clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
+      clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV,
       scope: googleScopes
     }
   },
@@ -29,6 +29,15 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     freshAge: 60 * 60 * 24 * 1
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        after: async (session) => {
+          console.log("session:", session);
+        }
+      }
+    }
   }
   // plugins: [
   //   polar({

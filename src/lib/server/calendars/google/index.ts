@@ -1,4 +1,4 @@
-import { GOOGLE_CLIENT_DEV_ID, GOOGLE_CLIENT_DEV_SECRET } from "$env/static/private";
+import { GOOGLE_CLIENT_ID_DEV, GOOGLE_CLIENT_SECRET_DEV } from "$env/static/private";
 
 import { google } from "googleapis";
 import type { Context } from "hono";
@@ -21,8 +21,8 @@ export async function getOAuthClient(c: Context) {
   }
 
   const client = new google.auth.OAuth2({
-    clientId: GOOGLE_CLIENT_DEV_ID,
-    clientSecret: GOOGLE_CLIENT_DEV_SECRET
+    clientId: GOOGLE_CLIENT_ID_DEV,
+    clientSecret: GOOGLE_CLIENT_SECRET_DEV
   });
 
   client.setCredentials({ access_token: session.accessToken });
