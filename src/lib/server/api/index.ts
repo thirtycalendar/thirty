@@ -8,13 +8,17 @@ import type { ErrorResponse } from "$lib/types";
 
 import type { Context } from "./context";
 import auth from "./routes/auth";
+import calendar from "./routes/calendars/google/calendar";
 import event from "./routes/calendars/google/event";
 
 const app = new Hono<Context>().basePath("/api");
 
 app.use("*", cors());
 
-const routes = app.route("/auth", auth).route("/calendars/google/event", event);
+const routes = app
+  .route("/auth", auth)
+  .route("/calendars/google/calendar", calendar)
+  .route("/calendars/google/event", event);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

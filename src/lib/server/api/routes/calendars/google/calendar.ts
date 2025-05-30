@@ -10,20 +10,14 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
   try {
     const oAuthClient = await getOAuthClient(c);
 
-    const data = await googleCalClient.events.list({
-      calendarId: "primary",
-      maxResults: 2500,
-      auth: oAuthClient
-    });
+    const data = await googleCalClient.calendars.get({ auth: oAuthClient });
 
-    const events = data.data.items ?? [];
+    console.log("Calendars:", data);
 
-    console.log("Events:", events);
-
-    return c.json<SuccessResponse<typeof data.data.items>>({
+    return c.json<SuccessResponse<typeof data>>({
       success: true,
       message: "Success",
-      data: events
+      data: data
     });
     // biome-ignore lint:
   } catch (err: any) {
