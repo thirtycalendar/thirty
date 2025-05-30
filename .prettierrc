@@ -20,14 +20,14 @@
 
     "",
 
-    "^\\$lib/ui/features",
-    "^\\$lib/ui/components",
-    "^\\$lib/ui/stores",
-    "^\\$lib/ui/contexts",
-    "^\\$lib/ui/actions",
-    "^\\$lib/ui/utils",
-    "^\\$lib/ui/assets",
-    "^\\$lib/ui",
+    "^\\$lib/client/features",
+    "^\\$lib/client/components",
+    "^\\$lib/client/stores",
+    "^\\$lib/client/contexts",
+    "^\\$lib/client/actions",
+    "^\\$lib/client/utils",
+    "^\\$lib/client/assets",
+    "^\\$lib/client",
 
     "",
 

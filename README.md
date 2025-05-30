@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Fri May 30, 2025
+  - (5.30.01) - Renamed lib/ui to lib/client for better naming convention.
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
   - (5.29.02) - Fixed server folder.

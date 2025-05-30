@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Navbar } from "$lib/ui/features/settings/components";
+  import { Navbar } from "$lib/client/features/settings/components";
 </script>
 
 <Navbar title="Delete Account" />

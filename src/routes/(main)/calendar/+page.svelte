@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Calendar, Navbar } from "$lib/ui/features/calendar/components";
-  import { chatSidebarId, sidebars } from "$lib/ui/stores/sidebar";
-  import { Sidebar } from "$lib/ui/components";
+  import { Sidebar } from "$lib/client/components";
+  import { Calendar, Navbar } from "$lib/client/features/calendar/components";
+  import { chatSidebarId, sidebars } from "$lib/client/stores/sidebar";
 
   let chatSidebarOpen = $derived($sidebars[chatSidebarId]);
 </script>

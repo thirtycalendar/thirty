@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createMutation } from "$lib/ui/utils/query/create-mutation";
-  import { createQuery } from "$lib/ui/utils/query/create-query";
+  import { createMutation } from "$lib/client/utils/query/create-mutation";
+  import { createQuery } from "$lib/client/utils/query/create-query";
 
   interface User {
     userId: number;
