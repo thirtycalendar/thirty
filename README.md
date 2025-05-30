@@ -11,6 +11,7 @@
 - Fri May 30, 2025
   - (5.30.01) - Renamed lib/ui to lib/client for better naming convention.
   - (5.30.02) - Added google cal client and ported to api routes. But getting errors.
+  - (5.30.03) - Committed for safety.
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
   - (5.29.02) - Fixed server folder.
