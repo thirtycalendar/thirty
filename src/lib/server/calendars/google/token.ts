@@ -1,17 +1,28 @@
-import {
-  GOOGLE_CLIENT_ID_DEV,
-  GOOGLE_CLIENT_ID_PROD,
-  GOOGLE_CLIENT_SECRET_DEV,
-  GOOGLE_CLIENT_SECRET_PROD
-} from "$env/static/private";
+import { auth } from "$lib/server/auth";
+import { kv } from "$lib/server/utils/upstash/kv";
 
-import { google } from "googleapis";
+import type { GoogleSession } from "$lib/types/server";
 
-import { isProd } from "$lib/utils/is-prod";
+export async function storeGoogleSessionToKV(userId: string, headers: Headers) {
+  const key = `google:auth:${userId}`;
 
-export async function storeGoogleSessionToKV(userId: string) {
-  const oAuthClient = new google.auth.OAuth2({
-    clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
-    clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV
+  const token = await auth.api.refreshToken({
+    body: { providerId: "google", userId },
+    headers
   });
+
+  if (!token.accessToken || !token.refreshToken || !token.idToken || !token.accessTokenExpiresAt) {
+    throw new Error("Invalid Google token response");
+  }
+
+  const session: GoogleSession = {
+    accessToken: token.accessToken,
+    refreshToken: token.refreshToken,
+    idToken: token.idToken,
+    expiresAt: token.accessTokenExpiresAt.toISOString()
+  };
+
+  console.log("session for KV:", session);
+
+  await kv.set(key, session);
 }

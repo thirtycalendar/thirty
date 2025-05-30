@@ -18,6 +18,7 @@
   - (5.30.07) - Committed for safety.
   - (5.30.08) - Used separated db projects link and added kv.
   - (5.30.09) - Fixed naming convention mistake. Removed token api call. Trying different method.
+  - (5.30.10) - Committed for safety.
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
   - (5.29.02) - Fixed server folder.

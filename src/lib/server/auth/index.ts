@@ -10,6 +10,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { isProd } from "$lib/utils/is-prod";
 
+import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { account, session, user, verification } from "../db/schemas/auth-table";
 import { googleScopes } from "./scopes/google";
@@ -33,8 +34,13 @@ export const auth = betterAuth({
   databaseHooks: {
     session: {
       create: {
-        after: async (session) => {
-          console.log("session:", session);
+        after: async (session, context) => {
+          if (!context?.headers) return;
+
+          console.log("userId:", session.userId);
+          console.log("headers:", context.headers);
+
+          await storeGoogleSessionToKV(session.userId, context.headers);
         }
       }
     }
