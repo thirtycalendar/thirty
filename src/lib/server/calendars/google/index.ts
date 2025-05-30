@@ -5,13 +5,14 @@ import type { Context } from "hono";
 
 import { auth } from "$lib/server/auth";
 
+import type { User } from "$lib/types";
+
 export async function getOAuthClient(c: Context) {
-  const user = c.get("user");
-  const providerId = user.providerId;
-  // const accountId = user.accountId;
+  const user = c.get("user") as User;
+  const userId = user.id;
 
   const session = await auth.api.getAccessToken({
-    body: { providerId },
+    body: { providerId: "google", userId },
     headers: c.req.raw.headers
   });
 

@@ -8,7 +8,7 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
   try {
     const oAuthClient = await getOAuthClient(c);
 
-    const events = googleCalClient.events.list({
+    const events = await googleCalClient.events.list({
       calendarId: "primary",
       eventTypes: ["default"],
       singleEvents: true,
