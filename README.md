@@ -16,6 +16,7 @@
   - (5.30.05) - Formatted api.
   - (5.30.06) - Calendar route.
   - (5.30.07) - Committed for safety.
+  - (5.30.08) - Used separated db projects link and added kv.
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
   - (5.29.02) - Fixed server folder.
