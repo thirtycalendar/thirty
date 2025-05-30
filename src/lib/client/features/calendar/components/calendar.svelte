@@ -2,16 +2,6 @@
   import { DayCalendar, EventModal, MonthCalendar, TaskModal, WeekCalendar, YearCalendar } from ".";
 
   import { calView } from "$lib/client/stores/cal-view";
-  import { client } from "$lib/client/utils/rpc";
-
-  $effect(() => {
-    (async () => {
-      const res = await client.api.calendars.google.event.getAll.$get();
-      const json = await res.json();
-
-      console.log("Json:", json);
-    })();
-  });
 </script>
 
 <EventModal />

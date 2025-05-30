@@ -12,7 +12,7 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
 
     const data = await googleCalClient.calendars.get({ auth: oAuthClient });
 
-    console.log("Calendars:", data);
+    // console.log("Calendars:", data);
 
     return c.json<SuccessResponse<typeof data>>({
       success: true,

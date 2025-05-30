@@ -18,7 +18,7 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
 
     const events = data.data.items ?? [];
 
-    console.log("Events:", events);
+    // console.log("Events:", events);
 
     return c.json<SuccessResponse<typeof data.data.items>>({
       success: true,

@@ -15,6 +15,7 @@
   - (5.30.04) - Google calendar auth is working now.
   - (5.30.05) - Formatted api.
   - (5.30.06) - Calendar route.
+  - (5.30.07) - Committed for safety.
 - Thu May 29, 2025
   - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
   - (5.29.02) - Fixed server folder.
