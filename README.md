@@ -12,6 +12,7 @@
   - (5.31.01) - Found a method to get refresh token. But will try different method next.
   - (5.31.02) - Got refresh token via generic oauth method.
   - (5.31.03) - Used better method.
+  - (5.31.04) - Fixed type.
 - Fri May 30, 2025
   - (5.30.01) - Renamed lib/ui to lib/client for better naming convention.
   - (5.30.02) - Added google cal client and ported to api routes. But getting errors.
