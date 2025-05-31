@@ -1,6 +1,7 @@
 export interface GoogleSession {
+  userId: string;
   accessToken: string;
   refreshToken: string;
-  expiresAt: string;
+  accessTokenExpiresAt: string;
   idToken: string;
 }
