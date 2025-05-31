@@ -13,6 +13,7 @@
   - (5.31.02) - Got refresh token via generic oauth method.
   - (5.31.03) - Used better method.
   - (5.31.04) - Fixed type.
+  - (5.31.05) - Google calendar api successfully working...
 - Fri May 30, 2025
   - (5.30.01) - Renamed lib/ui to lib/client for better naming convention.
   - (5.30.02) - Added google cal client and ported to api routes. But getting errors.

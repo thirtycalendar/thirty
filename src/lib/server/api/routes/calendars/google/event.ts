@@ -2,18 +2,18 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { getOAuthClient, googleCalClient } from "$lib/server/calendars/google";
+import { googleCalClient } from "$lib/server/calendars/google";
 
-import type { SuccessResponse } from "$lib/types";
+import type { SuccessResponse, User } from "$lib/types";
 
 const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
   try {
-    const oAuthClient = await getOAuthClient(c);
+    const user = c.get("user") as User;
+    const googleCal = await googleCalClient(user.id);
 
-    const data = await googleCalClient.events.list({
+    const data = await googleCal.events.list({
       calendarId: "primary",
-      maxResults: 2500,
-      auth: oAuthClient
+      maxResults: 2500
     });
 
     const events = data.data.items ?? [];

@@ -1,33 +1,32 @@
-import { GOOGLE_CLIENT_ID_DEV, GOOGLE_CLIENT_SECRET_DEV } from "$env/static/private";
+import {
+  GOOGLE_CLIENT_ID_DEV,
+  GOOGLE_CLIENT_ID_PROD,
+  GOOGLE_CLIENT_SECRET_DEV,
+  GOOGLE_CLIENT_SECRET_PROD
+} from "$env/static/private";
 
-import { google } from "googleapis";
-import type { Context } from "hono";
+import { auth, calendar } from "@googleapis/calendar";
 
-import { auth } from "$lib/server/auth";
+import { googleScopes } from "$lib/server/auth/scopes/google";
 
-import type { User } from "$lib/types";
+import { isProd } from "$lib/utils/is-prod";
 
-export async function getOAuthClient(c: Context) {
-  const user = c.get("user") as User;
-  const userId = user.id;
+import { getGoogleAccessToken } from "./token";
 
-  const session = await auth.api.getAccessToken({
-    body: { providerId: "google", userId },
-    headers: c.req.raw.headers
+export const googleAuthConfig = {
+  clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
+  clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV,
+  scope: googleScopes
+};
+
+export async function googleCalClient(userId: string) {
+  const oAuthClient = new auth.OAuth2({
+    clientId: googleAuthConfig.clientId,
+    clientSecret: googleAuthConfig.clientSecret
   });
 
-  if (!session.accessToken) {
-    throw new Error("Unauthorized");
-  }
+  const accessToken = await getGoogleAccessToken(userId);
+  oAuthClient.setCredentials({ access_token: accessToken });
 
-  const client = new google.auth.OAuth2({
-    clientId: GOOGLE_CLIENT_ID_DEV,
-    clientSecret: GOOGLE_CLIENT_SECRET_DEV
-  });
-
-  client.setCredentials({ access_token: session.accessToken });
-
-  return client;
+  return calendar({ version: "v3", auth: oAuthClient });
 }
-
-export const googleCalClient = google.calendar("v3");
