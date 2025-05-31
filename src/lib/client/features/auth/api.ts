@@ -1,8 +1,8 @@
 import { authClient } from "$lib/client/utils/rpc";
 
 export async function googleAuth() {
-  const data = await authClient.signIn.social({
-    provider: "google",
+  const data = await authClient.signIn.oauth2({
+    providerId: "google",
     callbackURL: "/calendar"
   });
 

@@ -7,6 +7,7 @@ import {
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { genericOAuth } from "better-auth/plugins";
 
 import { isProd } from "$lib/utils/is-prod";
 
@@ -29,11 +30,24 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     freshAge: 60 * 60 * 24 * 1
-  }
-  // plugins: [
-  //   polar({
-  //     client: polarClient,
-  //     createCustomerOnSignUp: true,
-  //   }),
-  // ],
+  },
+  plugins: [
+    genericOAuth({
+      config: [
+        {
+          providerId: "google",
+          clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
+          clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV,
+          scopes: googleScopes,
+          discoveryUrl: "https://accounts.google.com/.well-known/openid-configuration",
+          accessType: "offline",
+          prompt: "consent"
+        }
+      ]
+    })
+    //   polar({
+    //     client: polarClient,
+    //     createCustomerOnSignUp: true,
+    //   }),
+  ]
 });
