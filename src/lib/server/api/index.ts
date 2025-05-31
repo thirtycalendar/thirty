@@ -5,7 +5,6 @@ import { HTTPException } from "hono/http-exception";
 import type { ErrorResponse } from "$lib/types";
 import { isProd } from "$lib/utils/is-prod";
 
-import permission from "../calendars/google/exa";
 import type { Context } from "./context";
 import auth from "./routes/auth";
 import calendar from "./routes/calendars/google/calendar";
@@ -17,7 +16,6 @@ app.use("*", cors());
 
 const routes = app
   .route("/auth", auth)
-  .route("/permission", permission)
   .route("/calendars/google/calendar", calendar)
   .route("/calendars/google/event", event);
 

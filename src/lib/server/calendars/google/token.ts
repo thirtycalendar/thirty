@@ -1,11 +1,53 @@
+import {
+  GOOGLE_CLIENT_ID_DEV,
+  GOOGLE_CLIENT_ID_PROD,
+  GOOGLE_CLIENT_SECRET_DEV,
+  GOOGLE_CLIENT_SECRET_PROD
+} from "$env/static/private";
+
+import { google } from "googleapis";
+
 import { kv } from "$lib/server/utils/upstash/kv";
 
 import type { GoogleSession } from "$lib/types/server";
+import { isProd } from "$lib/utils/is-prod";
+
+const KV_KEY = (userId: string) => `google:token:${userId}`;
 
 export async function storeGoogleSessionToKV(session: GoogleSession) {
-  const key = `google:auth:${session.userId}`;
+  await kv.set(KV_KEY(session.userId), session);
+}
 
-  console.log("session for KV:", session);
+export async function getGoogleAccessToken(userId: string): Promise<string | null> {
+  const session = await kv.get<GoogleSession>(KV_KEY(userId));
 
-  await kv.set(key, session);
+  if (!session) return null;
+
+  const isExpired = new Date(session.accessTokenExpiresAt).getTime() < Date.now() + 60_000;
+  if (!isExpired) return session.accessToken;
+
+  const client = new google.auth.OAuth2({
+    clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
+    clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV
+  });
+
+  client.setCredentials({ refresh_token: session.refreshToken });
+
+  try {
+    const { credentials } = await client.refreshAccessToken();
+
+    const updated: GoogleSession = {
+      userId,
+      accessToken: credentials.access_token as string,
+      refreshToken: credentials.refresh_token ?? session.refreshToken,
+      idToken: credentials.id_token as string,
+      accessTokenExpiresAt: new Date(credentials.expiry_date as number).toISOString()
+    };
+
+    await kv.set(KV_KEY(userId), updated);
+    return updated.accessToken;
+  } catch (err) {
+    console.error("Failed to refresh Google access token", err);
+    return null;
+  }
 }
