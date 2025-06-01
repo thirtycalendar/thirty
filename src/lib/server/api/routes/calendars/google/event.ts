@@ -11,19 +11,32 @@ const app = new Hono<Context>().get("/getAll", loggedIn, async (c) => {
     const user = c.get("user") as User;
     const googleCal = await googleCalClient(user.id);
 
-    const data = await googleCal.events.list({
-      calendarId: "primary",
-      maxResults: 2500
-    });
+    const data = await googleCal.calendarList.list();
+    const calendars = data.data.items ?? [];
 
-    const events = data.data.items ?? [];
+    console.log("calendars:", calendars);
+
+    // biome-ignore lint:
+    const allEvents: any[] = [];
+
+    for (const cal of calendars) {
+      const eventsRes = await googleCal.events.list({
+        calendarId: cal.id as string,
+        maxResults: 2500,
+        singleEvents: true,
+        orderBy: "startTime"
+      });
+
+      const events = eventsRes.data.items ?? [];
+      allEvents.push(...events);
+    }
 
     // console.log("Events:", events);
 
     return c.json<SuccessResponse<typeof data.data.items>>({
       success: true,
       message: "Success",
-      data: events
+      data: allEvents
     });
     // biome-ignore lint:
   } catch (err: any) {
