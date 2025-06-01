@@ -1,16 +1,9 @@
-import {
-  GOOGLE_CLIENT_ID_DEV,
-  GOOGLE_CLIENT_ID_PROD,
-  GOOGLE_CLIENT_SECRET_DEV,
-  GOOGLE_CLIENT_SECRET_PROD
-} from "$env/static/private";
-
 import { google } from "googleapis";
 
 import { kv } from "$lib/server/utils/upstash/kv";
 
 import type { GoogleSession } from "$lib/types/server";
-import { isProd } from "$lib/utils/is-prod";
+import { googleEnvConfig } from "$lib/utils/env-configs";
 
 const KV_KEY = (userId: string) => `google:token:${userId}`;
 
@@ -27,8 +20,8 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
   if (!isExpired) return session.accessToken;
 
   const client = new google.auth.OAuth2({
-    clientId: isProd ? GOOGLE_CLIENT_ID_PROD : GOOGLE_CLIENT_ID_DEV,
-    clientSecret: isProd ? GOOGLE_CLIENT_SECRET_PROD : GOOGLE_CLIENT_SECRET_DEV
+    clientId: googleEnvConfig.clientId,
+    clientSecret: googleEnvConfig.clientSecret
   });
 
   client.setCredentials({ refresh_token: session.refreshToken });

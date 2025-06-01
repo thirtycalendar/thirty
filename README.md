@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Sun Jun 1, 2025
+  - (6.1.01) - Used env config file for better clean code.
 - Sat May 31, 2025
   - (5.31.01) - Found a method to get refresh token. But will try different method next.
   - (5.31.02) - Got refresh token via generic oauth method.
