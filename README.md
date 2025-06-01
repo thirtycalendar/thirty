@@ -12,6 +12,7 @@
   - (6.1.01) - Used env config file for better clean code.
   - (6.1.02) - Used env config for all env usages.
   - (6.1.03) - Listing all the calendar events.
+  - (6.1.04) - Added calendar, event, and task routes.
 - Sat May 31, 2025
   - (5.31.01) - Found a method to get refresh token. But will try different method next.
   - (5.31.02) - Got refresh token via generic oauth method.

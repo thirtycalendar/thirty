@@ -1,4 +1,4 @@
-import type { calendar_v3 } from "@googleapis/calendar";
+import type { tasks_v1 } from "@googleapis/tasks";
 
 import { Hono } from "hono";
 
@@ -15,21 +15,19 @@ const app = new Hono<Context>()
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
-      const cached = await kv.get<calendar_v3.Schema$Event[]>(`google:${user.id}:events`);
+      const cached = await kv.get<tasks_v1.Schema$Task[]>(`google:${user.id}:tasks`);
       if (cached) {
-        return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
+        return c.json<SuccessResponse<tasks_v1.Schema$Task[]>>({
           success: true,
           message: "Success",
           data: cached
         });
       }
-
-      const { events } = await fetchAndCacheAllGoogleCalData(user.id);
-
-      return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
+      const { tasks } = await fetchAndCacheAllGoogleCalData(user.id);
+      return c.json<SuccessResponse<tasks_v1.Schema$Task[]>>({
         success: true,
         message: "Success",
-        data: events
+        data: tasks
       });
       // biome-ignore lint:
     } catch (err: any) {
@@ -40,14 +38,15 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
-      const { calendar } = await getGoogleClients(user.id);
+      const tasklistId = c.req.query("tasklistId");
+      if (!tasklistId) throw new Error("tasklistId is required");
 
-      // You need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-      const res = await calendar.events.get({ calendarId, eventId: id });
+      const { tasks } = await getGoogleClients(user.id);
+      const res = await tasks.tasks.get({ tasklist: tasklistId, task: id });
 
-      if (!res.data) throw new Error("Event not found");
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      if (!res.data) throw new Error("Task not found");
+
+      return c.json<SuccessResponse<tasks_v1.Schema$Task>>({
         success: true,
         message: "Success",
         data: res.data
@@ -60,21 +59,21 @@ const app = new Hono<Context>()
   .post("/create", async (c) => {
     try {
       const user = c.get("user") as User;
-      const body = (await c.req.json()) as calendar_v3.Schema$Event;
+      const body = (await c.req.json()) as tasks_v1.Schema$Task;
+      const tasklistId = c.req.query("tasklistId");
+      if (!tasklistId) throw new Error("tasklistId is required");
 
-      const { calendar } = await getGoogleClients(user.id);
-      const calendarId = body.organizer?.email ?? "primary";
-
-      const res = await calendar.events.insert({
-        calendarId,
+      const { tasks } = await getGoogleClients(user.id);
+      const res = await tasks.tasks.insert({
+        tasklist: tasklistId,
         requestBody: body
       });
 
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      return c.json<SuccessResponse<tasks_v1.Schema$Task>>({
         success: true,
-        message: "Event created",
+        message: "Task created",
         data: res.data
       });
       // biome-ignore lint:
@@ -86,24 +85,22 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
-      const body = (await c.req.json()) as Partial<calendar_v3.Schema$Event>;
+      const body = (await c.req.json()) as Partial<tasks_v1.Schema$Task>;
+      const tasklistId = c.req.query("tasklistId");
+      if (!tasklistId) throw new Error("tasklistId is required");
 
-      const { calendar } = await getGoogleClients(user.id);
-
-      // Need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-
-      const res = await calendar.events.patch({
-        calendarId,
-        eventId: id,
+      const { tasks } = await getGoogleClients(user.id);
+      const res = await tasks.tasks.patch({
+        tasklist: tasklistId,
+        task: id,
         requestBody: body
       });
 
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      return c.json<SuccessResponse<tasks_v1.Schema$Task>>({
         success: true,
-        message: "Event updated",
+        message: "Task updated",
         data: res.data
       });
       // biome-ignore lint:
@@ -115,20 +112,15 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
+      const tasklistId = c.req.query("tasklistId");
+      if (!tasklistId) throw new Error("tasklistId is required");
 
-      const { calendar } = await getGoogleClients(user.id);
-
-      // Need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-
-      await calendar.events.delete({
-        calendarId,
-        eventId: id
-      });
+      const { tasks } = await getGoogleClients(user.id);
+      await tasks.tasks.delete({ tasklist: tasklistId, task: id });
 
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<null>>({ success: true, message: "Event deleted", data: null });
+      return c.json<SuccessResponse<null>>({ success: true, message: "Task deleted", data: null });
       // biome-ignore lint:
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
