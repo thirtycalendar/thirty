@@ -4,9 +4,12 @@ export const googleScopes = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/userinfo.profile",
 
-  // Full calendar access (read/write all calendars and events)
+  // Full Calendar access
   "https://www.googleapis.com/auth/calendar",
 
-  // Manage calendar ACLs (sharing permissions)
-  "https://www.googleapis.com/auth/calendar.acls"
+  // Manage Calendar ACLs (sharing permissions)
+  "https://www.googleapis.com/auth/calendar.acls",
+
+  // Full Tasks access
+  "https://www.googleapis.com/auth/tasks"
 ];
