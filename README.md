@@ -10,6 +10,7 @@
 
 - Thu Jun 5, 2025
   - (6.5.01) - Added google task scope.
+  - (6.5.02) - Fixed better auth route bug.
 - Sun Jun 1, 2025
   - (6.1.01) - Used env config file for better clean code.
   - (6.1.02) - Used env config for all env usages.
