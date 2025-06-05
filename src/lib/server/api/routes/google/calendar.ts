@@ -4,8 +4,8 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { getGoogleClients } from "$lib/server/calendars/google";
-import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/fetch-cache-google-cal";
+import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
+import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
 import type { ErrorResponse, SuccessResponse, User } from "$lib/types";
@@ -15,39 +15,33 @@ const app = new Hono<Context>()
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
-      const cached = await kv.get<calendar_v3.Schema$Event[]>(`google:${user.id}:events`);
-      if (cached) {
-        return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
-          success: true,
-          message: "Success",
-          data: cached
-        });
-      }
+      const cached = await kv.get<calendar_v3.Schema$CalendarListEntry[]>(
+        `google:${user.id}:calendars`
+      );
+      if (cached) return c.json({ success: true, data: cached });
 
-      const { events } = await fetchAndCacheAllGoogleCalData(user.id);
+      const { calendars } = await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
+      return c.json<SuccessResponse<calendar_v3.Schema$CalendarListEntry[]>>({
         success: true,
         message: "Success",
-        data: events
+        data: calendars
       });
       // biome-ignore lint:
     } catch (err: any) {
+      console.log("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
   .get("/:id", async (c) => {
     try {
       const user = c.get("user") as User;
-      const id = c.req.param("id");
       const { calendar } = await getGoogleClients(user.id);
+      const id = c.req.param("id");
+      const res = await calendar.calendars.get({ calendarId: id });
+      if (!res.data) throw new Error("Calendar not found");
 
-      // You need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-      const res = await calendar.events.get({ calendarId, eventId: id });
-
-      if (!res.data) throw new Error("Event not found");
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
         success: true,
         message: "Success",
         data: res.data
@@ -60,21 +54,15 @@ const app = new Hono<Context>()
   .post("/create", async (c) => {
     try {
       const user = c.get("user") as User;
-      const body = (await c.req.json()) as calendar_v3.Schema$Event;
+      const body = (await c.req.json()) as calendar_v3.Schema$Calendar;
 
       const { calendar } = await getGoogleClients(user.id);
-      const calendarId = body.organizer?.email ?? "primary";
-
-      const res = await calendar.events.insert({
-        calendarId,
-        requestBody: body
-      });
-
+      const res = await calendar.calendars.insert({ requestBody: body });
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
         success: true,
-        message: "Event created",
+        message: "Calendar created",
         data: res.data
       });
       // biome-ignore lint:
@@ -86,24 +74,15 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
-      const body = (await c.req.json()) as Partial<calendar_v3.Schema$Event>;
+      const body = (await c.req.json()) as Partial<calendar_v3.Schema$Calendar>;
 
       const { calendar } = await getGoogleClients(user.id);
-
-      // Need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-
-      const res = await calendar.events.patch({
-        calendarId,
-        eventId: id,
-        requestBody: body
-      });
-
+      const res = await calendar.calendars.patch({ calendarId: id, requestBody: body });
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
+      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
         success: true,
-        message: "Event updated",
+        message: "Calendar updated",
         data: res.data
       });
       // biome-ignore lint:
@@ -117,18 +96,14 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
 
       const { calendar } = await getGoogleClients(user.id);
-
-      // Need calendarId in query or fallback to "primary"
-      const calendarId = c.req.query("calendarId") ?? "primary";
-
-      await calendar.events.delete({
-        calendarId,
-        eventId: id
-      });
-
+      await calendar.calendars.delete({ calendarId: id });
       await fetchAndCacheAllGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<null>>({ success: true, message: "Event deleted", data: null });
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Calendar deleted",
+        data: null
+      });
       // biome-ignore lint:
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });

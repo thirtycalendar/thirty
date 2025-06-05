@@ -1,9 +1,9 @@
 import type { calendar_v3 } from "@googleapis/calendar";
 import type { tasks_v1 } from "@googleapis/tasks";
 
-import { getGoogleClients } from ".";
-
 import { kv } from "$lib/server/utils/upstash/kv";
+
+import { getGoogleClients } from "./client";
 
 export interface CachedGoogleData {
   calendars: calendar_v3.Schema$CalendarListEntry[];

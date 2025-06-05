@@ -7,9 +7,9 @@ import { isProd } from "$lib/utils/is-prod";
 
 import type { Context } from "./context";
 import auth from "./routes/auth";
-import calendar from "./routes/calendars/google/calendar";
-import event from "./routes/calendars/google/event";
-import task from "./routes/calendars/google/task";
+import calendar from "./routes/google/calendar";
+import event from "./routes/google/event";
+import task from "./routes/google/task";
 
 const app = new Hono<Context>().basePath("/api");
 
@@ -17,9 +17,9 @@ app.use("*", cors());
 
 const routes = app
   .route("/auth", auth)
-  .route("/calendars/google/calendar", calendar)
-  .route("/calendars/google/event", event)
-  .route("/calendars/google/task", task);
+  .route("/google/calendar", calendar)
+  .route("/google/event", event)
+  .route("/google/task", task);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
