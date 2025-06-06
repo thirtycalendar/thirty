@@ -2,28 +2,24 @@ import { writable } from "svelte/store";
 
 import { refetchQueries } from "./query-client";
 
-type CreateMutationOptions<
-  ReturnType,
-  ErrorType,
-  // biome-ignore lint:
-  Fn extends (...args: any) => Promise<ReturnType>
-> = {
+// biome-ignore lint:
+type CreateMutationOptions<Fn extends (...args: any) => Promise<any>, ErrorType> = {
   mutationFn: Fn;
   queryKeys?: string[];
   onPending?: () => void;
-  onSuccess?: (data: ReturnType) => void;
+  onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
   onError?: (err: ErrorType) => void;
 };
 
-export function createMutation<
-  ReturnType = unknown,
-  ErrorType = unknown,
-  // biome-ignore lint:
-  Fn extends (...args: any) => Promise<ReturnType> = (...args: any) => Promise<ReturnType>
->(opts: CreateMutationOptions<ReturnType, ErrorType, Fn>) {
+// biome-ignore lint:
+export function createMutation<Fn extends (...args: any) => Promise<any>, ErrorType = unknown>(
+  opts: CreateMutationOptions<Fn, ErrorType>
+) {
   const { mutationFn, queryKeys, onPending, onSuccess, onError } = opts;
 
-  const data = writable<ReturnType | null>(null);
+  type DataType = Awaited<ReturnType<Fn>>;
+
+  const data = writable<DataType | null>(null);
   const error = writable<ErrorType | null>(null);
   const isPending = writable(false);
   const isSuccess = writable(false);
@@ -38,8 +34,8 @@ export function createMutation<
     try {
       const result = await mutationFn(...args);
       data.set(result);
-      isSuccess.set(true);
       error.set(null);
+      isSuccess.set(true);
       onSuccess?.(result);
       refetchQueries(queryKeys);
       // biome-ignore lint:

@@ -2,51 +2,82 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { createQuery } from "$lib/client/utils/query/create-query";
 
-  interface User {
+  type Post = {
     userId: number;
     id: number;
     title: string;
     body: string;
-  }
+  };
 
-  const { data, error, isPending } = createQuery<User[]>({
-    queryFn: () => fetch("https://jsonplaceholder.typicode.com/posts").then((res) => res.json()),
-    queryKeys: ["posts"],
-    onSuccess: () => console.log("Posts loaded")
+  const {
+    data: posts,
+    error: queryError,
+    isPending: loadingPosts
+  } = createQuery<() => Promise<Post[]>, Error>({
+    queryFn: async () => {
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+      if (!res.ok) throw new Error("Failed to fetch posts");
+      return await res.json();
+    },
+    queryKeys: ["posts"]
   });
 
-  const { mutate, isPending: mutationPending } = createMutation<User>({
-    mutationFn: (data) =>
-      fetch("https://jsonplaceholder.typicode.com/posts", {
-        method: "PUT",
-        body: JSON.stringify(data),
+  const {
+    mutate: createPost,
+    data: createdPost,
+    isPending: creatingPost,
+    error: mutationError
+  } = createMutation<(post: Omit<Post, "id">) => Promise<Post>>({
+    mutationFn: async (input) => {
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
+        method: "POST",
+        body: JSON.stringify(input),
         headers: { "Content-Type": "application/json" }
-      }).then((r) => r.json()),
-    queryKeys: ["posts"],
-    onSuccess: (d) => console.log("Post updated", d)
+      });
+      if (!res.ok) throw new Error("Failed to create post");
+      return await res.json();
+    },
+    queryKeys: ["posts"]
   });
 
-  function onclick() {
-    mutate({
+  function handleCreate() {
+    createPost({
       userId: 1,
-      id: 1,
-      title: "New Title",
-      body: "New Body Content"
+      title: "New Post",
+      body: "This is a test post"
     });
   }
 </script>
 
-{#if $isPending}
-  <p>Loading...</p>
-{:else if $error}
-  <p>Error: {$error}</p>
-{:else if $data}
-  <ul>
-    {#each $data.slice(0, 4) as post}
-      <li><strong>{post.title}</strong></li>
-      <br />
+<button class="btn btn-primary mt-4" on:click={handleCreate} disabled={$creatingPost}>
+  {#if $creatingPost}
+    Creating...
+  {:else}
+    Create Post
+  {/if}
+</button>
+
+{#if $createdPost}
+  <p class="mt-4 text-green-600">
+    ✅ Created post: {$createdPost.title}
+  </p>
+{/if}
+
+{#if $mutationError}
+  <p class="text-red-500">Create Error: {$mutationError.message}</p>
+{/if}
+
+{#if $loadingPosts}
+  <p>Loading posts...</p>
+{:else if $queryError}
+  <p class="text-red-500">Error: {$queryError.message}</p>
+{:else if $posts}
+  <ul class="space-y-2">
+    {#each $posts as post}
+      <li class="border p-2 rounded">
+        <strong>{post.title}</strong>
+        <p>{post.body}</p>
+      </li>
     {/each}
   </ul>
 {/if}
-
-<button {onclick} class="btn" disabled={$mutationPending}>Mutate</button>

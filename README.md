@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Fri Jun 6, 2025
+  - (6.6.01) - Updated query utils.
 - Thu Jun 5, 2025
   - (6.5.01) - Added google task scope.
   - (6.5.02) - Fixed better auth route bug.
