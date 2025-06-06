@@ -5,6 +5,10 @@ import { kv } from "$lib/server/utils/upstash/kv";
 
 import { getGoogleClients } from "./client";
 
+export const KV_GOOGLE_CALENDARS = (userId: string) => `google:calendars:${userId}`;
+export const KV_GOOGLE_EVENTS = (userId: string) => `google:events:${userId}`;
+export const KV_GOOGLE_TASKS = (userId: string) => `google:tasks:${userId}`;
+
 export interface CachedGoogleData {
   calendars: calendar_v3.Schema$CalendarListEntry[];
   events: calendar_v3.Schema$Event[];
@@ -17,25 +21,36 @@ export async function fetchAndCacheAllGoogleCalData(userId: string): Promise<Cac
   // 1. Calendars
   const calendarsRes = await calendar.calendarList.list();
   const calendars = calendarsRes.data.items ?? [];
-  await kv.set<calendar_v3.Schema$CalendarListEntry[]>(`google:${userId}:calendars`, calendars);
 
-  // 2. Events from all calendars
+  await kv.set(KV_GOOGLE_CALENDARS(userId), calendars);
+
+  // 2. Events
   const allEvents: calendar_v3.Schema$Event[] = [];
+
   for (const cal of calendars) {
     const res = await calendar.events.list({
       calendarId: cal.id as string,
       maxResults: 2500,
-      showDeleted: false,
       singleEvents: true,
+      showDeleted: false,
       orderBy: "startTime"
     });
 
     const events = res.data.items ?? [];
     allEvents.push(...events);
   }
-  await kv.set<calendar_v3.Schema$Event[]>(`google:${userId}:events`, allEvents);
 
-  // 3. Tasks from all task lists
+  const sortedEvents = allEvents
+    .filter((e) => e.start?.dateTime || e.start?.date) // only valid events
+    .sort((a, b) => {
+      const aTime = new Date(a.created ?? a.start?.dateTime ?? (a.start?.date as string)).getTime();
+      const bTime = new Date(b.created ?? b.start?.dateTime ?? (b.start?.date as string)).getTime();
+      return bTime - aTime; // newest first
+    });
+
+  await kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents);
+
+  // 3. Tasks
   const taskListsRes = await tasks.tasklists.list();
   const taskLists = taskListsRes.data.items ?? [];
   const allTasks: tasks_v1.Schema$Task[] = [];
@@ -48,11 +63,12 @@ export async function fetchAndCacheAllGoogleCalData(userId: string): Promise<Cac
     const tasksInList = res.data.items ?? [];
     allTasks.push(...tasksInList);
   }
-  await kv.set<tasks_v1.Schema$Task[]>(`google:${userId}:tasks`, allTasks);
+
+  await kv.set(KV_GOOGLE_TASKS(userId), allTasks);
 
   return {
     calendars,
-    events: allEvents,
+    events: sortedEvents,
     tasks: allTasks
   };
 }

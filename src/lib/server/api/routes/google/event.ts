@@ -4,7 +4,10 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
+import {
+  fetchAndCacheAllGoogleCalData,
+  KV_GOOGLE_EVENTS
+} from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
@@ -15,7 +18,7 @@ const app = new Hono<Context>()
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
-      const cached = await kv.get<calendar_v3.Schema$Event[]>(`google:${user.id}:events`);
+      const cached = await kv.get<calendar_v3.Schema$Event[]>(KV_GOOGLE_EVENTS(user.id));
       if (cached) {
         return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
           success: true,

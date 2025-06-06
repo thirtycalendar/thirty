@@ -27,7 +27,7 @@
     data: createdPost,
     isPending: creatingPost,
     error: mutationError
-  } = createMutation<(post: Omit<Post, "id">) => Promise<Post>>({
+  } = createMutation<(post: Omit<Post, "id">) => Promise<Post>, Error>({
     mutationFn: async (input) => {
       const res = await fetch("https://jsonplaceholder.typicode.com/posts", {
         method: "POST",

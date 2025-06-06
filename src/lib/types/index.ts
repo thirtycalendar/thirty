@@ -1,5 +1,13 @@
 import type { auth } from "$lib/server/auth";
 
+export interface Calendar {
+  id: string;
+  summary: string;
+  timeZone: string;
+  backgroundColor: string;
+  accessRole: string;
+}
+
 export interface EventForm {
   name: string;
   calendar: string;
