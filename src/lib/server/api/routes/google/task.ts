@@ -4,11 +4,12 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { fetchAndCacheAllGoogleCalData, KV_GOOGLE_TASKS } from "$lib/server/calendars/google/cache";
+import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
 import type { ErrorResponse, SuccessResponse, User } from "$lib/types";
+import { KV_GOOGLE_TASKS } from "$lib/utils/kv-keys";
 
 const app = new Hono<Context>()
   .use(loggedIn)

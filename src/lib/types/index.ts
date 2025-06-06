@@ -8,6 +8,32 @@ export interface Calendar {
   accessRole: string;
 }
 
+export interface Event {
+  id: string;
+  summary: string;
+  colorId?: string;
+  organizer: {
+    displayName?: string;
+  };
+  start: {
+    dateTime: string;
+    timeZone: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone: string;
+  };
+  reminders: {
+    useDefault?: boolean;
+    overrides?: [
+      {
+        minutes: number;
+      }
+    ];
+  };
+  eventType: string;
+}
+
 export interface EventForm {
   name: string;
   calendar: string;

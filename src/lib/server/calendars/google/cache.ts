@@ -3,11 +3,9 @@ import type { tasks_v1 } from "@googleapis/tasks";
 
 import { kv } from "$lib/server/utils/upstash/kv";
 
-import { getGoogleClients } from "./client";
+import { KV_GOOGLE_CALENDARS, KV_GOOGLE_EVENTS, KV_GOOGLE_TASKS } from "$lib/utils/kv-keys";
 
-export const KV_GOOGLE_CALENDARS = (userId: string) => `google:calendars:${userId}`;
-export const KV_GOOGLE_EVENTS = (userId: string) => `google:events:${userId}`;
-export const KV_GOOGLE_TASKS = (userId: string) => `google:tasks:${userId}`;
+import { getGoogleClients } from "./client";
 
 export interface CachedGoogleData {
   calendars: calendar_v3.Schema$CalendarListEntry[];
