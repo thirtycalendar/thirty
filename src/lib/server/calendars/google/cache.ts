@@ -26,9 +26,9 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     accessRole: (cal.accessRole as "owner" | "reader") ?? "reader"
   }));
 
-  await kv.set(KV_GOOGLE_CALENDARS(userId), calendars);
+  await kv.set(KV_GOOGLE_CALENDARS(userId), calendars, { ex: 3600 });
 
-  // 2. Events
+  // Events
   const allEvents: Event[] = [];
 
   for (const cal of calendarsRaw) {
@@ -65,7 +65,14 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
             dateTime: e.end.dateTime ?? (e.end.date as string),
             timeZone: e.end.timeZone ?? cal.timeZone ?? "UTC"
           },
-          reminders: e.reminders ?? {},
+          reminders: e.reminders
+            ? {
+                useDefault: e.reminders.useDefault,
+                overrides: e.reminders.overrides?.map((o) => ({
+                  minutes: o.minutes ?? undefined
+                }))
+              }
+            : undefined,
           eventType: e.eventType ?? "default"
         })
       );
@@ -79,9 +86,9 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     return bTime - aTime;
   });
 
-  await kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents);
+  await kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents, { ex: 900 });
 
-  // 3. Tasks
+  // Tasks
   const taskListsRes = await tasks.tasklists.list();
   const taskLists = taskListsRes.data.items ?? [];
   const allTasks: Task[] = [];
@@ -104,11 +111,19 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     allTasks.push(...mapped);
   }
 
-  await kv.set(KV_GOOGLE_TASKS(userId), allTasks);
+  await kv.set(KV_GOOGLE_TASKS(userId), allTasks, { ex: 1800 });
 
   return {
     calendars,
     events: sortedEvents,
     tasks: allTasks
   };
+}
+
+export async function deleteGoogleCalDataCache(userId: string) {
+  await Promise.all([
+    kv.del(KV_GOOGLE_CALENDARS(userId)),
+    kv.del(KV_GOOGLE_EVENTS(userId)),
+    kv.del(KV_GOOGLE_TASKS(userId))
+  ]);
 }

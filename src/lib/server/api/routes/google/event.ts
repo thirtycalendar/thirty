@@ -37,7 +37,7 @@ const app = new Hono<Context>()
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
-  .get("/:id", async (c) => {
+  .get("/get/:id", async (c) => {
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
@@ -83,7 +83,7 @@ const app = new Hono<Context>()
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
-  .put("/:id", async (c) => {
+  .put("/update/:id", async (c) => {
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
@@ -112,7 +112,7 @@ const app = new Hono<Context>()
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
-  .delete("/:id", async (c) => {
+  .delete("/delete/:id", async (c) => {
     try {
       const user = c.get("user") as User;
       const id = c.req.param("id");
