@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
+import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
@@ -24,7 +24,7 @@ const app = new Hono<Context>()
           data: cached
         });
       }
-      const { tasks } = await fetchAndCacheAllGoogleCalData(user.id);
+      const { tasks } = await cacheGoogleCalData(user.id);
       return c.json<SuccessResponse<tasks_v1.Schema$Task[]>>({
         success: true,
         message: "Success",
@@ -70,7 +70,7 @@ const app = new Hono<Context>()
         requestBody: body
       });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<tasks_v1.Schema$Task>>({
         success: true,
@@ -97,7 +97,7 @@ const app = new Hono<Context>()
         requestBody: body
       });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<tasks_v1.Schema$Task>>({
         success: true,
@@ -119,7 +119,7 @@ const app = new Hono<Context>()
       const { tasks } = await getGoogleClients(user.id);
       await tasks.tasks.delete({ tasklist: tasklistId, task: id });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<null>>({ success: true, message: "Task deleted", data: null });
       // biome-ignore lint:

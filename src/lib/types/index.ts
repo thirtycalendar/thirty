@@ -5,15 +5,16 @@ export interface Calendar {
   summary: string;
   timeZone: string;
   backgroundColor: string;
-  accessRole: string;
+  accessRole: "owner" | "reader";
 }
 
 export interface Event {
   id: string;
   summary: string;
-  colorId?: string;
-  organizer: {
-    displayName?: string;
+  description?: string | null;
+  colorId?: string | null;
+  organizer?: {
+    displayName: string;
   };
   start: {
     dateTime: string;
@@ -23,15 +24,20 @@ export interface Event {
     dateTime: string;
     timeZone: string;
   };
-  reminders: {
-    useDefault?: boolean;
-    overrides?: [
-      {
-        minutes: number;
+  reminders:
+    | {
+        useDefault?: boolean;
+        overrides?: Array<{ minutes?: number | null }>;
       }
-    ];
-  };
+    | undefined;
   eventType: string;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  notes?: string;
+  updated: string;
 }
 
 export interface EventForm {

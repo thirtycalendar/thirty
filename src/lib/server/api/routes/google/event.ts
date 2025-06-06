@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
+import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
@@ -25,7 +25,7 @@ const app = new Hono<Context>()
         });
       }
 
-      const { events } = await fetchAndCacheAllGoogleCalData(user.id);
+      const { events } = await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
         success: true,
@@ -71,7 +71,7 @@ const app = new Hono<Context>()
         requestBody: body
       });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
         success: true,
@@ -100,7 +100,7 @@ const app = new Hono<Context>()
         requestBody: body
       });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$Event>>({
         success: true,
@@ -127,7 +127,7 @@ const app = new Hono<Context>()
         eventId: id
       });
 
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<null>>({ success: true, message: "Event deleted", data: null });
       // biome-ignore lint:

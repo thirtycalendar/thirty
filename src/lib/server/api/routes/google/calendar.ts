@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { fetchAndCacheAllGoogleCalData } from "$lib/server/calendars/google/cache";
+import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
@@ -21,7 +21,7 @@ const app = new Hono<Context>()
       );
       if (cached) return c.json({ success: true, data: cached });
 
-      const { calendars } = await fetchAndCacheAllGoogleCalData(user.id);
+      const { calendars } = await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$CalendarListEntry[]>>({
         success: true,
@@ -59,7 +59,7 @@ const app = new Hono<Context>()
 
       const { calendar } = await getGoogleClients(user.id);
       const res = await calendar.calendars.insert({ requestBody: body });
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
         success: true,
@@ -79,7 +79,7 @@ const app = new Hono<Context>()
 
       const { calendar } = await getGoogleClients(user.id);
       const res = await calendar.calendars.patch({ calendarId: id, requestBody: body });
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
         success: true,
@@ -98,7 +98,7 @@ const app = new Hono<Context>()
 
       const { calendar } = await getGoogleClients(user.id);
       await calendar.calendars.delete({ calendarId: id });
-      await fetchAndCacheAllGoogleCalData(user.id);
+      await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,
