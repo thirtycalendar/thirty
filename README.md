@@ -13,6 +13,7 @@
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.
   - (6.8.03) - Updated localStorage keys and styled cal list.
   - (6.8.04) - Replaced email address with name.
+  - (6.8.05) - Show/hide setting button.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.

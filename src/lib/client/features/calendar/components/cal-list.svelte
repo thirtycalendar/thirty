@@ -75,10 +75,10 @@
 {:else}
   {@render CalendarList("My Calendars", owners)}
   {@render CalendarList("Others", readers)}
-  {@render CalendarList("Holidays", holidays)}
+  {@render CalendarList("Holidays", holidays, false)}
 {/if}
 
-{#snippet CalendarList(title: string, cal: Calendar[])}
+{#snippet CalendarList(title: string, cal: Calendar[], showSetting: boolean = true)}
   {#if cal.length > 0}
     <div class="my-2">
       <div
@@ -103,25 +103,28 @@
       {#if $data && isExpanded(title)}
         <div class="my-1" transition:slide>
           {#each cal as { backgroundColor, summary }}
-            {@render CalendarRow(backgroundColor, summary)}
+            <label
+              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
+            >
+              <div class="flex items-center gap-2">
+                <input type="checkbox" class="checkbox checkbox-xs" />
+                <span
+                  class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
+                  style={`color: ${backgroundColor}`}>{summary}</span
+                >
+              </div>
+
+              {#if showSetting}
+                <button
+                  class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+                >
+                  <Bolt size="15" />
+                </button>
+              {/if}
+            </label>
           {/each}
         </div>
       {/if}
     </div>
   {/if}
-{/snippet}
-
-{#snippet CalendarRow(backgroundColor: string, summary: string)}
-  <label class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md">
-    <div class="flex items-center gap-2">
-      <input type="checkbox" class="checkbox checkbox-xs" />
-      <span
-        class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-        style={`color: ${backgroundColor}`}>{summary}</span
-      >
-    </div>
-    <button class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible">
-      <Bolt size="15" />
-    </button>
-  </label>
 {/snippet}
