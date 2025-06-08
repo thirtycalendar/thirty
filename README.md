@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Sun Jun 8, 2025
+  - (6.8.01) - Listed all the calendars from api.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.
