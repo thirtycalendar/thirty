@@ -14,21 +14,30 @@ export interface CachedData {
 export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
   const { calendar, tasks } = await getGoogleClients(userId);
 
-  // 1. Calendars
+  // 1. Fetch calendar list
   const calendarsRes = await calendar.calendarList.list();
   const calendarsRaw = calendarsRes.data.items ?? [];
 
+  // 2. Fetch color metadata
+  const colorsRes = await calendar.colors.get();
+  const calendarColors = colorsRes.data.calendar ?? {};
+  const eventColors = colorsRes.data.event ?? {};
+
+  // 3. Map calendars
   const calendars: Calendar[] = calendarsRaw.map((cal) => ({
     id: cal.id as string,
     summary: cal.summary ?? "",
     timeZone: cal.timeZone ?? "UTC",
-    backgroundColor: cal.backgroundColor ?? "#9a9cff",
+    backgroundColor:
+      calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
+      cal.backgroundColor ??
+      "#9a9cff",
     accessRole: (cal.accessRole as "owner" | "reader") ?? "reader"
   }));
 
   await kv.set(KV_GOOGLE_CALENDARS(userId), calendars, { ex: 3600 });
 
-  // Events
+  // 4. Fetch events for each calendar
   const allEvents: Event[] = [];
 
   for (const cal of calendarsRaw) {
@@ -41,6 +50,7 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     });
 
     const events = res.data.items ?? [];
+
     const mapped = events
       .filter(
         (
@@ -51,9 +61,14 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
       .map(
         (e): Event => ({
           id: e.id as string,
+          calendarId: cal.id as string,
           summary: e.summary ?? "",
           description: e.description,
-          colorId: e.colorId,
+          color:
+            e.colorId && eventColors[e.colorId]
+              ? eventColors[e.colorId].background
+              : (calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
+                "#9a9cff"),
           organizer: e.organizer?.displayName
             ? { displayName: e.organizer.displayName }
             : undefined,
@@ -88,7 +103,7 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
 
   await kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents, { ex: 900 });
 
-  // Tasks
+  // 5. Tasks
   const taskListsRes = await tasks.tasklists.list();
   const taskLists = taskListsRes.data.items ?? [];
   const allTasks: Task[] = [];

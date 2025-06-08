@@ -9,7 +9,7 @@
 
   let { event }: EventBlockProps = $props();
 
-  console.log("event:", event);
+  console.log("event:", event.color);
 
   const start = parseISO(event.start.dateTime);
   const end = parseISO(event.end.dateTime);
@@ -21,14 +21,11 @@
   const startOfDayDate = startOfDay(start);
   const topPx = differenceInMinutes(start, startOfDayDate) * minuteHeight;
   const heightPx = differenceInMinutes(end, start) * minuteHeight;
-
-  // Use event color or default
-  const bgColor = event.colorId ? `var(--color-calendar-${event.colorId})` : "bg-primary";
 </script>
 
 <div
   class="absolute left-1 right-1 rounded-md p-1 text-xs text-white overflow-hidden cursor-pointer select-none"
-  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${bgColor};`}
+  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.color}; pointer-events: auto;`}
   title={event.summary}
 >
   {event.summary}

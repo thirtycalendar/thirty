@@ -10,9 +10,10 @@ export interface Calendar {
 
 export interface Event {
   id: string;
+  calendarId: string;
   summary: string;
   description?: string | null;
-  colorId?: string | null;
+  color?: string | null;
   organizer?: {
     displayName: string;
   };

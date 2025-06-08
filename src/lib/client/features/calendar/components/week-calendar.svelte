@@ -87,14 +87,13 @@
     class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] text-xs rounded-2xl bg-base-100 relative"
   >
     {#each hours as hour}
-      <!-- Time Label -->
+      <!-- Time Labels -->
       <div
         class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70 border-r border-base-200"
       >
         {format(setHours(new Date(), hour), "h a")}
       </div>
 
-      <!-- Hour Blocks -->
       {#each $days as day}
         <div
           class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
@@ -107,17 +106,24 @@
               style={`top: ${getLineOffset()}px`}
             ></div>
           {/if}
-
-          <!-- Events rendered here -->
-          {#if $events}
-            {#each $events as event}
-              {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
-                <EventBlock {event} />
-              {/if}
-            {/each}
-          {/if}
         </div>
       {/each}
+    {/each}
+
+    <!-- Events overlay -->
+    {#each $days as day, dayIndex}
+      <div
+        class="absolute top-0 bottom-0 left-0 right-0"
+        style={`grid-column: ${dayIndex + 2}; position: absolute; pointer-events: none;`}
+      >
+        {#if $events}
+          {#each $events as event}
+            {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
+              <EventBlock {event} />
+            {/if}
+          {/each}
+        {/if}
+      </div>
     {/each}
   </div>
 </div>
