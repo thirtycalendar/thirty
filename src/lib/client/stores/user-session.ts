@@ -11,6 +11,8 @@ type UserSession = {
 const STORAGE_KEY = "user-session";
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
+export const session = writable<UserSession | null>(null);
+
 function loadFromLocalStorage(): UserSession | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -28,8 +30,6 @@ function loadFromLocalStorage(): UserSession | null {
 function saveToLocalStorage(data: UserSession) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
 }
-
-export const session = writable<UserSession | null>(null);
 
 export async function initUserSession() {
   const cached = loadFromLocalStorage();

@@ -4,6 +4,7 @@
 
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
+  import { session } from "$lib/client/stores/user-session";
   import { createQuery } from "$lib/client/utils/query/create-query";
   import { client } from "$lib/client/utils/rpc";
 
@@ -42,7 +43,15 @@
   });
 
   let owners = $derived(
-    $data?.filter((c) => c.accessRole === "owner" && !/@gmail\.com$/i.test(c.id)) ?? []
+    $data
+      ?.filter((c) => c.accessRole === "owner")
+      ?.map((c) => {
+        const isGmail = /@gmail\.com$/i.test(c.id);
+        return {
+          ...c,
+          summary: isGmail ? ($session?.name ?? c.summary) : c.summary
+        };
+      }) ?? []
   );
   let readers = $derived(
     $data?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
