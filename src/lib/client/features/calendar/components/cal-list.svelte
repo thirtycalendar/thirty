@@ -12,7 +12,6 @@
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
-
     try {
       return JSON.parse(localStorage.getItem("toggle-calendar-list") || "{}");
     } catch {
@@ -28,6 +27,28 @@
     collapsedCalendars[title] = !collapsedCalendars[title];
     if (browser) {
       localStorage.setItem("toggle-calendar-list", JSON.stringify(collapsedCalendars));
+    }
+  };
+
+  const getCheckedStates = (): Record<string, boolean> => {
+    if (!browser) return {};
+    try {
+      return JSON.parse(localStorage.getItem("checked-calendars") || "{}");
+    } catch {
+      return {};
+    }
+  };
+
+  let checkedCalendars = $state<Record<string, boolean>>(getCheckedStates());
+
+  const isChecked = (id: string) => {
+    return checkedCalendars[id] ?? true;
+  };
+
+  const toggleChecked = (id: string) => {
+    checkedCalendars[id] = !isChecked(id);
+    if (browser) {
+      localStorage.setItem("checked-calendars", JSON.stringify(checkedCalendars));
     }
   };
 
@@ -53,9 +74,11 @@
         };
       }) ?? []
   );
+
   let readers = $derived(
     $data?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
   );
+
   let holidays = $derived(
     $data
       ?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary))
@@ -102,12 +125,17 @@
 
       {#if $data && isExpanded(title)}
         <div class="my-1" transition:slide>
-          {#each cal as { backgroundColor, summary }}
+          {#each cal as { id, backgroundColor, summary }}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
             >
               <div class="flex items-center gap-2">
-                <input type="checkbox" class="checkbox checkbox-xs" />
+                <input
+                  type="checkbox"
+                  class="checkbox checkbox-xs"
+                  checked={isChecked(id)}
+                  onchange={() => toggleChecked(id)}
+                />
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
                   style={`color: ${backgroundColor}`}>{summary}</span
