@@ -1,5 +1,6 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
+  import { browser } from "$app/environment";
 
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
@@ -7,6 +8,27 @@
   import { client } from "$lib/client/utils/rpc";
 
   import type { Calendar } from "$lib/types";
+
+  const getToggledStates = (): Record<string, boolean> => {
+    if (!browser) return {};
+
+    try {
+      return JSON.parse(localStorage.getItem("toggleCalendarList") || "{}");
+    } catch {
+      return {};
+    }
+  };
+
+  let collapsedCalendars = $state<Record<string, boolean>>(getToggledStates());
+
+  const isExpanded = (title: string) => !collapsedCalendars[title];
+
+  const toggleCalendar = (title: string) => {
+    collapsedCalendars[title] = !collapsedCalendars[title];
+    if (browser) {
+      localStorage.setItem("toggleCalendarList", JSON.stringify(collapsedCalendars));
+    }
+  };
 
   let { data, isPending } = createQuery({
     queryFn: async () => {
@@ -19,8 +41,6 @@
     queryKeys: ["cal-list"]
   });
 
-  let showCalendars = $state(true);
-
   let owners = $derived($data?.filter((c) => c.accessRole === "owner") ?? []);
   let readers = $derived(
     $data?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
@@ -30,9 +50,17 @@
   );
 </script>
 
-{@render CalendarList("My Calendars", owners)}
-{@render CalendarList("Others", readers)}
-{@render CalendarList("Holidays", holidays)}
+{#if $isPending}
+  <div class="relative h-[200px]">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
+      <span class="loading loading-spinner loading-md"></span>
+    </div>
+  </div>
+{:else}
+  {@render CalendarList("My Calendars", owners)}
+  {@render CalendarList("Others", readers)}
+  {@render CalendarList("Holidays", holidays)}
+{/if}
 
 {#snippet CalendarList(title: string, cal: Calendar[])}
   {#if cal.length > 0}
@@ -48,15 +76,15 @@
           </button>
 
           <button
-            class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${showCalendars && "rotate-180"}`}
-            onclick={() => (showCalendars = !showCalendars)}
+            class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${isExpanded(title) && "rotate-180"}`}
+            onclick={() => toggleCalendar(title)}
           >
             <ChevronDown size="16" />
           </button>
         </div>
       </div>
 
-      {#if $data && showCalendars}
+      {#if $data && isExpanded(title)}
         <div class="my-1" transition:slide>
           {#each cal as { backgroundColor, summary }}
             {@render CalendarRow(backgroundColor, summary)}
