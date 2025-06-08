@@ -8,7 +8,7 @@ import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
-import type { ErrorResponse, SuccessResponse, User } from "$lib/types";
+import type { ErrorResponse, Event, SuccessResponse, User } from "$lib/types";
 import { KV_GOOGLE_EVENTS } from "$lib/utils/kv-keys";
 
 const app = new Hono<Context>()
@@ -16,9 +16,9 @@ const app = new Hono<Context>()
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
-      const cached = await kv.get<calendar_v3.Schema$Event[]>(KV_GOOGLE_EVENTS(user.id));
+      const cached = await kv.get<Event[]>(KV_GOOGLE_EVENTS(user.id));
       if (cached) {
-        return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
+        return c.json<SuccessResponse<Event[]>>({
           success: true,
           message: "Success",
           data: cached
@@ -27,7 +27,7 @@ const app = new Hono<Context>()
 
       const { events } = await cacheGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Event[]>>({
+      return c.json<SuccessResponse<Event[]>>({
         success: true,
         message: "Success",
         data: events

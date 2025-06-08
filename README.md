@@ -15,6 +15,7 @@
   - (6.8.04) - Replaced email address with name.
   - (6.8.05) - Show/hide setting button.
   - (6.8.06) - Store checkbox status in localStorage.
+  - (6.8.07) - Trying to show all the events.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.

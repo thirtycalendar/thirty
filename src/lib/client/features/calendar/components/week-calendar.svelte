@@ -13,6 +13,8 @@
   } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
+  import { createQuery } from "$lib/client/utils/query/create-query";
+  import { client } from "$lib/client/utils/rpc";
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
@@ -47,6 +49,17 @@
     const minutes = differenceInMinutes(now, startOfDay(now));
     return (minutes / 60) * 60; // if 60px = 1 hour
   };
+
+  let { data: event, isPending } = createQuery({
+    queryFn: async () => {
+      const res = await client.api.google.event.getAll.$get();
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.message);
+      return data.data;
+    },
+    queryKeys: ["cal-list"]
+  });
 </script>
 
 <div class="flex flex-col h-full py-3">
