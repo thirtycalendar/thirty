@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { differenceInMinutes, parseISO, startOfDay } from "date-fns";
+  import { differenceInMinutes, parseISO, startOfHour } from "date-fns";
 
   import type { Event } from "$lib/types";
 
@@ -9,22 +9,18 @@
 
   let { event }: EventBlockProps = $props();
 
-  console.log("event:", event.color);
-
   const start = parseISO(event.start.dateTime);
   const end = parseISO(event.end.dateTime);
 
   const hourHeight = 60;
   const minuteHeight = hourHeight / 60;
 
-  // Calculate top offset and height
-  const startOfDayDate = startOfDay(start);
-  const topPx = differenceInMinutes(start, startOfDayDate) * minuteHeight;
+  const topPx = differenceInMinutes(start, startOfHour(start)) * minuteHeight;
   const heightPx = differenceInMinutes(end, start) * minuteHeight;
 </script>
 
 <div
-  class="absolute left-1 right-1 rounded-md p-1 text-xs text-white overflow-hidden cursor-pointer select-none"
+  class="z-10 absolute left-1 right-1 rounded-md p-1 text-xs text-white overflow-hidden cursor-pointer select-none"
   style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.color}; pointer-events: auto;`}
   title={event.summary}
 >

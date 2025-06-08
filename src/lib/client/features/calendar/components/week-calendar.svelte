@@ -3,15 +3,7 @@
   import { derived } from "svelte/store";
 
   import { EventBlock } from ".";
-  import {
-    addDays,
-    differenceInMinutes,
-    format,
-    isToday,
-    setHours,
-    startOfDay,
-    startOfWeek
-  } from "date-fns";
+  import { addDays, format, isToday, setHours, startOfWeek } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
   import { createQuery } from "$lib/client/utils/query/create-query";
@@ -35,27 +27,22 @@
       }
     });
 
-    setInterval(() => {
-      now = new Date();
-    }, 60 * 1000);
-
     timer = setInterval(() => {
       now = new Date();
-    }, 60 * 1000); // update every minute
+    }, 60 * 1000);
   });
 
   onDestroy(() => clearInterval(timer));
 
   const getLineOffset = () => {
-    const minutes = differenceInMinutes(now, startOfDay(now));
-    return (minutes / 60) * 60; // if 60px = 1 hour
+    const minutes = now.getHours() * 60 + now.getMinutes();
+    return (minutes / 60) * 60; // 60px = 1 hour
   };
 
-  let { data: events, isPending } = createQuery({
+  const { data: events } = createQuery({
     queryFn: async () => {
       const res = await client.api.google.event.getAll.$get();
       const data = await res.json();
-
       if (!data.success) throw new Error(data.message);
       return data.data;
     },
@@ -106,24 +93,19 @@
               style={`top: ${getLineOffset()}px`}
             ></div>
           {/if}
+
+          <!-- Events that start in this hour and day -->
+          {#if $events}
+            {#each $events as event}
+              {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
+                {#if parseInt(format(new Date(event.start.dateTime), "H")) === hour}
+                  <EventBlock {event} />
+                {/if}
+              {/if}
+            {/each}
+          {/if}
         </div>
       {/each}
-    {/each}
-
-    <!-- Events overlay -->
-    {#each $days as day, dayIndex}
-      <div
-        class="absolute top-0 bottom-0 left-0 right-0"
-        style={`grid-column: ${dayIndex + 2}; position: absolute; pointer-events: none;`}
-      >
-        {#if $events}
-          {#each $events as event}
-            {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
-              <EventBlock {event} />
-            {/if}
-          {/each}
-        {/if}
-      </div>
     {/each}
   </div>
 </div>

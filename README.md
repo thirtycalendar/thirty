@@ -18,6 +18,7 @@
   - (6.8.07) - Trying to show all the events.
   - (6.8.08) - Showing events.
   - (6.8.09) - Event colors.
+  - (6.8.10) - Kinda working.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.
