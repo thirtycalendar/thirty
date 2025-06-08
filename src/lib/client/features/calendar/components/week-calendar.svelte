@@ -6,8 +6,14 @@
   import { addDays, format, isToday, setHours, startOfWeek } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
-  import { createQuery } from "$lib/client/utils/query/create-query";
-  import { client } from "$lib/client/utils/rpc";
+
+  import type { Event } from "$lib/types";
+
+  interface WeekCalendarProps {
+    events: Event[];
+  }
+
+  let { events }: WeekCalendarProps = $props();
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
@@ -38,16 +44,6 @@
     const minutes = now.getHours() * 60 + now.getMinutes();
     return (minutes / 60) * 60; // 60px = 1 hour
   };
-
-  const { data: events } = createQuery({
-    queryFn: async () => {
-      const res = await client.api.google.event.getAll.$get();
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-      return data.data;
-    },
-    queryKeys: ["cal-list"]
-  });
 
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 </script>
@@ -95,15 +91,13 @@
           {/if}
 
           <!-- Events that start in this hour and day -->
-          {#if $events}
-            {#each $events as event}
-              {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
-                {#if parseInt(format(new Date(event.start.dateTime), "H")) === hour}
-                  <EventBlock {event} />
-                {/if}
+          {#each events as event}
+            {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
+              {#if parseInt(format(new Date(event.start.dateTime), "H")) === hour}
+                <EventBlock {event} />
               {/if}
-            {/each}
-          {/if}
+            {/if}
+          {/each}
         </div>
       {/each}
     {/each}
