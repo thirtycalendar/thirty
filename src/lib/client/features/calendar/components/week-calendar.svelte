@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { derived } from "svelte/store";
 
+  import { EventBlock } from ".";
   import {
     addDays,
     differenceInMinutes,
@@ -50,7 +51,7 @@
     return (minutes / 60) * 60; // if 60px = 1 hour
   };
 
-  let { data: event, isPending } = createQuery({
+  let { data: events, isPending } = createQuery({
     queryFn: async () => {
       const res = await client.api.google.event.getAll.$get();
       const data = await res.json();
@@ -60,6 +61,8 @@
     },
     queryKeys: ["cal-list"]
   });
+
+  const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -103,6 +106,15 @@
               class="z-10 absolute left-0 right-0 h-px bg-red-500"
               style={`top: ${getLineOffset()}px`}
             ></div>
+          {/if}
+
+          <!-- Events rendered here -->
+          {#if $events}
+            {#each $events as event}
+              {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
+                <EventBlock {event} />
+              {/if}
+            {/each}
           {/if}
         </div>
       {/each}

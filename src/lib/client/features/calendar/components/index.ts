@@ -9,6 +9,7 @@ export { default as CreateTask } from "./create-task.svelte";
 export { default as DayCalendar } from "./day-calendar.svelte";
 export { default as EditEvent } from "./edit-event.svelte";
 export { default as EditTask } from "./edit-task.svelte";
+export { default as EventBlock } from "./event-block.svelte";
 export { default as EventForm } from "./event-form.svelte";
 export { default as EventModal } from "./event-modal.svelte";
 export { default as MiniCalendar } from "./mini-calendar.svelte";
