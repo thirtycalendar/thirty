@@ -20,6 +20,7 @@
   - (6.8.09) - Event colors.
   - (6.8.10) - Kinda working.
   - (6.8.11) - Passed as prop instead of directly fetching.
+  - (6.8.12) - Better styling and better event rendering.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.

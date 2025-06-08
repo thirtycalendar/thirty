@@ -24,5 +24,7 @@
   style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.color}; pointer-events: auto;`}
   title={event.summary}
 >
-  {event.summary}
+  <p class="text-primary font-medium">
+    {event.summary}
+  </p>
 </div>

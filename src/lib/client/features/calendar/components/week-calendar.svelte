@@ -3,7 +3,16 @@
   import { derived } from "svelte/store";
 
   import { EventBlock } from ".";
-  import { addDays, format, isToday, setHours, startOfWeek } from "date-fns";
+  import {
+    addDays,
+    endOfDay,
+    format,
+    isToday,
+    isWithinInterval,
+    parseISO,
+    setHours,
+    startOfWeek
+  } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
 
@@ -21,6 +30,21 @@
   });
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  const weekEvents = derived(days, ($days) => {
+    const weekStart = $days[0];
+    const weekEnd = endOfDay($days[6]);
+
+    return events.filter((event) => {
+      const start = parseISO(event.start.dateTime);
+      const end = parseISO(event.end.dateTime);
+
+      return (
+        isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
+        isWithinInterval(end, { start: weekStart, end: weekEnd })
+      );
+    });
+  });
 
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;
@@ -90,10 +114,9 @@
             ></div>
           {/if}
 
-          <!-- Events that start in this hour and day -->
-          {#each events as event}
-            {#if getDayString(new Date(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
-              {#if parseInt(format(new Date(event.start.dateTime), "H")) === hour}
+          {#each $weekEvents as event}
+            {#if getDayString(parseISO(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
+              {#if parseInt(format(parseISO(event.start.dateTime), "H")) === hour}
                 <EventBlock {event} />
               {/if}
             {/if}
