@@ -11,6 +11,7 @@
 - Sun Jun 8, 2025
   - (6.8.01) - Listed all the calendars from api.
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.
+  - (6.8.03) - Updated localStorage keys and styled cal list.
 - Fri Jun 6, 2025
   - (6.6.01) - Updated query utils.
   - (6.6.02) - Updated cache codes.

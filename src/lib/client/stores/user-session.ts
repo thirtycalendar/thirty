@@ -8,7 +8,7 @@ type UserSession = {
   image: string;
 };
 
-const STORAGE_KEY = "user_session";
+const STORAGE_KEY = "user-session";
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
 function loadFromLocalStorage(): UserSession | null {

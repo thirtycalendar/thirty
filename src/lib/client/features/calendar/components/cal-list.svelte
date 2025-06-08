@@ -13,7 +13,7 @@
     if (!browser) return {};
 
     try {
-      return JSON.parse(localStorage.getItem("toggleCalendarList") || "{}");
+      return JSON.parse(localStorage.getItem("toggle-calendar-list") || "{}");
     } catch {
       return {};
     }
@@ -26,7 +26,7 @@
   const toggleCalendar = (title: string) => {
     collapsedCalendars[title] = !collapsedCalendars[title];
     if (browser) {
-      localStorage.setItem("toggleCalendarList", JSON.stringify(collapsedCalendars));
+      localStorage.setItem("toggle-calendar-list", JSON.stringify(collapsedCalendars));
     }
   };
 
@@ -41,12 +41,19 @@
     queryKeys: ["cal-list"]
   });
 
-  let owners = $derived($data?.filter((c) => c.accessRole === "owner") ?? []);
+  let owners = $derived(
+    $data?.filter((c) => c.accessRole === "owner" && !/@gmail\.com$/i.test(c.id)) ?? []
+  );
   let readers = $derived(
     $data?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
   );
   let holidays = $derived(
-    $data?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary)) ?? []
+    $data
+      ?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary))
+      ?.map((c) => ({
+        ...c,
+        summary: c.summary.replace(/^Holidays in /i, "").trim()
+      })) ?? []
   );
 </script>
 
