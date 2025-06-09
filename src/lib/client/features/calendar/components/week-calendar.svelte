@@ -48,15 +48,12 @@
     });
   });
 
-  function normalizeUtilEventDate(dateStr: string): Date {
-    if (dateStr.startsWith("XXXX")) {
-      const [, month, day] = dateStr.split("-");
-      const year = getYear(now);
-      return parse(`${year}-${month}-${day}`, "yyyy-MM-dd", new Date());
-    } else {
-      // Full date with real year
-      return parseISO(dateStr);
+  function normalizeUtilEventDate(dateStr: string) {
+    const parsed = parseISO(dateStr);
+    if (isNaN(parsed.getTime())) {
+      console.warn("Invalid utilEvent date:", dateStr);
     }
+    return parsed;
   }
 
   const weekUtilEvents = derived(days, ($days) => {

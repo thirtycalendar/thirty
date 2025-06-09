@@ -45,7 +45,19 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
 
   // 4. Events + Util Events
   const allEvents: Event[] = [];
-  const utilEvents: UtilEvent[] = [];
+
+  // Helper: normalize to base holiday name (remove day off, substitute, observed, holiday suffixes/prefixes)
+  const normalizeHolidayBase = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/^day off for\s+/i, "")
+      .replace(/^substitute for\s+/i, "")
+      .replace(/\sobserved$/i, "")
+      .replace(/\sholiday$/i, "")
+      .trim();
+
+  // Group util events by year-month-baseName
+  const utilEventsGrouped = new Map<string, { mainEvents: UtilEvent[]; others: UtilEvent[] }>();
 
   for (const cal of calendarsRaw) {
     const res = await calendar.events.list({
@@ -62,51 +74,43 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
       if (!e.start || (!e.start.dateTime && !e.start.date) || !e.end) continue;
 
       const isAllDay = !!e.start.date && !e.start.dateTime;
-      const summary = e.summary?.toLowerCase() ?? "";
-      const calId = cal.id?.toLowerCase() ?? "";
+      const summaryRaw = e.summary ?? "";
+      const summaryLower = summaryRaw.toLowerCase();
+      const calIdLower = (cal.id ?? "").toLowerCase();
 
       const isUtil =
         isAllDay &&
-        (summary.includes("birthday") ||
-          summary.includes("holiday") ||
-          calId.includes("birthday") ||
-          calId.includes("holiday"));
+        (summaryLower.includes("birthday") ||
+          summaryLower.includes("holiday") ||
+          calIdLower.includes("birthday") ||
+          calIdLower.includes("holiday"));
 
-      const start = e.start.dateTime ?? (e.start.date as string);
-      const end = e.end.dateTime ?? (e.end.date as string);
-      const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
+      if (!isUtil) {
+        // Normal event
+        const start = e.start.dateTime ?? (e.start.date as string);
+        const end = e.end.dateTime ?? (e.end.date as string);
+        const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
 
-      const calendarBg =
-        calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
-        cal.backgroundColor ??
-        "#9a9cff";
+        const calendarBg =
+          calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
+          cal.backgroundColor ??
+          "#9a9cff";
 
-      const eventBg =
-        e.colorId && eventColors[e.colorId]?.background
-          ? eventColors[e.colorId].background
-          : calendarBg;
+        const eventBg =
+          e.colorId && eventColors[e.colorId]?.background
+            ? eventColors[e.colorId].background
+            : calendarBg;
 
-      const base = {
-        id: e.id as string,
-        calendarId: cal.id as string,
-        summary: e.summary ?? "",
-        description: e.description,
-        color: calendarBg,
-        bgColor: eventBg,
-        organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined
-      };
-
-      if (isUtil) {
-        utilEvents.push({
-          ...base,
-          date: {
-            dateTime: start,
-            timeZone
-          }
-        });
-      } else {
         allEvents.push({
-          ...base,
+          id: e.id as string,
+          calendarId: cal.id as string,
+          summary: e.summary ?? "",
+          description: e.description,
+          color: calendarBg,
+          bgColor: eventBg,
+          organizer: e.organizer?.displayName
+            ? { displayName: e.organizer.displayName }
+            : undefined,
           start: { dateTime: start, timeZone },
           end: { dateTime: end, timeZone },
           reminders: e.reminders
@@ -119,16 +123,79 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
             : undefined,
           eventType: e.eventType ?? "default"
         });
+
+        continue;
+      }
+
+      // Util event logic here
+
+      const start = e.start.dateTime ?? (e.start.date as string);
+      const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
+
+      // Base name normalized
+      const baseName = normalizeHolidayBase(summaryRaw);
+
+      // Year-month for grouping
+      const startDate = new Date(start);
+      const year = startDate.getFullYear();
+      const month = startDate.getMonth() + 1;
+
+      const key = `${year}-${month}-${baseName}`;
+
+      const calendarBg =
+        calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
+        cal.backgroundColor ??
+        "#9a9cff";
+
+      const eventBg =
+        e.colorId && eventColors[e.colorId]?.background
+          ? eventColors[e.colorId].background
+          : calendarBg;
+
+      const utilEvent: UtilEvent = {
+        id: e.id as string,
+        calendarId: cal.id as string,
+        summary: e.summary ?? "",
+        description: e.description,
+        color: calendarBg,
+        bgColor: eventBg,
+        organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined,
+        date: { dateTime: start, timeZone }
+      };
+
+      if (!utilEventsGrouped.has(key)) {
+        utilEventsGrouped.set(key, { mainEvents: [], others: [] });
+      }
+
+      // Determine if exact base name or a "duplicate" with day off, observed, etc.
+      if (summaryLower === baseName.toLowerCase()) {
+        utilEventsGrouped.get(key)?.mainEvents.push(utilEvent);
+      } else {
+        utilEventsGrouped.get(key)?.others.push(utilEvent);
       }
     }
   }
 
+  // Flatten util events — keep all mainEvents, ignore others if mainEvents exist for that group
+  const utilEvents: UtilEvent[] = [];
+
+  for (const { mainEvents, others } of utilEventsGrouped.values()) {
+    if (mainEvents.length > 0) {
+      utilEvents.push(...mainEvents);
+    } else {
+      // If no exact main event, keep others (fallback)
+      utilEvents.push(...others);
+    }
+  }
+
+  // Sort events descending by start date
   const sortedEvents = allEvents.sort((a, b) => {
     const aTime = new Date(a.start.dateTime).getTime();
     const bTime = new Date(b.start.dateTime).getTime();
     return bTime - aTime;
   });
 
+  // Save caches
   await Promise.all([
     kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents, { ex: 900 }),
     kv.set(KV_GOOGLE_UTIL_EVENTS(userId), utilEvents, { ex: 3600 })
