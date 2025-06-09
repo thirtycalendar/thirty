@@ -8,29 +8,31 @@ import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
-import type { ErrorResponse, Event, SuccessResponse, User } from "$lib/types";
-import { KV_GOOGLE_EVENTS } from "$lib/utils/kv-keys";
+import type { ErrorResponse, Event, SuccessResponse, User, UtilEvent } from "$lib/types";
+import { KV_GOOGLE_EVENTS, KV_GOOGLE_UTIL_EVENTS } from "$lib/utils/kv-keys";
 
 const app = new Hono<Context>()
   .use(loggedIn)
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
-      const cached = await kv.get<Event[]>(KV_GOOGLE_EVENTS(user.id));
-      if (cached) {
-        return c.json<SuccessResponse<Event[]>>({
+      const cachedEvents = await kv.get<Event[]>(KV_GOOGLE_EVENTS(user.id));
+      const cachedUtilEvents = await kv.get<UtilEvent[]>(KV_GOOGLE_UTIL_EVENTS(user.id));
+
+      if (cachedEvents && cachedUtilEvents) {
+        return c.json<SuccessResponse<{ events: Event[]; utilEvents: UtilEvent[] }>>({
           success: true,
           message: "Success",
-          data: cached
+          data: { events: cachedEvents, utilEvents: cachedUtilEvents }
         });
       }
 
-      const { events } = await cacheGoogleCalData(user.id);
+      const { events, utilEvents } = await cacheGoogleCalData(user.id);
 
-      return c.json<SuccessResponse<Event[]>>({
+      return c.json<SuccessResponse<{ events: Event[]; utilEvents: UtilEvent[] }>>({
         success: true,
         message: "Success",
-        data: events
+        data: { events, utilEvents }
       });
       // biome-ignore lint:
     } catch (err: any) {

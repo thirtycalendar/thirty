@@ -24,6 +24,10 @@
 
   let { events }: WeekCalendarProps = $props();
 
+  $effect(() => {
+    console.log("events", events);
+  });
+
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));

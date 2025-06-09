@@ -5,7 +5,7 @@
   import { createQuery } from "$lib/client/utils/query/create-query";
   import { client } from "$lib/client/utils/rpc";
 
-  const { data: events } = createQuery({
+  const { data } = createQuery({
     queryFn: async () => {
       const res = await client.api.google.event.getAll.$get();
       const data = await res.json();
@@ -20,14 +20,14 @@
 <TaskModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
-  {#if $calView === "year" && $events}
+  {#if $calView === "year" && $data}
     <YearCalendar />
-  {:else if $calView === "month" && $events}
+  {:else if $calView === "month" && $data}
     <MonthCalendar />
-  {:else if $calView === "day" && $events}
+  {:else if $calView === "day" && $data}
     <DayCalendar />
-  {:else if $calView === "week" && $events}
-    <WeekCalendar events={$events} />
+  {:else if $calView === "week" && $data}
+    <WeekCalendar events={$data.events} />
   {:else}
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
