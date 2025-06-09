@@ -20,16 +20,16 @@ export interface CachedData {
 export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
   const { calendar, tasks } = await getGoogleClients(userId);
 
-  // 1. Fetch calendar list
+  // 1. Calendar list
   const calendarsRes = await calendar.calendarList.list();
   const calendarsRaw = calendarsRes.data.items ?? [];
 
-  // 2. Fetch color metadata
+  // 2. Color metadata
   const colorsRes = await calendar.colors.get();
   const calendarColors = colorsRes.data.calendar ?? {};
   const eventColors = colorsRes.data.event ?? {};
 
-  // 3. Map calendars
+  // 3. Normalize calendars
   const calendars: Calendar[] = calendarsRaw.map((cal) => ({
     id: cal.id as string,
     summary: cal.summary ?? "",
@@ -43,7 +43,7 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
 
   await kv.set(KV_GOOGLE_CALENDARS(userId), calendars, { ex: 3600 });
 
-  // 4. Fetch events for each calendar
+  // 4. Events + Util Events
   const allEvents: Event[] = [];
   const utilEvents: UtilEvent[] = [];
 
@@ -93,30 +93,17 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
         description: e.description,
         color: calendarBg,
         bgColor: eventBg,
-        organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined,
-        date: {
-          dateTime: start,
-          timeZone
-        }
+        organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined
       };
 
       if (isUtil) {
-        const date = new Date(start);
-        const mmdd = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-
-        const alreadyExists = utilEvents.some(
-          (u) => u.summary.toLowerCase() === summary && u.date.dateTime.endsWith(mmdd)
-        );
-
-        if (!alreadyExists) {
-          utilEvents.push({
-            ...base,
-            date: {
-              dateTime: `XXXX-${mmdd}`,
-              timeZone
-            }
-          });
-        }
+        utilEvents.push({
+          ...base,
+          date: {
+            dateTime: start,
+            timeZone
+          }
+        });
       } else {
         allEvents.push({
           ...base,
@@ -184,6 +171,7 @@ export async function deleteGoogleCalDataCache(userId: string) {
   await Promise.all([
     kv.del(KV_GOOGLE_CALENDARS(userId)),
     kv.del(KV_GOOGLE_EVENTS(userId)),
+    kv.del(KV_GOOGLE_UTIL_EVENTS(userId)),
     kv.del(KV_GOOGLE_TASKS(userId))
   ]);
 }
