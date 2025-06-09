@@ -17,6 +17,7 @@
   } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event, UtilEvent } from "$lib/types";
 
@@ -34,17 +35,37 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const weekEvents = derived(days, ($days) => {
+  const weekEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
     const weekStart = $days[0];
     const weekEnd = endOfDay($days[6]);
 
     return events.filter((event) => {
+      const calendarId = event.calendarId;
+      const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+
+      if (!isVisible) return false;
+
       const start = parseISO(event.start.dateTime);
       const end = parseISO(event.end.dateTime);
       return (
         isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
         isWithinInterval(end, { start: weekStart, end: weekEnd })
       );
+    });
+  });
+
+  const weekUtilEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
+    const weekStart = $days[0];
+    const weekEnd = endOfDay($days[6]);
+
+    return utilEvents.filter((event) => {
+      const calendarId = event.calendarId;
+      const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+
+      if (!isVisible) return false;
+
+      const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
+      return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
     });
   });
 
@@ -55,16 +76,6 @@
     }
     return parsed;
   }
-
-  const weekUtilEvents = derived(days, ($days) => {
-    const weekStart = $days[0];
-    const weekEnd = endOfDay($days[6]);
-
-    return utilEvents.filter((event) => {
-      const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
-      return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
-    });
-  });
 
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;

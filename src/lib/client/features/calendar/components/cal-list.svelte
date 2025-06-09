@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { slide } from "svelte/transition";
   import { browser } from "$app/environment";
 
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
   import { session } from "$lib/client/stores/user-session";
   import { createQuery } from "$lib/client/utils/query/create-query";
   import { client } from "$lib/client/utils/rpc";
@@ -30,33 +32,22 @@
     }
   };
 
-  const getCheckedStates = (): Record<string, boolean> => {
-    if (!browser) return {};
-    try {
-      return JSON.parse(localStorage.getItem("checked-calendars") || "{}");
-    } catch {
-      return {};
-    }
-  };
-
-  let checkedCalendars = $state<Record<string, boolean>>(getCheckedStates());
-
   const isChecked = (id: string) => {
-    return checkedCalendars[id] ?? true;
+    const storeVal = get(checkedCalendars);
+    return storeVal[id] ?? true;
   };
 
   const toggleChecked = (id: string) => {
-    checkedCalendars[id] = !isChecked(id);
-    if (browser) {
-      localStorage.setItem("checked-calendars", JSON.stringify(checkedCalendars));
-    }
+    checkedCalendars.update((curr) => ({
+      ...curr,
+      [id]: !(curr[id] ?? true)
+    }));
   };
 
-  let { data, isPending } = createQuery({
+  const { data: calendars, isPending } = createQuery({
     queryFn: async () => {
       const res = await client.api.google.calendar.getAll.$get();
       const data = await res.json();
-
       if (!data.success) throw new Error(data.message);
       return data.data;
     },
@@ -64,7 +55,7 @@
   });
 
   let owners = $derived(
-    $data
+    $calendars
       ?.filter((c) => c.accessRole === "owner")
       ?.map((c) => {
         const isGmail = /@gmail\.com$/i.test(c.id);
@@ -76,11 +67,11 @@
   );
 
   let readers = $derived(
-    $data?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
+    $calendars?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
   );
 
   let holidays = $derived(
-    $data
+    $calendars
       ?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary))
       ?.map((c) => ({
         ...c,
@@ -123,7 +114,7 @@
         </div>
       </div>
 
-      {#if $data && isExpanded(title)}
+      {#if $calendars && isExpanded(title)}
         <div class="my-1" transition:slide>
           {#each cal as { id, backgroundColor, summary }}
             <label
