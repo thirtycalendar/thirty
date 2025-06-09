@@ -95,7 +95,22 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
       };
 
       if (isUtil) {
-        utilEvents.push(base);
+        const date = new Date(start);
+        const mmdd = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+
+        const alreadyExists = utilEvents.some(
+          (u) => u.summary.toLowerCase() === summary && u.date.dateTime.endsWith(mmdd)
+        );
+
+        if (!alreadyExists) {
+          utilEvents.push({
+            ...base,
+            date: {
+              dateTime: `XXXX-${mmdd}`,
+              timeZone
+            }
+          });
+        }
       } else {
         allEvents.push({
           ...base,
