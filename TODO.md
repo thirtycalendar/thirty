@@ -1,0 +1,1 @@
+- [ ] Make the event blocks better like Google Calendar events if they have shared time.

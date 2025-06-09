@@ -55,13 +55,17 @@
   <div class="w-1 h-full rounded-sm shrink-0" style={`background-color: ${event.color};`}></div>
 
   <div class="text-primary w-full" style={`background-color: ${event.bgColor};`}>
-    {#if heightPx < 30}
-      <p class={`${heightPx < 24 ? "text-[10px]" : "text-xs"} truncate`}>
+    {#if heightPx < 28}
+      <p class={`${heightPx < 24 ? "text-[10px]" : "text-xs"} ${heightPx < 40 ? "truncate" : ""}`}>
         {event.summary}, {formatStartTime(start)}
       </p>
     {:else}
       <div class="py-1">
-        <p class="text-xs font-medium truncate">
+        <p
+          class="text-xs font-medium"
+          class:truncate={heightPx < 40}
+          class:line-clamp-2={heightPx >= 40 && heightPx < 60}
+        >
           {event.summary}
         </p>
         <p class="text-[10px] truncate">
