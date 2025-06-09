@@ -49,9 +49,14 @@
   });
 
   function normalizeUtilEventDate(dateStr: string): Date {
-    const [_, month, day] = dateStr.split("-");
-    const year = getYear(now); // reuse `now`
-    return parse(`${year}-${month}-${day}`, "yyyy-MM-dd", new Date());
+    if (dateStr.startsWith("XXXX")) {
+      const [, month, day] = dateStr.split("-");
+      const year = getYear(now);
+      return parse(`${year}-${month}-${day}`, "yyyy-MM-dd", new Date());
+    } else {
+      // Full date with real year
+      return parseISO(dateStr);
+    }
   }
 
   const weekUtilEvents = derived(days, ($days) => {
