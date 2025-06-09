@@ -20,7 +20,7 @@
 </script>
 
 <div
-  class="z-10 absolute left-1 right-1 rounded-md p-1 text-xs text-white overflow-hidden cursor-pointer select-none"
+  class="z-10 absolute left-1 right-1 rounded-md p-1 text-xs text-white overflow-hidden cursor-pointer select-none opacity-90"
   style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.color}; pointer-events: auto;`}
   title={event.summary}
 >

@@ -58,17 +58,20 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
         ): e is typeof e & { start: NonNullable<typeof e.start>; end: NonNullable<typeof e.end> } =>
           !!e.start && (!!e.start.dateTime || !!e.start.date) && !!e.end
       )
-      .map(
-        (e): Event => ({
+      .map((e): Event => {
+        const eventColorId = e.colorId;
+        const calendarColorId = cal.colorId as keyof typeof calendarColors;
+
+        const calendarBg = calendarColors[calendarColorId]?.background ?? "#9a9cff";
+        const eventBg = eventColorId ? eventColors[eventColorId]?.background : undefined;
+
+        return {
           id: e.id as string,
           calendarId: cal.id as string,
           summary: e.summary ?? "",
           description: e.description,
-          color:
-            e.colorId && eventColors[e.colorId]
-              ? eventColors[e.colorId].background
-              : (calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
-                "#9a9cff"),
+          color: calendarBg, // calendar-level color
+          bgColor: eventBg ?? calendarBg, // event-level color if available
           organizer: e.organizer?.displayName
             ? { displayName: e.organizer.displayName }
             : undefined,
@@ -89,8 +92,8 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
               }
             : undefined,
           eventType: e.eventType ?? "default"
-        })
-      );
+        };
+      });
 
     allEvents.push(...mapped);
   }

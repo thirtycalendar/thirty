@@ -14,6 +14,7 @@ export interface Event {
   summary: string;
   description?: string | null;
   color?: string | null;
+  bgColor?: string | null;
   organizer?: {
     displayName: string;
   };
