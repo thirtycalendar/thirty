@@ -17,6 +17,7 @@
   - (6.9.06) - Better styling.
   - (6.9.07) - Fixed color error. Still styling events.
   - (6.9.08) - Better event style.
+  - (6.9.09) - Showed holidays.
 - Sun Jun 8, 2025
   - (6.8.01) - Listed all the calendars from api.
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.

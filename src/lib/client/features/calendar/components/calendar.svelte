@@ -27,7 +27,7 @@
   {:else if $calView === "day" && $data}
     <DayCalendar />
   {:else if $calView === "week" && $data}
-    <WeekCalendar events={$data.events} />
+    <WeekCalendar events={$data.events} utilEvents={$data.utilEvents} />
   {:else}
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>

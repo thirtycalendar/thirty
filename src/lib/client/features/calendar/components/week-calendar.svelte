@@ -7,8 +7,10 @@
     addDays,
     endOfDay,
     format,
+    getYear,
     isToday,
     isWithinInterval,
+    parse,
     parseISO,
     setHours,
     startOfWeek
@@ -16,17 +18,14 @@
 
   import { currentDate } from "$lib/client/stores/change-date";
 
-  import type { Event } from "$lib/types";
+  import type { Event, UtilEvent } from "$lib/types";
 
   interface WeekCalendarProps {
     events: Event[];
+    utilEvents: UtilEvent[];
   }
 
-  let { events }: WeekCalendarProps = $props();
-
-  $effect(() => {
-    console.log("events", events);
-  });
+  let { events, utilEvents }: WeekCalendarProps = $props();
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
@@ -42,11 +41,26 @@
     return events.filter((event) => {
       const start = parseISO(event.start.dateTime);
       const end = parseISO(event.end.dateTime);
-
       return (
         isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
         isWithinInterval(end, { start: weekStart, end: weekEnd })
       );
+    });
+  });
+
+  function normalizeUtilEventDate(dateStr: string): Date {
+    const [_, month, day] = dateStr.split("-");
+    const year = getYear(now); // reuse `now`
+    return parse(`${year}-${month}-${day}`, "yyyy-MM-dd", new Date());
+  }
+
+  const weekUtilEvents = derived(days, ($days) => {
+    const weekStart = $days[0];
+    const weekEnd = endOfDay($days[6]);
+
+    return utilEvents.filter((event) => {
+      const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
+      return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
     });
   });
 
@@ -81,13 +95,27 @@
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
     <div></div>
     {#each $days as day}
-      <div class="h-8 flex flex-col border-b border-base-200 items-center justify-center relative">
-        <div class={`font-semibold ${isToday(day) ? "text-secondary-content" : ""}`}>
+      <div
+        class="min-h-14 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
+      >
+        <!-- Day Label -->
+        <div class={`font-semibold text-center ${isToday(day) ? "text-secondary-content" : ""}`}>
           <p>
             {format(day, "EEE")}
             <span class="block sm:inline mb-2 sm:mb-0">{format(day, "d")}</span>
           </p>
         </div>
+
+        <!-- Util Events -->
+        {#each $weekUtilEvents.filter((e) => format(normalizeUtilEventDate(e.date.dateTime), "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as util}
+          <div
+            class="text-primary text-[10px] py-[2px] px-[3px] rounded-md truncate max-w-full"
+            style="background-color: {util.bgColor || '#e5e7eb'};"
+            title={util.summary}
+          >
+            {util.summary}
+          </div>
+        {/each}
       </div>
     {/each}
   </div>
