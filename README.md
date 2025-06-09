@@ -13,6 +13,7 @@
   - (6.9.02) - Separated events and util events.
   - (6.9.03) - Updated event api routes.
   - (6.9.04) - Remove duplicate util events.
+  - (6.9.05) - Styling event block.
 - Sun Jun 8, 2025
   - (6.8.01) - Listed all the calendars from api.
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.
