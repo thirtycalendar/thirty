@@ -98,7 +98,7 @@
     <div></div>
     {#each $days as day}
       <div
-        class="min-h-14 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
+        class="min-h-8 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
       >
         <!-- Day Label -->
         <div class={`font-semibold text-center ${isToday(day) ? "text-secondary-content" : ""}`}>
