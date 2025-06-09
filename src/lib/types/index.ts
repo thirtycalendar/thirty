@@ -35,6 +35,22 @@ export interface Event {
   eventType: string;
 }
 
+export interface UtilEvent {
+  id: string;
+  calendarId: string;
+  summary: string;
+  description?: string | null;
+  color?: string | null;
+  bgColor?: string | null;
+  organizer?: {
+    displayName: string;
+  };
+  date: {
+    dateTime: string;
+    timeZone: string;
+  };
+}
+
 export interface Task {
   id: string;
   title: string;

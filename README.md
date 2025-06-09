@@ -10,6 +10,7 @@
 
 - Mon Jun 9, 2025
   - (6.9.01) - color and bg color of an event.
+  - (6.9.02) - Separated events and util events.
 - Sun Jun 8, 2025
   - (6.8.01) - Listed all the calendars from api.
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.
