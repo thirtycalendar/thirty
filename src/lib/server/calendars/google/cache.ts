@@ -77,8 +77,14 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
       const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
 
       const calendarBg =
-        calendarColors[cal.colorId as keyof typeof calendarColors]?.background ?? "#9a9cff";
-      const eventBg = e.colorId ? eventColors[e.colorId]?.background : null;
+        calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
+        cal.backgroundColor ??
+        "#9a9cff";
+
+      const eventBg =
+        e.colorId && eventColors[e.colorId]?.background
+          ? eventColors[e.colorId].background
+          : calendarBg;
 
       const base = {
         id: e.id as string,
@@ -86,7 +92,7 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
         summary: e.summary ?? "",
         description: e.description,
         color: calendarBg,
-        bgColor: eventBg ?? calendarBg,
+        bgColor: eventBg,
         organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined,
         date: {
           dateTime: start,

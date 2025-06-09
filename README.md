@@ -15,6 +15,7 @@
   - (6.9.04) - Remove duplicate util events.
   - (6.9.05) - Styling event block.
   - (6.9.06) - Better styling.
+  - (6.9.07) - Fixed color error. Still styling events.
 - Sun Jun 8, 2025
   - (6.8.01) - Listed all the calendars from api.
   - (6.8.02) - Loading state and toggle calendar list status in localStorage.
