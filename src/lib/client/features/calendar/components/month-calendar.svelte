@@ -15,6 +15,15 @@
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
 
+  import type { Event, UtilEvent } from "$lib/types";
+
+  interface WeekCalendarProps {
+    events: Event[];
+    utilEvents: UtilEvent[];
+  }
+
+  let { events, utilEvents }: WeekCalendarProps = $props();
+
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));
     const end = endOfWeek(endOfMonth($currentDate));
