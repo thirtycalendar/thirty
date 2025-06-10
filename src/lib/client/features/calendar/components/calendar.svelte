@@ -20,14 +20,16 @@
 <TaskModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
-  {#if $calView === "year" && $data}
-    <YearCalendar />
-  {:else if $calView === "month" && $data}
-    <MonthCalendar />
-  {:else if $calView === "day" && $data}
-    <DayCalendar events={$data.events} utilEvents={$data.utilEvents} />
-  {:else if $calView === "week" && $data}
-    <WeekCalendar events={$data.events} utilEvents={$data.utilEvents} />
+  {#if $data}
+    {#if $calView === "year"}
+      <YearCalendar />
+    {:else if $calView === "month"}
+      <MonthCalendar />
+    {:else if $calView === "day"}
+      <DayCalendar events={$data.events} utilEvents={$data.utilEvents} />
+    {:else}
+      <WeekCalendar events={$data.events} utilEvents={$data.utilEvents} />
+    {/if}
   {:else}
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
