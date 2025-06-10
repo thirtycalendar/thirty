@@ -26,13 +26,13 @@ export interface Event {
     dateTime: string;
     timeZone: string;
   };
-  reminders:
+  reminders?:
     | {
         useDefault?: boolean;
         overrides?: Array<{ minutes?: number | null }>;
       }
     | undefined;
-  eventType: string;
+  eventType?: string;
 }
 
 export interface UtilEvent {

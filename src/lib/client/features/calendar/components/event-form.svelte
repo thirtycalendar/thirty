@@ -1,19 +1,25 @@
 <script lang="ts">
-  import type { EventForm } from "$lib/types";
   import { InputField } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
+  import type { Event } from "$lib/types";
+
   import { eventSchema } from "../schema";
 
-  let defaultValues: EventForm = {
-    name: "",
-    calendar: "",
-    date: "",
-    timeFrom: "",
-    timeTo: "",
-    location: "",
+  let defaultValues: Omit<Event, "id"> = {
+    calendarId: "",
+    summary: "",
     description: "",
-    notifyIn: ""
+    color: "",
+    bgColor: "",
+    start: {
+      dateTime: "",
+      timeZone: ""
+    },
+    end: {
+      dateTime: "",
+      timeZone: ""
+    }
   };
 
   let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
@@ -28,7 +34,7 @@
 </script>
 
 <form onsubmit={handleSubmit(onSubmit)}>
-  <InputField name="name" placeholder="Name" {handleInput} {formData} {formErrors} />
+  <InputField name="summary" placeholder="Name" {handleInput} {formData} {formErrors} />
 
   <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save
