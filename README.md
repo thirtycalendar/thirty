@@ -16,6 +16,7 @@
   - (6.10.05) - Tying to show events and utilEvents in month calendar.
   - (6.10.06) - Kinda working.
   - (6.10.07) - Month calendar view is working now.
+  - (6.10.08) - Updated cal list.
 - Mon Jun 9, 2025
   - (6.9.01) - color and bg color of an event.
   - (6.9.02) - Separated events and util events.

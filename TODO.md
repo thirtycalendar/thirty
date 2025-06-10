@@ -1,1 +1,2 @@
 - [ ] Make the event blocks better like Google Calendar events if they have shared time.
+- [ ] Clean, faster, and reduce redundancy codes in `week-calendar`, `day-calendar`, and `month-calendar` components.

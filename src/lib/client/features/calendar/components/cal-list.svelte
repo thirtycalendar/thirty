@@ -89,10 +89,10 @@
 {:else}
   {@render CalendarList("My Calendars", owners)}
   {@render CalendarList("Others", readers)}
-  {@render CalendarList("Holidays", holidays, false)}
+  {@render CalendarList("Holidays", holidays)}
 {/if}
 
-{#snippet CalendarList(title: string, cal: Calendar[], showSetting: boolean = true)}
+{#snippet CalendarList(title: string, cal: Calendar[])}
   {#if cal.length > 0}
     <div class="my-2">
       <div
@@ -101,9 +101,11 @@
         <p>{title}</p>
 
         <div>
-          <button class="btn btn-xs btn-ghost btn-square">
-            <Plus size="16" />
-          </button>
+          {#if title === "My Calendars"}
+            <button class="btn btn-xs btn-ghost btn-square">
+              <Plus size="16" />
+            </button>
+          {/if}
 
           <button
             class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${isExpanded(title) && "rotate-180"}`}
@@ -133,7 +135,7 @@
                 >
               </div>
 
-              {#if showSetting}
+              {#if title !== "Holidays"}
                 <button
                   class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
                 >
