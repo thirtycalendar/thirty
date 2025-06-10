@@ -25,7 +25,7 @@
   {:else if $calView === "month" && $data}
     <MonthCalendar />
   {:else if $calView === "day" && $data}
-    <DayCalendar />
+    <DayCalendar events={$data.events} utilEvents={$data.utilEvents} />
   {:else if $calView === "week" && $data}
     <WeekCalendar events={$data.events} utilEvents={$data.utilEvents} />
   {:else}

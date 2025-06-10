@@ -5,7 +5,16 @@
 
   import { currentDate } from "$lib/client/stores/change-date";
 
-  let date = $currentDate;
+  import type { Event, UtilEvent } from "$lib/types";
+
+  interface WeekCalendarProps {
+    events: Event[];
+    utilEvents: UtilEvent[];
+  }
+
+  let { events, utilEvents }: WeekCalendarProps = $props();
+
+  let date = $state($currentDate);
 
   let scrollContainer: HTMLDivElement;
   let now = new Date();

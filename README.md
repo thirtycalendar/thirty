@@ -10,6 +10,7 @@
 
 - Tue Jun 10, 2025
   - (6.10.01) - Removed unused imports.
+  - (6.10.02) - Trying to show events and utilEvents in day calendar.
 - Mon Jun 9, 2025
   - (6.9.01) - color and bg color of an event.
   - (6.9.02) - Separated events and util events.
