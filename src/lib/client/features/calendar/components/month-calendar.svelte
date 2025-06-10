@@ -8,21 +8,27 @@
     format,
     isSameMonth,
     isToday,
+    isWithinInterval,
+    parseISO,
     startOfMonth,
     startOfWeek
   } from "date-fns";
 
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event, UtilEvent } from "$lib/types";
 
-  interface WeekCalendarProps {
+  interface MonthCalendarProps {
     events: Event[];
     utilEvents: UtilEvent[];
   }
 
-  let { events, utilEvents }: WeekCalendarProps = $props();
+  let { events, utilEvents }: MonthCalendarProps = $props();
+
+  // Maximum number of events to show per day before showing "+N more"
+  const MAX_EVENTS_PER_DAY = 4;
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));
@@ -35,11 +41,64 @@
     return result;
   });
 
+  // Helper to normalize util event dates safely
+  function normalizeUtilEventDate(dateStr: string) {
+    return parseISO(dateStr);
+  }
+
+  /**
+   * Creates a map of events keyed by day ("yyyy-MM-dd").
+   * This is much more performant than filtering inside the loop.
+   */
+  const eventsByDay = derived(
+    [currentDate, checkedCalendars],
+    ([$currentDate, $checkedCalendars]) => {
+      const monthStart = startOfWeek(startOfMonth($currentDate));
+      const monthEnd = endOfWeek(endOfMonth($currentDate));
+      const dailyEventsMap: Record<string, { summary: string; color: string }[]> = {};
+
+      const addEventToMap = (date: Date, event: { summary: string; bgColor: string }) => {
+        const dayKey = format(date, "yyyy-MM-dd");
+        if (!dailyEventsMap[dayKey]) {
+          dailyEventsMap[dayKey] = [];
+        }
+        dailyEventsMap[dayKey].push({ summary: event.summary, color: event.bgColor });
+      };
+
+      // Process Util Events (all-day)
+      utilEvents.forEach((event) => {
+        const isVisible =
+          !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
+        if (!isVisible) return;
+
+        const eventDate = normalizeUtilEventDate(event.date.dateTime);
+        if (isWithinInterval(eventDate, { start: monthStart, end: monthEnd })) {
+          addEventToMap(eventDate, event);
+        }
+      });
+
+      // Process Timed Events
+      events.forEach((event) => {
+        const isVisible =
+          !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
+        if (!isVisible) return;
+
+        const startDate = parseISO(event.start.dateTime);
+        // Simple approach: show event on its start day.
+        // For multi-day events, more complex logic would be needed to span them.
+        if (isWithinInterval(startDate, { start: monthStart, end: monthEnd })) {
+          addEventToMap(startDate, event);
+        }
+      });
+
+      return dailyEventsMap;
+    }
+  );
+
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 </script>
 
 <div class="flex flex-col h-full py-3">
-  <!-- Day Headers -->
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
     {#each dayLabels as label}
       <div class="h-8 flex items-center justify-center font-semibold">
@@ -48,34 +107,48 @@
     {/each}
   </div>
 
-  <!-- Month Grid -->
-  <div class="grid grid-cols-7 row-5 h-full bg-base-100 text-xs rounded-2xl w-full relative">
+  <div class="grid grid-cols-7 grid-rows-5 h-full bg-base-100 text-xs rounded-2xl w-full">
     {#each $days as day}
+      {@const dayKey = format(day, "yyyy-MM-dd")}
+      {@const dayEvents = $eventsByDay[dayKey] || []}
       <button
-        class="border border-base-200 px-2 py-1 relative hover:bg-base-300/10 transition-colors"
-        data-day={format(day, "yyyy-MM-dd")}
+        class="border border-base-200 px-1 py-1 text-left relative hover:bg-base-300/10 transition-colors flex flex-col items-start"
         onclick={() => {
           currentDate.set(day);
           changeToDayView();
         }}
       >
-        <div class="text-xs font-medium absolute top-1 right-1">
+        <div class="self-end text-xs font-medium mb-1">
           <span
-            class={`select-none ${
-              isToday(day)
-                ? "text-primary bg-primary-content font-bold rounded p-[1px]"
-                : !isSameMonth(day, $currentDate)
-                  ? "text-base-content/40"
-                  : ""
-            }`}
+            class:select-none={true}
+            class:text-primary={isToday(day)}
+            class:bg-primary-content={isToday(day)}
+            class:font-bold={isToday(day)}
+            class:rounded={isToday(day)}
+            class:p-[1px]={isToday(day)}
+            class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
+            class:text-base={!isSameMonth(day, $currentDate)}
           >
             {format(day, "d")}
           </span>
         </div>
 
-        <!-- Event slot -->
-        <div class="absolute inset-x-1 top-6 space-y-1 text-[10px] leading-tight">
-          <!-- Inject events here -->
+        <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
+          {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
+            <div
+              class="font-semibold truncate"
+              style="color: {event.color || 'var(--fallback-text-color, #333)'}"
+              title={event.summary}
+            >
+              {event.summary}
+            </div>
+          {/each}
+
+          {#if dayEvents.length > MAX_EVENTS_PER_DAY}
+            <div class="font-bold text-base-content/80">
+              + {dayEvents.length - MAX_EVENTS_PER_DAY} more
+            </div>
+          {/if}
         </div>
       </button>
     {/each}

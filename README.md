@@ -14,6 +14,7 @@
   - (6.10.03) - Showed events in day calendar.
   - (6.10.04) - Improved codes.
   - (6.10.05) - Tying to show events and utilEvents in month calendar.
+  - (6.10.06) - Kinda working.
 - Mon Jun 9, 2025
   - (6.9.01) - color and bg color of an event.
   - (6.9.02) - Separated events and util events.
