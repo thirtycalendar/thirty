@@ -27,7 +27,6 @@
 
   let { events, utilEvents }: MonthCalendarProps = $props();
 
-  // Maximum number of events to show per day before showing "+N more"
   const MAX_EVENTS_PER_DAY = 4;
 
   const days = derived(currentDate, ($currentDate) => {
@@ -41,28 +40,35 @@
     return result;
   });
 
-  // Helper to normalize util event dates safely
   function normalizeUtilEventDate(dateStr: string) {
     return parseISO(dateStr);
   }
 
-  /**
-   * Creates a map of events keyed by day ("yyyy-MM-dd").
-   * This is much more performant than filtering inside the loop.
-   */
   const eventsByDay = derived(
     [currentDate, checkedCalendars],
     ([$currentDate, $checkedCalendars]) => {
       const monthStart = startOfWeek(startOfMonth($currentDate));
       const monthEnd = endOfWeek(endOfMonth($currentDate));
-      const dailyEventsMap: Record<string, { summary: string; color: string }[]> = {};
 
-      const addEventToMap = (date: Date, event: { summary: string; bgColor: string }) => {
+      const dailyEventsMap: Record<
+        string,
+        { summary: string; color: string | null | undefined; isUtilEvent: boolean }[]
+      > = {};
+
+      const addEventToMap = (
+        date: Date,
+        event: { summary: string; bgColor?: string | null | undefined },
+        isUtilEvent: boolean
+      ) => {
         const dayKey = format(date, "yyyy-MM-dd");
         if (!dailyEventsMap[dayKey]) {
           dailyEventsMap[dayKey] = [];
         }
-        dailyEventsMap[dayKey].push({ summary: event.summary, color: event.bgColor });
+        dailyEventsMap[dayKey].push({
+          summary: event.summary,
+          color: event.bgColor,
+          isUtilEvent
+        });
       };
 
       // Process Util Events (all-day)
@@ -73,7 +79,7 @@
 
         const eventDate = normalizeUtilEventDate(event.date.dateTime);
         if (isWithinInterval(eventDate, { start: monthStart, end: monthEnd })) {
-          addEventToMap(eventDate, event);
+          addEventToMap(eventDate, event, true); // Mark as util event
         }
       });
 
@@ -84,10 +90,8 @@
         if (!isVisible) return;
 
         const startDate = parseISO(event.start.dateTime);
-        // Simple approach: show event on its start day.
-        // For multi-day events, more complex logic would be needed to span them.
         if (isWithinInterval(startDate, { start: monthStart, end: monthEnd })) {
-          addEventToMap(startDate, event);
+          addEventToMap(startDate, event, false); // Mark as regular event
         }
       });
 
@@ -136,8 +140,13 @@
         <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
             <div
-              class="font-semibold truncate"
-              style="color: {event.color || 'var(--fallback-text-color, #333)'}"
+              class="font-semibold truncate px-1 rounded"
+              style:background-color={event.isUtilEvent
+                ? event.color || "var(--fallback-bg-color, #ccc)"
+                : "transparent"}
+              style:color={event.isUtilEvent
+                ? "white"
+                : event.color || "var(--fallback-text-color, #333)"}
               title={event.summary}
             >
               {event.summary}
