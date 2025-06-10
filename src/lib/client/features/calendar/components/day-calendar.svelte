@@ -1,26 +1,84 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
+  import { derived } from "svelte/store";
 
-  import { differenceInMinutes, format, isToday, setHours, startOfDay } from "date-fns";
+  import { EventBlock } from ".";
+  import {
+    differenceInMinutes,
+    endOfDay,
+    format,
+    isToday,
+    isWithinInterval,
+    parseISO,
+    setHours,
+    startOfDay
+  } from "date-fns";
 
   import { currentDate } from "$lib/client/stores/change-date";
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event, UtilEvent } from "$lib/types";
 
-  interface WeekCalendarProps {
+  interface DayCalendarProps {
     events: Event[];
     utilEvents: UtilEvent[];
   }
 
-  let { events, utilEvents }: WeekCalendarProps = $props();
-
-  let date = $state($currentDate);
+  let { events, utilEvents }: DayCalendarProps = $props();
 
   let scrollContainer: HTMLDivElement;
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  const dayEvents = derived(
+    [currentDate, checkedCalendars],
+    ([$currentDate, $checkedCalendars]) => {
+      const dayStart = startOfDay($currentDate);
+      const dayEnd = endOfDay($currentDate);
+
+      return events.filter((event) => {
+        const calendarId = event.calendarId;
+        const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+
+        if (!isVisible) return false;
+
+        const start = parseISO(event.start.dateTime);
+        const end = parseISO(event.end.dateTime);
+        return (
+          isWithinInterval(start, { start: dayStart, end: dayEnd }) ||
+          isWithinInterval(end, { start: dayStart, end: dayEnd })
+        );
+      });
+    }
+  );
+
+  const dayUtilEvents = derived(
+    [currentDate, checkedCalendars],
+    ([$currentDate, $checkedCalendars]) => {
+      const dayStart = startOfDay($currentDate);
+      const dayEnd = endOfDay($currentDate);
+
+      return utilEvents.filter((event) => {
+        const calendarId = event.calendarId;
+        const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+
+        if (!isVisible) return false;
+
+        const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
+        return isWithinInterval(normalizedDate, { start: dayStart, end: dayEnd });
+      });
+    }
+  );
+
+  function normalizeUtilEventDate(dateStr: string) {
+    const parsed = parseISO(dateStr);
+    if (isNaN(parsed.getTime())) {
+      console.warn("Invalid utilEvent date:", dateStr);
+    }
+    return parsed;
+  }
 
   const getLineOffset = () => {
     const minutes = differenceInMinutes(now, startOfDay(now));
@@ -34,65 +92,76 @@
     }
   }
 
-  const unsubscribe = currentDate.subscribe((value) => {
-    date = value;
-    if (isToday(date)) {
+  currentDate.subscribe((value) => {
+    if (isToday(value)) {
       now = new Date();
       scrollToCurrentTime();
     }
   });
 
   onMount(() => {
-    if (isToday(date)) scrollToCurrentTime();
+    if (isToday($currentDate)) scrollToCurrentTime();
 
     timer = setInterval(() => {
       now = new Date();
-      if (isToday(date)) scrollToCurrentTime();
-    }, 60 * 1000);
+    }, 60 * 1000); // No need to scroll here, the red line position is reactive
   });
 
   onDestroy(() => {
     clearInterval(timer);
-    unsubscribe();
   });
 </script>
 
 <div class="flex flex-col h-full py-3">
-  <!-- Day Header -->
-  <div
-    class="h-8 flex items-center justify-center text-sm bg-base-200 border-b border-base-200 sticky top-0 z-10"
-  >
-    <div class={`font-semibold ${isToday(date) ? "text-primary-content" : ""}`}>
-      {format(date, "EEEE, MMM d")}
+  <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200 px-1 py-1">
+    <div class="flex flex-col items-center justify-start gap-1">
+      <div
+        class={`font-semibold text-center ${isToday($currentDate) ? "text-secondary-content" : ""}`}
+      >
+        {format($currentDate, "EEEE, MMM d")}
+      </div>
+
+      {#each $dayUtilEvents as util}
+        <div
+          class="text-primary text-[10px] py-[2px] px-[3px] mb-1 rounded-md truncate w-full"
+          style="background-color: {util.bgColor || '#e5e7eb'};"
+          title={util.summary}
+        >
+          {util.summary}
+        </div>
+      {/each}
     </div>
   </div>
 
-  <!-- Time Grid -->
   <div
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto bg-base-100 relative rounded-2xl text-xs"
   >
     <div class="grid grid-cols-[50px_1fr]">
       {#each hours as hour}
-        <!-- Time Label -->
         <div
           class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70 border-r border-base-200"
         >
           {format(setHours(new Date(), hour), "h a")}
         </div>
 
-        <!-- Hour Block -->
         <div
           class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
-          data-day={format(date, "yyyy-MM-dd")}
+          data-day={format($currentDate, "yyyy-MM-dd")}
           data-hour={hour}
         >
-          {#if isToday(date) && hour === 0}
+          {#if isToday($currentDate) && hour === 0}
             <div
               class="z-10 absolute left-0 right-0 h-px bg-red-500"
-              style={`top: ${getLineOffset()}px`}
+              style="top: {getLineOffset()}px"
             ></div>
           {/if}
+
+          {#each $dayEvents as event}
+            {#if parseInt(format(parseISO(event.start.dateTime), "H")) === hour}
+              <EventBlock {event} />
+            {/if}
+          {/each}
         </div>
       {/each}
     </div>
