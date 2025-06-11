@@ -37,13 +37,17 @@ export const createForm = <T>({
       return;
     }
 
-    const result = schema.safeParse({ ...get(formData), [field]: value });
+    const currentFormData = get(formData);
+    const dataForValidation = { ...currentFormData, [field]: value };
+
+    const result = schema.safeParse(dataForValidation);
 
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors as Record<keyof T, string[]>;
+      const errorMessage = fieldErrors[field]?.[0] || "";
       formErrors.update((e) => ({
         ...e,
-        [field]: fieldErrors[field]?.[0] || ""
+        [field]: errorMessage
       }));
     } else {
       formErrors.update((e) => ({ ...e, [field]: "" }));
@@ -54,22 +58,25 @@ export const createForm = <T>({
     const disabled = get(disabledFields);
     const result = schema.safeParse(data);
 
+    formErrors.set({});
+
     if (!result.success) {
       const fieldErrors = result.error.formErrors.fieldErrors as Record<keyof T, string[]>;
+      let hasErrorsForEnabledFields = false;
+      const newFormErrors: Partial<Record<keyof T, string>> = {};
 
-      formErrors.set(
-        Object.fromEntries(
-          Object.entries(fieldErrors)
-            .filter(([key]) => !disabled.has(key as keyof T))
-            .map(([key, value]) => [key, (value as string[])[0]])
-        ) as Partial<Record<keyof T, string>>
-      );
+      for (const key in fieldErrors) {
+        if (!disabled.has(key as keyof T)) {
+          newFormErrors[key as keyof T] = fieldErrors[key]?.[0] || "";
+          hasErrorsForEnabledFields = true;
+        }
+      }
+      formErrors.set(newFormErrors);
 
-      // Check if there are any remaining errors after filtering out disabled fields
-      return Object.keys(get(formErrors)).length === 0;
+      const isValid = !hasErrorsForEnabledFields;
+      return isValid;
     }
 
-    formErrors.set({});
     return true;
   }
 
@@ -112,6 +119,8 @@ export const createForm = <T>({
         isSubmitting.set(true);
         try {
           await callback(data);
+        } catch (e) {
+          console.error("Error during form submission callback:", e);
         } finally {
           isSubmitting.set(false);
         }

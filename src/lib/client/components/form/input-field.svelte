@@ -43,7 +43,7 @@
     {name}
     class={cn("input w-full focus:outline-none", error ? "input-error" : "", className)}
     oninput={handleInput}
-    {value}
+    value={value ?? ""}
     {placeholder}
     {disabled}
     step={type === "number" ? "0.01" : undefined}

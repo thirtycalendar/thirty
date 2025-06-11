@@ -23,10 +23,9 @@
     defaultValues
   });
 
-  // Accept data argument, which createForm passes on submit
-  async function onSubmit(data: EventForm) {
+  async function onSubmit() {
     console.log("Submitted...");
-    console.log("Form data:", data);
+    console.log("Form data:", $formData);
   }
 </script>
 
