@@ -44,9 +44,6 @@
     const suffix = d.getHours() < 12 ? "am" : "pm";
     return m ? `${h}:${m.toString().padStart(2, "0")} ${suffix}` : `${h} ${suffix}`;
   }
-
-  console.log("event:", event.summary);
-  console.log("event cal id:", event.calendarId);
 </script>
 
 <div

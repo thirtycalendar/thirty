@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const eventSchema = z.object({
-  id: z.string(),
   calendarId: z.string(),
   summary: z.string(),
   description: z.string().nullable().optional(),
@@ -13,11 +12,11 @@ export const eventSchema = z.object({
     })
     .optional(),
   start: z.object({
-    dateTime: z.string().datetime(),
+    dateTime: z.string(),
     timeZone: z.string()
   }),
   end: z.object({
-    dateTime: z.string().datetime(),
+    dateTime: z.string(),
     timeZone: z.string()
   }),
   reminders: z

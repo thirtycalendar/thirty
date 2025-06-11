@@ -116,7 +116,7 @@ export const createForm = <T>({
           isSubmitting.set(false);
         }
       } else {
-        console.log("Form validation failed");
+        console.log("Form validation failed. Errors:", get(formErrors));
       }
     };
   }
