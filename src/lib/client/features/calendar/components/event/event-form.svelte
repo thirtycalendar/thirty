@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CalendarField, InputField } from "$lib/client/components";
+  import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
   import type { EventForm } from "$lib/types";
@@ -37,8 +37,10 @@
   <InputField name="description" placeholder="Description" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
+
   <CalendarField name="startDate" {handleInput} {formData} {formErrors} />
-  <InputField name="startTime" placeholder="Start time" {handleInput} {formData} {formErrors} />
+  <TimeField name="startTime" {handleInput} {formData} {formErrors} />
+
   <InputField
     name="startTimeZone"
     placeholder="Start time zone"
@@ -46,8 +48,10 @@
     {formData}
     {formErrors}
   />
+
   <CalendarField name="endDate" {handleInput} {formData} {formErrors} />
-  <InputField name="endTime" placeholder="End time" {handleInput} {formData} {formErrors} />
+  <TimeField name="endTime" {handleInput} {formData} {formErrors} />
+
   <InputField
     name="endTimeZone"
     placeholder="End time zone"

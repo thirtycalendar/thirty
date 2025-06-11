@@ -12,7 +12,18 @@
     startOfDay
   } from "date-fns";
 
-  let value = $state(new Date());
+  interface TimeFieldProps {
+    name: string;
+    formData: any;
+    formErrors: any;
+    handleInput: (event: Event) => void;
+  }
+
+  let { name, formData, formErrors, handleInput }: TimeFieldProps = $props();
+
+  let value = $derived($formData[name] ?? new Date());
+  let error = $derived($formData[name]);
+
   let open = $state(false);
   let currentInputText = $state("");
   let filterText = $state("");

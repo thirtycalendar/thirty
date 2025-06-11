@@ -15,6 +15,7 @@
   - (6.11.04) - Event form validation working.
   - (6.11.05) - Cleaned codes.
   - (6.11.06) - Event form fields.
+  - (6.11.07) - Time input field.
 - Tue Jun 10, 2025
   - (6.10.01) - Removed unused imports.
   - (6.10.02) - Trying to show events and utilEvents in day calendar.

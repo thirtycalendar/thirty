@@ -15,14 +15,14 @@
     subMonths
   } from "date-fns";
 
-  interface InputFieldProps {
+  interface CalendarFieldProps {
     name: string;
     formData: any;
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, formData, formErrors, handleInput }: InputFieldProps = $props();
+  let { name, formData, formErrors, handleInput }: CalendarFieldProps = $props();
 
   let value = $derived($formData[name] ?? new Date());
   let error = $derived($formData[name]);
