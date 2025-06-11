@@ -14,10 +14,10 @@
     bgColor: "",
     startDate: new Date().toISOString(),
     startTime: new Date().toISOString(),
-    startTimeZone: "",
+    startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     endDate: new Date().toISOString(),
-    endTime: new Date().toISOString(),
-    endTimeZone: ""
+    endTime: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    endTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({

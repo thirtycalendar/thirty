@@ -16,6 +16,7 @@
   - (6.11.05) - Cleaned codes.
   - (6.11.06) - Event form fields.
   - (6.11.07) - Time input field.
+  - (6.11.08) - Time zone and time.
 - Tue Jun 10, 2025
   - (6.10.01) - Removed unused imports.
   - (6.10.02) - Trying to show events and utilEvents in day calendar.

@@ -21,7 +21,7 @@
 
   let { name, formData, formErrors, handleInput }: TimeFieldProps = $props();
 
-  let value = $derived($formData[name] ?? new Date());
+  let value: Date = $derived($formData[name] ?? new Date());
   let error = $derived($formData[name]);
 
   let open = $state(false);
