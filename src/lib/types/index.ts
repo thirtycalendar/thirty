@@ -35,6 +35,18 @@ export interface Event {
   eventType?: string;
 }
 
+export interface EventForm {
+  calendarId: string;
+  summary: string;
+  description?: string;
+  color: string;
+  bgColor: string;
+  startDateTime: string;
+  startTimeZone: string;
+  endDateTime: string;
+  endTimeZone: string;
+}
+
 export interface UtilEvent {
   id: string;
   calendarId: string;
@@ -56,17 +68,6 @@ export interface Task {
   title: string;
   notes?: string;
   updated: string;
-}
-
-export interface EventForm {
-  name: string;
-  calendar: string;
-  date: string;
-  timeFrom: string;
-  timeTo: string;
-  location?: string;
-  description?: string;
-  notifyIn?: string;
 }
 
 export type User = typeof auth.$Infer.Session.user;

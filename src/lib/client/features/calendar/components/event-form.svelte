@@ -2,59 +2,44 @@
   import { InputField } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import type { Event } from "$lib/types";
+  import type { EventForm } from "$lib/types";
 
   import { eventSchema } from "../schema";
 
-  let defaultValues: Omit<Event, "id"> = {
+  let defaultValues: EventForm = {
     calendarId: "",
     summary: "",
     description: "",
     color: "",
     bgColor: "",
-    start: {
-      dateTime: "",
-      timeZone: ""
-    },
-    end: {
-      dateTime: "",
-      timeZone: ""
-    }
+    startDateTime: "",
+    startTimeZone: "",
+    endDateTime: "",
+    endTimeZone: ""
   };
 
-  let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
+  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
     defaultValues
   });
 
-  function onSubmit() {
+  // Accept data argument, which createForm passes on submit
+  async function onSubmit(data: EventForm) {
     console.log("Submitted...");
-    console.log("Form data:", $formData);
+    console.log("Form data:", data);
   }
 </script>
 
-<form onsubmit={handleSubmit(onSubmit)}>
+<form on:submit={handleSubmit(onSubmit)}>
   <InputField name="calendarId" placeholder="Name" {handleInput} {formData} {formErrors} />
   <InputField name="summary" placeholder="Summary" {handleInput} {formData} {formErrors} />
   <InputField name="description" placeholder="Description" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
-  <InputField
-    name="start.dateTime"
-    placeholder="Start date"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
-  <InputField
-    name="start.timeZone"
-    placeholder="Start time"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
-  <InputField name="end.dateTime" placeholder="End date" {handleInput} {formData} {formErrors} />
-  <InputField name="end.timeZone" placeholder="End time" {handleInput} {formData} {formErrors} />
+  <InputField name="startDateTime" placeholder="Start date" {handleInput} {formData} {formErrors} />
+  <InputField name="startTimeZone" placeholder="Start time" {handleInput} {formData} {formErrors} />
+  <InputField name="endDateTime" placeholder="End date" {handleInput} {formData} {formErrors} />
+  <InputField name="endTimeZone" placeholder="End time" {handleInput} {formData} {formErrors} />
 
   <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save

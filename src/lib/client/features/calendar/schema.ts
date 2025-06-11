@@ -3,33 +3,11 @@ import { z } from "zod";
 export const eventSchema = z.object({
   calendarId: z.string(),
   summary: z.string(),
-  description: z.string().nullable().optional(),
-  color: z.string().nullable().optional(),
-  bgColor: z.string().nullable().optional(),
-  organizer: z
-    .object({
-      displayName: z.string()
-    })
-    .optional(),
-  start: z.object({
-    dateTime: z.string(),
-    timeZone: z.string()
-  }),
-  end: z.object({
-    dateTime: z.string(),
-    timeZone: z.string()
-  }),
-  reminders: z
-    .object({
-      useDefault: z.boolean().optional(),
-      overrides: z
-        .array(
-          z.object({
-            minutes: z.number().nullable().optional()
-          })
-        )
-        .optional()
-    })
-    .optional(),
-  eventType: z.string().optional()
+  description: z.string().optional(),
+  color: z.string(),
+  bgColor: z.string(),
+  startDateTime: z.string(),
+  startTimeZone: z.string(),
+  endDateTime: z.string(),
+  endTimeZone: z.string()
 });
