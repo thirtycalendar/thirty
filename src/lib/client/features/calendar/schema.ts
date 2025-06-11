@@ -6,8 +6,10 @@ export const eventSchema = z.object({
   description: z.string().nullable().optional(),
   color: z.string().min(1, { message: "Color is required" }),
   bgColor: z.string().min(1, { message: "Background color is required" }),
-  startDateTime: z.string().min(1, { message: "Start date is required" }),
+  startDate: z.string().min(1, { message: "Start date is required" }),
+  startTime: z.string().min(1, { message: "Start time is required" }),
   startTimeZone: z.string().min(1, { message: "Start time zone is required" }),
-  endDateTime: z.string().min(1, { message: "End date is required" }),
+  endDate: z.string().min(1, { message: "End date is required" }),
+  endTime: z.string().min(1, { message: "End time is required" }),
   endTimeZone: z.string().min(1, { message: "End time zone is required" })
 });

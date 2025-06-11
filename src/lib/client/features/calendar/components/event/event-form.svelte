@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { InputField } from "$lib/client/components";
+  import { CalendarField, InputField } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
   import type { EventForm } from "$lib/types";
@@ -12,9 +12,11 @@
     description: "",
     color: "",
     bgColor: "",
-    startDateTime: "",
+    startDate: new Date().toISOString(),
+    startTime: new Date().toISOString(),
     startTimeZone: "",
-    endDateTime: "",
+    endDate: new Date().toISOString(),
+    endTime: new Date().toISOString(),
     endTimeZone: ""
   };
 
@@ -35,10 +37,24 @@
   <InputField name="description" placeholder="Description" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
-  <InputField name="startDateTime" placeholder="Start date" {handleInput} {formData} {formErrors} />
-  <InputField name="startTimeZone" placeholder="Start time" {handleInput} {formData} {formErrors} />
-  <InputField name="endDateTime" placeholder="End date" {handleInput} {formData} {formErrors} />
-  <InputField name="endTimeZone" placeholder="End time" {handleInput} {formData} {formErrors} />
+  <CalendarField name="startDate" {handleInput} {formData} {formErrors} />
+  <InputField name="startTime" placeholder="Start time" {handleInput} {formData} {formErrors} />
+  <InputField
+    name="startTimeZone"
+    placeholder="Start time zone"
+    {handleInput}
+    {formData}
+    {formErrors}
+  />
+  <CalendarField name="endDate" {handleInput} {formData} {formErrors} />
+  <InputField name="endTime" placeholder="End time" {handleInput} {formData} {formErrors} />
+  <InputField
+    name="endTimeZone"
+    placeholder="End time zone"
+    {handleInput}
+    {formData}
+    {formErrors}
+  />
 
   <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save

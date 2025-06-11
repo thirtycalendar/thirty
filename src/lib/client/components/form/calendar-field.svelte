@@ -15,7 +15,18 @@
     subMonths
   } from "date-fns";
 
-  let value: Date = $state(new Date());
+  interface InputFieldProps {
+    name: string;
+    formData: any;
+    formErrors: any;
+    handleInput: (event: Event) => void;
+  }
+
+  let { name, formData, formErrors, handleInput }: InputFieldProps = $props();
+
+  let value = $derived($formData[name] ?? new Date());
+  let error = $derived($formData[name]);
+
   let open = $state(false);
   let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
   let triggerButton = $state<HTMLButtonElement | undefined>(undefined);

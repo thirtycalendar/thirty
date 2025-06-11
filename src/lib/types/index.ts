@@ -41,9 +41,11 @@ export interface EventForm {
   description?: string;
   color: string;
   bgColor: string;
-  startDateTime: string;
+  startDate: string;
+  startTime: string;
   startTimeZone: string;
-  endDateTime: string;
+  endDate: string;
+  endTime: string;
   endTimeZone: string;
 }
 
