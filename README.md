@@ -13,6 +13,7 @@
   - (6.11.02) - Updated month calendar util event text color.
   - (6.11.03) - Just decided to use the simple way.
   - (6.11.04) - Event form validation working.
+  - (6.11.05) - Cleaned codes.
 - Tue Jun 10, 2025
   - (6.10.01) - Removed unused imports.
   - (6.10.02) - Trying to show events and utilEvents in day calendar.

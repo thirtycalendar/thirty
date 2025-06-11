@@ -2,9 +2,9 @@
   import { onMount } from "svelte";
   import { page } from "$app/state";
 
-  import { Sidebar, SidebarMenu } from "$lib/client/components";
-  import { CalSidebar } from "$lib/client/features/calendar/components";
+  import { CalSidebar } from "$lib/client/features/calendar/components/calendar";
   import { SettingsSidebar } from "$lib/client/features/settings/components";
+  import { Sidebar, SidebarMenu } from "$lib/client/components";
   import { mainSidebarId, sidebars } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
 

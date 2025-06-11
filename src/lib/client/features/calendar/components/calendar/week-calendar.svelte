@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from "svelte";
   import { derived } from "svelte/store";
 
-  import { EventBlock } from ".";
   import {
     addDays,
     endOfDay,
@@ -18,6 +17,8 @@
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event, UtilEvent } from "$lib/types";
+
+  import { EventBlock } from "../event";
 
   interface WeekCalendarProps {
     events: Event[];

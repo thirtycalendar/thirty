@@ -4,7 +4,7 @@
 
   import type { EventForm } from "$lib/types";
 
-  import { eventSchema } from "../schema";
+  import { eventSchema } from "../../schema";
 
   let defaultValues: EventForm = {
     calendarId: "",

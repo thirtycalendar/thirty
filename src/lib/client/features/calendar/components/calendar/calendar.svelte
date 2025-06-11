@@ -1,9 +1,12 @@
 <script lang="ts">
-  import { DayCalendar, EventModal, MonthCalendar, TaskModal, WeekCalendar, YearCalendar } from ".";
+  import { DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
   import { calView } from "$lib/client/stores/cal-view";
   import { createQuery } from "$lib/client/utils/query/create-query";
   import { client } from "$lib/client/utils/rpc";
+
+  import { EventModal } from "../event";
+  import { TaskModal } from "../task";
 
   const { data } = createQuery({
     queryFn: async () => {
