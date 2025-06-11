@@ -145,7 +145,7 @@
                 ? event.color || "var(--fallback-bg-color, #ccc)"
                 : "transparent"}
               style:color={event.isUtilEvent
-                ? "white"
+                ? "black"
                 : event.color || "var(--fallback-text-color, #333)"}
               title={event.summary}
             >

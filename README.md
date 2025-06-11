@@ -10,6 +10,7 @@
 
 - Wed Jun 11, 2025
   - (6.11.01) - Updated event schema.
+  - (6.11.02) - Updated month calendar util event text color.
 - Tue Jun 10, 2025
   - (6.10.01) - Removed unused imports.
   - (6.10.02) - Trying to show events and utilEvents in day calendar.
