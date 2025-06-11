@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
+  import { addMinutes, differenceInCalendarDays, formatISO, parseISO } from "date-fns";
+
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -6,23 +10,49 @@
 
   import { eventSchema } from "../../schema";
 
+  const now = new Date();
+  const fifteenMinsLater = addMinutes(now, 15);
+
   let defaultValues: EventForm = {
     calendarId: "",
     summary: "",
     description: "",
     color: "",
     bgColor: "",
-    startDate: new Date().toISOString(),
-    startTime: new Date().toISOString(),
+    startDate: now.toISOString(),
+    startTime: now.toISOString(),
     startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    endDate: new Date().toISOString(),
-    endTime: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    endDate: now.toISOString(),
+    endTime: fifteenMinsLater.toISOString(),
     endTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 
-  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
-    schema: eventSchema,
-    defaultValues
+  let { formData, formErrors, isSubmitting, handleInput, handleSubmit, setDisabledFields } =
+    createForm({
+      schema: eventSchema,
+      defaultValues
+    });
+
+  onMount(() => {
+    setDisabledFields(["startTimeZone", "endTimeZone"]);
+  });
+
+  // Derived: is the endTime on the next calendar day compared to startTime?
+  let isNextDay = $derived(() => {
+    const start = parseISO($formData.startTime);
+    const end = parseISO($formData.endTime);
+    return differenceInCalendarDays(end, start) > 0;
+  });
+
+  // Keep endDate in sync with endTime if it's next day
+  $effect(() => {
+    if (isNextDay()) {
+      setDisabledFields(["endDate"]);
+      formData.update((data) => ({
+        ...data,
+        endDate: formatISO(parseISO(data.endTime), { representation: "date" })
+      }));
+    }
   });
 
   async function onSubmit() {
@@ -31,7 +61,7 @@
   }
 </script>
 
-<form on:submit={handleSubmit(onSubmit)}>
+<form onsubmit={handleSubmit(onSubmit)}>
   <InputField name="calendarId" placeholder="Name" {handleInput} {formData} {formErrors} />
   <InputField name="summary" placeholder="Summary" {handleInput} {formData} {formErrors} />
   <InputField name="description" placeholder="Description" {handleInput} {formData} {formErrors} />
@@ -41,24 +71,11 @@
   <CalendarField name="startDate" {handleInput} {formData} {formErrors} />
   <TimeField name="startTime" {handleInput} {formData} {formErrors} />
 
-  <InputField
-    name="startTimeZone"
-    placeholder="Start time zone"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
+  {#if isNextDay()}
+    <CalendarField name="endDate" {handleInput} {formData} {formErrors} />
+  {/if}
 
-  <CalendarField name="endDate" {handleInput} {formData} {formErrors} />
   <TimeField name="endTime" {handleInput} {formData} {formErrors} />
-
-  <InputField
-    name="endTimeZone"
-    placeholder="End time zone"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
 
   <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save
