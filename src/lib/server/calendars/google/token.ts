@@ -23,17 +23,23 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
     clientSecret: googleEnvConfig.clientSecret
   });
 
-  client.setCredentials({ refresh_token: session.refreshToken });
+  client.setCredentials({
+    refresh_token: session.refreshToken
+  });
 
   try {
-    const { credentials } = await client.refreshAccessToken();
+    const tokens = await client.getAccessToken();
+
+    if (!tokens.token) throw new Error("No access token returned");
+
+    const creds = client.credentials;
 
     const updated: GoogleSession = {
       userId,
-      accessToken: credentials.access_token as string,
-      refreshToken: credentials.refresh_token ?? session.refreshToken,
-      idToken: credentials.id_token as string,
-      accessTokenExpiresAt: new Date(credentials.expiry_date as number).toISOString()
+      accessToken: tokens.token,
+      refreshToken: creds.refresh_token ?? session.refreshToken,
+      idToken: creds.id_token ?? session.idToken,
+      accessTokenExpiresAt: new Date(creds.expiry_date ?? Date.now() + 3600_000).toISOString()
     };
 
     await kv.set(KV_GOOGLE_TOKEN(userId), updated);
