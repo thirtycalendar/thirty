@@ -3,7 +3,7 @@
 
   import { AlignLeft, Clock3 } from "@lucide/svelte";
 
-  import { addMinutes, format, formatISO, parseISO } from "date-fns";
+  import { addMinutes, format } from "date-fns";
 
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
@@ -14,7 +14,6 @@
   import { eventSchema } from "../../schema";
 
   const now = new Date();
-  const fifteenMinsLater = addMinutes(now, 15);
 
   let defaultValues: EventForm = {
     calendarId: "",
@@ -23,10 +22,10 @@
     color: "",
     bgColor: "",
     startDate: now.toISOString(),
-    startTime: now.toISOString(),
+    startTime: format(now, "HH:mm:ss.SSS"),
     startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     endDate: now.toISOString(),
-    endTime: fifteenMinsLater.toISOString(),
+    endTime: format(addMinutes(now, 15), "HH:mm:ss.SSS"),
     endTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 
@@ -35,6 +34,15 @@
       schema: eventSchema,
       defaultValues
     });
+
+  $effect(() => {
+    if ($formData.startTime > $formData.endTime) {
+      console.log("Start time > end time");
+    }
+
+    console.log("Start:", $formData.startTime);
+    console.log("End:", $formData.startTime);
+  });
 
   onMount(() => {
     setDisabledFields(["startTimeZone", "endTimeZone"]);
@@ -98,9 +106,9 @@
     </div>
   </div>
 
-  <!-- <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
+  <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
-  <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} /> -->
+  <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
 
   <div class="flex my-2 items-start gap-3 w-full">
     <div class="pt-[6px] text-muted-foreground">

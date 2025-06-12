@@ -17,18 +17,20 @@
   interface TimeFieldProps {
     name: string;
     className?: string;
-    formData: any;
+    formData: any; // Expects formData[name] to be "HH:mm:ss.SSS" string
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
   let { name, className, formData, formErrors, handleInput }: TimeFieldProps = $props();
 
-  let value: Date = $derived(
-    isValidDate(new Date($formData[name])) ? new Date($formData[name]) : new Date()
-  );
+  function getTimeAsDate(timeString: string | undefined | null): Date {
+    if (!timeString) return new Date(); // Default to now if no value
+    const parsed = parseDateFns(timeString, "HH:mm:ss.SSS", new Date());
+    return isValidDate(parsed) ? parsed : new Date();
+  }
 
-  let error = $derived($formData[name]);
+  let internalDate: Date = $derived(getTimeAsDate($formData[name]));
 
   let open = $state(false);
   let currentInputText = $state("");
@@ -37,7 +39,7 @@
 
   $effect(() => {
     if (!open || (open && !filterText)) {
-      currentInputText = formatDateFns(value, "h:mm aa");
+      currentInputText = formatDateFns(internalDate, "h:mm aa");
     }
   });
 
@@ -48,7 +50,7 @@
 
   function generateTimeSlots(): Date[] {
     const slots: Date[] = [];
-    let slotTime = startOfDay(value);
+    let slotTime = startOfDay(internalDate);
     for (let i = 0; i < (24 * 60) / timeSlotInterval; i++) {
       slots.push(new Date(slotTime));
       slotTime = addMinutesFns(slotTime, timeSlotInterval);
@@ -69,11 +71,50 @@
     })()
   );
 
-  $effect(() => {
-    if (open && filterText) {
-      tryAutoDetectTime();
+  // Propagate changes to the parent form using the provided callback.
+  function updateFormValue(newDate: Date): void {
+    const newTimeString = formatDateFns(newDate, "HH:mm:ss.SSS");
+    // Create a mock event to pass to the form handler.
+    const event = new Event("input", { bubbles: true });
+    const mockTarget = { name, value: newTimeString };
+    Object.defineProperty(event, "target", { writable: false, value: mockTarget });
+    handleInput(event);
+  }
+
+  function selectTime(slotDate: Date): void {
+    let newDate = setHours(internalDate, slotDate.getHours());
+    newDate = setMinutes(newDate, slotDate.getMinutes());
+    newDate = setSeconds(newDate, 0); // Selecting from a slot resets seconds.
+
+    updateFormValue(newDate);
+
+    filterText = "";
+    open = false;
+    justSelected = true;
+    setTimeout(() => {
+      triggerButtonElement?.blur();
+    }, 0);
+  }
+
+  function parseAndSetTime(): void {
+    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
+    const textToParse = filterText || currentInputText;
+
+    for (const fmt of formatsToTry) {
+      const parsed = parseDateFns(textToParse, fmt, internalDate);
+      if (isValidDate(parsed)) {
+        let newDate = setHours(internalDate, parsed.getHours());
+        newDate = setMinutes(newDate, parsed.getMinutes());
+        newDate = setSeconds(newDate, 0); // Reset seconds on free-form input.
+
+        updateFormValue(newDate);
+        filterText = "";
+        return; // Exit after successful parse
+      }
     }
-  });
+    // If parsing fails, do nothing. The input text will revert automatically via the $effect.
+    filterText = "";
+  }
 
   $effect(() => {
     if (open && timeSlotsDropdown) {
@@ -81,10 +122,10 @@
         if (!timeSlotsDropdown) return;
         const selectedItem = timeSlotsDropdown.querySelector<HTMLElement>(`[data-selected="true"]`);
         if (selectedItem) {
-          selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          selectedItem.scrollIntoView({ block: "nearest" });
         } else {
-          const currentHour = value.getHours();
-          const currentMinute = value.getMinutes();
+          const currentHour = internalDate.getHours();
+          const currentMinute = internalDate.getMinutes();
           let bestMatchIndex = -1;
           const slots: Date[] = filteredTimeSlots.length > 0 ? filteredTimeSlots : allTimeSlots;
           for (let i = 0; i < slots.length; i++) {
@@ -97,14 +138,10 @@
               break;
             }
           }
-          if (bestMatchIndex === -1 && slots.length > 0) {
-            bestMatchIndex = slots.length - 1;
-          }
-          if (bestMatchIndex !== -1 && timeSlotsDropdown.children.length > bestMatchIndex) {
-            const itemToScroll = timeSlotsDropdown.children[bestMatchIndex] as HTMLElement;
-            itemToScroll?.scrollIntoView({
-              block: "nearest",
-              behavior: "smooth"
+          if (bestMatchIndex === -1 && slots.length > 0) bestMatchIndex = 0;
+          if (bestMatchIndex !== -1) {
+            (timeSlotsDropdown.children[bestMatchIndex] as HTMLElement)?.scrollIntoView({
+              block: "nearest"
             });
           }
         }
@@ -112,78 +149,23 @@
     }
   });
 
-  function selectTime(slotDate: Date): void {
-    let newDate = setHours(value, slotDate.getHours());
-    newDate = setMinutes(newDate, slotDate.getMinutes());
-    newDate = setSeconds(newDate, 0);
-    value = newDate;
-    filterText = "";
-    open = false;
-    justSelected = true;
-    setTimeout(() => {
-      triggerButtonElement?.blur();
-    }, 0);
-  }
-
-  function tryAutoDetectTime(): boolean {
-    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
-    for (const fmt of formatsToTry) {
-      try {
-        const parsed = parseDateFns(filterText, fmt, value);
-        if (isValidDate(parsed)) {
-          currentInputText = filterText;
-          return true;
-        }
-      } catch (e) {}
-    }
-    return false;
-  }
-
-  function parseAndSetTime(): void {
-    const formatsToTry = ["h:mm aa", "HH:mm", "h:m aa", "H:m", "ha", "Ha", "h a", "H"];
-    let parsedDateSuccessfully = false;
-    for (const fmt of formatsToTry) {
-      try {
-        const parsed = parseDateFns(filterText || currentInputText, fmt, value);
-        if (isValidDate(parsed)) {
-          let newDate = setHours(value, parsed.getHours());
-          newDate = setMinutes(newDate, parsed.getMinutes());
-          newDate = setSeconds(newDate, 0);
-          value = newDate;
-          parsedDateSuccessfully = true;
-          break;
-        }
-      } catch (e) {}
-    }
-    if (!parsedDateSuccessfully) {
-      currentInputText = formatDateFns(value, "h:mm aa");
-    }
-    filterText = "";
-  }
-
   function handleInputFocus(): void {
     if (justSelected) {
       justSelected = false;
       return;
     }
     open = true;
-    setTimeout(() => {
-      const selectedItem = timeSlotsDropdown?.querySelector<HTMLElement>('[data-selected="true"]');
-      selectedItem?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }, 10);
   }
 
   function handleInputBlur(): void {
     setTimeout(() => {
       const activeEl = document.activeElement;
-      if (triggerButtonElement && timeSlotsDropdown) {
-        if (activeEl !== triggerButtonElement && !timeSlotsDropdown.contains(activeEl)) {
-          if (open) {
-            parseAndSetTime();
-            open = false;
-          }
-        }
-      } else if (open) {
+      if (
+        open &&
+        triggerButtonElement &&
+        activeEl !== triggerButtonElement &&
+        !timeSlotsDropdown?.contains(activeEl)
+      ) {
         parseAndSetTime();
         open = false;
       }
@@ -194,9 +176,6 @@
     const input = event.target as HTMLInputElement;
     filterText = input.value;
     currentInputText = input.value;
-    if (!input.value) {
-      filterText = "";
-    }
   }
 
   function handleInputKeydown(event: KeyboardEvent): void {
@@ -208,16 +187,12 @@
     } else if (event.key === "Escape") {
       event.preventDefault();
       filterText = "";
-      currentInputText = formatDateFns(value, "h:mm aa");
       open = false;
       triggerButtonElement?.blur();
     } else if (event.key === "ArrowDown") {
-      if (open && timeSlotsDropdown?.firstChild) {
-        event.preventDefault();
-        (timeSlotsDropdown.firstChild as HTMLElement)?.focus();
-      } else if (!open) {
-        open = true;
-      }
+      event.preventDefault();
+      open = true;
+      setTimeout(() => (timeSlotsDropdown?.firstChild as HTMLElement)?.focus(), 0);
     } else if (event.key === "Tab" && open) {
       parseAndSetTime();
       open = false;
@@ -245,7 +220,7 @@
   }
 
   function isSelectedTime(slot: Date): boolean {
-    return isSameHour(slot, value) && isSameMinute(slot, value);
+    return isSameHour(slot, internalDate) && isSameMinute(slot, internalDate);
   }
 
   function handleClickOutside(event: MouseEvent): void {
