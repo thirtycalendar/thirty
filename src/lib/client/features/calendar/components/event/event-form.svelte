@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Clock3 } from "@lucide/svelte";
+  import { AlignLeft, Clock3 } from "@lucide/svelte";
 
   import { addMinutes, format, formatISO, parseISO } from "date-fns";
 
@@ -50,18 +50,18 @@
   <InputField
     name="summary"
     placeholder="Add title"
-    className="text-lg"
+    className="my-2"
     {handleInput}
     {formData}
     {formErrors}
   />
 
-  <div class="my-2 flex w-full">
-    <div class="w-">
-      <Clock3 />
+  <div class="flex my-2 items-start gap-3 w-full">
+    <div class="pt-[6px] text-muted-foreground">
+      <Clock3 size="20" strokeWidth="2.5" />
     </div>
 
-    <div>
+    <div class="flex flex-col gap-2 w-full">
       <div class="flex gap-2 w-full">
         <CalendarField
           name="startDate"
@@ -79,7 +79,7 @@
         />
       </div>
 
-      <div class="flex gap-1 w-full">
+      <div class="flex gap-2 w-full">
         <CalendarField
           name="endDate"
           className="w-full basis-[60%]"
@@ -98,19 +98,29 @@
     </div>
   </div>
 
-  <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
+  <!-- <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
-  <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
+  <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} /> -->
 
-  <TextareaField
-    name="description"
-    placeholder="Description"
-    {handleInput}
-    {formData}
-    {formErrors}
-  />
+  <div class="flex my-2 items-start gap-3 w-full">
+    <div class="pt-[6px] text-muted-foreground">
+      <AlignLeft size="20" strokeWidth="2.5" />
+    </div>
 
-  <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
-    Save
-  </button>
+    <div class="w-full">
+      <TextareaField
+        name="description"
+        placeholder="Description"
+        {handleInput}
+        {formData}
+        {formErrors}
+      />
+    </div>
+  </div>
+
+  <div class="my-2 mt-3">
+    <button type="submit" class="btn bg-base-200 font-bold w-full" disabled={$isSubmitting}>
+      Save
+    </button>
+  </div>
 </form>
