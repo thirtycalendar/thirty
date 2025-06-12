@@ -4,6 +4,7 @@
   import { addMinutes, differenceInCalendarDays, formatISO, parseISO } from "date-fns";
 
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
+  import TextareaField from "$lib/client/components/form/textarea-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
   import type { EventForm } from "$lib/types";
@@ -62,9 +63,16 @@
 </script>
 
 <form onsubmit={handleSubmit(onSubmit)}>
-  <InputField name="calendarId" placeholder="Name" {handleInput} {formData} {formErrors} />
-  <InputField name="summary" placeholder="Summary" {handleInput} {formData} {formErrors} />
-  <InputField name="description" placeholder="Description" {handleInput} {formData} {formErrors} />
+  <InputField
+    name="summary"
+    placeholder="Add title"
+    className="text-lg"
+    {handleInput}
+    {formData}
+    {formErrors}
+  />
+
+  <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
 
@@ -76,6 +84,14 @@
   {/if}
 
   <TimeField name="endTime" {handleInput} {formData} {formErrors} />
+
+  <TextareaField
+    name="description"
+    placeholder="Description"
+    {handleInput}
+    {formData}
+    {formErrors}
+  />
 
   <button type="submit" class="btn bg-base-200 font-bold flex-grow" disabled={$isSubmitting}>
     Save
