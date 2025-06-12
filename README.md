@@ -11,6 +11,7 @@
 - Thu Jan 12, 2025
   - (6.12.01) - Updated codes to long live access token.
   - (6.12.02) - Added textarea field.
+  - (6.12.03) - Calendar start date and end dates.
 - Wed Jun 11, 2025
   - (6.11.01) - Updated event schema.
   - (6.11.02) - Updated month calendar util event text color.

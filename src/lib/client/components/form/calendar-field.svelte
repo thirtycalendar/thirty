@@ -15,14 +15,17 @@
     subMonths
   } from "date-fns";
 
+  import { cn } from "$lib/client/utils/cn";
+
   interface CalendarFieldProps {
     name: string;
+    className?: string;
     formData: any;
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, formData, formErrors, handleInput }: CalendarFieldProps = $props();
+  let { name, className, formData, formErrors, handleInput }: CalendarFieldProps = $props();
 
   let value = $derived($formData[name] ?? new Date());
   let error = $derived($formData[name]);
@@ -112,7 +115,7 @@
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class="relative w-full">
+<div class={cn("relative w-full", className)}>
   <!-- Trigger Button -->
   <button
     type="button"

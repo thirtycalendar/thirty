@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { addMinutes, differenceInCalendarDays, formatISO, parseISO } from "date-fns";
+  import { Clock3 } from "@lucide/svelte";
+
+  import { addMinutes, format, formatISO, parseISO } from "date-fns";
 
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
@@ -38,24 +40,6 @@
     setDisabledFields(["startTimeZone", "endTimeZone"]);
   });
 
-  // Derived: is the endTime on the next calendar day compared to startTime?
-  let isNextDay = $derived(() => {
-    const start = parseISO($formData.startTime);
-    const end = parseISO($formData.endTime);
-    return differenceInCalendarDays(end, start) > 0;
-  });
-
-  // Keep endDate in sync with endTime if it's next day
-  $effect(() => {
-    if (isNextDay()) {
-      setDisabledFields(["endDate"]);
-      formData.update((data) => ({
-        ...data,
-        endDate: formatISO(parseISO(data.endTime), { representation: "date" })
-      }));
-    }
-  });
-
   async function onSubmit() {
     console.log("Submitted...");
     console.log("Form data:", $formData);
@@ -72,18 +56,51 @@
     {formErrors}
   />
 
+  <div class="my-2 flex w-full">
+    <div class="w-">
+      <Clock3 />
+    </div>
+
+    <div>
+      <div class="flex gap-2 w-full">
+        <CalendarField
+          name="startDate"
+          className="w-full basis-[60%]"
+          {handleInput}
+          {formData}
+          {formErrors}
+        />
+        <TimeField
+          name="startTime"
+          className="w-full basis-[40%]"
+          {handleInput}
+          {formData}
+          {formErrors}
+        />
+      </div>
+
+      <div class="flex gap-1 w-full">
+        <CalendarField
+          name="endDate"
+          className="w-full basis-[60%]"
+          {handleInput}
+          {formData}
+          {formErrors}
+        />
+        <TimeField
+          name="endTime"
+          className="w-full basis-[40%]"
+          {handleInput}
+          {formData}
+          {formErrors}
+        />
+      </div>
+    </div>
+  </div>
+
   <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
-
-  <CalendarField name="startDate" {handleInput} {formData} {formErrors} />
-  <TimeField name="startTime" {handleInput} {formData} {formErrors} />
-
-  {#if isNextDay()}
-    <CalendarField name="endDate" {handleInput} {formData} {formErrors} />
-  {/if}
-
-  <TimeField name="endTime" {handleInput} {formData} {formErrors} />
 
   <TextareaField
     name="description"

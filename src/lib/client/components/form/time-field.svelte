@@ -12,14 +12,17 @@
     startOfDay
   } from "date-fns";
 
+  import { cn } from "$lib/client/utils/cn";
+
   interface TimeFieldProps {
     name: string;
+    className?: string;
     formData: any;
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, formData, formErrors, handleInput }: TimeFieldProps = $props();
+  let { name, className, formData, formErrors, handleInput }: TimeFieldProps = $props();
 
   let value: Date = $derived(
     isValidDate(new Date($formData[name])) ? new Date($formData[name]) : new Date()
@@ -258,7 +261,7 @@
 
 <svelte:window onclick={handleClickOutside} />
 
-<div class="relative w-full">
+<div class={cn("relative w-full", className)}>
   <input
     type="text"
     aria-label="Time input"
