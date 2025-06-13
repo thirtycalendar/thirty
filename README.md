@@ -13,6 +13,7 @@
   - (6.13.02) - Kinda working but got effect bug.
   - (6.13.03) - Fixed re-render effect bug.
   - (6.13.04) - Fixed time picker width.
+  - (6.13.05) - Disable past days in endDate.
 - Thu Jun 12, 2025
   - (6.12.01) - Updated codes to long live access token.
   - (6.12.02) - Added textarea field.

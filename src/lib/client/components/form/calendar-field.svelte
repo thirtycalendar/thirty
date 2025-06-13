@@ -19,13 +19,15 @@
 
   interface CalendarFieldProps {
     name: string;
+    isDisablePast?: boolean;
     className?: string;
     formData: any;
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, className, formData, formErrors, handleInput }: CalendarFieldProps = $props();
+  let { name, isDisablePast, className, formData, formErrors, handleInput }: CalendarFieldProps =
+    $props();
 
   let value = $derived($formData[name] ?? new Date());
   let error = $derived($formData[name]);
@@ -47,19 +49,21 @@
   };
 
   function selectDay(day: Date) {
+    if (isDisablePast && day < new Date()) return;
     value = day;
     open = false;
 
-    // Return focus to the button after selection
-    setTimeout(() => {
-      if (triggerButton) {
-        triggerButton.focus();
-      }
-    }, 0);
+    setTimeout(() => triggerButton?.focus(), 0);
   }
 
   function prevMonth() {
-    value = subMonths(value, 1);
+    const prev = subMonths(value, 1);
+    const now = new Date();
+    const startOfPrev = startOfMonth(prev);
+
+    if (!isDisablePast || startOfPrev >= startOfMonth(now)) {
+      value = prev;
+    }
   }
 
   function nextMonth() {
@@ -86,6 +90,12 @@
   }
 
   function handleDayKeydown(event: KeyboardEvent, day: Date): void {
+    const navigate = (target: Date) => {
+      if (!isDisablePast || target >= new Date()) {
+        value = target;
+      }
+    };
+
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       selectDay(day);
@@ -95,20 +105,16 @@
       triggerButton?.focus();
     } else if (event.key === "ArrowRight") {
       event.preventDefault();
-      const nextDay = addDays(day, 1);
-      value = nextDay;
+      navigate(addDays(day, 1));
     } else if (event.key === "ArrowLeft") {
       event.preventDefault();
-      const prevDay = addDays(day, -1);
-      value = prevDay;
+      navigate(addDays(day, -1));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      const prevWeekDay = addDays(day, -7);
-      value = prevWeekDay;
+      navigate(addDays(day, -7));
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
-      const nextWeekDay = addDays(day, 7);
-      value = nextWeekDay;
+      navigate(addDays(day, 7));
     }
   }
 </script>
@@ -149,14 +155,8 @@
           type="button"
           class="btn btn-ghost btn-xs btn-square"
           onclick={prevMonth}
-          onkeydown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              prevMonth();
-            }
-          }}
+          disabled={isDisablePast && startOfMonth(value) <= startOfMonth(new Date())}
           aria-label="Previous Month"
-          tabindex="0"
         >
           <ChevronLeft size="15" />
         </button>
@@ -193,7 +193,8 @@
               ${isSameDay(day, value) ? "bg-base-200 text-primary-content font-semibold" : ""}
               ${!isSameMonth(day, value) ? "text-base-content/30" : ""}
               ${isToday(day) && isSameDay(day, value) ? "text-primary font-medium" : ""}
-              hover:bg-base-300/60`}
+              ${isDisablePast && day < new Date() ? "opacity-30 cursor-not-allowed" : "hover:bg-base-300/60"}
+            `}
             onclick={(e) => {
               e.preventDefault();
               selectDay(day);
@@ -202,6 +203,7 @@
             tabindex="0"
             role="gridcell"
             aria-selected={isSameDay(day, value)}
+            disabled={isDisablePast && day < new Date()}
           >
             {format(day, "d")}
           </button>

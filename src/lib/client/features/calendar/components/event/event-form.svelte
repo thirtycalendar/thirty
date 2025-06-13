@@ -100,6 +100,7 @@
           <CalendarField
             name="endDate"
             className="w-full basis-[60%]"
+            isDisablePast={true}
             {handleInput}
             {formData}
             {formErrors}
