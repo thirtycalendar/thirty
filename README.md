@@ -10,6 +10,7 @@
 
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
+  - (6.13.02) - Kinda working but got effect bug.
 - Thu Jun 12, 2025
   - (6.12.01) - Updated codes to long live access token.
   - (6.12.02) - Added textarea field.

@@ -42,7 +42,10 @@
   $effect(() => {
     if (startTime > endTime) {
       isNextDay = true;
-      addDays($formData.endDate, 1);
+      formData.update((data) => ({
+        ...data,
+        endDate: addDays(now, 1).toISOString()
+      }));
     } else {
       isNextDay = false;
     }
@@ -76,41 +79,71 @@
       <Clock3 size="20" strokeWidth="2.5" />
     </div>
 
-    <div class="flex flex-col gap-2 w-full">
-      <div class="flex gap-2 w-full">
-        <CalendarField
-          name="startDate"
-          className="w-full basis-[60%]"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
-        <TimeField
-          name="startTime"
-          className="w-full basis-[40%]"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
-      </div>
+    {#if isNextDay}
+      <div class="flex flex-col gap-2 w-full">
+        <div class="flex gap-2 w-full">
+          <CalendarField
+            name="startDate"
+            className="w-full basis-[60%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+          <TimeField
+            name="startTime"
+            className="w-full basis-[40%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        </div>
 
-      <div class="flex gap-2 w-full">
-        <CalendarField
-          name="endDate"
-          className="w-full basis-[60%]"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
-        <TimeField
-          name="endTime"
-          className="w-full basis-[40%]"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
+        <div class="flex gap-2 w-full">
+          <CalendarField
+            name="endDate"
+            className="w-full basis-[60%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+          <TimeField
+            name="endTime"
+            className="w-full basis-[40%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        </div>
       </div>
-    </div>
+    {:else}
+      <div class="flex flex-col gap-2 w-full">
+        <div class="flex gap-2 w-full">
+          <CalendarField
+            name="startDate"
+            className="w-full basis-[50%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+
+          <TimeField
+            name="startTime"
+            className="w-full basis-[25%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+
+          <TimeField
+            name="endTime"
+            className="w-full basis-[25%]"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        </div>
+      </div>
+    {/if}
   </div>
 
   <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
