@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import { AlignLeft, Clock3 } from "@lucide/svelte";
 
-  import { addDays, addMinutes, format } from "date-fns";
+  import { addDays, addMinutes, format, startOfDay } from "date-fns";
 
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
@@ -14,6 +12,7 @@
   import { eventSchema } from "../../schema";
 
   const now = new Date();
+  const today = startOfDay(now);
 
   let defaultValues: EventForm = {
     calendarId: "",
@@ -21,41 +20,40 @@
     description: "",
     color: "",
     bgColor: "",
-    startDate: now.toISOString(),
-    startTime: format(now, "HH:mm:ss.SSS"),
+    startDate: today.toISOString(),
+    startTime: format(now, "HH:mm"),
     startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    endDate: now.toISOString(),
-    endTime: format(addMinutes(now, 15), "HH:mm:ss.SSS"),
+    endDate: today.toISOString(),
+    endTime: format(addMinutes(now, 30), "HH:mm"),
     endTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   };
 
-  let { formData, formErrors, isSubmitting, handleInput, handleSubmit, setDisabledFields } =
-    createForm({
-      schema: eventSchema,
-      defaultValues
-    });
-
-  let startTime = $derived($formData.startTime);
-  let endTime = $derived($formData.endTime);
-  let isNextDay = $state(false);
-
-  $effect(() => {
-    if (startTime > endTime) {
-      isNextDay = true;
-      formData.update((data) => ({
-        ...data,
-        endDate: addDays(now, 1).toISOString()
-      }));
-    } else {
-      isNextDay = false;
-    }
-
-    console.log("Start:", $formData.startTime);
-    console.log("End:", $formData.startTime);
+  let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
+    schema: eventSchema,
+    defaultValues
   });
 
-  onMount(() => {
-    setDisabledFields(["startTimeZone", "endTimeZone"]);
+  let isNextDay = $derived($formData.startTime > $formData.endTime);
+
+  $effect(() => {
+    const { startDate, startTime, endTime, endDate } = $formData;
+
+    const currentStartDate = startOfDay(new Date(startDate));
+    const currentEndDate = startOfDay(new Date(endDate));
+
+    if (startTime > endTime) {
+      const expectedEndDate = addDays(currentStartDate, 1);
+
+      if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
+        $formData.endDate = expectedEndDate.toISOString();
+      }
+    } else {
+      const expectedEndDate = currentStartDate;
+
+      if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
+        $formData.endDate = expectedEndDate.toISOString();
+      }
+    }
   });
 
   async function onSubmit() {
