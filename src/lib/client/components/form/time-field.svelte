@@ -17,12 +17,13 @@
   interface TimeFieldProps {
     name: string;
     className?: string;
+    isRightDiv?: boolean;
     formData: any; // Expects formData[name] to be "HH:mm:ss.SSS" string
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, className, formData, formErrors, handleInput }: TimeFieldProps = $props();
+  let { name, className, isRightDiv, formData, formErrors, handleInput }: TimeFieldProps = $props();
 
   function getTimeAsDate(timeString: string | undefined | null): Date {
     if (!timeString) return new Date(); // Default to now if no value
@@ -258,7 +259,7 @@
   {#if open}
     <div
       bind:this={timeSlotsDropdown}
-      class={`${filteredTimeSlots.length === 0 && "hidden"} absolute mt-1 z-50 w-auto max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl`}
+      class={`${filteredTimeSlots.length === 0 && "hidden"} absolute ${isRightDiv ? "right-0" : "left-0"} mt-1 z-50 w-50 max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl`}
       role="listbox"
       aria-labelledby={triggerButtonElement?.id || undefined}
     >

@@ -136,6 +136,7 @@
           <TimeField
             name="endTime"
             className="w-full basis-[25%]"
+            isRightDiv={true}
             {handleInput}
             {formData}
             {formErrors}
