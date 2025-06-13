@@ -250,7 +250,7 @@
       open = true;
       setTimeout(() => triggerButtonElement?.select(), 0);
     }}
-    class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+    class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left cursor-pointer outline-none"
     autocomplete="off"
     placeholder="hh:mm"
   />
@@ -258,7 +258,7 @@
   {#if open}
     <div
       bind:this={timeSlotsDropdown}
-      class={`${filteredTimeSlots.length === 0 && "hidden"} absolute mt-1 z-50 w-64 max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl`}
+      class={`${filteredTimeSlots.length === 0 && "hidden"} absolute mt-1 z-50 w-auto max-h-60 overflow-y-auto p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl`}
       role="listbox"
       aria-labelledby={triggerButtonElement?.id || undefined}
     >
