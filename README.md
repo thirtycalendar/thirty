@@ -8,7 +8,9 @@
 
 ## Logs
 
-- Thu Jan 12, 2025
+- Fri Jun 13, 2025
+  - (6.13.01) - Event form start time and end time comparison.
+- Thu Jun 12, 2025
   - (6.12.01) - Updated codes to long live access token.
   - (6.12.02) - Added textarea field.
   - (6.12.03) - Calendar start date and end dates.

@@ -3,7 +3,7 @@
 
   import { AlignLeft, Clock3 } from "@lucide/svelte";
 
-  import { addMinutes, format } from "date-fns";
+  import { addDays, addMinutes, format } from "date-fns";
 
   import { CalendarField, InputField, TimeField } from "$lib/client/components";
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
@@ -35,9 +35,16 @@
       defaultValues
     });
 
+  let startTime = $derived($formData.startTime);
+  let endTime = $derived($formData.endTime);
+  let isNextDay = $state(false);
+
   $effect(() => {
-    if ($formData.startTime > $formData.endTime) {
-      console.log("Start time > end time");
+    if (startTime > endTime) {
+      isNextDay = true;
+      addDays($formData.endDate, 1);
+    } else {
+      isNextDay = false;
     }
 
     console.log("Start:", $formData.startTime);
