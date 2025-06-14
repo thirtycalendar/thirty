@@ -25,7 +25,8 @@
     handleInput
   }: CalendarChoiceFieldProps = $props();
 
-  let value: Calendar | undefined = $derived($formData[name]);
+  let value: string | undefined = $derived($formData[name]);
+  let selectedCalendar: Calendar | undefined = $derived(choiceList.find((c) => c.id === value));
   let error = $derived($formErrors[name]);
 
   let open = $state(false);
@@ -33,12 +34,13 @@
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
 
   function selectChoice(choice: Calendar) {
-    if (value?.id === choice.id) {
+    if (value === choice.id) {
       $formData[name] = undefined;
     } else {
-      $formData[name] = choice;
+      $formData[name] = choice.id;
     }
     open = false;
+
     const event = new CustomEvent("input", {
       detail: {
         name,
@@ -68,7 +70,6 @@
       open = false;
       triggerButtonRef?.focus();
     }
-    // Add arrow key navigation within the dropdown if desired (more complex)
   }
 </script>
 
@@ -90,7 +91,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{value ? value.summary : placeholder || "Select a calendar"}</span>
+    <span>{selectedCalendar ? selectedCalendar.summary : placeholder || "Select a calendar"}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -109,10 +110,10 @@
         <button
           type="button"
           class="flex items-center justify-between w-full px-3 py-2 text-sm text-left hover:bg-base-200 cursor-pointer
-            {value?.id === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}"
+            {value === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}"
           onclick={() => selectChoice(choice)}
           role="option"
-          aria-selected={value?.id === choice.id}
+          aria-selected={value === choice.id}
           tabindex="0"
           onkeydown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -126,7 +127,7 @@
           }}
         >
           {choice.summary}
-          {#if value?.id === choice.id}
+          {#if value === choice.id}
             <Check size="16" />
           {/if}
         </button>
