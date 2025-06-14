@@ -51,25 +51,19 @@
     const start = $days[0];
     const end = endOfDay($days[$days.length - 1]);
 
-    const map: Record<
-      string,
-      { summary: string; color: string | null | undefined; isUtilEvent: boolean }[]
-    > = {};
+    type EventItem = { summary: string; color: string | null | undefined; isUtilEvent: boolean };
+    type TempMap = Record<string, { utils: EventItem[]; normals: EventItem[] }>;
 
-    const add = (
-      date: Date,
+    const tempMap: TempMap = {};
+
+    const createEventItem = (
       event: { summary: string; calendarId: string },
       isUtilEvent: boolean
-    ) => {
-      const key = getDayString(date);
-      if (!map[key]) map[key] = [];
-
-      map[key].push({
-        summary: event.summary,
-        color: getEventColor(event.calendarId),
-        isUtilEvent
-      });
-    };
+    ): EventItem => ({
+      summary: event.summary,
+      color: getEventColor(event.calendarId),
+      isUtilEvent
+    });
 
     for (const event of utilEvents) {
       const isVisible =
@@ -78,7 +72,9 @@
 
       const date = normalizeUtilEventDate(event.date.dateTime);
       if (isWithinInterval(date, { start, end })) {
-        add(date, event, true);
+        const key = getDayString(date);
+        if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
+        tempMap[key].utils.push(createEventItem(event, true));
       }
     }
 
@@ -89,18 +85,24 @@
 
       const startDate = parseISO(event.start.dateTime);
       if (isWithinInterval(startDate, { start, end })) {
-        add(startDate, event, false);
+        const key = getDayString(startDate);
+        if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
+        tempMap[key].normals.push(createEventItem(event, false));
       }
     }
 
-    return map;
+    const finalMap: Record<string, EventItem[]> = {};
+    for (const key in tempMap) {
+      finalMap[key] = [...tempMap[key].utils, ...tempMap[key].normals.reverse()];
+    }
+
+    return finalMap;
   });
 
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 </script>
 
 <div class="flex flex-col h-full py-3">
-  <!-- Headers -->
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
     {#each dayLabels as label}
       <div class="h-8 flex items-center justify-center font-semibold">
@@ -109,7 +111,6 @@
     {/each}
   </div>
 
-  <!-- Calendar Grid -->
   <div class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full">
     {#each $days as day}
       {@const key = getDayString(day)}
@@ -121,7 +122,6 @@
           changeToDayView();
         }}
       >
-        <!-- Date Number -->
         <div class="self-end text-xs font-medium mb-1">
           <span
             class:text-primary={isToday(day)}
@@ -136,7 +136,6 @@
           </span>
         </div>
 
-        <!-- Events -->
         <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
             <div

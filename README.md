@@ -16,6 +16,7 @@
   - (6.14.05) - Showed colors of week calendar and day calendar.
   - (6.14.06) - Fixing month colors.
   - (6.14.07) - Updated color fetching loading.
+  - (6.14.08) - Made event sorting in month calendar.
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
   - (6.13.02) - Kinda working but got effect bug.

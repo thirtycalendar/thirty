@@ -72,7 +72,7 @@
   );
 </script>
 
-{#if $isCalendarListPending && $isColorListPending}
+{#if $isCalendarListPending || $isColorListPending}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
