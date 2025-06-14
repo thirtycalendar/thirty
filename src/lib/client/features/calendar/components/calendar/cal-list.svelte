@@ -7,10 +7,10 @@
 
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
   import { session } from "$lib/client/stores/user-session";
-  import { createQuery } from "$lib/client/utils/query/create-query";
-  import { client } from "$lib/client/utils/rpc";
 
   import type { Calendar } from "$lib/types";
+
+  import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
@@ -44,18 +44,8 @@
     }));
   };
 
-  const { data: calendars, isPending } = createQuery({
-    queryFn: async () => {
-      const res = await client.api.google.calendar.getAll.$get();
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-      return data.data;
-    },
-    queryKeys: ["cal-list"]
-  });
-
   let owners = $derived(
-    $calendars
+    $calendarList
       ?.filter((c) => c.accessRole === "owner")
       ?.map((c) => {
         const isGmail = /@gmail\.com$/i.test(c.id);
@@ -67,11 +57,11 @@
   );
 
   let readers = $derived(
-    $calendars?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
+    $calendarList?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
   );
 
   let holidays = $derived(
-    $calendars
+    $calendarList
       ?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary))
       ?.map((c) => ({
         ...c,
@@ -80,7 +70,7 @@
   );
 </script>
 
-{#if $isPending}
+{#if $isCalendarListPending}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
@@ -116,9 +106,9 @@
         </div>
       </div>
 
-      {#if $calendars && isExpanded(title)}
+      {#if $calendarList && isExpanded(title)}
         <div class="my-1" transition:slide>
-          {#each cal as { id, backgroundColor, summary }}
+          {#each cal as { id, colorId, summary }}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
             >
@@ -131,7 +121,7 @@
                 />
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${backgroundColor}`}>{summary}</span
+                  style={`color: ${colorId}`}>{summary}</span
                 >
               </div>
 

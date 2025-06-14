@@ -10,6 +10,7 @@
 
 - Sat Jun 14, 2025
   - (6.14.01) - Extracted color route.
+  - (6.14.02) - Trying to update the colors.
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
   - (6.13.02) - Kinda working but got effect bug.
