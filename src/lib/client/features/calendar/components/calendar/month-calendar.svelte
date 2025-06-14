@@ -21,12 +21,19 @@
 
   import type { Event, UtilEvent } from "$lib/types";
 
-  import { getEventColor } from "../../utils/get-colors";
+  import { getEventBgColor, getEventColor } from "../../utils/get-colors";
 
   interface MonthCalendarProps {
     events: Event[];
     utilEvents: UtilEvent[];
   }
+
+  type DisplayProperties = {
+    color: string | null | undefined;
+    isUtilEvent: boolean;
+  };
+
+  type DisplayEvent = (Event & DisplayProperties) | (UtilEvent & DisplayProperties);
 
   let { events, utilEvents }: MonthCalendarProps = $props();
 
@@ -51,19 +58,7 @@
     const start = $days[0];
     const end = endOfDay($days[$days.length - 1]);
 
-    type EventItem = { summary: string; color: string | null | undefined; isUtilEvent: boolean };
-    type TempMap = Record<string, { utils: EventItem[]; normals: EventItem[] }>;
-
-    const tempMap: TempMap = {};
-
-    const createEventItem = (
-      event: { summary: string; calendarId: string },
-      isUtilEvent: boolean
-    ): EventItem => ({
-      summary: event.summary,
-      color: getEventColor(event.calendarId),
-      isUtilEvent
-    });
+    const tempMap: Record<string, { utils: DisplayEvent[]; normals: DisplayEvent[] }> = {};
 
     for (const event of utilEvents) {
       const isVisible =
@@ -74,7 +69,12 @@
       if (isWithinInterval(date, { start, end })) {
         const key = getDayString(date);
         if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
-        tempMap[key].utils.push(createEventItem(event, true));
+
+        tempMap[key].utils.push({
+          ...event,
+          color: getEventColor(event.calendarId),
+          isUtilEvent: true
+        });
       }
     }
 
@@ -87,11 +87,16 @@
       if (isWithinInterval(startDate, { start, end })) {
         const key = getDayString(startDate);
         if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
-        tempMap[key].normals.push(createEventItem(event, false));
+
+        tempMap[key].normals.push({
+          ...event,
+          color: event.colorId ? getEventBgColor(event.colorId) : getEventColor(event.calendarId),
+          isUtilEvent: false
+        });
       }
     }
 
-    const finalMap: Record<string, EventItem[]> = {};
+    const finalMap: Record<string, DisplayEvent[]> = {};
     for (const key in tempMap) {
       finalMap[key] = [...tempMap[key].utils, ...tempMap[key].normals.reverse()];
     }
