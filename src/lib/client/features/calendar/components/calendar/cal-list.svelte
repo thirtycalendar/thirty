@@ -11,7 +11,7 @@
   import type { Calendar } from "$lib/types";
 
   import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
-  import { colorList } from "../../queries/color-list";
+  import { getCalendarColor } from "../../utils/get-colors";
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
@@ -69,14 +69,6 @@
         summary: c.summary.replace(/^Holidays in /i, "").trim()
       })) ?? []
   );
-
-  function getCalendarColor(colorId: string): string {
-    const colors = $colorList;
-
-    if (!colors || !colors.calendar[colorId]) return "transparent";
-
-    return colors.calendar[colorId].background;
-  }
 </script>
 
 {#if $isCalendarListPending}

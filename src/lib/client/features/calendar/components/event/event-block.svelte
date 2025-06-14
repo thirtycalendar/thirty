@@ -3,6 +3,8 @@
 
   import type { Event } from "$lib/types";
 
+  import { getCalendarColor, getEventBgColor, getEventColor } from "../../utils/get-colors";
+
   interface EventBlockProps {
     event: Event;
   }
@@ -48,13 +50,19 @@
 
 <div
   class="absolute left-1 right-1 z-10 text-xs text-white cursor-pointer select-none opacity-90 overflow-hidden rounded-md flex items-start gap-1"
-  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.bgColor}; pointer-events: auto;`}
+  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${event.colorId ? getEventBgColor(event.colorId) : getEventColor(event.calendarId)}; pointer-events: auto;`}
   title={event.summary}
 >
   <!-- Color bar -->
-  <div class="w-1 h-full rounded-sm shrink-0" style={`background-color: ${event.color};`}></div>
+  <div
+    class="w-1 h-full rounded-sm shrink-0"
+    style={`background-color: ${getEventColor(event.calendarId)};`}
+  ></div>
 
-  <div class="text-primary w-full" style={`background-color: ${event.bgColor};`}>
+  <div
+    class="text-primary w-full"
+    style={`background-color: ${event.colorId ? getEventBgColor(event.colorId) : getEventColor(event.calendarId)};`}
+  >
     {#if heightPx < 28}
       <p class={`${heightPx < 24 ? "text-[10px]" : "text-xs"} ${heightPx < 40 ? "truncate" : ""}`}>
         {event.summary}, {formatStartTime(start)}

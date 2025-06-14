@@ -13,6 +13,7 @@
   - (6.14.02) - Trying to update the colors.
   - (6.14.03) - Showed colors of calendars.
   - (6.14.04) - Showed colors of util events.
+  - (6.14.05) - Showed colors of week calendar and day calendar.
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
   - (6.13.02) - Kinda working but got effect bug.

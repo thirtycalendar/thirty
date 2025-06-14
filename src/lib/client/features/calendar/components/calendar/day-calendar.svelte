@@ -18,6 +18,7 @@
 
   import type { Event, UtilEvent } from "$lib/types";
 
+  import { getEventColor } from "../../utils/get-colors";
   import { EventBlock } from "../event";
 
   interface DayCalendarProps {
@@ -125,7 +126,7 @@
       {#each $dayUtilEvents as util}
         <div
           class="text-primary text-[10px] py-[2px] px-[3px] mb-1 rounded-md truncate w-full"
-          style="background-color: {util.bgColor || '#e5e7eb'};"
+          style="background-color: {getEventColor(util.calendarId)};"
           title={util.summary}
         >
           {util.summary}
