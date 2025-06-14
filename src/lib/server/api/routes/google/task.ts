@@ -17,6 +17,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const cached = await kv.get<tasks_v1.Schema$Task[]>(KV_GOOGLE_TASKS(user.id));
+
       if (cached) {
         return c.json<SuccessResponse<tasks_v1.Schema$Task[]>>({
           success: true,

@@ -17,7 +17,13 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
       const cached = await kv.get<Calendar[]>(KV_GOOGLE_CALENDARS(user.id));
-      if (cached) return c.json({ success: true, message: "Success", data: cached });
+
+      if (cached)
+        return c.json<SuccessResponse<Calendar[]>>({
+          success: true,
+          message: "Success",
+          data: cached
+        });
 
       const { calendars } = await cacheGoogleCalData(user.id);
 

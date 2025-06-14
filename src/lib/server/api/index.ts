@@ -8,6 +8,7 @@ import { isProd } from "$lib/utils/is-prod";
 import type { Context } from "./context";
 import auth from "./routes/auth";
 import calendar from "./routes/google/calendar";
+import color from "./routes/google/color";
 import event from "./routes/google/event";
 import task from "./routes/google/task";
 
@@ -17,6 +18,7 @@ app.use("*", cors());
 
 const routes = app
   .route("/auth", auth)
+  .route("/google/color", color)
   .route("/google/calendar", calendar)
   .route("/google/event", event)
   .route("/google/task", task);

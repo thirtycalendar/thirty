@@ -1,8 +1,11 @@
+import type { calendar_v3 } from "@googleapis/calendar";
+
 import { kv } from "$lib/server/utils/upstash/kv";
 
-import type { Calendar, Event, Task, UtilEvent } from "$lib/types";
+import type { Calendar, Color, ColorMap, Event, Task, UtilEvent } from "$lib/types";
 import {
   KV_GOOGLE_CALENDARS,
+  KV_GOOGLE_COLORS,
   KV_GOOGLE_EVENTS,
   KV_GOOGLE_TASKS,
   KV_GOOGLE_UTIL_EVENTS
@@ -11,6 +14,7 @@ import {
 import { getGoogleClients } from "./client";
 
 export interface CachedData {
+  colors: Color;
   calendars: Calendar[];
   events: Event[];
   tasks: Task[];
@@ -25,19 +29,34 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
   const calendarsRaw = calendarsRes.data.items ?? [];
 
   // 2. Color metadata
+  function normalizeColors(input: Record<string, calendar_v3.Schema$ColorDefinition>): ColorMap {
+    const output: ColorMap = {};
+    for (const [id, def] of Object.entries(input)) {
+      if (def.background && def.foreground) {
+        output[id] = {
+          background: def.background,
+          foreground: def.foreground
+        };
+      }
+    }
+    return output;
+  }
+
   const colorsRes = await calendar.colors.get();
-  const calendarColors = colorsRes.data.calendar ?? {};
-  const eventColors = colorsRes.data.event ?? {};
+  const calendarColors = normalizeColors(colorsRes.data.calendar ?? {});
+  const eventColors = normalizeColors(colorsRes.data.event ?? {});
+
+  const colors = {
+    calendar: calendarColors,
+    event: eventColors
+  };
 
   // 3. Normalize calendars
   const calendars: Calendar[] = calendarsRaw.map((cal) => ({
     id: cal.id as string,
     summary: cal.summary ?? "",
     timeZone: cal.timeZone ?? "UTC",
-    backgroundColor:
-      calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
-      cal.backgroundColor ??
-      "#9a9cff",
+    colorId: cal.colorId ?? "",
     accessRole: (cal.accessRole as "owner" | "reader") ?? "reader"
   }));
 
@@ -46,7 +65,6 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
   // 4. Events + Util Events
   const allEvents: Event[] = [];
 
-  // Helper: normalize to base holiday name (remove day off, substitute, observed, holiday suffixes/prefixes)
   const normalizeHolidayBase = (s: string) =>
     s
       .toLowerCase()
@@ -56,7 +74,6 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
       .replace(/\sholiday$/i, "")
       .trim();
 
-  // Group util events by year-month-baseName
   const utilEventsGrouped = new Map<string, { mainEvents: UtilEvent[]; others: UtilEvent[] }>();
 
   for (const cal of calendarsRaw) {
@@ -86,28 +103,16 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
           calIdLower.includes("holiday"));
 
       if (!isUtil) {
-        // Normal event
         const start = e.start.dateTime ?? (e.start.date as string);
         const end = e.end.dateTime ?? (e.end.date as string);
         const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
-
-        const calendarBg =
-          calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
-          cal.backgroundColor ??
-          "#9a9cff";
-
-        const eventBg =
-          e.colorId && eventColors[e.colorId]?.background
-            ? eventColors[e.colorId].background
-            : calendarBg;
 
         allEvents.push({
           id: e.id as string,
           calendarId: cal.id as string,
           summary: e.summary ?? "",
           description: e.description,
-          color: calendarBg,
-          bgColor: eventBg,
+          colorId: e.colorId ?? null,
           organizer: e.organizer?.displayName
             ? { displayName: e.organizer.displayName }
             : undefined,
@@ -127,38 +132,19 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
         continue;
       }
 
-      // Util event logic here
-
       const start = e.start.dateTime ?? (e.start.date as string);
       const timeZone = e.start.timeZone ?? cal.timeZone ?? "UTC";
 
-      // Base name normalized
       const baseName = normalizeHolidayBase(summaryRaw);
-
-      // Year-month for grouping
       const startDate = new Date(start);
-      const year = startDate.getFullYear();
-      const month = startDate.getMonth() + 1;
-
-      const key = `${year}-${month}-${baseName}`;
-
-      const calendarBg =
-        calendarColors[cal.colorId as keyof typeof calendarColors]?.background ??
-        cal.backgroundColor ??
-        "#9a9cff";
-
-      const eventBg =
-        e.colorId && eventColors[e.colorId]?.background
-          ? eventColors[e.colorId].background
-          : calendarBg;
+      const key = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${baseName}`;
 
       const utilEvent: UtilEvent = {
         id: e.id as string,
         calendarId: cal.id as string,
         summary: e.summary ?? "",
         description: e.description,
-        color: calendarBg,
-        bgColor: eventBg,
+        colorId: e.colorId ?? null,
         organizer: e.organizer?.displayName ? { displayName: e.organizer.displayName } : undefined,
         date: { dateTime: start, timeZone }
       };
@@ -167,7 +153,6 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
         utilEventsGrouped.set(key, { mainEvents: [], others: [] });
       }
 
-      // Determine if exact base name or a "duplicate" with day off, observed, etc.
       if (summaryLower === baseName.toLowerCase()) {
         utilEventsGrouped.get(key)?.mainEvents.push(utilEvent);
       } else {
@@ -176,29 +161,24 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     }
   }
 
-  // Flatten util events — keep all mainEvents, ignore others if mainEvents exist for that group
   const utilEvents: UtilEvent[] = [];
 
   for (const { mainEvents, others } of utilEventsGrouped.values()) {
     if (mainEvents.length > 0) {
       utilEvents.push(...mainEvents);
     } else {
-      // If no exact main event, keep others (fallback)
       utilEvents.push(...others);
     }
   }
 
-  // Sort events descending by start date
   const sortedEvents = allEvents.sort((a, b) => {
-    const aTime = new Date(a.start.dateTime).getTime();
-    const bTime = new Date(b.start.dateTime).getTime();
-    return bTime - aTime;
+    return new Date(b.start.dateTime).getTime() - new Date(a.start.dateTime).getTime();
   });
 
-  // Save caches
   await Promise.all([
     kv.set(KV_GOOGLE_EVENTS(userId), sortedEvents, { ex: 900 }),
-    kv.set(KV_GOOGLE_UTIL_EVENTS(userId), utilEvents, { ex: 3600 })
+    kv.set(KV_GOOGLE_UTIL_EVENTS(userId), utilEvents, { ex: 3600 }),
+    kv.set(KV_GOOGLE_COLORS(userId), colors, { ex: 3600 })
   ]);
 
   // 5. Tasks
@@ -230,7 +210,8 @@ export async function cacheGoogleCalData(userId: string): Promise<CachedData> {
     calendars,
     events: sortedEvents,
     tasks: allTasks,
-    utilEvents
+    utilEvents,
+    colors
   };
 }
 
@@ -239,6 +220,7 @@ export async function deleteGoogleCalDataCache(userId: string) {
     kv.del(KV_GOOGLE_CALENDARS(userId)),
     kv.del(KV_GOOGLE_EVENTS(userId)),
     kv.del(KV_GOOGLE_UTIL_EVENTS(userId)),
-    kv.del(KV_GOOGLE_TASKS(userId))
+    kv.del(KV_GOOGLE_TASKS(userId)),
+    kv.del(KV_GOOGLE_COLORS(userId))
   ]);
 }

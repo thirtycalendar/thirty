@@ -1,10 +1,22 @@
 import type { auth } from "$lib/server/auth";
 
+export interface ColorMap {
+  [id: string]: {
+    background: string;
+    foreground: string;
+  };
+}
+
+export interface Color {
+  calendar: ColorMap;
+  event: ColorMap;
+}
+
 export interface Calendar {
   id: string;
   summary: string;
   timeZone: string;
-  backgroundColor: string;
+  colorId: string;
   accessRole: "owner" | "reader";
 }
 
@@ -13,8 +25,7 @@ export interface Event {
   calendarId: string;
   summary: string;
   description?: string | null;
-  color?: string | null;
-  bgColor?: string | null;
+  colorId?: string | null;
   organizer?: {
     displayName: string;
   };
@@ -54,8 +65,7 @@ export interface UtilEvent {
   calendarId: string;
   summary: string;
   description?: string | null;
-  color?: string | null;
-  bgColor?: string | null;
+  colorId?: string | null;
   organizer?: {
     displayName: string;
   };
