@@ -11,6 +11,7 @@
   import type { Calendar } from "$lib/types";
 
   import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
+  import { colorList, isColorListPending } from "../../queries/color-list";
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
@@ -68,6 +69,14 @@
         summary: c.summary.replace(/^Holidays in /i, "").trim()
       })) ?? []
   );
+
+  function getCalendarColor(colorId: string): string {
+    const colors = $colorList;
+
+    if (!colors || !colors.calendar[colorId]) return "transparent";
+
+    return colors.calendar[colorId].background;
+  }
 </script>
 
 {#if $isCalendarListPending}
@@ -121,8 +130,10 @@
                 />
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${colorId}`}>{summary}</span
+                  style={`color: ${getCalendarColor(colorId)}`}
                 >
+                  {summary}
+                </span>
               </div>
 
               {#if title !== "Holidays"}
