@@ -3,25 +3,28 @@
 
   import { addDays, addMinutes, format, startOfDay } from "date-fns";
 
-  import { CalendarField, ChoiceField, InputField, TimeField } from "$lib/client/components";
+  import {
+    CalendarChoiceField,
+    CalendarField,
+    InputField,
+    TimeField
+  } from "$lib/client/components";
+  import ColorChoiceField from "$lib/client/components/form/color-choice-field.svelte";
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import type { Calendar, EventForm } from "$lib/types"; // Import Calendar type
+  import type { Calendar, EventForm } from "$lib/types";
 
   import { calendarList } from "../../queries/calendar-list";
+  import { colorList } from "../../queries/color-list";
   import { eventSchema } from "../../schema";
 
   const now = new Date();
   const today = startOfDay(now);
 
-  // Derive the initial calendarId based on calendarList
-  // This needs to be done *after* $calendarList is available
   let initialCalendarId: string = "";
   $effect(() => {
-    // Only run this effect once calendarList is loaded
     if ($calendarList && !initialCalendarId) {
-      // Find a calendar whose summary is an email address
       const emailCalendar: Calendar | undefined = $calendarList.find((c) =>
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary)
       );
@@ -80,7 +83,7 @@
   }
 </script>
 
-{#if !$calendarList}
+{#if !$calendarList || !$colorList}
   <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
     <span class="loading loading-spinner loading-md"></span>
   </div>
@@ -170,7 +173,7 @@
     </div>
 
     <div>
-      <ChoiceField
+      <CalendarChoiceField
         name="calendarId"
         choiceList={$calendarList}
         placeholder="calendarId"
@@ -178,7 +181,14 @@
         {formData}
         {formErrors}
       />
-      <InputField name="colorId" placeholder="Color Id" {handleInput} {formData} {formErrors} />
+      <ColorChoiceField
+        name="colorId"
+        choiceList={$colorList}
+        placeholder="Color Id"
+        {handleInput}
+        {formData}
+        {formErrors}
+      />
     </div>
 
     <div class="flex my-2 items-start gap-3 w-full">
