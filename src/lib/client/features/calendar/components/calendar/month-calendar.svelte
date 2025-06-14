@@ -3,6 +3,7 @@
 
   import {
     addDays,
+    endOfDay,
     endOfMonth,
     endOfWeek,
     format,
@@ -20,6 +21,8 @@
 
   import type { Event, UtilEvent } from "$lib/types";
 
+  import { getEventColor } from "../../utils/get-colors";
+
   interface MonthCalendarProps {
     events: Event[];
     utilEvents: UtilEvent[];
@@ -32,77 +35,72 @@
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));
     const end = endOfWeek(endOfMonth($currentDate));
-
-    const result: Date[] = [];
-    for (let d = start; d <= end; d = addDays(d, 1)) {
-      result.push(d);
-    }
-    return result;
+    return Array.from(
+      { length: Math.ceil((end.getTime() - start.getTime()) / 86400000) + 1 },
+      (_, i) => addDays(start, i)
+    );
   });
 
   function normalizeUtilEventDate(dateStr: string) {
     return parseISO(dateStr);
   }
 
-  const eventsByDay = derived(
-    [currentDate, checkedCalendars],
-    ([$currentDate, $checkedCalendars]) => {
-      const monthStart = startOfWeek(startOfMonth($currentDate));
-      const monthEnd = endOfWeek(endOfMonth($currentDate));
+  const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 
-      const dailyEventsMap: Record<
-        string,
-        { summary: string; color: string | null | undefined; isUtilEvent: boolean }[]
-      > = {};
+  const eventsByDay = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
+    const start = $days[0];
+    const end = endOfDay($days[$days.length - 1]);
 
-      const addEventToMap = (
-        date: Date,
-        event: { summary: string; bgColor?: string | null | undefined },
-        isUtilEvent: boolean
-      ) => {
-        const dayKey = format(date, "yyyy-MM-dd");
-        if (!dailyEventsMap[dayKey]) {
-          dailyEventsMap[dayKey] = [];
-        }
-        dailyEventsMap[dayKey].push({
-          summary: event.summary,
-          color: event.bgColor,
-          isUtilEvent
-        });
-      };
+    const map: Record<
+      string,
+      { summary: string; color: string | null | undefined; isUtilEvent: boolean }[]
+    > = {};
 
-      // Process Util Events (all-day)
-      utilEvents.forEach((event) => {
-        const isVisible =
-          !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
-        if (!isVisible) return;
+    const add = (
+      date: Date,
+      event: { summary: string; calendarId: string },
+      isUtilEvent: boolean
+    ) => {
+      const key = getDayString(date);
+      if (!map[key]) map[key] = [];
 
-        const eventDate = normalizeUtilEventDate(event.date.dateTime);
-        if (isWithinInterval(eventDate, { start: monthStart, end: monthEnd })) {
-          addEventToMap(eventDate, event, true); // Mark as util event
-        }
+      map[key].push({
+        summary: event.summary,
+        color: getEventColor(event.calendarId),
+        isUtilEvent
       });
+    };
 
-      // Process Timed Events
-      events.forEach((event) => {
-        const isVisible =
-          !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
-        if (!isVisible) return;
+    for (const event of utilEvents) {
+      const isVisible =
+        !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
+      if (!isVisible) continue;
 
-        const startDate = parseISO(event.start.dateTime);
-        if (isWithinInterval(startDate, { start: monthStart, end: monthEnd })) {
-          addEventToMap(startDate, event, false); // Mark as regular event
-        }
-      });
-
-      return dailyEventsMap;
+      const date = normalizeUtilEventDate(event.date.dateTime);
+      if (isWithinInterval(date, { start, end })) {
+        add(date, event, true);
+      }
     }
-  );
+
+    for (const event of events) {
+      const isVisible =
+        !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
+      if (!isVisible) continue;
+
+      const startDate = parseISO(event.start.dateTime);
+      if (isWithinInterval(startDate, { start, end })) {
+        add(startDate, event, false);
+      }
+    }
+
+    return map;
+  });
 
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 </script>
 
 <div class="flex flex-col h-full py-3">
+  <!-- Headers -->
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
     {#each dayLabels as label}
       <div class="h-8 flex items-center justify-center font-semibold">
@@ -111,10 +109,11 @@
     {/each}
   </div>
 
-  <div class="grid grid-cols-7 grid-rows-5 h-full bg-base-100 text-xs rounded-2xl w-full">
+  <!-- Calendar Grid -->
+  <div class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full">
     {#each $days as day}
-      {@const dayKey = format(day, "yyyy-MM-dd")}
-      {@const dayEvents = $eventsByDay[dayKey] || []}
+      {@const key = getDayString(day)}
+      {@const dayEvents = $eventsByDay[key] || []}
       <button
         class="border border-base-200 px-1 py-1 text-left relative hover:bg-base-300/10 transition-colors flex flex-col items-start"
         onclick={() => {
@@ -122,9 +121,9 @@
           changeToDayView();
         }}
       >
+        <!-- Date Number -->
         <div class="self-end text-xs font-medium mb-1">
           <span
-            class:select-none={true}
             class:text-primary={isToday(day)}
             class:bg-primary-content={isToday(day)}
             class:font-bold={isToday(day)}
@@ -137,16 +136,13 @@
           </span>
         </div>
 
+        <!-- Events -->
         <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
             <div
               class="font-semibold truncate px-1 rounded"
-              style:background-color={event.isUtilEvent
-                ? event.color || "var(--fallback-bg-color, #ccc)"
-                : "transparent"}
-              style:color={event.isUtilEvent
-                ? "black"
-                : event.color || "var(--fallback-text-color, #333)"}
+              style:background-color={event.isUtilEvent ? event.color : "transparent"}
+              style:color={event.isUtilEvent ? "black" : event.color}
               title={event.summary}
             >
               {event.summary}
