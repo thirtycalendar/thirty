@@ -11,7 +11,7 @@
   import type { Calendar } from "$lib/types";
 
   import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
-  import { colorList, isColorListPending } from "../../queries/color-list";
+  import { colorList } from "../../queries/color-list";
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};

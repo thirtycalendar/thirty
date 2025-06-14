@@ -18,6 +18,8 @@
 
   import type { Event, UtilEvent } from "$lib/types";
 
+  import { calendarList } from "../../queries/calendar-list";
+  import { colorList } from "../../queries/color-list";
   import { EventBlock } from "../event";
 
   interface WeekCalendarProps {
@@ -100,6 +102,14 @@
   };
 
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
+
+  function getUtilEventColor(calendarId: string): string {
+    const calendar = $calendarList?.find((cal) => cal.id === calendarId);
+    const colorId = calendar?.colorId;
+    const bg = $colorList?.calendar?.[colorId ?? ""]?.background;
+
+    return bg ?? "transparent";
+  }
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -122,7 +132,7 @@
         {#each $weekUtilEvents.filter((e) => format(normalizeUtilEventDate(e.date.dateTime), "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as util}
           <div
             class="text-primary text-[10px] py-[2px] px-[3px] rounded-md truncate max-w-full"
-            style="background-color: {util.bgColor || '#e5e7eb'};"
+            style="background-color: {getUtilEventColor(util.calendarId)};"
             title={util.summary}
           >
             {util.summary}
