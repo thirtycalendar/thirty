@@ -5,6 +5,7 @@
   import { createQuery } from "$lib/client/utils/query/create-query";
   import { client } from "$lib/client/utils/rpc";
 
+  import { isColorListPending } from "../../queries/color-list";
   import { EventModal } from "../event";
   import { TaskModal } from "../task";
 
@@ -23,7 +24,7 @@
 <TaskModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
-  {#if $data}
+  {#if $data && !$isColorListPending}
     {#if $calView === "year"}
       <YearCalendar />
     {:else if $calView === "month"}

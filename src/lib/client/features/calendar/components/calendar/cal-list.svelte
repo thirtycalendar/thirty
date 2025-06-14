@@ -11,6 +11,7 @@
   import type { Calendar } from "$lib/types";
 
   import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
+  import { isColorListPending } from "../../queries/color-list";
   import { getCalendarColor } from "../../utils/get-colors";
 
   const getToggledStates = (): Record<string, boolean> => {
@@ -71,7 +72,7 @@
   );
 </script>
 
-{#if $isCalendarListPending}
+{#if $isCalendarListPending && $isColorListPending}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
