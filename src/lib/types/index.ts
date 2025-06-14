@@ -50,8 +50,7 @@ export interface EventForm {
   calendarId: string;
   summary: string;
   description?: string;
-  color: string;
-  bgColor: string;
+  colorId: string;
   startDate: string;
   startTime: string;
   startTimeZone: string;

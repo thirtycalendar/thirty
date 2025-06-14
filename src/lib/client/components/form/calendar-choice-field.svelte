@@ -41,22 +41,37 @@
         const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary);
         return {
           ...c,
-          summary: isEmail ? ($session?.name ?? c.summary) : c.summary
+          summary: isEmail ? ($session?.name ?? c.summary) : c.summary,
+          originalSummary: c.summary,
+          isEmailSummary: isEmail
         };
       })
   );
 
-  function selectChoice(choice: Calendar) {
-    let newValue: string | undefined;
+  const displayedSummary = $derived(() => {
+    if (selectedCalendar) {
+      const originalCalendar = choiceList.find((c) => c.id === selectedCalendar.id);
+      if (originalCalendar) {
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(originalCalendar.summary);
+        return isEmail ? ($session?.name ?? originalCalendar.summary) : originalCalendar.summary;
+      }
+      return selectedCalendar.summary;
+    }
+    return placeholder || "Select a calendar";
+  });
 
+  function selectChoice(choice: Calendar) {
     if (value === choice.id) {
-      newValue = undefined; // Deselect
-    } else {
-      newValue = choice.id; // Select the ID
+      open = false;
+      setTimeout(() => triggerButtonRef?.focus(), 0);
+      return;
     }
 
-    $formData[name] = newValue; // Update the store directly
+    const newValue = choice.id;
 
+    $formData[name] = newValue;
+
+    // Mimic native input event for `handleInput`
     const mockEvent = new Event("input", { bubbles: true });
     const mockTarget = {
       name: name,
@@ -109,7 +124,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{selectedCalendar ? selectedCalendar.summary : placeholder || "Select a calendar"}</span>
+    <span>{displayedSummary()}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -145,6 +160,7 @@
                 triggerButtonRef?.focus();
               }
             }}
+            disabled={value === choice.id}
           >
             {choice.summary}
             {#if value === choice.id}

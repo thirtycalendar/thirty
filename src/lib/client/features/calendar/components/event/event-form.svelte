@@ -7,7 +7,7 @@
   import TextareaField from "$lib/client/components/form/textarea-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import type { EventForm } from "$lib/types";
+  import type { Calendar, EventForm } from "$lib/types"; // Import Calendar type
 
   import { calendarList } from "../../queries/calendar-list";
   import { eventSchema } from "../../schema";
@@ -15,12 +15,29 @@
   const now = new Date();
   const today = startOfDay(now);
 
+  // Derive the initial calendarId based on calendarList
+  // This needs to be done *after* $calendarList is available
+  let initialCalendarId: string = "";
+  $effect(() => {
+    // Only run this effect once calendarList is loaded
+    if ($calendarList && !initialCalendarId) {
+      // Find a calendar whose summary is an email address
+      const emailCalendar: Calendar | undefined = $calendarList.find((c) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary)
+      );
+
+      if (emailCalendar) {
+        initialCalendarId = emailCalendar.id;
+        $formData.calendarId = initialCalendarId;
+      }
+    }
+  });
+
   let defaultValues: EventForm = {
-    calendarId: "",
+    calendarId: initialCalendarId, // Use the reactive initialCalendarId
     summary: "",
     description: "",
-    color: "",
-    bgColor: "",
+    colorId: "",
     startDate: today.toISOString(),
     startTime: format(now, "HH:mm"),
     startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -152,16 +169,17 @@
       {/if}
     </div>
 
-    <ChoiceField
-      name="calendarId"
-      choiceList={$calendarList}
-      placeholder="calendarId"
-      {handleInput}
-      {formData}
-      {formErrors}
-    />
-    <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
-    <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
+    <div>
+      <ChoiceField
+        name="calendarId"
+        choiceList={$calendarList}
+        placeholder="calendarId"
+        {handleInput}
+        {formData}
+        {formErrors}
+      />
+      <InputField name="colorId" placeholder="Color Id" {handleInput} {formData} {formErrors} />
+    </div>
 
     <div class="flex my-2 items-start gap-3 w-full">
       <div class="pt-[6px] text-muted-foreground">
