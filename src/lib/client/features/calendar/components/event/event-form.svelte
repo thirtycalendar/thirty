@@ -146,7 +146,7 @@
     {/if}
   </div>
 
-  <InputField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
+  <ChoiceField name="calendarId" placeholder="calendarId" {handleInput} {formData} {formErrors} />
   <InputField name="color" placeholder="Color" {handleInput} {formData} {formErrors} />
   <InputField name="bgColor" placeholder="Bg Color" {handleInput} {formData} {formErrors} />
 
