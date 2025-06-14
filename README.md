@@ -20,6 +20,7 @@
   - (6.14.09) - Updated month calendar component.
   - (6.14.10) - Committed for safety.
   - (6.14.11) - Calendar id picker kinda working.
+  - (6.14.12) - Updated calendar input field.
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
   - (6.13.02) - Kinda working but got effect bug.

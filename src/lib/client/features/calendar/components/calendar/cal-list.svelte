@@ -50,10 +50,10 @@
     $calendarList
       ?.filter((c) => c.accessRole === "owner")
       ?.map((c) => {
-        const isGmail = /@gmail\.com$/i.test(c.id);
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary);
         return {
           ...c,
-          summary: isGmail ? ($session?.name ?? c.summary) : c.summary
+          summary: isEmail ? ($session?.name ?? c.summary) : c.summary
         };
       }) ?? []
   );

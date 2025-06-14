@@ -29,8 +29,8 @@
   let { name, isDisablePast, className, formData, formErrors, handleInput }: CalendarFieldProps =
     $props();
 
-  let value = $derived($formData[name] ?? new Date());
-  let error = $derived($formData[name]);
+  let value: Date = $derived($formData[name] ? new Date($formData[name]) : new Date());
+  let error = $derived($formErrors[name]);
 
   let open = $state(false);
   let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
@@ -49,10 +49,24 @@
   };
 
   function selectDay(day: Date) {
-    if (isDisablePast && day < new Date()) return;
-    value = day;
-    open = false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
+    if (isDisablePast && day < today) return;
+
+    value = day;
+
+    const mockEvent = new Event("input", { bubbles: true });
+    const mockTarget = {
+      name: name,
+      value: format(day, "yyyy-MM-dd"),
+      type: "text"
+    };
+    Object.defineProperty(mockEvent, "target", { writable: false, value: mockTarget });
+
+    handleInput(mockEvent);
+
+    open = false;
     setTimeout(() => triggerButton?.focus(), 0);
   }
 
@@ -60,8 +74,9 @@
     const prev = subMonths(value, 1);
     const now = new Date();
     const startOfPrev = startOfMonth(prev);
+    const startOfNow = startOfMonth(now);
 
-    if (!isDisablePast || startOfPrev >= startOfMonth(now)) {
+    if (!isDisablePast || startOfPrev >= startOfNow) {
       value = prev;
     }
   }
@@ -91,7 +106,10 @@
 
   function handleDayKeydown(event: KeyboardEvent, day: Date): void {
     const navigate = (target: Date) => {
-      if (!isDisablePast || target >= new Date()) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (!isDisablePast || target >= today) {
         value = target;
       }
     };
@@ -122,11 +140,10 @@
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
 <div class={cn("relative w-full", className)}>
-  <!-- Trigger Button -->
   <button
     type="button"
     bind:this={triggerButton}
-    class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left"
+    class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left outline-none"
     onclick={() => (open = true)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
@@ -145,7 +162,6 @@
       bind:this={calendarDropdown}
       class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
-      <!-- Month Navigation -->
       <div class="flex items-center justify-between px-2 mb-2 text-sm font-semibold">
         <div class=" w-full">
           {format(value, "MMMM yyyy")}
@@ -153,7 +169,7 @@
 
         <button
           type="button"
-          class="btn btn-ghost btn-xs btn-square"
+          class="btn btn-ghost btn-xs btn-square outline-none"
           onclick={prevMonth}
           disabled={isDisablePast && startOfMonth(value) <= startOfMonth(new Date())}
           aria-label="Previous Month"
@@ -162,7 +178,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-ghost btn-xs btn-square"
+          class="btn btn-ghost btn-xs btn-square outline-none"
           onclick={nextMonth}
           onkeydown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -177,23 +193,21 @@
         </button>
       </div>
 
-      <!-- Day Labels -->
       <div class="grid grid-cols-7 text-[10px] text-center opacity-50 mb-1">
         {#each dayLabels as label}
           <div>{label}</div>
         {/each}
       </div>
 
-      <!-- Calendar Days -->
       <div class="grid grid-cols-7 gap-1 text-center text-sm">
         {#each getDays() as day}
           <button
             type="button"
-            class={`py-1 rounded-md cursor-pointer transition-colors w-full
+            class={`py-1 rounded-md cursor-pointer transition-colors w-full outline-none
               ${isSameDay(day, value) ? "bg-base-200 text-primary-content font-semibold" : ""}
               ${!isSameMonth(day, value) ? "text-base-content/30" : ""}
               ${isToday(day) && isSameDay(day, value) ? "text-primary font-medium" : ""}
-              ${isDisablePast && day < new Date() ? "opacity-30 cursor-not-allowed" : "hover:bg-base-300/60"}
+              ${isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0)) ? "opacity-30 cursor-not-allowed" : "hover:bg-base-300/60"}
             `}
             onclick={(e) => {
               e.preventDefault();
@@ -203,7 +217,7 @@
             tabindex="0"
             role="gridcell"
             aria-selected={isSameDay(day, value)}
-            disabled={isDisablePast && day < new Date()}
+            disabled={isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))}
           >
             {format(day, "d")}
           </button>

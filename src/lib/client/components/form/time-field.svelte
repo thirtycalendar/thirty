@@ -72,10 +72,8 @@
     })()
   );
 
-  // Propagate changes to the parent form using the provided callback.
   function updateFormValue(newDate: Date): void {
     const newTimeString = formatDateFns(newDate, "HH:mm:ss.SSS");
-    // Create a mock event to pass to the form handler.
     const event = new Event("input", { bubbles: true });
     const mockTarget = { name, value: newTimeString };
     Object.defineProperty(event, "target", { writable: false, value: mockTarget });
