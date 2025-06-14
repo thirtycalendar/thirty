@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { AlignLeft, Clock3 } from "@lucide/svelte";
+  import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
 
   import { addDays, addMinutes, format, startOfDay } from "date-fns";
 
@@ -89,14 +89,7 @@
   </div>
 {:else}
   <form onsubmit={handleSubmit(onSubmit)}>
-    <InputField
-      name="summary"
-      placeholder="Add title"
-      className="my-2"
-      {handleInput}
-      {formData}
-      {formErrors}
-    />
+    <InputField name="summary" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
     <div class="flex my-2 items-start gap-3 w-full">
       <div class="pt-[6px] text-muted-foreground">
@@ -172,23 +165,34 @@
       {/if}
     </div>
 
-    <div>
-      <CalendarChoiceField
-        name="calendarId"
-        choiceList={$calendarList}
-        placeholder="calendarId"
-        {handleInput}
-        {formData}
-        {formErrors}
-      />
-      <ColorChoiceField
-        name="colorId"
-        choiceList={$colorList}
-        placeholder="Color Id"
-        {handleInput}
-        {formData}
-        {formErrors}
-      />
+    <div class="flex my-2 items-start gap-3 w-full">
+      <div class="pt-[6px] text-muted-foreground">
+        <CalendarCheck2 size="20" strokeWidth="2.5" />
+      </div>
+
+      <div class="flex gap-2 w-full">
+        <div class="w-full basis-[75%]">
+          <CalendarChoiceField
+            name="calendarId"
+            choiceList={$calendarList}
+            placeholder="calendarId"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        </div>
+
+        <div class="w-full basis-[25%]">
+          <ColorChoiceField
+            name="colorId"
+            choiceList={$colorList}
+            placeholder="Color Id"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        </div>
+      </div>
     </div>
 
     <div class="flex my-2 items-start gap-3 w-full">

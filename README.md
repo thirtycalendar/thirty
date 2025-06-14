@@ -23,6 +23,7 @@
   - (6.14.12) - Updated calendar input field.
   - (6.14.13) - Improved codes.
   - (6.14.14) - Added color choice field.
+  - (6.14.15) - Styled color picker.
 - Fri Jun 13, 2025
   - (6.13.01) - Event form start time and end time comparison.
   - (6.13.02) - Kinda working but got effect bug.

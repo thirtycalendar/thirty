@@ -48,18 +48,6 @@
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
 
-  // The displayed summary for the trigger button
-  const displayedSummary = $derived(() => {
-    if (selectedColor) {
-      // For colors, the "summary" is essentially the color itself,
-      // but we can just use the placeholder or a generic "Selected Color"
-      // or the ID if we want to be explicit.
-      // For simplicity, let's show "Color <ID>" or the placeholder.
-      return `Color ${selectedColor.id}`;
-    }
-    return placeholder || "Select a color";
-  });
-
   function selectChoice(choice: { id: string; background: string; foreground: string }) {
     // PREVENT DESELECTION: If the clicked choice is already selected, just close the dropdown
     if (value === choice.id) {
@@ -106,6 +94,53 @@
       triggerButtonRef?.focus();
     }
   }
+
+  // Handle keyboard navigation within the grid
+  function handleGridKeydown(event: KeyboardEvent, choice: { id: string }, index: number) {
+    const numCols = 6; // Or whatever number of columns you choose
+    const totalChoices = filteredChoiceList.length;
+
+    let nextIndex: number | null = null;
+
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        selectChoice(filteredChoiceList[index]);
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        nextIndex = (index + 1) % totalChoices;
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        nextIndex = (index - 1 + totalChoices) % totalChoices;
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        nextIndex = index + numCols;
+        if (nextIndex >= totalChoices) nextIndex = null; // Stay on last row if no full row below
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        nextIndex = index - numCols;
+        if (nextIndex < 0) nextIndex = null; // Stay on first row if no full row above
+        break;
+      case "Escape":
+        event.preventDefault();
+        open = false;
+        triggerButtonRef?.focus();
+        break;
+    }
+
+    if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
+      // Focus the next button
+      const nextButton = dropdownRef?.querySelector(
+        `[data-color-id="${filteredChoiceList[nextIndex].id}"]`
+      ) as HTMLButtonElement;
+      nextButton?.focus();
+    }
+  }
 </script>
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
@@ -121,6 +156,11 @@
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
         e.preventDefault();
         open = true;
+        // Focus the first item in the grid when opened with keyboard
+        setTimeout(() => {
+          const firstColorButton = dropdownRef?.querySelector<HTMLButtonElement>('[role="option"]');
+          firstColorButton?.focus();
+        }, 0);
       }
     }}
     aria-haspopup="listbox"
@@ -134,7 +174,6 @@
           aria-label="Selected color preview"
         ></span>
       {/if}
-      <span>{displayedSummary()}</span>
     </div>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
@@ -146,48 +185,36 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class="absolute mt-1 z-50 w-full rounded-xl border border-base-300 bg-base-100 shadow-xl max-h-60 overflow-y-auto p-3"
+      class="absolute mt-1 z-50 w-20 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3"
       role="listbox"
       tabindex="-1"
     >
-      <div class="space-y-0.5">
-        {#each filteredChoiceList as choice (choice.id)}
+      <div class="grid grid-cols-2 gap-2 auto-rows-fr">
+        {#each filteredChoiceList as choice, index (choice.id)}
           <button
             type="button"
-            class="flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors
-              {value === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}
-              hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
+            class="relative w-full aspect-square rounded-full flex items-center justify-center p-0.5
+              hover:ring-2 hover:ring-offset-2 hover:ring-base-300
+              focus:ring-2 focus:ring-offset-2 focus:ring-base-300 outline-none
+              transition-all duration-100 ease-in-out"
+            style="background-color: {choice.background}; border: 1px solid {choice.background};"
             onclick={() => selectChoice(choice)}
+            onkeydown={(e) => handleGridKeydown(e, choice, index)}
             role="option"
             aria-selected={value === choice.id}
-            tabindex="0"
-            onkeydown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                selectChoice(choice);
-              } else if (e.key === "Escape") {
-                e.preventDefault();
-                open = false;
-                triggerButtonRef?.focus();
-              }
-            }}
+            aria-label={`Color ${choice.id}`}
+            data-color-id={choice.id}
             disabled={value === choice.id}
           >
-            <div class="flex items-center gap-2">
-              <span
-                class="inline-block w-4 h-4 rounded-full"
-                style="background-color: {choice.background};"
-                aria-label="Color preview"
-              ></span>
-              <span>Color {choice.id}</span>
-            </div>
             {#if value === choice.id}
-              <Check size="16" />
+              <Check size="16" style="color: {choice.foreground};" />
             {/if}
           </button>
         {/each}
         {#if filteredChoiceList.length === 0}
-          <div class="px-3 py-2 text-sm text-base-content/60">No event colors available.</div>
+          <div class="col-span-full px-3 py-2 text-sm text-base-content/60 text-center">
+            No event colors available.
+          </div>
         {/if}
       </div>
     </div>
