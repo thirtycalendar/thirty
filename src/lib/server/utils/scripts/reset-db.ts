@@ -1,5 +1,7 @@
 import { Client } from "pg";
 
+// npx tsx ./src/lib/server/utils/scripts/reset-db.ts --url
+
 // Grab --url argument
 const args = process.argv;
 const urlIndex = args.indexOf("--url");

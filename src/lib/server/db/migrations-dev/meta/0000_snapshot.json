@@ -1,5 +1,5 @@
 {
-  "id": "23a1c656-9aeb-43b0-a492-e6ed15a46246",
+  "id": "9a4eb689-82be-4a13-aa59-2a5395a319e1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -315,12 +315,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "external_id": {
           "name": "external_id",
           "type": "text",
@@ -334,6 +328,12 @@
           "notNull": false,
           "default": "'local'"
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -344,7 +344,7 @@
           "name": "colorId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "timezone": {
           "name": "timezone",
@@ -596,18 +596,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "calendar_id": {
-          "name": "calendar_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "external_id": {
           "name": "external_id",
           "type": "text",
@@ -621,6 +609,18 @@
           "notNull": false,
           "default": "'local'"
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "calendar_id": {
+          "name": "calendar_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -631,7 +631,7 @@
           "name": "colorId",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "description": {
           "name": "description",
@@ -647,13 +647,13 @@
         },
         "start": {
           "name": "start",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "end": {
           "name": "end",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -676,6 +676,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
+        },
+        "notificationSent": {
+          "name": "notificationSent",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -816,6 +823,19 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'local'"
+        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -834,11 +854,17 @@
           "primaryKey": false,
           "notNull": false
         },
+        "colorId": {
+          "name": "colorId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "due": {
           "name": "due",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "status": {
           "name": "status",
@@ -847,12 +873,12 @@
           "notNull": false,
           "default": "'pending'"
         },
-        "source": {
-          "name": "source",
-          "type": "text",
+        "notificationSent": {
+          "name": "notificationSent",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "default": "'local'"
+          "default": false
         },
         "created_at": {
           "name": "created_at",

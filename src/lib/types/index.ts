@@ -1,5 +1,7 @@
 import type { auth } from "$lib/server/auth";
 
+import type { Source } from "./server";
+
 export interface ColorMap {
   [id: string]: {
     background: string;
@@ -14,71 +16,89 @@ export interface Color {
 
 export interface Calendar {
   id: string;
-  summary: string;
-  timeZone: string;
+  userId: string;
+  externalId: string;
+  source: Source;
+
+  name: string;
   colorId: string;
-  accessRole: "owner" | "reader";
+  timezone: string;
+  isPrimary: boolean;
+  isSynced: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+export interface CalendarForm {
+  name: string;
+  colorId: string;
+  timezone: string;
+  isPrimary: boolean;
 }
 
 export interface Event {
   id: string;
+  userId: string;
   calendarId: string;
-  summary: string;
-  description?: string | null;
-  colorId?: string | null;
-  organizer?: {
-    displayName: string;
-  };
-  start: {
-    dateTime: string;
-    timeZone: string;
-  };
-  end: {
-    dateTime: string;
-    timeZone: string;
-  };
-  reminders?:
-    | {
-        useDefault?: boolean;
-        overrides?: Array<{ minutes?: number | null }>;
-      }
-    | undefined;
-  eventType?: string;
+  externalId: string | null;
+  source: string;
+
+  title: string;
+  colorId: string;
+  description: string;
+  location: string;
+  start: string;
+  end: string;
+  allDay: boolean;
+  status: string;
+  recurrence: string[] | null;
+
+  notificationSent: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
 
 export interface EventForm {
   calendarId: string;
-  summary: string;
-  description?: string;
-  colorId: string;
-  startDate: string;
-  startTime: string;
-  startTimeZone: string;
-  endDate: string;
-  endTime: string;
-  endTimeZone: string;
-}
 
-export interface UtilEvent {
-  id: string;
-  calendarId: string;
-  summary: string;
-  description?: string | null;
-  colorId?: string | null;
-  organizer?: {
-    displayName: string;
-  };
-  date: {
-    dateTime: string;
-    timeZone: string;
-  };
+  title: string;
+  colorId: string;
+  description: string;
+  location: string;
+  start: string;
+  end: string;
+  allDay: boolean;
 }
 
 export interface Task {
   id: string;
+  userId: string;
+  externalId: string | null;
+  source: string;
+
   title: string;
-  notes?: string;
-  updated: string;
+  notes: string;
+  colorId: string;
+  due: string;
+  status: string;
+
+  notificationSent: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+export interface TaskForm {
+  title: string;
+  notes: string;
+  colorId: string;
+  due: string;
+  status: string;
 }
 
 export type User = typeof auth.$Infer.Session.user;

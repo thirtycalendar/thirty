@@ -49,11 +49,11 @@ CREATE TABLE "verification" (
 --> statement-breakpoint
 CREATE TABLE "calendars" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" text NOT NULL,
 	"external_id" text,
 	"source" text DEFAULT 'local',
+	"user_id" text NOT NULL,
 	"name" text NOT NULL,
-	"colorId" text,
+	"colorId" text NOT NULL,
 	"timezone" text NOT NULL,
 	"is_primary" boolean DEFAULT false,
 	"is_synced" boolean DEFAULT true,
@@ -88,19 +88,20 @@ CREATE TABLE "event_metadata" (
 --> statement-breakpoint
 CREATE TABLE "events" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" text NOT NULL,
-	"calendar_id" uuid NOT NULL,
 	"external_id" text,
 	"source" text DEFAULT 'local',
+	"user_id" text NOT NULL,
+	"calendar_id" uuid NOT NULL,
 	"title" text NOT NULL,
-	"colorId" text,
+	"colorId" text NOT NULL,
 	"description" text,
 	"location" text,
-	"start" timestamp NOT NULL,
-	"end" timestamp NOT NULL,
+	"start" timestamp with time zone NOT NULL,
+	"end" timestamp with time zone NOT NULL,
 	"all_day" boolean DEFAULT false,
 	"status" text DEFAULT 'confirmed',
 	"recurrence" jsonb,
+	"notificationSent" boolean DEFAULT false,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -118,12 +119,15 @@ CREATE TABLE "messages" (
 --> statement-breakpoint
 CREATE TABLE "tasks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"external_id" text,
+	"source" text DEFAULT 'local',
 	"user_id" text NOT NULL,
 	"title" text NOT NULL,
 	"notes" text,
-	"due" timestamp,
+	"colorId" text NOT NULL,
+	"due" timestamp with time zone NOT NULL,
 	"status" text DEFAULT 'pending',
-	"source" text DEFAULT 'local',
+	"notificationSent" boolean DEFAULT false,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
