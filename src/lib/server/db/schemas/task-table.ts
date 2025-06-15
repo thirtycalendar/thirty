@@ -1,5 +1,7 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
+import type { Source, TaskStatus } from "$lib/types/server";
+
 import { user } from "./auth-table";
 import { timestamps } from "./utils";
 
@@ -11,8 +13,8 @@ export const tasks = pgTable("tasks", {
   title: text("title").notNull(),
   notes: text("notes"),
   due: timestamp("due"),
-  status: text("status").$type<"pending" | "completed">().default("pending"),
-  source: text("source").$type<"local" | "google">().default("local"),
+  status: text("status").$type<TaskStatus>().default("pending"),
+  source: text("source").$type<Source>().default("local"),
 
   ...timestamps
 });

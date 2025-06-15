@@ -12,6 +12,7 @@
   - (6.15.01) - Updated google access token.
   - (6.15.02) - Reset both db.
   - (6.15.03) - Added calendar, event, and task db schemas.
+  - (6.15.04) - Better db schemas.
 - Sat Jun 14, 2025
   - (6.14.01) - Extracted color route.
   - (6.14.02) - Trying to update the colors.

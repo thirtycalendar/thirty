@@ -1,6 +1,6 @@
-import { boolean, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import type { Source } from "$lib/types/server";
+import type { EventAttendeeStatus, EventStatus, Source } from "$lib/types/server";
 
 import { user } from "./auth-table";
 import { calendars } from "./calendar-table";
@@ -23,7 +23,7 @@ export const events = pgTable("events", {
   start: timestamp("start").notNull(),
   end: timestamp("end").notNull(),
   allDay: boolean("all_day").default(false),
-  status: text("status").$type<"confirmed" | "cancelled" | "tentative">().default("confirmed"),
+  status: text("status").$type<EventStatus>().default("confirmed"),
   recurrence: jsonb("recurrence").$type<string[] | null>(),
 
   ...timestamps
@@ -36,9 +36,7 @@ export const eventAttendees = pgTable("event_attendees", {
     .references(() => events.id, { onDelete: "cascade" }),
   email: text("email").notNull(),
   name: text("name"),
-  responseStatus: text("response_status").$type<
-    "accepted" | "declined" | "tentative" | "needsAction"
-  >(),
+  status: text("status").$type<EventAttendeeStatus>(),
   isSelf: boolean("is_self").default(false)
 });
 
@@ -48,9 +46,5 @@ export const eventMetadata = pgTable("event_metadata", {
     .notNull()
     .references(() => events.id, { onDelete: "cascade" }),
   aiSummary: text("ai_summary"),
-  aiTags: jsonb("ai_tags").$type<string[] | null>(),
-  summaryEmbedding: jsonb("summary_embedding").$type<number[] | null>(),
-  manualTags: jsonb("manual_tags").$type<string[] | null>(),
-  priority: integer("priority"),
-  visibility: text("visibility").$type<"default" | "public" | "private">().default("default")
+  aiTags: jsonb("ai_tags").$type<string[] | null>()
 });

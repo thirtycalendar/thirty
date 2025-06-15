@@ -75,7 +75,7 @@ CREATE TABLE "event_attendees" (
 	"event_id" uuid NOT NULL,
 	"email" text NOT NULL,
 	"name" text,
-	"response_status" text,
+	"status" text,
 	"is_self" boolean DEFAULT false
 );
 --> statement-breakpoint
@@ -83,11 +83,7 @@ CREATE TABLE "event_metadata" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"event_id" uuid NOT NULL,
 	"ai_summary" text,
-	"ai_tags" jsonb,
-	"summary_embedding" jsonb,
-	"manual_tags" jsonb,
-	"priority" integer,
-	"visibility" text DEFAULT 'default'
+	"ai_tags" jsonb
 );
 --> statement-breakpoint
 CREATE TABLE "events" (
