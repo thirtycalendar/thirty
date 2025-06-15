@@ -1,10 +1,13 @@
-import { pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, text } from "drizzle-orm/pg-core";
 
+import { user } from "./auth-table";
 import { timestamps } from "./utils";
 
 export const chats = pgTable("chats", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id", { length: 256 }).notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 
   ...timestamps
 });

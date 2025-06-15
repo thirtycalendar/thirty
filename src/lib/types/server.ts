@@ -5,3 +5,5 @@ export interface GoogleSession {
   accessTokenExpiresAt: string;
   idToken: string;
 }
+
+export type Source = "local" | "google" | "outlook" | "apple";
