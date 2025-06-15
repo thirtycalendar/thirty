@@ -10,7 +10,12 @@ if (!dbUrl) {
   process.exit(1);
 }
 
-const client = new Client({ connectionString: dbUrl });
+const client = new Client({
+  connectionString: dbUrl,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 await client.connect();
 

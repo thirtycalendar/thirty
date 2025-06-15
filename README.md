@@ -10,6 +10,7 @@
 
 - Sun Jun 15, 2025
   - (6.15.01) - Updated google access token.
+  - (6.15.02) - Reset both db.
 - Sat Jun 14, 2025
   - (6.14.01) - Extracted color route.
   - (6.14.02) - Trying to update the colors.
