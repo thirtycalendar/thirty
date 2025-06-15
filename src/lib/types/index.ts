@@ -1,6 +1,6 @@
 import type { auth } from "$lib/server/auth";
 
-import type { Source } from "./server";
+import type { EventStatus, Source, TaskStatus } from "./server";
 
 export interface ColorMap {
   [id: string]: {
@@ -43,16 +43,16 @@ export interface Event {
   userId: string;
   calendarId: string;
   externalId: string | null;
-  source: string;
+  source: string | null;
 
-  title: string;
+  name: string;
   colorId: string;
-  description: string;
-  location: string;
+  description: string | null;
+  location: string | null;
   start: string;
   end: string;
   allDay: boolean;
-  status: string;
+  status: EventStatus;
   recurrence: string[] | null;
 
   notificationSent: boolean;
@@ -65,13 +65,14 @@ export interface Event {
 export interface EventForm {
   calendarId: string;
 
-  title: string;
+  name: string;
   colorId: string;
   description: string;
   location: string;
   start: string;
   end: string;
   allDay: boolean;
+  status: EventStatus;
 }
 
 export interface Task {
@@ -80,11 +81,11 @@ export interface Task {
   externalId: string | null;
   source: string;
 
-  title: string;
-  notes: string;
+  name: string;
+  notes: string | null;
   colorId: string;
   due: string;
-  status: string;
+  status: TaskStatus;
 
   notificationSent: boolean;
 
@@ -94,11 +95,11 @@ export interface Task {
 }
 
 export interface TaskForm {
-  title: string;
-  notes: string;
+  name: string;
+  notes: string | null;
   colorId: string;
   due: string;
-  status: string;
+  status: TaskStatus;
 }
 
 export type User = typeof auth.$Infer.Session.user;

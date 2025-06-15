@@ -18,13 +18,13 @@ export const events = pgTable("events", {
     .notNull()
     .references(() => calendars.id, { onDelete: "cascade" }),
 
-  title: text("title").notNull(),
+  name: text("name").notNull(),
   colorId: text("colorId").notNull(),
   description: text("description"),
   location: text("location"),
   start: timestamp("start", { withTimezone: true, mode: "string" }).notNull(),
   end: timestamp("end", { withTimezone: true, mode: "string" }).notNull(),
-  allDay: boolean("all_day").default(false),
+  allDay: boolean("all_day").default(false).notNull(),
   status: text("status").$type<EventStatus>().default("confirmed").notNull(),
   recurrence: jsonb("recurrence").$type<string[] | null>(),
 

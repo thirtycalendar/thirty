@@ -14,7 +14,7 @@ export const tasks = pgTable("tasks", {
     .notNull()
     .references(() => user.id),
 
-  title: text("title").notNull(),
+  name: text("name").notNull(),
   notes: text("notes"),
   colorId: text("colorId").notNull(),
   due: timestamp("due", { withTimezone: true, mode: "string" }).notNull(),

@@ -33,7 +33,7 @@ const app = new Hono<Context>()
 
       const calendar = await getCalendar(id);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
+      return c.json<SuccessResponse<Calendar>>({
         success: true,
         message: "Success",
         data: calendar

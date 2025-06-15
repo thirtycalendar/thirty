@@ -15,6 +15,7 @@
   - (6.15.04) - Better db schemas.
   - (6.15.05) - Improved db schemas and updated types.
   - (6.15.06) - Made a lot of improvement.
+  - (6.15.07) - Added calendar, event, and task services.
 - Sat Jun 14, 2025
   - (6.14.01) - Extracted color route.
   - (6.14.02) - Trying to update the colors.
