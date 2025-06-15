@@ -25,7 +25,7 @@ export const events = pgTable("events", {
   start: timestamp("start", { withTimezone: true, mode: "string" }).notNull(),
   end: timestamp("end", { withTimezone: true, mode: "string" }).notNull(),
   allDay: boolean("all_day").default(false),
-  status: text("status").$type<EventStatus>().default("confirmed"),
+  status: text("status").$type<EventStatus>().default("confirmed").notNull(),
   recurrence: jsonb("recurrence").$type<string[] | null>(),
 
   ...notificationSent,
@@ -42,8 +42,10 @@ export const eventAttendees = pgTable("event_attendees", {
 
   email: text("email").notNull(),
   name: text("name"),
-  status: text("status").$type<EventAttendeeStatus>(),
-  isSelf: boolean("is_self").default(false)
+  status: text("status").$type<EventAttendeeStatus>().default("needsAction").notNull(),
+  isSelf: boolean("is_self").default(false).notNull(),
+
+  ...notificationSent
 });
 
 export const eventMetadata = pgTable("event_metadata", {

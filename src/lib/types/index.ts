@@ -17,7 +17,7 @@ export interface Color {
 export interface Calendar {
   id: string;
   userId: string;
-  externalId: string;
+  externalId: string | null;
   source: Source;
 
   name: string;

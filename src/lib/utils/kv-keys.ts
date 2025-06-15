@@ -1,11 +1,6 @@
-// ----- Google -----
+export const KV_CALENDARS = (userId: string) => `calendars:${userId}`;
+export const KV_EVENTS = (userId: string) => `events:${userId}`;
+export const KV_TASKS = (userId: string) => `tasks:${userId}`;
 
-// Token
+// Google
 export const KV_GOOGLE_TOKEN = (userId: string) => `google:token:${userId}`;
-
-// Calendar
-export const KV_GOOGLE_COLORS = (userId: string) => `google:colors:${userId}`;
-export const KV_GOOGLE_CALENDARS = (userId: string) => `google:calendars:${userId}`;
-export const KV_GOOGLE_EVENTS = (userId: string) => `google:events:${userId}`;
-export const KV_GOOGLE_UTIL_EVENTS = (userId: string) => `google:util_events:${userId}`;
-export const KV_GOOGLE_TASKS = (userId: string) => `google:tasks:${userId}`;

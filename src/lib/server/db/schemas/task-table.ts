@@ -8,7 +8,7 @@ import { notificationSent, timestamps } from "./utils";
 export const tasks = pgTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
-  source: text("source").$type<Source>().default("local"),
+  source: text("source").$type<Source>().default("local").notNull(),
 
   userId: text("user_id")
     .notNull()
@@ -18,7 +18,7 @@ export const tasks = pgTable("tasks", {
   notes: text("notes"),
   colorId: text("colorId").notNull(),
   due: timestamp("due", { withTimezone: true, mode: "string" }).notNull(),
-  status: text("status").$type<TaskStatus>().default("pending"),
+  status: text("status").$type<TaskStatus>().default("pending").notNull(),
 
   ...notificationSent,
 

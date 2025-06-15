@@ -3,7 +3,7 @@ import { boolean, pgEnum, timestamp } from "drizzle-orm/pg-core";
 export const userSystemEnum = pgEnum("user_system_enum", ["system", "user"]);
 
 export const notificationSent = {
-  notificationSent: boolean("notificationSent").default(false)
+  notificationSent: boolean("notificationSent").default(false).notNull()
 };
 
 export const timestamps = {
