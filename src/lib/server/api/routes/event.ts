@@ -14,7 +14,9 @@ import {
   updateEvent
 } from "$lib/server/services/event";
 
-import type { ErrorResponse, Event, SuccessResponse, User } from "$lib/types";
+import type { Event, SuccessResponse, User } from "$lib/types";
+
+import { errorResponse, requireParamId } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
@@ -31,14 +33,13 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.error("error:", err);
-      return c.json<ErrorResponse>({ success: false, message: err.message });
+      return errorResponse(c, err.message);
     }
   })
   .get("/get/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing event ID" });
+      if (!id) return requireParamId(c, "event");
 
       const event = await getEvent(id);
 
@@ -49,8 +50,7 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.error("error:", err);
-      return c.json<ErrorResponse>({ success: false, message: err.message });
+      return errorResponse(c, err.message);
     }
   })
   .post("/create", zValidator("json", eventSchema), async (c) => {
@@ -67,14 +67,13 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.error("error:", err);
-      return c.json<ErrorResponse>({ success: false, message: err.message });
+      return errorResponse(c, err.message);
     }
   })
   .put("/update/:id", zValidator("json", eventSchema), async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing event ID" });
+      if (!id) return requireParamId(c, "event");
 
       const data = c.req.valid("json");
 
@@ -87,14 +86,13 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.error("error:", err);
-      return c.json<ErrorResponse>({ success: false, message: err.message });
+      return errorResponse(c, err.message);
     }
   })
   .delete("/delete/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing event ID" });
+      if (!id) return requireParamId(c, "event");
 
       const event = await deleteEvent(id);
 
@@ -105,8 +103,7 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.error("error:", err);
-      return c.json<ErrorResponse>({ success: false, message: err.message });
+      return errorResponse(c, err.message);
     }
   });
 

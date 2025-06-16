@@ -12,6 +12,7 @@
   - (6.16.01) - Updated db schemas and service files.
   - (6.16.02) - Create initial calendar on sign-up and color util functions.
   - (6.16.03) - Added all routes, schemas, and finished all the service files.
+  - (6.16.04) - Used `requireParamId` and `errorResponse` util functions for api routes.
 - Sun Jun 15, 2025
   - (6.15.01) - Updated google access token.
   - (6.15.02) - Reset both db.
