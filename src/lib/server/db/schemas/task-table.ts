@@ -1,9 +1,9 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import type { Source, TaskStatus } from "$lib/types/server";
+import type { Source, TaskStatus } from "$lib/types";
 
 import { user } from "./auth-table";
-import { notificationSent, timestamps } from "./utils";
+import { notification, timestamps } from "./utils";
 
 export const tasks = pgTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -20,7 +20,7 @@ export const tasks = pgTable("tasks", {
   due: timestamp("due", { withTimezone: true, mode: "string" }).notNull(),
   status: text("status").$type<TaskStatus>().default("pending").notNull(),
 
-  ...notificationSent,
+  ...notification,
 
   ...timestamps
 });

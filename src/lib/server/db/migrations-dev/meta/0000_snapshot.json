@@ -1,5 +1,5 @@
 {
-  "id": "60f3becf-9912-4dc3-ae02-c8a6c52ed1f3",
+  "id": "73a6336d-c776-41eb-a000-c293099a12c9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -517,6 +517,26 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -567,6 +587,26 @@
         "ai_tags": {
           "name": "ai_tags",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -684,6 +724,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
+        },
+        "notifyInMin": {
+          "name": "notifyInMin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "notificationSent": {
           "name": "notificationSent",
@@ -880,6 +927,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
+        },
+        "notifyInMin": {
+          "name": "notifyInMin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "notificationSent": {
           "name": "notificationSent",

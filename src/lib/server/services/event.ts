@@ -25,19 +25,21 @@ export async function getAllEvents(userId: string): Promise<Event[]> {
   return await refreshEventsFromDb(userId);
 }
 
-export async function getEvent(calendarId: string): Promise<Event | undefined> {
-  const [calendar] = await db.select().from(events).where(eq(events.id, calendarId)).limit(1);
+export async function getEvent(eventId: string): Promise<Event> {
+  const [event] = await db.select().from(events).where(eq(events.id, eventId)).limit(1);
 
-  return calendar;
+  if (!event) throw new Error("No event with id found");
+
+  return event;
 }
 
-export async function createEvent(userId: string, calendarForm: EventForm): Promise<Event> {
+export async function createEvent(userId: string, eventForm: EventForm): Promise<Event> {
   const [inserted] = await db
     .insert(events)
-    .values({ userId, ...calendarForm })
+    .values({ userId, ...eventForm })
     .returning();
 
-  if (!inserted) throw new Error("Failed to create calendar");
+  if (!inserted) throw new Error("Failed to create event");
 
   const cached = await kv.get<Event[]>(KV_EVENTS(userId));
 
@@ -52,20 +54,20 @@ export async function createEvent(userId: string, calendarForm: EventForm): Prom
   return inserted;
 }
 
-export async function updateEvent(calendarId: string, updates: EventForm): Promise<Event> {
+export async function updateEvent(eventId: string, updates: Partial<EventForm>): Promise<Event> {
   const [updated] = await db
     .update(events)
     .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(events.id, calendarId))
+    .where(eq(events.id, eventId))
     .returning();
 
-  if (!updated) throw new Error("Failed to update calendar");
+  if (!updated) throw new Error("Failed to update event");
 
   const userId = updated.userId;
   const cached = await kv.get<Event[]>(KV_EVENTS(userId));
 
   if (cached) {
-    const index = cached.findIndex((c) => c.id === calendarId);
+    const index = cached.findIndex((c) => c.id === eventId);
     if (index !== -1) {
       cached[index] = updated;
 
@@ -78,16 +80,16 @@ export async function updateEvent(calendarId: string, updates: EventForm): Promi
   return updated;
 }
 
-export async function deleteEvent(calendarId: string): Promise<string> {
-  const [deleted] = await db.delete(events).where(eq(events.id, calendarId)).returning();
+export async function deleteEvent(eventId: string): Promise<string> {
+  const [deleted] = await db.delete(events).where(eq(events.id, eventId)).returning();
 
-  if (!deleted) throw new Error("Failed to delete calendar");
+  if (!deleted) throw new Error("Failed to delete event");
 
   const userId = deleted.userId;
   const cached = await kv.get<Event[]>(KV_EVENTS(userId));
 
   if (cached) {
-    const updated = cached.filter((c) => c.id !== calendarId);
+    const updated = cached.filter((c) => c.id !== eventId);
 
     await cacheEvents(userId, updated);
   } else {

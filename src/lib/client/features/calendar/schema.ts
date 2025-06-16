@@ -1,14 +1,16 @@
 import { z } from "zod";
 
+import { EventStatus } from "$lib/types";
+
 export const eventSchema = z.object({
   calendarId: z.string().min(1, { message: "Calendar ID is required" }),
-  summary: z.string().min(1, { message: "Title is required" }),
+
+  name: z.string().min(1, { message: "Name is required" }),
+  colorId: z.string().min(1, { message: "Color Id is required" }),
   description: z.string().nullable().optional(),
-  colorId: z.string().min(1, { message: "Background color is required" }),
-  startDate: z.string().min(1, { message: "Start date is required" }),
-  startTime: z.string().min(1, { message: "Start time is required" }),
-  startTimeZone: z.string().min(1, { message: "Start time zone is required" }),
-  endDate: z.string().min(1, { message: "End date is required" }),
-  endTime: z.string().min(1, { message: "End time is required" }),
-  endTimeZone: z.string().min(1, { message: "End time zone is required" })
+  location: z.string().nullable().optional(),
+  start: z.string().min(1, { message: "Start date is required" }),
+  end: z.string().min(1, { message: "Start time is required" }),
+  allDay: z.boolean().default(false),
+  status: z.enum(EventStatus).optional()
 });

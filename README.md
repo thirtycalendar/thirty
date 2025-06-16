@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Mon Jun 16, 2025
+  - (6.16.01) - Updated db schemas and service files.
 - Sun Jun 15, 2025
   - (6.15.01) - Updated google access token.
   - (6.15.02) - Reset both db.

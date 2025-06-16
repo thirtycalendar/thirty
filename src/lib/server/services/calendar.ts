@@ -23,8 +23,11 @@ export async function getAllCalendars(userId: string): Promise<Calendar[]> {
   return await refreshCalendarsFromDb(userId);
 }
 
-export async function getCalendar(calendarId: string): Promise<Calendar | undefined> {
+export async function getCalendar(calendarId: string): Promise<Calendar> {
   const [calendar] = await db.select().from(calendars).where(eq(calendars.id, calendarId)).limit(1);
+
+  if (!calendar) throw new Error("No calendar with id found");
+
   return calendar;
 }
 
@@ -52,7 +55,10 @@ export async function createCalendar(
   return inserted;
 }
 
-export async function updateCalendar(calendarId: string, updates: CalendarForm): Promise<Calendar> {
+export async function updateCalendar(
+  calendarId: string,
+  updates: Partial<CalendarForm>
+): Promise<Calendar> {
   const [updated] = await db
     .update(calendars)
     .set({ ...updates, updatedAt: sql`now()` })

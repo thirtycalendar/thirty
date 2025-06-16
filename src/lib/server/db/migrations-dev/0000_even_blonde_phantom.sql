@@ -77,14 +77,20 @@ CREATE TABLE "event_attendees" (
 	"name" text,
 	"status" text DEFAULT 'needsAction' NOT NULL,
 	"is_self" boolean DEFAULT false NOT NULL,
-	"notificationSent" boolean DEFAULT false NOT NULL
+	"notificationSent" boolean DEFAULT false NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
 CREATE TABLE "event_metadata" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"event_id" uuid NOT NULL,
 	"ai_summary" text,
-	"ai_tags" jsonb
+	"ai_tags" jsonb,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
 );
 --> statement-breakpoint
 CREATE TABLE "events" (
@@ -102,6 +108,7 @@ CREATE TABLE "events" (
 	"all_day" boolean DEFAULT false NOT NULL,
 	"status" text DEFAULT 'confirmed' NOT NULL,
 	"recurrence" jsonb,
+	"notifyInMin" integer DEFAULT 0 NOT NULL,
 	"notificationSent" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -128,6 +135,7 @@ CREATE TABLE "tasks" (
 	"colorId" text NOT NULL,
 	"due" timestamp with time zone NOT NULL,
 	"status" text DEFAULT 'pending' NOT NULL,
+	"notifyInMin" integer DEFAULT 0 NOT NULL,
 	"notificationSent" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,

@@ -25,19 +25,21 @@ export async function getAllTasks(userId: string): Promise<Task[]> {
   return await refreshTasksFromDb(userId);
 }
 
-export async function getTask(calendarId: string): Promise<Task | undefined> {
-  const [calendar] = await db.select().from(tasks).where(eq(tasks.id, calendarId)).limit(1);
+export async function getTask(taskId: string): Promise<Task> {
+  const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
 
-  return calendar;
+  if (!task) throw new Error("No task with id found");
+
+  return task;
 }
 
-export async function createTask(userId: string, calendarForm: TaskForm): Promise<Task> {
+export async function createTask(userId: string, taskForm: TaskForm): Promise<Task> {
   const [inserted] = await db
     .insert(tasks)
-    .values({ userId, ...calendarForm })
+    .values({ userId, ...taskForm })
     .returning();
 
-  if (!inserted) throw new Error("Failed to create calendar");
+  if (!inserted) throw new Error("Failed to create task");
 
   const cached = await kv.get<Task[]>(KV_EVENTS(userId));
 
@@ -52,20 +54,20 @@ export async function createTask(userId: string, calendarForm: TaskForm): Promis
   return inserted;
 }
 
-export async function updateTask(calendarId: string, updates: TaskForm): Promise<Task> {
+export async function updateTask(taskId: string, updates: TaskForm): Promise<Task> {
   const [updated] = await db
     .update(tasks)
     .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(tasks.id, calendarId))
+    .where(eq(tasks.id, taskId))
     .returning();
 
-  if (!updated) throw new Error("Failed to update calendar");
+  if (!updated) throw new Error("Failed to update task");
 
   const userId = updated.userId;
   const cached = await kv.get<Task[]>(KV_EVENTS(userId));
 
   if (cached) {
-    const index = cached.findIndex((c) => c.id === calendarId);
+    const index = cached.findIndex((c) => c.id === taskId);
     if (index !== -1) {
       cached[index] = updated;
 
@@ -78,16 +80,16 @@ export async function updateTask(calendarId: string, updates: TaskForm): Promise
   return updated;
 }
 
-export async function deleteTask(calendarId: string): Promise<string> {
-  const [deleted] = await db.delete(tasks).where(eq(tasks.id, calendarId)).returning();
+export async function deleteTask(taskId: string): Promise<string> {
+  const [deleted] = await db.delete(tasks).where(eq(tasks.id, taskId)).returning();
 
-  if (!deleted) throw new Error("Failed to delete calendar");
+  if (!deleted) throw new Error("Failed to delete task");
 
   const userId = deleted.userId;
   const cached = await kv.get<Task[]>(KV_EVENTS(userId));
 
   if (cached) {
-    const updated = cached.filter((c) => c.id !== calendarId);
+    const updated = cached.filter((c) => c.id !== taskId);
 
     await cacheTasks(userId, updated);
   } else {
