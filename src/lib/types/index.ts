@@ -30,6 +30,9 @@ export interface Calendar {
 }
 
 export interface CalendarForm {
+  externalId: string | null;
+  source: Source;
+
   name: string;
   colorId: string;
   timezone: string;
@@ -41,7 +44,7 @@ export interface Event {
   userId: string;
   calendarId: string;
   externalId: string | null;
-  source: string | null;
+  source: Source;
 
   name: string;
   colorId: string;
@@ -62,11 +65,13 @@ export interface Event {
 
 export interface EventForm {
   calendarId: string;
+  externalId: string | null;
+  source: Source;
 
   name: string;
   colorId: string;
-  description: string;
-  location: string;
+  description: string | null;
+  location: string | null;
   start: string;
   end: string;
   allDay: boolean;
@@ -77,7 +82,7 @@ export interface Task {
   id: string;
   userId: string;
   externalId: string | null;
-  source: string;
+  source: Source;
 
   name: string;
   notes: string | null;
@@ -93,6 +98,9 @@ export interface Task {
 }
 
 export interface TaskForm {
+  externalId: string | null;
+  source: Source;
+
   name: string;
   notes: string | null;
   colorId: string;

@@ -80,7 +80,7 @@ export async function updateEvent(eventId: string, updates: Partial<EventForm>):
   return updated;
 }
 
-export async function deleteEvent(eventId: string): Promise<string> {
+export async function deleteEvent(eventId: string): Promise<Event> {
   const [deleted] = await db.delete(events).where(eq(events.id, eventId)).returning();
 
   if (!deleted) throw new Error("Failed to delete event");
@@ -96,5 +96,5 @@ export async function deleteEvent(eventId: string): Promise<string> {
     await refreshEventsFromDb(userId);
   }
 
-  return `${deleted.name} deleted`;
+  return deleted;
 }

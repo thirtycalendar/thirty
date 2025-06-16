@@ -1,16 +1,13 @@
 import { z } from "zod";
 
-import { EventStatus } from "$lib/types";
+import { Source } from "$lib/types";
 
-export const eventSchema = z.object({
-  calendarId: z.string().min(1, { message: "Calendar ID is required" }),
+export const calendarSchema = z.object({
+  externalId: z.string().nullable(),
+  source: z.enum(Source).default("local"),
 
-  name: z.string().min(1, { message: "Name is required" }),
-  colorId: z.string().min(1, { message: "Color Id is required" }),
-  description: z.string().nullable().optional(),
-  location: z.string().nullable().optional(),
-  start: z.string().min(1, { message: "Start date is required" }),
-  end: z.string().min(1, { message: "Start time is required" }),
-  allDay: z.boolean().default(false),
-  status: z.enum(EventStatus).optional()
+  name: z.string(),
+  colorId: z.string(),
+  timezone: z.string(),
+  isPrimary: z.boolean()
 });

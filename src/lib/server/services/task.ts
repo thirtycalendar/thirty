@@ -80,7 +80,7 @@ export async function updateTask(taskId: string, updates: TaskForm): Promise<Tas
   return updated;
 }
 
-export async function deleteTask(taskId: string): Promise<string> {
+export async function deleteTask(taskId: string): Promise<Task> {
   const [deleted] = await db.delete(tasks).where(eq(tasks.id, taskId)).returning();
 
   if (!deleted) throw new Error("Failed to delete task");
@@ -96,5 +96,5 @@ export async function deleteTask(taskId: string): Promise<string> {
     await refreshTasksFromDb(userId);
   }
 
-  return `${deleted.name} deleted`;
+  return deleted;
 }

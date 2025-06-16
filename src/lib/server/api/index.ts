@@ -7,12 +7,19 @@ import { isProd } from "$lib/utils/is-prod";
 
 import type { Context } from "./context";
 import auth from "./routes/auth";
+import calendar from "./routes/calendar";
+import event from "./routes/event";
+import task from "./routes/task";
 
 const app = new Hono<Context>().basePath("/api");
 
 app.use("*", cors());
 
-const routes = app.route("/auth", auth);
+const routes = app
+  .route("/auth", auth)
+  .route("/calendar", calendar)
+  .route("/event", event)
+  .route("/task", task);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

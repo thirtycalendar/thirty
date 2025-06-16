@@ -47,6 +47,8 @@ export const auth = betterAuth({
           const { id, name } = user;
 
           const calendar: CalendarForm = {
+            externalId: null,
+            source: "local",
             name,
             colorId: getRandomColorId(),
             timezone: "UTC",

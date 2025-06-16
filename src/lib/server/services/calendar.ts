@@ -110,7 +110,7 @@ export async function updateCalendar(
   return updated;
 }
 
-export async function deleteCalendar(calendarId: string): Promise<string> {
+export async function deleteCalendar(calendarId: string): Promise<Calendar> {
   const [deleted] = await db.delete(calendars).where(eq(calendars.id, calendarId)).returning();
 
   if (!deleted) throw new Error("Failed to delete calendar");
@@ -126,5 +126,5 @@ export async function deleteCalendar(calendarId: string): Promise<string> {
     await refreshCalendarsFromDb(userId);
   }
 
-  return `${deleted.name} deleted`;
+  return deleted;
 }

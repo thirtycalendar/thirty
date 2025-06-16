@@ -1,10 +1,18 @@
-import type { calendar_v3 } from "@googleapis/calendar";
+import { zValidator } from "@hono/zod-validator";
 
 import { Hono } from "hono";
 
+import { calendarSchema } from "$lib/client/features/calendar/schema";
+
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { getAllCalendars, getCalendar } from "$lib/server/services/calendar";
+import {
+  createCalendar,
+  deleteCalendar,
+  getAllCalendars,
+  getCalendar,
+  updateCalendar
+} from "$lib/server/services/calendar";
 
 import type { Calendar, ErrorResponse, SuccessResponse, User } from "$lib/types";
 
@@ -23,13 +31,14 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
-      console.log("error:", err);
+      console.error("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
   .get("/get/:id", async (c) => {
     try {
       const id = c.req.param("id");
+      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing calendar ID" });
 
       const calendar = await getCalendar(id);
 
@@ -40,64 +49,63 @@ const app = new Hono<Context>()
       });
       // biome-ignore lint:
     } catch (err: any) {
+      console.error("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
-  .post("/create", async (c) => {
+  .post("/create", zValidator("json", calendarSchema), async (c) => {
     try {
       const user = c.get("user") as User;
-      const body = (await c.req.json()) as calendar_v3.Schema$Calendar;
+      const data = c.req.valid("json");
 
-      const { calendar } = await getGoogleClients(user.id);
-      const res = await calendar.calendars.insert({ requestBody: body });
-      await cacheGoogleCalData(user.id);
+      const calendar = await createCalendar(user.id, data);
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
+      return c.json<SuccessResponse<Calendar>>({
         success: true,
-        message: "Calendar created",
-        data: res.data
+        message: `${calendar.name} created`,
+        data: calendar
       });
       // biome-ignore lint:
     } catch (err: any) {
+      console.error("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
-  .put("/update/:id", async (c) => {
+  .put("/update/:id", zValidator("json", calendarSchema), async (c) => {
     try {
-      const user = c.get("user") as User;
       const id = c.req.param("id");
-      const body = (await c.req.json()) as Partial<calendar_v3.Schema$Calendar>;
+      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing calendar ID" });
 
-      const { calendar } = await getGoogleClients(user.id);
-      const res = await calendar.calendars.patch({ calendarId: id, requestBody: body });
-      await cacheGoogleCalData(user.id);
+      const data = c.req.valid("json");
 
-      return c.json<SuccessResponse<calendar_v3.Schema$Calendar>>({
+      const calendar = await updateCalendar(id, data);
+
+      return c.json<SuccessResponse<Calendar>>({
         success: true,
-        message: "Calendar updated",
-        data: res.data
+        message: `${calendar.name} updated`,
+        data: calendar
       });
       // biome-ignore lint:
     } catch (err: any) {
+      console.error("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   })
   .delete("/delete/:id", async (c) => {
     try {
-      const user = c.get("user") as User;
       const id = c.req.param("id");
+      if (!id) return c.json<ErrorResponse>({ success: false, message: "Missing calendar ID" });
 
-      const { calendar } = await getGoogleClients(user.id);
-      await calendar.calendars.delete({ calendarId: id });
-      await cacheGoogleCalData(user.id);
+      const calendar = await deleteCalendar(id);
 
-      return c.json<SuccessResponse<null>>({
+      return c.json<SuccessResponse<Calendar>>({
         success: true,
-        message: "Calendar deleted",
-        data: null
+        message: `${calendar.name} deleted`,
+        data: calendar
       });
       // biome-ignore lint:
     } catch (err: any) {
+      console.error("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
   });
