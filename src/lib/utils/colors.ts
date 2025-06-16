@@ -24,3 +24,12 @@ export const colors = [
   { id: "23", colorHexCode: "#cd74e6" },
   { id: "24", colorHexCode: "#a47ae2" }
 ];
+
+export function getRandomColorId(): string {
+  const random = Math.floor(Math.random() * colors.length);
+  return colors[random].id;
+}
+
+export function getColorHexCodeFromId(id: string): string {
+  return colors.find((c) => c.id === id)?.colorHexCode ?? "transparent";
+}

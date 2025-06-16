@@ -10,6 +10,7 @@
 
 - Mon Jun 16, 2025
   - (6.16.01) - Updated db schemas and service files.
+  - (6.16.02) - Create initial calendar on sign-up and color util functions.
 - Sun Jun 15, 2025
   - (6.15.01) - Updated google access token.
   - (6.15.02) - Reset both db.

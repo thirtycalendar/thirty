@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, ne, sql } from "drizzle-orm";
 
 import type { Calendar, CalendarForm } from "$lib/types";
 import { KV_CALENDARS } from "$lib/utils/kv-keys";
@@ -13,6 +13,7 @@ async function cacheCalendars(userId: string, list: Calendar[]) {
 
 async function refreshCalendarsFromDb(userId: string) {
   const list = await db.select().from(calendars).where(eq(calendars.userId, userId));
+
   await cacheCalendars(userId, list);
   return list;
 }
@@ -20,6 +21,7 @@ async function refreshCalendarsFromDb(userId: string) {
 export async function getAllCalendars(userId: string): Promise<Calendar[]> {
   const cached = await kv.get<Calendar[]>(KV_CALENDARS(userId));
   if (cached) return cached;
+
   return await refreshCalendarsFromDb(userId);
 }
 
@@ -35,6 +37,13 @@ export async function createCalendar(
   userId: string,
   calendarForm: CalendarForm
 ): Promise<Calendar> {
+  if (calendarForm.isPrimary) {
+    await db
+      .update(calendars)
+      .set({ isPrimary: false, updatedAt: sql`now()` })
+      .where(and(eq(calendars.userId, userId), eq(calendars.isPrimary, true)));
+  }
+
   const [inserted] = await db
     .insert(calendars)
     .values({ userId, ...calendarForm })
@@ -59,6 +68,23 @@ export async function updateCalendar(
   calendarId: string,
   updates: Partial<CalendarForm>
 ): Promise<Calendar> {
+  const [existing] = await db.select().from(calendars).where(eq(calendars.id, calendarId)).limit(1);
+
+  if (!existing) throw new Error("Calendar not found");
+
+  if (updates.isPrimary) {
+    await db
+      .update(calendars)
+      .set({ isPrimary: false, updatedAt: sql`now()` })
+      .where(
+        and(
+          eq(calendars.userId, existing.userId),
+          eq(calendars.isPrimary, true),
+          ne(calendars.id, calendarId)
+        )
+      );
+  }
+
   const [updated] = await db
     .update(calendars)
     .set({ ...updates, updatedAt: sql`now()` })
