@@ -5,10 +5,10 @@ import { KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
 import { events } from "../db/schemas/event-table";
-import { kv } from "../utils/upstash/kv";
+import { kv } from "../libs/upstash/kv";
 
 async function cacheEvents(userId: string, list: Event[]) {
-  await kv.set(KV_EVENTS(userId), list, { ex: 3600 });
+  await kv.set(KV_EVENTS(userId), list, { ex: 900 });
 }
 
 async function refreshEventsFromDb(userId: string) {

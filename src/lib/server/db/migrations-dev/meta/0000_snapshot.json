@@ -1,5 +1,5 @@
 {
-  "id": "73a6336d-c776-41eb-a000-c293099a12c9",
+  "id": "f4b5e5d1-1f9f-4149-a95e-1fc35ad3c292",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -654,7 +654,7 @@
           "name": "source",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'local'"
         },
         "user_id": {

@@ -5,10 +5,10 @@ import { KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
 import { tasks } from "../db/schemas/task-table";
-import { kv } from "../utils/upstash/kv";
+import { kv } from "../libs/upstash/kv";
 
 async function cacheTasks(userId: string, list: Task[]) {
-  await kv.set(KV_EVENTS(userId), list, { ex: 3600 });
+  await kv.set(KV_EVENTS(userId), list, { ex: 1800 });
 }
 
 async function refreshTasksFromDb(userId: string) {

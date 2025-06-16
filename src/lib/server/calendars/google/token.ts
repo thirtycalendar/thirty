@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 
-import { kv } from "$lib/server/utils/upstash/kv";
+import { kv } from "$lib/server/libs/upstash/kv";
 
 import type { GoogleSession } from "$lib/types/server";
 import { googleEnvConfig } from "$lib/utils/env-configs";

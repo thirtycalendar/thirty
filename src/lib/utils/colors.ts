@@ -33,3 +33,34 @@ export function getRandomColorId(): string {
 export function getColorHexCodeFromId(id: string): string {
   return colors.find((c) => c.id === id)?.colorHexCode ?? "transparent";
 }
+
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) throw new Error(`Invalid hex color: ${hex}`);
+  return [
+    Number.parseInt(result[1], 16),
+    Number.parseInt(result[2], 16),
+    Number.parseInt(result[3], 16)
+  ];
+}
+
+export function getNearestColorHexCode(hexCode: string): string {
+  const targetRgb = hexToRgb(hexCode);
+
+  let closestColor = colors[0];
+  let minDistance = Number.POSITIVE_INFINITY;
+
+  for (const color of colors) {
+    const [r1, g1, b1] = targetRgb;
+    const [r2, g2, b2] = hexToRgb(color.colorHexCode);
+
+    const distance = Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestColor = color;
+    }
+  }
+
+  return closestColor.colorHexCode;
+}

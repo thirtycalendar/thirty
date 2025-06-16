@@ -96,7 +96,7 @@ CREATE TABLE "event_metadata" (
 CREATE TABLE "events" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"external_id" text,
-	"source" text DEFAULT 'local',
+	"source" text DEFAULT 'local' NOT NULL,
 	"user_id" text NOT NULL,
 	"calendar_id" uuid NOT NULL,
 	"name" text NOT NULL,

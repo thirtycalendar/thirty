@@ -9,7 +9,7 @@ import { notification, timestamps } from "./utils";
 export const events = pgTable("events", {
   id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
-  source: text("source").$type<Source>().default("local"),
+  source: text("source").$type<Source>().default("local").notNull(),
 
   userId: text("user_id")
     .notNull()

@@ -5,7 +5,7 @@ import { KV_CALENDARS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
 import { calendars } from "../db/schemas/calendar-table";
-import { kv } from "../utils/upstash/kv";
+import { kv } from "../libs/upstash/kv";
 
 async function cacheCalendars(userId: string, list: Calendar[]) {
   await kv.set(KV_CALENDARS(userId), list, { ex: 3600 });
