@@ -24,6 +24,7 @@ export const events = pgTable("events", {
   location: text("location"),
   start: timestamp("start", { withTimezone: true, mode: "string" }).notNull(),
   end: timestamp("end", { withTimezone: true, mode: "string" }).notNull(),
+  timezone: text("timezone").default("UTC").notNull(),
   allDay: boolean("all_day").default(false).notNull(),
   status: text("status").$type<EventStatus>().default("confirmed").notNull(),
   recurrence: jsonb("recurrence").$type<string[] | null>(),

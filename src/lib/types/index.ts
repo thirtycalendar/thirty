@@ -52,6 +52,7 @@ export interface Event {
   location: string | null;
   start: string;
   end: string;
+  timezone: string;
   allDay: boolean;
   status: EventStatus;
   recurrence: string[] | null;
@@ -74,6 +75,7 @@ export interface EventForm {
   location: string | null;
   start: string;
   end: string;
+  timezone: string;
   allDay: boolean;
   status: EventStatus;
 }

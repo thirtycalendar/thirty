@@ -1,5 +1,5 @@
 {
-  "id": "f4b5e5d1-1f9f-4149-a95e-1fc35ad3c292",
+  "id": "de8c6f32-fd3d-4b54-b50f-a00adca0fabe",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -350,7 +350,8 @@
           "name": "timezone",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'UTC'"
         },
         "is_primary": {
           "name": "is_primary",
@@ -704,6 +705,13 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'UTC'"
         },
         "all_day": {
           "name": "all_day",

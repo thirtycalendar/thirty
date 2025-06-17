@@ -16,7 +16,7 @@ export const calendars = pgTable("calendars", {
 
   name: text("name").notNull(),
   colorId: text("colorId").notNull(),
-  timezone: text("timezone").notNull(),
+  timezone: text("timezone").default("UTC").notNull(),
   isPrimary: boolean("is_primary").default(false).notNull(),
   isSynced: boolean("is_synced").default(true).notNull(),
 
