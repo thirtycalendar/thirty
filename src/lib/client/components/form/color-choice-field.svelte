@@ -3,11 +3,11 @@
 
   import { cn } from "$lib/client/utils/cn"; // Assuming this utility is still available
 
-  import type { Color, ColorMap } from "$lib/types"; // Import Color and ColorMap types
+  import type { Color } from "$lib/types";
+  import { colors } from "$lib/utils/colors";
 
   interface ColorChoiceFieldProps {
     name: string;
-    choiceList: Color;
     placeholder?: string;
     className?: string;
     formData: any;
@@ -15,32 +15,13 @@
     handleInput: (event: Event) => void;
   }
 
-  let {
-    name,
-    choiceList, // This is the full Color object
-    placeholder,
-    className,
-    formData,
-    formErrors,
-    handleInput
-  }: ColorChoiceFieldProps = $props();
+  let { name, className, formData, formErrors, handleInput }: ColorChoiceFieldProps = $props();
 
   let value: string | undefined = $derived($formData[name]);
 
-  // Derive the list of event colors for display in the dropdown
-  const eventColorMap: ColorMap = $derived(choiceList?.event || {});
-  const filteredChoiceList: { id: string; background: string; foreground: string }[] = $derived(
-    Object.entries(eventColorMap).map(([id, colors]) => ({
-      id,
-      background: colors.background,
-      foreground: colors.foreground
-    }))
-  );
+  let choiceList: Color[] = colors;
 
-  // Derive the currently selected color object based on `value`
-  let selectedColor: { id: string; background: string; foreground: string } | undefined = $derived(
-    filteredChoiceList.find((c) => c.id === value)
-  );
+  let selectedColor: Color | undefined = $derived(choiceList.find((c) => c.id === value));
 
   let error = $derived($formErrors[name]);
 
@@ -48,18 +29,16 @@
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
 
-  function selectChoice(choice: { id: string; background: string; foreground: string }) {
-    // PREVENT DESELECTION: If the clicked choice is already selected, just close the dropdown
+  function selectChoice(choice: Color) {
     if (value === choice.id) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return; // Do nothing else
     }
 
-    // SELECT the new choice
     const newValue = choice.id;
 
-    $formData[name] = newValue; // Update the Svelte store directly
+    $formData[name] = newValue;
 
     // Mimic native input event for `handleInput`
     const mockEvent = new Event("input", { bubbles: true });
@@ -96,9 +75,9 @@
   }
 
   // Handle keyboard navigation within the grid
-  function handleGridKeydown(event: KeyboardEvent, choice: { id: string }, index: number) {
+  function handleGridKeydown(event: KeyboardEvent, index: number) {
     const numCols = 6; // Or whatever number of columns you choose
-    const totalChoices = filteredChoiceList.length;
+    const totalChoices = choiceList.length;
 
     let nextIndex: number | null = null;
 
@@ -106,7 +85,7 @@
       case "Enter":
       case " ":
         event.preventDefault();
-        selectChoice(filteredChoiceList[index]);
+        selectChoice(choiceList[index]);
         break;
       case "ArrowRight":
         event.preventDefault();
@@ -136,7 +115,7 @@
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       // Focus the next button
       const nextButton = dropdownRef?.querySelector(
-        `[data-color-id="${filteredChoiceList[nextIndex].id}"]`
+        `[data-color-id="${choiceList[nextIndex].id}"]`
       ) as HTMLButtonElement;
       nextButton?.focus();
     }
@@ -170,7 +149,7 @@
       {#if selectedColor}
         <span
           class="inline-block w-4 h-4 rounded-full"
-          style="background-color: {selectedColor.background};"
+          style="background-color: {selectedColor.colorHexCode};"
           aria-label="Selected color preview"
         ></span>
       {/if}
@@ -190,16 +169,16 @@
       tabindex="-1"
     >
       <div class="grid grid-cols-2 gap-2 auto-rows-fr">
-        {#each filteredChoiceList as choice, index (choice.id)}
+        {#each choiceList as choice, index (choice.id)}
           <button
             type="button"
             class="relative w-full aspect-square rounded-full flex items-center justify-center p-0.5
               hover:ring-2 hover:ring-offset-2 hover:ring-base-300
               focus:ring-2 focus:ring-offset-2 focus:ring-base-300 outline-none
               transition-all duration-100 ease-in-out"
-            style="background-color: {choice.background}; border: 1px solid {choice.background};"
+            style="background-color: {choice.colorHexCode}; border: 1px solid {choice.colorHexCode};"
             onclick={() => selectChoice(choice)}
-            onkeydown={(e) => handleGridKeydown(e, choice, index)}
+            onkeydown={(e) => handleGridKeydown(e, index)}
             role="option"
             aria-selected={value === choice.id}
             aria-label={`Color ${choice.id}`}
@@ -207,13 +186,13 @@
             disabled={value === choice.id}
           >
             {#if value === choice.id}
-              <Check size="16" style="color: {choice.foreground};" />
+              <Check size="16" style="color: {choice.colorHexCode};" />
             {/if}
           </button>
         {/each}
-        {#if filteredChoiceList.length === 0}
+        {#if choiceList.length === 0}
           <div class="col-span-full px-3 py-2 text-sm text-base-content/60 text-center">
-            No event colors available.
+            No colors available.
           </div>
         {/if}
       </div>

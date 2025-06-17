@@ -16,49 +16,16 @@
     handleInput: (event: Event) => void;
   }
 
-  let {
-    name,
-    choiceList,
-    placeholder,
-    className,
-    formData,
-    formErrors,
-    handleInput
-  }: CalendarChoiceFieldProps = $props();
+  let { name, choiceList, className, formData, formErrors, handleInput }: CalendarChoiceFieldProps =
+    $props();
 
-  let value: string | undefined = $derived($formData[name]);
+  let value: string = $derived($formData[name]);
   let selectedCalendar: Calendar | undefined = $derived(choiceList.find((c) => c.id === value));
   let error = $derived($formErrors[name]);
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
-
-  const filteredChoiceList = $derived(
-    choiceList
-      .filter((calendar) => calendar.accessRole === "owner")
-      .map((c) => {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary);
-        return {
-          ...c,
-          summary: isEmail ? ($session?.name ?? c.summary) : c.summary,
-          originalSummary: c.summary,
-          isEmailSummary: isEmail
-        };
-      })
-  );
-
-  const displayedSummary = $derived(() => {
-    if (selectedCalendar) {
-      const originalCalendar = choiceList.find((c) => c.id === selectedCalendar.id);
-      if (originalCalendar) {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(originalCalendar.summary);
-        return isEmail ? ($session?.name ?? originalCalendar.summary) : originalCalendar.summary;
-      }
-      return selectedCalendar.summary;
-    }
-    return placeholder || "Select a calendar";
-  });
 
   function selectChoice(choice: Calendar) {
     if (value === choice.id) {
@@ -124,7 +91,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{displayedSummary()}</span>
+    <span>{selectedCalendar?.name}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -140,7 +107,7 @@
       tabindex="-1"
     >
       <div class="space-y-0.5">
-        {#each filteredChoiceList as choice (choice.id)}
+        {#each choiceList as choice (choice.id)}
           <button
             type="button"
             class="flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors
@@ -162,14 +129,14 @@
             }}
             disabled={value === choice.id}
           >
-            {choice.summary}
+            {choice.name}
             {#if value === choice.id}
               <Check size="16" />
             {/if}
           </button>
         {/each}
-        {#if filteredChoiceList.length === 0}
-          <div class="px-3 py-2 text-sm text-base-content/60">No owner calendars available.</div>
+        {#if choiceList.length === 0}
+          <div class="px-3 py-2 text-sm text-base-content/60">No calendars available.</div>
         {/if}
       </div>
     </div>

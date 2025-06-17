@@ -12,6 +12,7 @@
   - (6.17.01) - Added timezone field to event table.
   - (6.17.02) - Moved components into each feature folders.
   - (6.17.03) - Fixed/updated components.
+  - (6.17.04) - Fixed most of components.
 - Mon Jun 16, 2025
   - (6.16.01) - Updated db schemas and service files.
   - (6.16.02) - Create initial calendar on sign-up and color util functions.

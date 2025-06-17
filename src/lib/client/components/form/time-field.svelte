@@ -18,12 +18,12 @@
     name: string;
     className?: string;
     isRightDiv?: boolean;
-    formData: any; // Expects formData[name] to be "HH:mm:ss.SSS" string
+    formData: any;
     formErrors: any;
     handleInput: (event: Event) => void;
   }
 
-  let { name, className, isRightDiv, formData, formErrors, handleInput }: TimeFieldProps = $props();
+  let { name, className, isRightDiv, formData, handleInput }: TimeFieldProps = $props();
 
   function getTimeAsDate(timeString: string | undefined | null): Date {
     if (!timeString) return new Date(); // Default to now if no value

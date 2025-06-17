@@ -1,15 +1,8 @@
 import type { auth } from "$lib/server/auth";
 
-export interface ColorMap {
-  [id: string]: {
-    background: string;
-    foreground: string;
-  };
-}
-
 export interface Color {
-  calendar: ColorMap;
-  event: ColorMap;
+  id: string;
+  colorHexCode: string;
 }
 
 export interface Calendar {
