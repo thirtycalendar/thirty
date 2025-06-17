@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Check, ChevronDown } from "@lucide/svelte";
 
-  import { session } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Calendar } from "$lib/types";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
 
-  import { addDays, addMinutes, format, startOfDay } from "date-fns";
+  import { addDays, format, startOfDay } from "date-fns";
 
   import {
     CalendarChoiceField,
@@ -15,38 +15,43 @@
 
   import type { Calendar, EventForm } from "$lib/types";
 
-  import { calendarList } from "../../queries/calendar-list";
-  import { colorList } from "../../queries/color-list";
-  import { eventSchema } from "../../schema";
+  import { getCalList } from "../../calendar/query";
+  import { eventSchema } from "../schema";
+
+  const { calendarList } = getCalList();
 
   const now = new Date();
   const today = startOfDay(now);
 
   let initialCalendarId: string = "";
+  let initialColorId: string = "";
   $effect(() => {
     if ($calendarList && !initialCalendarId) {
-      const emailCalendar: Calendar | undefined = $calendarList.find((c) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary)
-      );
+      const primaryCalendar: Calendar | undefined = $calendarList.find((cal) => cal.isPrimary);
 
-      if (emailCalendar) {
-        initialCalendarId = emailCalendar.id;
+      if (primaryCalendar) {
+        initialCalendarId = primaryCalendar.id;
+        initialColorId = primaryCalendar.colorId;
+
         $formData.calendarId = initialCalendarId;
+        $formData.colorId = initialColorId;
       }
     }
   });
 
   let defaultValues: EventForm = {
-    calendarId: initialCalendarId, // Use the reactive initialCalendarId
-    summary: "",
-    description: "",
-    colorId: "",
-    startDate: today.toISOString(),
-    startTime: format(now, "HH:mm"),
-    startTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    endDate: today.toISOString(),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
-    endTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    calendarId: initialCalendarId,
+    externalId: null,
+    source: "local",
+    name: "",
+    description: null,
+    location: null,
+    colorId: initialColorId,
+    start: today.toISOString(),
+    end: format(now, "HH:mm"),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    allDay: false,
+    status: "confirmed"
   };
 
   let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
@@ -54,25 +59,25 @@
     defaultValues
   });
 
-  let isNextDay = $derived($formData.startTime > $formData.endTime);
+  let isNextDay = $derived($formData.start > $formData.end);
 
   $effect(() => {
-    const { startDate, startTime, endTime, endDate } = $formData;
+    const { start, end } = $formData;
 
-    const currentStartDate = startOfDay(new Date(startDate));
-    const currentEndDate = startOfDay(new Date(endDate));
+    const currentStartDate = startOfDay(new Date(start));
+    const currentEndDate = startOfDay(new Date(end));
 
-    if (startTime > endTime) {
+    if (currentStartDate > currentEndDate) {
       const expectedEndDate = addDays(currentStartDate, 1);
 
       if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
-        $formData.endDate = expectedEndDate.toISOString();
+        $formData.end = expectedEndDate.toISOString();
       }
     } else {
       const expectedEndDate = currentStartDate;
 
       if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
-        $formData.endDate = expectedEndDate.toISOString();
+        $formData.end = expectedEndDate.toISOString();
       }
     }
   });
@@ -83,13 +88,9 @@
   }
 </script>
 
-{#if !$calendarList || !$colorList}
-  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
-    <span class="loading loading-spinner loading-md"></span>
-  </div>
-{:else}
+{#if $calendarList}
   <form onsubmit={handleSubmit(onSubmit)}>
-    <InputField name="summary" placeholder="Add title" {handleInput} {formData} {formErrors} />
+    <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
     <div class="flex my-2 items-start gap-3 w-full">
       <div class="pt-[6px] text-muted-foreground">
@@ -185,7 +186,6 @@
         <div class="w-full basis-[25%]">
           <ColorChoiceField
             name="colorId"
-            choiceList={$colorList}
             placeholder="Color Id"
             {handleInput}
             {formData}
