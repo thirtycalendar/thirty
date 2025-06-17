@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Navbar } from "$lib/client/features/calendar/components";
-  import { Calendar } from "$lib/client/features/calendar/components/calendar";
+  import { Calendar, Navbar } from "$lib/client/features/calendar/components";
   import { Sidebar } from "$lib/client/components";
   import { chatSidebarId, sidebars } from "$lib/client/stores/sidebar";
 

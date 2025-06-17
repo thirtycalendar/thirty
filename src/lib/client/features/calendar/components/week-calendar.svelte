@@ -16,17 +16,15 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import type { Event, UtilEvent } from "$lib/types";
+  import type { Event } from "$lib/types";
 
-  import { getEventColor } from "../../utils/get-colors";
-  import { EventBlock } from "../event";
+  import { EventBlock } from "../../event/components";
 
   interface WeekCalendarProps {
     events: Event[];
-    utilEvents: UtilEvent[];
   }
 
-  let { events, utilEvents }: WeekCalendarProps = $props();
+  let { events }: WeekCalendarProps = $props();
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
@@ -45,8 +43,8 @@
 
       if (!isVisible) return false;
 
-      const start = parseISO(event.start.dateTime);
-      const end = parseISO(event.end.dateTime);
+      const start = parseISO(event.start);
+      const end = parseISO(event.end);
       return (
         isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
         isWithinInterval(end, { start: weekStart, end: weekEnd })
@@ -54,28 +52,28 @@
     });
   });
 
-  const weekUtilEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
-    const weekStart = $days[0];
-    const weekEnd = endOfDay($days[6]);
+  // const weekUtilEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
+  //   const weekStart = $days[0];
+  //   const weekEnd = endOfDay($days[6]);
 
-    return utilEvents.filter((event) => {
-      const calendarId = event.calendarId;
-      const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+  //   return utilEvents.filter((event) => {
+  //     const calendarId = event.calendarId;
+  //     const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
 
-      if (!isVisible) return false;
+  //     if (!isVisible) return false;
 
-      const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
-      return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
-    });
-  });
+  //     const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
+  //     return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
+  //   });
+  // });
 
-  function normalizeUtilEventDate(dateStr: string) {
-    const parsed = parseISO(dateStr);
-    if (isNaN(parsed.getTime())) {
-      console.warn("Invalid utilEvent date:", dateStr);
-    }
-    return parsed;
-  }
+  // function normalizeUtilEventDate(dateStr: string) {
+  //   const parsed = parseISO(dateStr);
+  //   if (isNaN(parsed.getTime())) {
+  //     console.warn("Invalid utilEvent date:", dateStr);
+  //   }
+  //   return parsed;
+  // }
 
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;
@@ -120,7 +118,7 @@
         </div>
 
         <!-- Util Events -->
-        {#each $weekUtilEvents.filter((e) => format(normalizeUtilEventDate(e.date.dateTime), "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as util}
+        <!-- {#each $weekUtilEvents.filter((e) => format(normalizeUtilEventDate(e.date.dateTime), "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as util}
           <div
             class="text-primary text-[10px] py-[2px] px-[3px] rounded-md truncate max-w-full"
             style="background-color: {getEventColor(util.calendarId)};"
@@ -128,7 +126,7 @@
           >
             {util.summary}
           </div>
-        {/each}
+        {/each} -->
       </div>
     {/each}
   </div>
@@ -160,8 +158,8 @@
           {/if}
 
           {#each $weekEvents as event}
-            {#if getDayString(parseISO(event.start.dateTime)) === format(day, "yyyy-MM-dd")}
-              {#if parseInt(format(parseISO(event.start.dateTime), "H")) === hour}
+            {#if getDayString(parseISO(event.start)) === format(day, "yyyy-MM-dd")}
+              {#if parseInt(format(parseISO(event.start), "H")) === hour}
                 <EventBlock {event} />
               {/if}
             {/if}

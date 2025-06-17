@@ -1,18 +1,17 @@
 <script lang="ts">
-  import { get } from "svelte/store";
   import { slide } from "svelte/transition";
   import { browser } from "$app/environment";
 
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
-  import { session } from "$lib/client/stores/user-session";
 
   import type { Calendar } from "$lib/types";
+  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
-  import { calendarList, isCalendarListPending } from "../../queries/calendar-list";
-  import { isColorListPending } from "../../queries/color-list";
-  import { getCalendarColor } from "../../utils/get-colors";
+  import { getCalList } from "../query";
+
+  const { calendarList } = getCalList();
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
@@ -35,7 +34,7 @@
   };
 
   const isChecked = (id: string) => {
-    const storeVal = get(checkedCalendars);
+    const storeVal = $checkedCalendars;
     return storeVal[id] ?? true;
   };
 
@@ -45,43 +44,16 @@
       [id]: !(curr[id] ?? true)
     }));
   };
-
-  let owners = $derived(
-    $calendarList
-      ?.filter((c) => c.accessRole === "owner")
-      ?.map((c) => {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.summary);
-        return {
-          ...c,
-          summary: isEmail ? ($session?.name ?? c.summary) : c.summary
-        };
-      }) ?? []
-  );
-
-  let readers = $derived(
-    $calendarList?.filter((c) => c.accessRole === "reader" && !/holidays/i.test(c.summary)) ?? []
-  );
-
-  let holidays = $derived(
-    $calendarList
-      ?.filter((c) => c.accessRole === "reader" && /holidays/i.test(c.summary))
-      ?.map((c) => ({
-        ...c,
-        summary: c.summary.replace(/^Holidays in /i, "").trim()
-      })) ?? []
-  );
 </script>
 
-{#if $isCalendarListPending || $isColorListPending}
+{#if !$calendarList}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
     </div>
   </div>
 {:else}
-  {@render CalendarList("My Calendars", owners)}
-  {@render CalendarList("Others", readers)}
-  {@render CalendarList("Holidays", holidays)}
+  {@render CalendarList("My Calendars", $calendarList)}
 {/if}
 
 {#snippet CalendarList(title: string, cal: Calendar[])}
@@ -110,7 +82,7 @@
 
       {#if $calendarList && isExpanded(title)}
         <div class="my-1" transition:slide>
-          {#each cal as { id, colorId, summary }}
+          {#each cal as { id, name, colorId }}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
             >
@@ -123,9 +95,9 @@
                 />
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${getCalendarColor(colorId)}`}
+                  style={`color: ${getColorHexCodeFromId(colorId)}`}
                 >
-                  {summary}
+                  {name}
                 </span>
               </div>
 

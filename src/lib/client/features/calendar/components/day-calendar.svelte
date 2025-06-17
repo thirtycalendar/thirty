@@ -16,17 +16,15 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import type { Event, UtilEvent } from "$lib/types";
+  import type { Event } from "$lib/types";
 
-  import { getEventColor } from "../../utils/get-colors";
-  import { EventBlock } from "../event";
+  import { EventBlock } from "../../event/components";
 
   interface DayCalendarProps {
     events: Event[];
-    utilEvents: UtilEvent[];
   }
 
-  let { events, utilEvents }: DayCalendarProps = $props();
+  let { events }: DayCalendarProps = $props();
 
   let scrollContainer: HTMLDivElement;
   let now = new Date();
@@ -46,8 +44,8 @@
 
         if (!isVisible) return false;
 
-        const start = parseISO(event.start.dateTime);
-        const end = parseISO(event.end.dateTime);
+        const start = parseISO(event.start);
+        const end = parseISO(event.end);
         return (
           isWithinInterval(start, { start: dayStart, end: dayEnd }) ||
           isWithinInterval(end, { start: dayStart, end: dayEnd })
@@ -56,31 +54,23 @@
     }
   );
 
-  const dayUtilEvents = derived(
-    [currentDate, checkedCalendars],
-    ([$currentDate, $checkedCalendars]) => {
-      const dayStart = startOfDay($currentDate);
-      const dayEnd = endOfDay($currentDate);
+  // const dayUtilEvents = derived(
+  //   [currentDate, checkedCalendars],
+  //   ([$currentDate, $checkedCalendars]) => {
+  //     const dayStart = startOfDay($currentDate);
+  //     const dayEnd = endOfDay($currentDate);
 
-      return utilEvents.filter((event) => {
-        const calendarId = event.calendarId;
-        const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+  //     return utilEvents.filter((event) => {
+  //       const calendarId = event.calendarId;
+  //       const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
 
-        if (!isVisible) return false;
+  //       if (!isVisible) return false;
 
-        const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
-        return isWithinInterval(normalizedDate, { start: dayStart, end: dayEnd });
-      });
-    }
-  );
-
-  function normalizeUtilEventDate(dateStr: string) {
-    const parsed = parseISO(dateStr);
-    if (isNaN(parsed.getTime())) {
-      console.warn("Invalid utilEvent date:", dateStr);
-    }
-    return parsed;
-  }
+  //       const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
+  //       return isWithinInterval(normalizedDate, { start: dayStart, end: dayEnd });
+  //     });
+  //   }
+  // );
 
   const getLineOffset = () => {
     const minutes = differenceInMinutes(now, startOfDay(now));
@@ -123,7 +113,7 @@
         {format($currentDate, "EEEE, MMM d")}
       </div>
 
-      {#each $dayUtilEvents as util}
+      <!-- {#each $dayUtilEvents as util}
         <div
           class="text-primary text-[10px] py-[2px] px-[3px] mb-1 rounded-md truncate w-full"
           style="background-color: {getEventColor(util.calendarId)};"
@@ -131,7 +121,7 @@
         >
           {util.summary}
         </div>
-      {/each}
+      {/each} -->
     </div>
   </div>
 
@@ -160,7 +150,7 @@
           {/if}
 
           {#each $dayEvents as event}
-            {#if parseInt(format(parseISO(event.start.dateTime), "H")) === hour}
+            {#if parseInt(format(parseISO(event.start), "H")) === hour}
               <EventBlock {event} />
             {/if}
           {/each}

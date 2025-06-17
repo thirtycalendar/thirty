@@ -19,23 +19,14 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import type { Event, UtilEvent } from "$lib/types";
-
-  import { getEventBgColor, getEventColor } from "../../utils/get-colors";
+  import type { Event } from "$lib/types";
+  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   interface MonthCalendarProps {
     events: Event[];
-    utilEvents: UtilEvent[];
   }
 
-  type DisplayProperties = {
-    color: string | null | undefined;
-    isUtilEvent: boolean;
-  };
-
-  type DisplayEvent = (Event & DisplayProperties) | (UtilEvent & DisplayProperties);
-
-  let { events, utilEvents }: MonthCalendarProps = $props();
+  let { events }: MonthCalendarProps = $props();
 
   const MAX_EVENTS_PER_DAY = 4;
 
@@ -48,57 +39,33 @@
     );
   });
 
-  function normalizeUtilEventDate(dateStr: string) {
-    return parseISO(dateStr);
-  }
-
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 
   const eventsByDay = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
     const start = $days[0];
     const end = endOfDay($days[$days.length - 1]);
 
-    const tempMap: Record<string, { utils: DisplayEvent[]; normals: DisplayEvent[] }> = {};
-
-    for (const event of utilEvents) {
-      const isVisible =
-        !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
-      if (!isVisible) continue;
-
-      const date = normalizeUtilEventDate(event.date.dateTime);
-      if (isWithinInterval(date, { start, end })) {
-        const key = getDayString(date);
-        if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
-
-        tempMap[key].utils.push({
-          ...event,
-          color: getEventColor(event.calendarId),
-          isUtilEvent: true
-        });
-      }
-    }
+    const tempMap: Record<string, { normals: Event[] }> = {};
 
     for (const event of events) {
       const isVisible =
         !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
       if (!isVisible) continue;
 
-      const startDate = parseISO(event.start.dateTime);
+      const startDate = parseISO(event.start);
       if (isWithinInterval(startDate, { start, end })) {
         const key = getDayString(startDate);
-        if (!tempMap[key]) tempMap[key] = { utils: [], normals: [] };
+        if (!tempMap[key]) tempMap[key] = { normals: [] };
 
         tempMap[key].normals.push({
-          ...event,
-          color: event.colorId ? getEventBgColor(event.colorId) : getEventColor(event.calendarId),
-          isUtilEvent: false
+          ...event
         });
       }
     }
 
-    const finalMap: Record<string, DisplayEvent[]> = {};
+    const finalMap: Record<string, Event[]> = {};
     for (const key in tempMap) {
-      finalMap[key] = [...tempMap[key].utils, ...tempMap[key].normals.reverse()];
+      finalMap[key] = [...tempMap[key].normals.reverse()];
     }
 
     return finalMap;
@@ -145,11 +112,10 @@
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
             <div
               class="font-semibold truncate px-1 rounded"
-              style:background-color={event.isUtilEvent ? event.color : "transparent"}
-              style:color={event.isUtilEvent ? "black" : event.color}
-              title={event.summary}
+              style:color={getColorHexCodeFromId(event.colorId)}
+              title={event.name}
             >
-              {event.summary}
+              {event.name}
             </div>
           {/each}
 
