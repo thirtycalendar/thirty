@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Wed Jun 18, 2025
+  - (6.18.01) - Updated form components.
 - Tue Jun 17, 2025
   - (6.17.01) - Added timezone field to event table.
   - (6.17.02) - Moved components into each feature folders.

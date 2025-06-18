@@ -1,6 +1,7 @@
-export { default as CalendarChoiceField } from "./form/calendar-choice-field.svelte";
-export { default as CalendarField } from "./form/calendar-field.svelte";
+export { default as ColorChoiceField } from "./form/color-choice-field.svelte";
+export { default as DateField } from "./form/date-field.svelte";
 export { default as InputField } from "./form/input-field.svelte";
+export { default as TextareaField } from "./form/textarea-field.svelte";
 export { default as TimeField } from "./form/time-field.svelte";
 export { default as GoogleIcon } from "./icons/google-icon.svelte";
 export { default as Modal } from "./modal.svelte";

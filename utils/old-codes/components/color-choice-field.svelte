@@ -1,36 +1,58 @@
 <script lang="ts">
   import { Check, ChevronDown } from "@lucide/svelte";
 
-  import { cn } from "$lib/client/utils/cn";
+  import { cn } from "$lib/client/utils/cn"; // Assuming this utility is still available
 
   import type { Color } from "$lib/types";
   import { colors } from "$lib/utils/colors";
 
   interface ColorChoiceFieldProps {
     name: string;
-    colorId: string;
+    placeholder?: string;
     className?: string;
+    formData: any;
+    formErrors: any;
+    handleInput: (event: Event) => void;
   }
 
-  let { colorId, className }: ColorChoiceFieldProps = $props();
+  let { name, className, formData, formErrors, handleInput }: ColorChoiceFieldProps = $props();
 
-  let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
+  let value: string | undefined = $derived($formData[name]);
+
+  let choiceList: Color[] = colors;
+
+  let selectedColor: Color | undefined = $derived(choiceList.find((c) => c.id === value));
+
+  let error = $derived($formErrors[name]);
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
 
   function selectChoice(choice: Color) {
-    if (colorId === choice.id) {
+    if (value === choice.id) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
-      return;
+      return; // Do nothing else
     }
 
-    colorId = choice.id;
+    const newValue = choice.id;
+
+    $formData[name] = newValue;
+
+    // Mimic native input event for `handleInput`
+    const mockEvent = new Event("input", { bubbles: true });
+    const mockTarget = {
+      name: name,
+      value: newValue,
+      type: "text" // Treat as a text input for generic handling
+    };
+    Object.defineProperty(mockEvent, "target", { writable: false, value: mockTarget });
+
+    handleInput(mockEvent); // Call the form's handleInput
 
     open = false; // Close the dropdown
-    setTimeout(() => triggerButtonRef?.focus(), 0);
+    setTimeout(() => triggerButtonRef?.focus(), 0); // Focus back on trigger
   }
 
   function handleClickOutside(event: MouseEvent): void {
@@ -52,9 +74,10 @@
     }
   }
 
+  // Handle keyboard navigation within the grid
   function handleGridKeydown(event: KeyboardEvent, index: number) {
-    const numCols = 6;
-    const totalChoices = colors.length;
+    const numCols = 6; // Or whatever number of columns you choose
+    const totalChoices = choiceList.length;
 
     let nextIndex: number | null = null;
 
@@ -62,7 +85,7 @@
       case "Enter":
       case " ":
         event.preventDefault();
-        selectChoice(colors[index]);
+        selectChoice(choiceList[index]);
         break;
       case "ArrowRight":
         event.preventDefault();
@@ -92,7 +115,7 @@
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       // Focus the next button
       const nextButton = dropdownRef?.querySelector(
-        `[data-color-id="${colors[nextIndex].id}"]`
+        `[data-color-id="${choiceList[nextIndex].id}"]`
       ) as HTMLButtonElement;
       nextButton?.focus();
     }
@@ -105,7 +128,8 @@
   <button
     type="button"
     bind:this={triggerButtonRef}
-    class="w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center border-base-300 outline-none"
+    class="w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center
+      {error ? 'border-error' : 'border-base-300'} outline-none"
     onclick={() => (open = !open)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
@@ -133,6 +157,10 @@
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
+  {#if error}
+    <p class="text-error text-xs mt-1">{error}</p>
+  {/if}
+
   {#if open}
     <div
       bind:this={dropdownRef}
@@ -141,7 +169,7 @@
       tabindex="-1"
     >
       <div class="grid grid-cols-4 gap-2 auto-rows-fr">
-        {#each colors as choice, index (choice.id)}
+        {#each choiceList as choice, index (choice.id)}
           <button
             type="button"
             class="relative w-full aspect-square rounded-full flex items-center justify-center p-0.5
@@ -152,17 +180,17 @@
             onclick={() => selectChoice(choice)}
             onkeydown={(e) => handleGridKeydown(e, index)}
             role="option"
-            aria-selected={colorId === choice.id}
+            aria-selected={value === choice.id}
             aria-label={`Color ${choice.id}`}
             data-color-id={choice.id}
-            disabled={colorId === choice.id}
+            disabled={value === choice.id}
           >
-            {#if colorId === choice.id}
+            {#if value === choice.id}
               <Check size="16" style="color: {choice.colorHexCode};" />
             {/if}
           </button>
         {/each}
-        {#if colors.length === 0}
+        {#if choiceList.length === 0}
           <div class="col-span-full px-3 py-2 text-sm text-base-content/60 text-center">
             No colors available.
           </div>

@@ -1,6 +1,7 @@
 export { default as CalList } from "./cal-list.svelte";
 export { default as CalSidebar } from "./cal-sidebar.svelte";
 export { default as Calendar } from "./calendar.svelte";
+export { default as CalendarChoiceField } from "./calendar-choice-field.svelte";
 export { default as ChangeCalViewButtons } from "./change-cal-view-buttons.svelte";
 export { default as ChangeDateButtons } from "./change-date-buttons.svelte";
 export { default as CreateButton } from "./create-button.svelte";

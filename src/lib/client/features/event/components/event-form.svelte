@@ -1,55 +1,66 @@
 <script lang="ts">
   import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
 
-  import { addDays, format, startOfDay } from "date-fns";
+  import { addDays, addMinutes, startOfDay } from "date-fns";
+  import { format } from "date-fns-tz";
 
   import {
-    CalendarChoiceField,
-    CalendarField,
+    ColorChoiceField,
+    DateField,
     InputField,
+    TextareaField,
     TimeField
   } from "$lib/client/components";
-  import ColorChoiceField from "$lib/client/components/form/color-choice-field.svelte";
-  import TextareaField from "$lib/client/components/form/textarea-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
   import type { Calendar, EventForm } from "$lib/types";
 
+  import { CalendarChoiceField } from "../../calendar/components";
   import { getCalList } from "../../calendar/query";
   import { eventSchema } from "../schema";
 
   const { calendarList } = getCalList();
 
   const now = new Date();
-  const today = startOfDay(now);
 
-  let initialCalendarId: string = "";
-  let initialColorId: string = "";
+  let calendarId = $state("");
+  let colorId = $state("");
+
+  let startDate = $state(format(now, "yyyy-MM-dd"));
+  let startTime = $state(format(now, "HH:mm"));
+  let endTime = $state(format(addMinutes(now, 30), "HH:mm"));
+  let endDate = $state(format(now, "yyyy-MM-dd"));
+
+  let start = $state(`${startDate}T${startTime}`);
+  let end = $state(`${endDate}T${endTime}`);
+
+  let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   $effect(() => {
-    if ($calendarList && !initialCalendarId) {
+    if ($calendarList && !calendarId) {
       const primaryCalendar: Calendar | undefined = $calendarList.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
-        initialCalendarId = primaryCalendar.id;
-        initialColorId = primaryCalendar.colorId;
+        calendarId = primaryCalendar.id;
+        colorId = primaryCalendar.colorId;
 
-        $formData.calendarId = initialCalendarId;
-        $formData.colorId = initialColorId;
+        $formData.calendarId = calendarId;
+        $formData.colorId = colorId;
       }
     }
   });
 
   let defaultValues: EventForm = {
-    calendarId: initialCalendarId,
+    calendarId,
     externalId: null,
     source: "local",
     name: "",
     description: null,
     location: null,
-    colorId: initialColorId,
-    start: today.toISOString(),
-    end: format(now, "HH:mm"),
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    colorId,
+    start,
+    end,
+    timezone,
     allDay: false,
     status: "confirmed"
   };
@@ -100,66 +111,34 @@
       {#if isNextDay}
         <div class="flex flex-col gap-2 w-full">
           <div class="flex gap-2 w-full">
-            <CalendarField
-              name="startDate"
-              className="w-full basis-[60%]"
-              {handleInput}
-              {formData}
-              {formErrors}
-            />
-            <TimeField
-              name="startTime"
-              className="w-full basis-[40%]"
-              {handleInput}
-              {formData}
-              {formErrors}
-            />
+            <DateField name="startDate" date={startDate} className="w-full basis-[60%]" />
+
+            <TimeField name="startTime" time={startTime} className="w-full basis-[40%]" />
           </div>
 
           <div class="flex gap-2 w-full">
-            <CalendarField
+            <DateField
               name="endDate"
+              date={endDate}
               className="w-full basis-[60%]"
               isDisablePast={true}
-              {handleInput}
-              {formData}
-              {formErrors}
             />
-            <TimeField
-              name="endTime"
-              className="w-full basis-[40%]"
-              {handleInput}
-              {formData}
-              {formErrors}
-            />
+
+            <TimeField name="endTime" time={endTime} className="w-full basis-[40%]" />
           </div>
         </div>
       {:else}
         <div class="flex flex-col gap-2 w-full">
           <div class="flex gap-2 w-full">
-            <CalendarField
-              name="startDate"
-              className="w-full basis-[50%]"
-              {handleInput}
-              {formData}
-              {formErrors}
-            />
+            <DateField name="startDate" className="w-full basis-[50%]" date={startDate} />
 
-            <TimeField
-              name="startTime"
-              className="w-full basis-[25%]"
-              {handleInput}
-              {formData}
-              {formErrors}
-            />
+            <TimeField name="startTime" time={startTime} className="w-full basis-[25%]" />
 
             <TimeField
               name="endTime"
+              time={endTime}
               className="w-full basis-[25%]"
               isRightDiv={true}
-              {handleInput}
-              {formData}
-              {formErrors}
             />
           </div>
         </div>
@@ -175,22 +154,14 @@
         <div class="w-full basis-[75%]">
           <CalendarChoiceField
             name="calendarId"
-            choiceList={$calendarList}
+            {calendarId}
+            calendars={$calendarList}
             placeholder="calendarId"
-            {handleInput}
-            {formData}
-            {formErrors}
           />
         </div>
 
         <div class="w-full basis-[25%]">
-          <ColorChoiceField
-            name="colorId"
-            placeholder="Color Id"
-            {handleInput}
-            {formData}
-            {formErrors}
-          />
+          <ColorChoiceField name="colorId" {colorId} />
         </div>
       </div>
     </div>
