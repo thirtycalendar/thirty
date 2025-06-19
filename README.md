@@ -13,6 +13,7 @@
   - (6.18.02) - Kinda working, just wired.
   - (6.18.03) - For safety.
   - (6.18.04) - All form fields kinda working.
+  - (6.18.05) - Time field updated.
 - Tue Jun 17, 2025
   - (6.17.01) - Added timezone field to event table.
   - (6.17.02) - Moved components into each feature folders.

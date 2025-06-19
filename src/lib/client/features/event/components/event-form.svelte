@@ -3,7 +3,7 @@
 
   import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
 
-  import { addDays, addMinutes, isValid as isValidDate, startOfDay } from "date-fns";
+  import { addDays, addMinutes } from "date-fns";
   import { format } from "date-fns-tz";
 
   import {
@@ -36,6 +36,8 @@
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   });
 
+  const isNextDay = $derived($eventData.startTime > $eventData.endTime);
+
   $effect(() => {
     if ($calendarList) {
       const primaryCalendar: Calendar | undefined = $calendarList.find((cal) => cal.isPrimary);
@@ -52,6 +54,10 @@
 
       $formData.start = `${$event.startDate}T${$event.startTime}`;
       $formData.end = `${$event.endDate}T${$event.endTime}`;
+
+      if (isNextDay) {
+        $event.endDate = format(addDays(now, 1), "yyyy-MM-dd");
+      }
     });
   });
 
@@ -75,8 +81,6 @@
     defaultValues,
     disabledFields: ["start", "end"]
   });
-
-  let isNextDay = $derived($eventData.startTime > $eventData.endTime);
 
   async function onSubmit() {
     console.log("eventData:", $eventData);
