@@ -50,6 +50,7 @@
     "@neondatabase/serverless": "^1.0.0",
     "@tailwindcss/vite": "^4.1.7",
     "@upstash/redis": "^1.34.9",
+    "@vvo/tzdb": "^6.171.0",
     "better-auth": "^1.2.8",
     "clsx": "^2.1.1",
     "daisyui": "^5.0.35",

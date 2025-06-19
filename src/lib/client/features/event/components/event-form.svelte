@@ -11,7 +11,8 @@
     DateField,
     InputField,
     TextareaField,
-    TimeField
+    TimeField,
+    TimezoneField
   } from "$lib/client/components";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -32,8 +33,7 @@
     startTime: format(now, "HH:mm"),
     endDate: format(now, "yyyy-MM-dd"),
     endTime: format(addMinutes(now, 30), "HH:mm"),
-
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    timezone: ""
   });
 
   const isNextDay = $derived($eventData.startTime > $eventData.endTime);
@@ -45,6 +45,7 @@
       if (primaryCalendar) {
         $eventData.calendarId = primaryCalendar.id;
         $eventData.colorId = primaryCalendar.colorId;
+        $eventData.timezone = primaryCalendar.timezone;
       }
     }
 
@@ -54,6 +55,8 @@
 
       $formData.start = `${$event.startDate}T${$event.startTime}`;
       $formData.end = `${$event.endDate}T${$event.endTime}`;
+
+      $formData.timezone = $event.timezone;
 
       if (isNextDay) {
         $event.endDate = format(addDays(now, 1), "yyyy-MM-dd");
@@ -79,7 +82,7 @@
   let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
     defaultValues,
-    disabledFields: ["start", "end"]
+    disabledFields: ["start", "end", "timezone"]
   });
 
   async function onSubmit() {
@@ -172,6 +175,8 @@
         />
       </div>
     </div>
+
+    <TimezoneField name="timezone" data={eventData} className="w-full basis-[25%]" />
 
     <div class="my-2 mt-3">
       <button type="submit" class="btn bg-base-200 font-bold w-full" disabled={$isSubmitting}>
