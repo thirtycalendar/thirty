@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { Check, ChevronDown } from "@lucide/svelte";
 
   import { cn } from "$lib/client/utils/cn";
@@ -8,11 +10,13 @@
 
   interface ColorChoiceFieldProps {
     name: string;
-    colorId: string;
+    data: Writable<any>;
     className?: string;
   }
 
-  let { colorId, className }: ColorChoiceFieldProps = $props();
+  let { name, data, className }: ColorChoiceFieldProps = $props();
+
+  let colorId = $derived($data[name]);
 
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
 

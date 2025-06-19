@@ -44,16 +44,18 @@
       const primaryCalendar: Calendar | undefined = $calendarList.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
-        const calendarId = primaryCalendar.id;
-        const colorId = primaryCalendar.colorId;
-
-        $eventData.calendarId = calendarId;
-        $eventData.colorId = colorId;
-
-        $formData.calendarId = calendarId;
-        $formData.colorId = colorId;
+        $eventData.calendarId = primaryCalendar.id;
+        $eventData.colorId = primaryCalendar.colorId;
       }
     }
+
+    eventData.subscribe(($event) => {
+      $formData.calendarId = $event.calendarId;
+      $formData.colorId = $event.colorId;
+
+      $formData.start = `${$event.startDate}T${$event.startTime}`;
+      $formData.end = `${$event.endDate}T${$event.endTime}`;
+    });
   });
 
   let defaultValues: EventForm = {
@@ -73,36 +75,11 @@
 
   let { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
-    defaultValues
+    defaultValues,
+    disabledFields: ["start", "end"]
   });
 
   let isNextDay = $derived($formData.start > $formData.end);
-
-  $effect(() => {
-    const { start, end } = $formData;
-
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-
-    if (!isValidDate(startDate) || !isValidDate(endDate)) return;
-
-    const currentStartDate = startOfDay(startDate);
-    const currentEndDate = startOfDay(endDate);
-
-    if (currentStartDate > currentEndDate) {
-      const expectedEndDate = addDays(currentStartDate, 1);
-
-      if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
-        $formData.end = expectedEndDate.toISOString();
-      }
-    } else {
-      const expectedEndDate = currentStartDate;
-
-      if (currentEndDate.getTime() !== expectedEndDate.getTime()) {
-        $formData.end = expectedEndDate.toISOString();
-      }
-    }
-  });
 
   async function onSubmit() {
     console.log("Submitted...");
@@ -172,7 +149,7 @@
         </div>
 
         <div class="w-full basis-[25%]">
-          <ColorChoiceField name="colorId" colorId={$eventData.colorId} />
+          <ColorChoiceField name="colorId" data={eventData} />
         </div>
       </div>
     </div>

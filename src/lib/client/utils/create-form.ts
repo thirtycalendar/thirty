@@ -5,6 +5,7 @@ import type { ZodSchema } from "zod";
 type CreateFormParams<T> = {
   schema: ZodSchema<T>;
   defaultValues: T;
+  disabledFields?: (keyof T)[];
 };
 
 type CreateFormReturn<T> = {
@@ -18,14 +19,15 @@ type CreateFormReturn<T> = {
 
 export const createForm = <T>({
   schema,
-  defaultValues
+  defaultValues,
+  disabledFields: initialDisabledFields = []
 }: CreateFormParams<T>): CreateFormReturn<T> => {
   const formData = writable<T>({ ...defaultValues });
   const formErrors = writable<Partial<Record<keyof T, string>>>({});
   const isSubmitting = writable(false);
   let submitted = false;
 
-  const disabledFields = writable<Set<keyof T>>(new Set());
+  const disabledFields = writable<Set<keyof T>>(new Set(initialDisabledFields));
 
   function setDisabledFields(fields: (keyof T)[]) {
     disabledFields.set(new Set(fields));
@@ -71,10 +73,9 @@ export const createForm = <T>({
           hasErrorsForEnabledFields = true;
         }
       }
-      formErrors.set(newFormErrors);
 
-      const isValid = !hasErrorsForEnabledFields;
-      return isValid;
+      formErrors.set(newFormErrors);
+      return !hasErrorsForEnabledFields;
     }
 
     return true;
@@ -87,7 +88,6 @@ export const createForm = <T>({
     formData.update((data) => {
       let updatedValue: unknown;
 
-      // Handle different input types
       if (type === "number") {
         updatedValue = value === "" ? null : +value;
       } else if (type === "checkbox") {
@@ -98,7 +98,6 @@ export const createForm = <T>({
 
       const updatedData = { ...data, [name]: updatedValue } as T;
 
-      // Only validate the field after the first submission
       if (submitted) {
         validateField(name as keyof T, updatedValue);
       }
