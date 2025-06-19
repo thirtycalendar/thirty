@@ -15,19 +15,25 @@
   import { cn } from "$lib/client/utils/cn";
 
   interface TimeFieldProps {
-    time: string;
-    name?: string;
+    name: string;
+    data: any;
     className?: string;
     isRightDiv?: boolean;
   }
 
-  let { time, className, isRightDiv = false }: TimeFieldProps = $props();
+  let { name, data, className, isRightDiv = false }: TimeFieldProps = $props();
+
+  let time = $derived($data[name]);
 
   let open = $state(false);
   let inputValue = $state("");
   let filterText = $state("");
   let triggerButtonElement: HTMLInputElement | undefined = $state();
   let timeSlotsDropdown: HTMLDivElement | undefined = $state();
+
+  $effect(() => {
+    console.log("Time:", time);
+  });
 
   const timeSlotInterval = 15; // In minutes
 

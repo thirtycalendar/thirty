@@ -19,13 +19,14 @@
 
   interface CalendarFieldProps {
     name: string;
-    date: string;
+    data: any;
     isDisablePast?: boolean;
     className?: string;
   }
 
-  let { name, date, isDisablePast, className }: CalendarFieldProps = $props();
+  let { name, data, isDisablePast, className }: CalendarFieldProps = $props();
 
+  let date = $derived($data[name]);
   let open = $state(false);
   let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
   let triggerButton = $state<HTMLButtonElement | undefined>(undefined);

@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { writable } from "svelte/store";
+
   import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
 
-  import { addDays, addMinutes, startOfDay } from "date-fns";
+  import { addDays, addMinutes, isValid as isValidDate, startOfDay } from "date-fns";
   import { format } from "date-fns-tz";
 
   import {
@@ -23,26 +25,30 @@
 
   const now = new Date();
 
-  let calendarId = $state("");
-  let colorId = $state("");
+  let eventData = writable({
+    calendarId: "",
+    colorId: "",
+    startDate: format(now, "yyyy-MM-dd"),
+    startTime: format(now, "HH:mm"),
+    endTime: format(addMinutes(now, 30), "HH:mm"),
+    endDate: format(now, "yyyy-MM-dd"),
 
-  let startDate = $state(format(now, "yyyy-MM-dd"));
-  let startTime = $state(format(now, "HH:mm"));
-  let endTime = $state(format(addMinutes(now, 30), "HH:mm"));
-  let endDate = $state(format(now, "yyyy-MM-dd"));
+    start: "",
+    end: "",
 
-  let start = $state(`${startDate}T${startTime}`);
-  let end = $state(`${endDate}T${endTime}`);
-
-  let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  });
 
   $effect(() => {
-    if ($calendarList && !calendarId) {
+    if ($calendarList) {
       const primaryCalendar: Calendar | undefined = $calendarList.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
-        calendarId = primaryCalendar.id;
-        colorId = primaryCalendar.colorId;
+        const calendarId = primaryCalendar.id;
+        const colorId = primaryCalendar.colorId;
+
+        $eventData.calendarId = calendarId;
+        $eventData.colorId = colorId;
 
         $formData.calendarId = calendarId;
         $formData.colorId = colorId;
@@ -51,16 +57,16 @@
   });
 
   let defaultValues: EventForm = {
-    calendarId,
+    calendarId: $eventData.calendarId,
     externalId: null,
     source: "local",
     name: "",
     description: null,
     location: null,
-    colorId,
-    start,
-    end,
-    timezone,
+    colorId: $eventData.colorId,
+    start: $eventData.start,
+    end: $eventData.end,
+    timezone: $eventData.timezone,
     allDay: false,
     status: "confirmed"
   };
@@ -75,8 +81,13 @@
   $effect(() => {
     const { start, end } = $formData;
 
-    const currentStartDate = startOfDay(new Date(start));
-    const currentEndDate = startOfDay(new Date(end));
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    if (!isValidDate(startDate) || !isValidDate(endDate)) return;
+
+    const currentStartDate = startOfDay(startDate);
+    const currentEndDate = startOfDay(endDate);
 
     if (currentStartDate > currentEndDate) {
       const expectedEndDate = addDays(currentStartDate, 1);
@@ -111,32 +122,32 @@
       {#if isNextDay}
         <div class="flex flex-col gap-2 w-full">
           <div class="flex gap-2 w-full">
-            <DateField name="startDate" date={startDate} className="w-full basis-[60%]" />
+            <DateField name="startDate" data={eventData} className="w-full basis-[60%]" />
 
-            <TimeField name="startTime" time={startTime} className="w-full basis-[40%]" />
+            <TimeField name="startTime" data={eventData} className="w-full basis-[40%]" />
           </div>
 
           <div class="flex gap-2 w-full">
             <DateField
               name="endDate"
-              date={endDate}
+              data={eventData}
               className="w-full basis-[60%]"
               isDisablePast={true}
             />
 
-            <TimeField name="endTime" time={endTime} className="w-full basis-[40%]" />
+            <TimeField name="endTime" data={eventData} className="w-full basis-[40%]" />
           </div>
         </div>
       {:else}
         <div class="flex flex-col gap-2 w-full">
           <div class="flex gap-2 w-full">
-            <DateField name="startDate" className="w-full basis-[50%]" date={startDate} />
+            <DateField name="startDate" data={eventData} className="w-full basis-[50%]" />
 
-            <TimeField name="startTime" time={startTime} className="w-full basis-[25%]" />
+            <TimeField name="startTime" data={eventData} className="w-full basis-[25%]" />
 
             <TimeField
               name="endTime"
-              time={endTime}
+              data={eventData}
               className="w-full basis-[25%]"
               isRightDiv={true}
             />
@@ -154,14 +165,14 @@
         <div class="w-full basis-[75%]">
           <CalendarChoiceField
             name="calendarId"
-            {calendarId}
+            calendarId={$eventData.calendarId}
             calendars={$calendarList}
             placeholder="calendarId"
           />
         </div>
 
         <div class="w-full basis-[25%]">
-          <ColorChoiceField name="colorId" {colorId} />
+          <ColorChoiceField name="colorId" colorId={$eventData.colorId} />
         </div>
       </div>
     </div>
