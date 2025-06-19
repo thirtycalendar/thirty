@@ -16,6 +16,7 @@
   - (6.18.05) - Time field updated.
   - (6.18.06) - Both date and time fields are working.
   - (6.18.07) - Added timezone field.
+  - (6.18.08) - Show original date and time on focus lose.
 - Tue Jun 17, 2025
   - (6.17.01) - Added timezone field to event table.
   - (6.17.02) - Moved components into each feature folders.

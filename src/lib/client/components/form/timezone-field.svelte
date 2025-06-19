@@ -26,8 +26,6 @@
     return timezones.filter((tz) => tz.toLowerCase().includes(q));
   });
 
-  let inputValue = $derived.by(() => (open ? filterText || $data[name] : $data[name]));
-
   function selectTimezone(tz: string) {
     $data[name] = tz;
     open = false;
@@ -66,9 +64,14 @@
   function handleBlur(event: FocusEvent) {
     setTimeout(() => {
       const related = event.relatedTarget as Node;
-      if (!triggerButton?.contains(related) && !dropdown?.contains(related)) {
+      const isOutside = !triggerButton?.contains(related) && !dropdown?.contains(related);
+
+      if (isOutside) {
         open = false;
-        filterText = "";
+
+        if (!filterText.trim()) {
+          filterText = "";
+        }
       }
     }, 100);
   }
@@ -89,8 +92,11 @@
     type="text"
     aria-label="Timezone input"
     bind:this={triggerButton}
-    value={inputValue}
-    onfocus={() => (open = true)}
+    value={open ? filterText : $data[name]}
+    onfocus={() => {
+      open = true;
+      filterText = $data[name];
+    }}
     onblur={handleBlur}
     oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}
     onkeydown={handleKeyDown}

@@ -69,11 +69,19 @@
 
   function commitInput() {
     const input = (filterText || "").trim().toLowerCase();
+    if (!input) {
+      filterText = "";
+      open = false;
+      return;
+    }
+
     let parsed: Date | null = null;
 
     if (/^\d+$/.test(input)) {
       const num = parseInt(input, 10);
-      if (num >= 0 && num < 24) parsed = setHours(setMinutes(setSeconds(new Date(), 0), 0), num);
+      if (num >= 0 && num < 24) {
+        parsed = setHours(setMinutes(setSeconds(new Date(), 0), 0), num);
+      }
     }
 
     if (!parsed && input) {
@@ -99,8 +107,16 @@
   function handleBlur(event: FocusEvent) {
     setTimeout(() => {
       const related = event.relatedTarget as Node;
-      if (!triggerButtonElement?.contains(related) && !timeSlotsDropdown?.contains(related)) {
-        commitInput();
+      const isOutside =
+        !triggerButtonElement?.contains(related) && !timeSlotsDropdown?.contains(related);
+
+      if (isOutside) {
+        if (!filterText.trim()) {
+          filterText = "";
+          open = false;
+        } else {
+          commitInput();
+        }
       }
     }, 100);
   }
@@ -153,7 +169,12 @@
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as Node;
     if (!triggerButtonElement?.contains(target) && !timeSlotsDropdown?.contains(target)) {
-      commitInput();
+      if (!filterText.trim()) {
+        filterText = "";
+        open = false;
+      } else {
+        commitInput();
+      }
     }
   }
 </script>
@@ -166,7 +187,10 @@
     aria-label="Time input"
     bind:this={triggerButtonElement}
     value={inputValue}
-    onfocus={() => (open = true)}
+    onfocus={() => {
+      open = true;
+      filterText = $data[name] ? formatDate(parseTime($data[name]), "h:mm aa") : "";
+    }}
     onblur={handleBlur}
     oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}
     onkeydown={handleKeyDown}
