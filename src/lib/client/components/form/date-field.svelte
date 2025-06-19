@@ -6,10 +6,12 @@
     addMonths,
     endOfMonth,
     endOfWeek,
-    format,
+    format as formatDate,
     isSameDay,
     isSameMonth,
     isToday,
+    isValid,
+    parse,
     startOfMonth,
     startOfWeek,
     subMonths
@@ -17,164 +19,204 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  interface CalendarFieldProps {
+  interface DateFieldProps {
     name: string;
     data: any;
     isDisablePast?: boolean;
     className?: string;
   }
 
-  let { name, data, isDisablePast, className }: CalendarFieldProps = $props();
+  let { name, data, isDisablePast = false, className }: DateFieldProps = $props();
 
-  let date = $derived(new Date(`${$data[name]}T00:00:00Z`));
+  let triggerButton = $state<HTMLInputElement | undefined>();
+  let calendarDropdown = $state<HTMLDivElement | undefined>();
   let open = $state(false);
-  let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
-  let triggerButton = $state<HTMLButtonElement | undefined>(undefined);
+  let filterText = $state("");
+
+  let parsedDate = $derived.by(() => {
+    const raw = $data[name];
+    const parsed = parse(raw, "yyyy-MM-dd", new Date());
+    return isValid(parsed) ? parsed : new Date();
+  });
+
+  let inputValue = $derived.by(() =>
+    open ? filterText || formatDate(parsedDate, "EEE d, MMM") : formatDate(parsedDate, "EEE d, MMM")
+  );
+
+  let visibleMonth = $derived(parsedDate);
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
-  const getDays = () => {
-    const start = startOfWeek(startOfMonth(date), { weekStartsOn: 0 });
-    const end = endOfWeek(endOfMonth(date), { weekStartsOn: 0 });
+  let getDays = $derived.by(() => {
+    const start = startOfWeek(startOfMonth(visibleMonth), { weekStartsOn: 0 });
+    const end = endOfWeek(endOfMonth(visibleMonth), { weekStartsOn: 0 });
     const days: Date[] = [];
     for (let d = start; d <= end; d = addDays(d, 1)) {
       days.push(d);
     }
     return days;
-  };
+  });
 
   function selectDay(day: Date) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     if (isDisablePast && day < today) return;
-
-    $data[name] = format(day, "yyyy-MM-dd");
+    $data[name] = formatDate(day, "yyyy-MM-dd");
+    filterText = "";
     open = false;
-    setTimeout(() => triggerButton?.focus(), 0);
+    triggerButton?.blur();
+  }
+
+  function commitInput() {
+    const trimmed = filterText.trim();
+    const parsed = parse(trimmed, "yyyy-MM-dd", new Date());
+    if (isValid(parsed)) $data[name] = formatDate(parsed, "yyyy-MM-dd");
+    filterText = "";
+    open = false;
+    triggerButton?.blur();
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    switch (event.key) {
+      case "Enter":
+        event.preventDefault();
+        commitInput();
+        break;
+      case "Escape":
+        open = false;
+        filterText = "";
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        if (open) {
+          const cell = calendarDropdown?.querySelector('[role="gridcell"]:not(:disabled)');
+          if (cell instanceof HTMLElement) cell.focus();
+        } else {
+          open = true;
+        }
+        break;
+      case "Tab":
+        if (open) commitInput();
+        break;
+    }
+  }
+
+  function handleDayKeydown(event: KeyboardEvent, day: Date) {
+    const move = (d: Date) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (!isDisablePast || d >= today) {
+        $data[name] = formatDate(d, "yyyy-MM-dd");
+      }
+    };
+
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        selectDay(day);
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        move(addDays(day, 1));
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        move(addDays(day, -1));
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        move(addDays(day, 7));
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        move(addDays(day, -7));
+        break;
+      case "Escape":
+      case "Tab":
+        open = false;
+        triggerButton?.focus();
+        break;
+    }
+  }
+
+  function handleBlur(event: FocusEvent) {
+    setTimeout(() => {
+      const related = event.relatedTarget as Node;
+      if (!triggerButton?.contains(related) && !calendarDropdown?.contains(related)) {
+        commitInput();
+      }
+    }, 100);
+  }
+
+  function handleClickOutside(event: MouseEvent) {
+    const target = event.target as Node;
+    if (!triggerButton?.contains(target) && !calendarDropdown?.contains(target)) {
+      commitInput();
+    }
   }
 
   function prevMonth() {
-    const prev = subMonths(date, 1);
+    const prev = subMonths(visibleMonth, 1);
     const now = new Date();
-    const startOfPrev = startOfMonth(prev);
-    const startOfNow = startOfMonth(now);
-
-    if (!isDisablePast || startOfPrev >= startOfNow) {
-      $data[name] = format(prev, "yyyy-MM-dd");
+    if (!isDisablePast || startOfMonth(prev) >= startOfMonth(now)) {
+      $data[name] = formatDate(prev, "yyyy-MM-dd");
     }
   }
 
   function nextMonth() {
-    $data[name] = format(addMonths(date, 1), "yyyy-MM-dd");
-  }
-
-  function handleClickOutside(event: MouseEvent): void {
-    if (!open) return;
-
-    if (calendarDropdown && triggerButton) {
-      const target = event.target as Node;
-      if (!calendarDropdown.contains(target) && !triggerButton.contains(target)) {
-        open = false;
-      }
-    }
-  }
-
-  function handleKeydown(event: KeyboardEvent): void {
-    if (event.key === "Escape" && open) {
-      event.preventDefault();
-      open = false;
-      triggerButton?.focus();
-    }
-  }
-
-  function handleDayKeydown(event: KeyboardEvent, day: Date): void {
-    const navigate = (target: Date) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      if (!isDisablePast || target >= today) {
-        $data[name] = format(target, "yyyy-MM-dd");
-      }
-    };
-
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      selectDay(day);
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      open = false;
-      triggerButton?.focus();
-    } else if (event.key === "ArrowRight") {
-      event.preventDefault();
-      navigate(addDays(day, 1));
-    } else if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      navigate(addDays(day, -1));
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      navigate(addDays(day, -7));
-    } else if (event.key === "ArrowDown") {
-      event.preventDefault();
-      navigate(addDays(day, 7));
-    }
+    const next = addMonths(visibleMonth, 1);
+    $data[name] = formatDate(next, "yyyy-MM-dd");
   }
 </script>
 
-<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
+<svelte:window onmousedown={handleClickOutside} />
 
 <div class={cn("relative w-full", className)}>
-  <button
-    type="button"
+  <input
+    type="text"
+    aria-label="Date input"
     bind:this={triggerButton}
-    class="w-full px-3 py-2 border border-base-300 rounded-md text-sm bg-base-100 hover:bg-base-200 text-left outline-none"
-    onclick={() => (open = true)}
-    onkeydown={(e) => {
-      if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
-        e.preventDefault();
-        open = true;
-      }
+    value={inputValue}
+    onfocus={() => (open = true)}
+    onblur={handleBlur}
+    oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}
+    onkeydown={handleKeyDown}
+    onclick={() => {
+      open = true;
+      triggerButton?.select();
     }}
-    aria-haspopup="dialog"
-    aria-expanded={open}
-  >
-    {format(date, "EEE d, MMM")}
-  </button>
+    class="w-full cursor-pointer rounded-md border border-base-300 bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200"
+    autocomplete="off"
+    placeholder="yyyy-MM-dd"
+  />
 
   {#if open}
     <div
       bind:this={calendarDropdown}
-      class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
+      class="absolute z-50 mt-1 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
-      <div class="flex items-center justify-between px-2 mb-2 text-sm font-semibold">
-        <div class="w-full">
-          {format(date, "MMMM yyyy")}
+      <div class="flex items-center justify-between mb-2 px-2 text-sm font-semibold">
+        <div>{formatDate(visibleMonth, "MMMM yyyy")}</div>
+        <div class="flex gap-1">
+          <button
+            type="button"
+            class="btn btn-ghost btn-xs btn-square"
+            onclick={prevMonth}
+            disabled={isDisablePast && startOfMonth(visibleMonth) <= startOfMonth(new Date())}
+            aria-label="Previous Month"
+          >
+            <ChevronLeft size="15" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-ghost btn-xs btn-square"
+            onclick={nextMonth}
+            aria-label="Next Month"
+          >
+            <ChevronRight size="15" />
+          </button>
         </div>
-
-        <button
-          type="button"
-          class="btn btn-ghost btn-xs btn-square outline-none"
-          onclick={prevMonth}
-          disabled={isDisablePast && startOfMonth(date) <= startOfMonth(new Date())}
-          aria-label="Previous Month"
-        >
-          <ChevronLeft size="15" />
-        </button>
-        <button
-          type="button"
-          class="btn btn-ghost btn-xs btn-square outline-none"
-          onclick={nextMonth}
-          onkeydown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              nextMonth();
-            }
-          }}
-          aria-label="Next Month"
-          tabindex="0"
-        >
-          <ChevronRight size="15" />
-        </button>
       </div>
 
       <div class="grid grid-cols-7 text-[10px] text-center opacity-50 mb-1">
@@ -184,26 +226,27 @@
       </div>
 
       <div class="grid grid-cols-7 gap-1 text-center text-sm">
-        {#each getDays() as day}
+        {#each getDays as day (formatDate(day, "yyyy-MM-dd"))}
+          {@const selected = isSameDay(day, parsedDate)}
           <button
             type="button"
-            class={`py-1 rounded-md cursor-pointer transition-colors w-full outline-none
-              ${isSameDay(day, date) ? "bg-base-200 text-primary-content font-semibold" : ""}
-              ${!isSameMonth(day, date) ? "text-base-content/30" : ""}
-              ${isToday(day) && isSameDay(day, date) ? "text-primary font-medium" : ""}
-              ${isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0)) ? "opacity-30 cursor-not-allowed" : "hover:bg-base-300/60"}
-            `}
-            onclick={(e) => {
-              e.preventDefault();
-              selectDay(day);
-            }}
-            onkeydown={(e) => handleDayKeydown(e, day)}
-            tabindex="0"
             role="gridcell"
-            aria-selected={isSameDay(day, date)}
+            aria-selected={selected}
+            class={cn(
+              "py-1 rounded-md w-full transition-colors outline-none",
+              selected ? "bg-base-300 font-semibold text-base-content" : "",
+              !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
+              isToday(day) && !selected ? "text-primary font-medium" : "",
+              isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))
+                ? "opacity-30 cursor-not-allowed"
+                : "hover:bg-base-200/60"
+            )}
             disabled={isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))}
+            onkeydown={(e) => handleDayKeydown(e, day)}
+            onclick={() => selectDay(day)}
+            tabindex="-1"
           >
-            {format(day, "d")}
+            {formatDate(day, "d")}
           </button>
         {/each}
       </div>
