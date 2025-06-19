@@ -23,7 +23,7 @@
 
   let { name, data, className, isRightDiv = false }: TimeFieldProps = $props();
 
-  let time = $derived($data[name]);
+  let time: string = $derived($data[name]);
 
   let open = $state(false);
   let inputValue = $state("");
@@ -31,17 +31,17 @@
   let triggerButtonElement: HTMLInputElement | undefined = $state();
   let timeSlotsDropdown: HTMLDivElement | undefined = $state();
 
-  $effect(() => {
-    console.log("Time:", time);
-  });
+  const timeSlotInterval = 15;
 
-  const timeSlotInterval = 15; // In minutes
-
-  function parseTimeProp(timeString: string | undefined | null): Date {
+  function parseTimeProp(timeString: string): Date {
     const baseDate = new Date();
-    if (!timeString) return baseDate;
 
-    const parsed = parseDateFns(timeString, "HH:mm:ss.SSS", baseDate);
+    // Normalize "12:37" -> "12:37:00"
+    if (/^\d{1,2}:\d{2}$/.test(timeString)) {
+      timeString = `${timeString}:00`;
+    }
+
+    const parsed = parseDateFns(timeString, "HH:mm:ss", baseDate);
     return isValidDate(parsed) ? parsed : baseDate;
   }
 
@@ -99,7 +99,7 @@
   });
 
   function selectTime(slotDate: Date): void {
-    time = formatDateFns(slotDate, "HH:mm:ss.SSS");
+    $data[name] = formatDateFns(slotDate, "HH:mm");
     open = false;
     triggerButtonElement?.blur();
   }
@@ -108,16 +108,13 @@
     const textToParse = (filterText || inputValue).trim().toLowerCase();
     let parsedDate: Date | null = null;
 
-    // Custom numeric parsing for inputs like "2", "12", "24"
     if (/^\d+$/.test(textToParse)) {
       const num = parseInt(textToParse, 10);
       const baseDate = setSeconds(new Date(), 0);
 
       if (num === 12) {
-        // Special case: "12" -> 12:00 AM (Midnight)
         parsedDate = setHours(setMinutes(baseDate, 0), 0);
       } else if (num === 24) {
-        // Special case: "24" -> 12:00 PM (Noon)
         parsedDate = setHours(setMinutes(baseDate, 0), 12);
       } else if (num >= 0 && num < 24) {
         parsedDate = setHours(setMinutes(baseDate, 0), num);
@@ -136,7 +133,7 @@
     }
 
     if (parsedDate) {
-      time = formatDateFns(parsedDate, "HH:mm:ss.SSS");
+      $data[name] = formatDateFns(parsedDate, "HH:mm");
     } else {
       inputValue = formatDateFns(currentDate, "h:mm aa");
     }

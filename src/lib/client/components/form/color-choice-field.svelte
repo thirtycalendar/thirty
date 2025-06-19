@@ -31,7 +31,7 @@
       return;
     }
 
-    colorId = choice.id;
+    $data[name] = choice.id;
 
     open = false; // Close the dropdown
     setTimeout(() => triggerButtonRef?.focus(), 0);
@@ -128,7 +128,7 @@
     <div class="flex items-center gap-2">
       {#if selectedColor}
         <span
-          class="inline-block w-4 h-4 rounded-full"
+          class="inline-block w-5 h-5 rounded-full"
           style="background-color: {selectedColor.colorHexCode};"
           aria-label="Selected color preview"
         ></span>

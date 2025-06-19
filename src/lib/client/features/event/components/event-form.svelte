@@ -30,11 +30,8 @@
     colorId: "",
     startDate: format(now, "yyyy-MM-dd"),
     startTime: format(now, "HH:mm"),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
     endDate: format(now, "yyyy-MM-dd"),
-
-    start: "",
-    end: "",
+    endTime: format(addMinutes(now, 30), "HH:mm"),
 
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   });
@@ -66,8 +63,8 @@
     description: null,
     location: null,
     colorId: $eventData.colorId,
-    start: $eventData.start,
-    end: $eventData.end,
+    start: "",
+    end: "",
     timezone: $eventData.timezone,
     allDay: false,
     status: "confirmed"
@@ -79,9 +76,11 @@
     disabledFields: ["start", "end"]
   });
 
-  let isNextDay = $derived($formData.start > $formData.end);
+  let isNextDay = $derived($eventData.startTime > $eventData.endTime);
 
   async function onSubmit() {
+    console.log("eventData:", $eventData);
+
     console.log("Submitted...");
     console.log("Form data:", $formData);
   }

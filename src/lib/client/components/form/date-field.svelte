@@ -26,7 +26,7 @@
 
   let { name, data, isDisablePast, className }: CalendarFieldProps = $props();
 
-  let date = $derived($data[name]);
+  let date = $derived(new Date(`${$data[name]}T00:00:00Z`));
   let open = $state(false);
   let calendarDropdown = $state<HTMLDivElement | undefined>(undefined);
   let triggerButton = $state<HTMLButtonElement | undefined>(undefined);
@@ -49,8 +49,7 @@
 
     if (isDisablePast && day < today) return;
 
-    date = day.toISOString();
-
+    $data[name] = format(day, "yyyy-MM-dd");
     open = false;
     setTimeout(() => triggerButton?.focus(), 0);
   }
@@ -62,12 +61,12 @@
     const startOfNow = startOfMonth(now);
 
     if (!isDisablePast || startOfPrev >= startOfNow) {
-      date = prev.toISOString();
+      $data[name] = format(prev, "yyyy-MM-dd");
     }
   }
 
   function nextMonth() {
-    date = addMonths(date, 1).toISOString();
+    $data[name] = format(addMonths(date, 1), "yyyy-MM-dd");
   }
 
   function handleClickOutside(event: MouseEvent): void {
@@ -95,7 +94,7 @@
       today.setHours(0, 0, 0, 0);
 
       if (!isDisablePast || target >= today) {
-        date = target.toISOString();
+        $data[name] = format(target, "yyyy-MM-dd");
       }
     };
 
@@ -148,7 +147,7 @@
       class="absolute mt-1 z-50 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
       <div class="flex items-center justify-between px-2 mb-2 text-sm font-semibold">
-        <div class=" w-full">
+        <div class="w-full">
           {format(date, "MMMM yyyy")}
         </div>
 
