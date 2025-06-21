@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { differenceInMinutes, parseISO, startOfHour } from "date-fns";
+  import { differenceInMinutes, startOfHour } from "date-fns";
+  import { toZonedTime } from "date-fns-tz";
 
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
@@ -12,8 +13,8 @@
 
   let { event }: EventBlockProps = $props();
 
-  const start = parseISO(event.start);
-  const end = parseISO(event.end);
+  const start = toZonedTime(event.start, event.timezone);
+  const end = toZonedTime(event.end, event.timezone);
 
   const hourHeight = 60;
   const minuteHeight = hourHeight / 60;

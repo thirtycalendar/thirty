@@ -3,15 +3,15 @@
   import { derived } from "svelte/store";
 
   import {
+    addDays,
     differenceInMinutes,
     endOfDay,
     format,
     isToday,
     isWithinInterval,
-    parseISO,
-    setHours,
     startOfDay
   } from "date-fns";
+  import { toZonedTime } from "date-fns-tz";
 
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
@@ -20,11 +20,11 @@
 
   import { EventBlock } from "../../event/components";
 
-  interface DayCalendarProps {
+  interface WeekCalendarProps {
     events: Event[];
   }
 
-  let { events }: DayCalendarProps = $props();
+  let { events }: WeekCalendarProps = $props();
 
   let scrollContainer: HTMLDivElement;
   let now = new Date();
@@ -32,49 +32,57 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
+  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  function splitEventByDay(
+    event: Event,
+    dayStart: Date
+  ): { event: Event; start: Date; end: Date }[] {
+    const chunks = [];
+    const eventStartTz = toZonedTime(event.start, calendarTimezone);
+    const eventEndTz = toZonedTime(event.end, calendarTimezone);
+
+    const dayEnd = endOfDay(dayStart);
+
+    const start = eventStartTz < dayStart ? dayStart : eventStartTz;
+    const end = eventEndTz > dayEnd ? dayEnd : eventEndTz;
+
+    chunks.push({ event, start, end });
+    return chunks;
+  }
+
   const dayEvents = derived(
     [currentDate, checkedCalendars],
     ([$currentDate, $checkedCalendars]) => {
       const dayStart = startOfDay($currentDate);
       const dayEnd = endOfDay($currentDate);
 
-      return events.filter((event) => {
+      const filtered = events.filter((event) => {
         const calendarId = event.calendarId;
         const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
-
         if (!isVisible) return false;
 
-        const start = parseISO(event.start);
-        const end = parseISO(event.end);
+        const eventStartTz = toZonedTime(event.start, calendarTimezone);
+        const eventEndTz = toZonedTime(event.end, calendarTimezone);
+
         return (
-          isWithinInterval(start, { start: dayStart, end: dayEnd }) ||
-          isWithinInterval(end, { start: dayStart, end: dayEnd })
+          isWithinInterval(eventStartTz, { start: dayStart, end: dayEnd }) ||
+          isWithinInterval(eventEndTz, { start: dayStart, end: dayEnd }) ||
+          (eventStartTz < dayStart && eventEndTz > dayEnd)
         );
       });
+
+      const chunks = filtered.flatMap((event) => splitEventByDay(event, dayStart));
+
+      chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+      return chunks;
     }
   );
 
-  // const dayUtilEvents = derived(
-  //   [currentDate, checkedCalendars],
-  //   ([$currentDate, $checkedCalendars]) => {
-  //     const dayStart = startOfDay($currentDate);
-  //     const dayEnd = endOfDay($currentDate);
-
-  //     return utilEvents.filter((event) => {
-  //       const calendarId = event.calendarId;
-  //       const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
-
-  //       if (!isVisible) return false;
-
-  //       const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
-  //       return isWithinInterval(normalizedDate, { start: dayStart, end: dayEnd });
-  //     });
-  //   }
-  // );
-
   const getLineOffset = () => {
     const minutes = differenceInMinutes(now, startOfDay(now));
-    return (minutes / 60) * 60; // 60px per hour height
+    return (minutes / 60) * 60;
   };
 
   async function scrollToCurrentTime() {
@@ -96,7 +104,7 @@
 
     timer = setInterval(() => {
       now = new Date();
-    }, 60 * 1000); // No need to scroll here, the red line position is reactive
+    }, 60 * 1000);
   });
 
   onDestroy(() => {
@@ -112,16 +120,6 @@
       >
         {format($currentDate, "EEEE, MMM d")}
       </div>
-
-      <!-- {#each $dayUtilEvents as util}
-        <div
-          class="text-primary text-[10px] py-[2px] px-[3px] mb-1 rounded-md truncate w-full"
-          style="background-color: {getEventColor(util.calendarId)};"
-          title={util.summary}
-        >
-          {util.summary}
-        </div>
-      {/each} -->
     </div>
   </div>
 
@@ -134,7 +132,7 @@
         <div
           class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70 border-r border-base-200"
         >
-          {format(setHours(new Date(), hour), "h a")}
+          {format(new Date().setHours(hour, 0, 0, 0), "h a")}
         </div>
 
         <div
@@ -149,9 +147,9 @@
             ></div>
           {/if}
 
-          {#each $dayEvents as event}
-            {#if parseInt(format(parseISO(event.start), "H")) === hour}
-              <EventBlock {event} />
+          {#each $dayEvents as { event, start }}
+            {#if start.getHours() === hour}
+              <EventBlock event={{ ...event, start: start.toISOString() }} />
             {/if}
           {/each}
         </div>

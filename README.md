@@ -30,6 +30,7 @@
   - (6.21.14) - Toast component.
   - (6.21.15) - Improved google syncing time.
   - (6.21.16) - Fixed month calendar component.
+  - (6.21.17) - Showed events based on timezone.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.

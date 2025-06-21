@@ -12,9 +12,11 @@
     isToday,
     isWithinInterval,
     parseISO,
+    startOfDay,
     startOfMonth,
     startOfWeek
   } from "date-fns";
+  import { toZonedTime } from "date-fns-tz";
 
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
@@ -27,7 +29,9 @@
     events: Event[];
   }
 
-  let { events = [] }: MonthCalendarProps = $props();
+  let { events }: MonthCalendarProps = $props();
+
+  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const MAX_EVENTS_PER_DAY = 4;
 
@@ -45,9 +49,10 @@
 
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 
+  // Filter and group events by day considering timezone & multi-day events
   const eventsByDay = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
-    const start = $days[0];
-    const end = endOfDay($days[$days.length - 1]);
+    const dayStart = startOfDay($days[0]);
+    const dayEnd = endOfDay($days[$days.length - 1]);
 
     const seen = new Set<string>();
     const map: Record<string, Event[]> = {};
@@ -60,13 +65,22 @@
         !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
       if (!isVisible) continue;
 
-      const startDate = parseISO(event.start);
-      if (!isWithinInterval(startDate, { start, end })) continue;
+      const eventStartTz = toZonedTime(event.start, calendarTimezone);
+      const eventEndTz = toZonedTime(event.end, calendarTimezone);
 
-      const key = format(startDate, "yyyy-MM-dd");
-      if (!map[key]) map[key] = [];
+      const overlaps = eventStartTz <= dayEnd && eventEndTz >= dayStart;
 
-      map[key].push(event);
+      if (!overlaps) continue;
+
+      let cursor = startOfDay(eventStartTz < dayStart ? dayStart : eventStartTz);
+      const eventEndDay = startOfDay(eventEndTz > dayEnd ? dayEnd : eventEndTz);
+
+      while (cursor <= eventEndDay) {
+        const key = format(cursor, "yyyy-MM-dd");
+        if (!map[key]) map[key] = [];
+        map[key].push(event);
+        cursor = addDays(cursor, 1);
+      }
     }
 
     return map;

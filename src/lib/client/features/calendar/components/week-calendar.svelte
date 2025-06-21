@@ -10,8 +10,10 @@
     isWithinInterval,
     parseISO,
     setHours,
+    startOfDay,
     startOfWeek
   } from "date-fns";
+  import { toZonedTime } from "date-fns-tz";
 
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
@@ -26,6 +28,8 @@
 
   let { events }: WeekCalendarProps = $props();
 
+  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek($currentDate);
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
@@ -33,47 +37,60 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
+  function splitEventByDay(event: Event): { event: Event; day: Date; start: Date; end: Date }[] {
+    const chunks = [];
+
+    const eventStartTz = toZonedTime(event.start, calendarTimezone);
+    const eventEndTz = toZonedTime(event.end, calendarTimezone);
+
+    let currentStart = eventStartTz;
+
+    while (currentStart < eventEndTz) {
+      const dayStart = startOfDay(currentStart);
+      const dayEnd = endOfDay(currentStart);
+
+      const chunkEnd = eventEndTz < dayEnd ? eventEndTz : dayEnd;
+
+      chunks.push({
+        event,
+        day: dayStart,
+        start: currentStart,
+        end: chunkEnd
+      });
+
+      currentStart = addDays(dayStart, 1);
+    }
+
+    return chunks;
+  }
+
   const weekEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
-    const weekStart = $days[0];
+    const weekStart = startOfDay($days[0]);
     const weekEnd = endOfDay($days[6]);
 
-    return events.filter((event) => {
+    const filtered = events.filter((event) => {
       const calendarId = event.calendarId;
       const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
-
       if (!isVisible) return false;
 
-      const start = parseISO(event.start);
-      const end = parseISO(event.end);
+      const eventStart = toZonedTime(event.start, calendarTimezone);
+      const eventEnd = toZonedTime(event.end, calendarTimezone);
+
       return (
-        isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
-        isWithinInterval(end, { start: weekStart, end: weekEnd })
+        isWithinInterval(eventStart, { start: weekStart, end: weekEnd }) ||
+        isWithinInterval(eventEnd, { start: weekStart, end: weekEnd }) ||
+        (eventStart < weekStart && eventEnd > weekEnd)
       );
     });
+
+    // Split each filtered event into daily chunks
+    const chunks = filtered.flatMap(splitEventByDay);
+
+    // Only keep chunks that fall within the displayed week days
+    return chunks.filter(({ day }) => {
+      return day >= weekStart && day <= weekEnd;
+    });
   });
-
-  // const weekUtilEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
-  //   const weekStart = $days[0];
-  //   const weekEnd = endOfDay($days[6]);
-
-  //   return utilEvents.filter((event) => {
-  //     const calendarId = event.calendarId;
-  //     const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
-
-  //     if (!isVisible) return false;
-
-  //     const normalizedDate = normalizeUtilEventDate(event.date.dateTime);
-  //     return isWithinInterval(normalizedDate, { start: weekStart, end: weekEnd });
-  //   });
-  // });
-
-  // function normalizeUtilEventDate(dateStr: string) {
-  //   const parsed = parseISO(dateStr);
-  //   if (isNaN(parsed.getTime())) {
-  //     console.warn("Invalid utilEvent date:", dateStr);
-  //   }
-  //   return parsed;
-  // }
 
   let now = new Date();
   let timer: ReturnType<typeof setInterval>;
@@ -109,24 +126,12 @@
       <div
         class="min-h-8 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
       >
-        <!-- Day Label -->
         <div class={`font-semibold text-center ${isToday(day) ? "text-secondary-content" : ""}`}>
           <p>
             {format(day, "EEE")}
             <span class="block sm:inline mb-2 sm:mb-0">{format(day, "d")}</span>
           </p>
         </div>
-
-        <!-- Util Events -->
-        <!-- {#each $weekUtilEvents.filter((e) => format(normalizeUtilEventDate(e.date.dateTime), "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as util}
-          <div
-            class="text-primary text-[10px] py-[2px] px-[3px] rounded-md truncate max-w-full"
-            style="background-color: {getEventColor(util.calendarId)};"
-            title={util.summary}
-          >
-            {util.summary}
-          </div>
-        {/each} -->
       </div>
     {/each}
   </div>
@@ -157,10 +162,16 @@
             ></div>
           {/if}
 
-          {#each $weekEvents as event}
-            {#if getDayString(parseISO(event.start)) === format(day, "yyyy-MM-dd")}
-              {#if parseInt(format(parseISO(event.start), "H")) === hour}
-                <EventBlock {event} />
+          {#each $weekEvents as { event, day: eventDay, start, end }}
+            {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
+              {#if start.getHours() === hour}
+                <EventBlock
+                  event={{
+                    ...event,
+                    start: start.toISOString(),
+                    end: end.toISOString()
+                  }}
+                />
               {/if}
             {/if}
           {/each}
