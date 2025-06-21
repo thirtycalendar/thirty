@@ -128,3 +128,8 @@ export async function deleteCalendar(calendarId: string): Promise<Calendar> {
 
   return deleted;
 }
+
+export async function createCalendarsBulk(userId: string, data: CalendarForm[]) {
+  if (data.length === 0) return;
+  await db.insert(calendars).values(data.map((c) => ({ ...c, userId })));
+}

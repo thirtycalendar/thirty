@@ -98,3 +98,8 @@ export async function deleteEvent(eventId: string): Promise<Event> {
 
   return deleted;
 }
+
+export async function createEventsBulk(userId: string, data: EventForm[]) {
+  if (data.length === 0) return;
+  await db.insert(events).values(data.map((e) => ({ ...e, userId })));
+}
