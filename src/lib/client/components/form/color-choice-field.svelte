@@ -17,7 +17,6 @@
   let { name, data, className }: ColorChoiceFieldProps = $props();
 
   let colorId = $derived($data[name]);
-
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
 
   let open = $state(false);
@@ -32,14 +31,12 @@
     }
 
     $data[name] = choice.id;
-
-    open = false; // Close the dropdown
+    open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
 
   function handleClickOutside(event: MouseEvent): void {
     if (!open) return;
-
     if (dropdownRef && triggerButtonRef) {
       const target = event.target as Node;
       if (!dropdownRef.contains(target) && !triggerButtonRef.contains(target)) {
@@ -79,12 +76,12 @@
       case "ArrowDown":
         event.preventDefault();
         nextIndex = index + numCols;
-        if (nextIndex >= totalChoices) nextIndex = null; // Stay on last row if no full row below
+        if (nextIndex >= totalChoices) nextIndex = null;
         break;
       case "ArrowUp":
         event.preventDefault();
         nextIndex = index - numCols;
-        if (nextIndex < 0) nextIndex = null; // Stay on first row if no full row above
+        if (nextIndex < 0) nextIndex = null;
         break;
       case "Escape":
         event.preventDefault();
@@ -94,7 +91,6 @@
     }
 
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
-      // Focus the next button
       const nextButton = dropdownRef?.querySelector(
         `[data-color-id="${colors[nextIndex].id}"]`
       ) as HTMLButtonElement;
@@ -115,7 +111,6 @@
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
         e.preventDefault();
         open = true;
-        // Focus the first item in the grid when opened with keyboard
         setTimeout(() => {
           const firstColorButton = dropdownRef?.querySelector<HTMLButtonElement>('[role="option"]');
           firstColorButton?.focus();
@@ -162,7 +157,7 @@
             disabled={colorId === choice.id}
           >
             {#if colorId === choice.id}
-              <Check size="16" style="color: {choice.colorHexCode};" />
+              <Check size="16" strokeWidth="4" class="text-base-200 drop-shadow-sm" />
             {/if}
           </button>
         {/each}
