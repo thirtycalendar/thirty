@@ -8,6 +8,8 @@
 
 ## Logs
 
+- Sat Jun 21, 2025
+  - (6.21.01) - Time field input deleted value working.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.

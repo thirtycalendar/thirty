@@ -49,6 +49,7 @@
 
   function parseTime(timeString: string): Date {
     if (!timeString) return new Date();
+    // Allow HH:mm format which is used for data storage
     if (/^\d{1,2}:\d{2}$/.test(timeString)) timeString += ":00";
     const parsed = parse(timeString, "HH:mm:ss", new Date());
     return isValid(parsed) ? parsed : new Date();
@@ -56,9 +57,9 @@
 
   const currentDate = $derived.by(() => parseTime($data[name]));
 
-  const inputValue = $derived.by(() =>
-    open ? filterText || formatDate(currentDate, "h:mm aa") : formatDate(currentDate, "h:mm aa")
-  );
+  // FIX: Allow the input to be empty while focused (open).
+  // When closed, it reverts to the formatted `currentDate`.
+  const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
 
   function selectTime(date: Date) {
     $data[name] = formatDate(date, "HH:mm");
@@ -77,6 +78,7 @@
 
     let parsed: Date | null = null;
 
+    // Handle "9" -> 9:00 AM
     if (/^\d+$/.test(input)) {
       const num = parseInt(input, 10);
       if (num >= 0 && num < 24) {
@@ -84,6 +86,7 @@
       }
     }
 
+    // Handle "9pm", "14:30", "2:30 pm", etc.
     if (!parsed && input) {
       const formats = ["h:mm aa", "HH:mm", "h a", "ha"];
       for (const fmt of formats) {
@@ -112,9 +115,11 @@
 
       if (isOutside) {
         if (!filterText.trim()) {
+          // Input is empty, revert to last value by closing.
           filterText = "";
           open = false;
         } else {
+          // Input has a value, try to commit it.
           commitInput();
         }
       }
