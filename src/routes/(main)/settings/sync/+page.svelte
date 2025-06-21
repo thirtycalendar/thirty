@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { Navbar } from "$lib/client/features/settings/components";
+  import { Navbar, Sync } from "$lib/client/features/settings/components";
 </script>
 
 <Navbar title="Sync" />
+
+<Sync />

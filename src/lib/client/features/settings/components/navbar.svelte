@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { ToggleSidebarIcon } from "$lib/client/components";
   import { LogoutButton } from "$lib/client/features/auth/components";
+  import { ToggleSidebarIcon } from "$lib/client/components";
 
   interface NavbarProps {
     title: string;
@@ -19,3 +19,5 @@
     <LogoutButton />
   </div>
 </div>
+
+<hr class="mt-2 mb-3 text-base-300" />
