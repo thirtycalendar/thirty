@@ -49,7 +49,6 @@
 
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 
-  // Filter and group events by day considering timezone & multi-day events
   const eventsByDay = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
     const dayStart = startOfDay($days[0]);
     const dayEnd = endOfDay($days[$days.length - 1]);
@@ -69,7 +68,6 @@
       const eventEndTz = toZonedTime(event.end, calendarTimezone);
 
       const overlaps = eventStartTz <= dayEnd && eventEndTz >= dayStart;
-
       if (!overlaps) continue;
 
       let cursor = startOfDay(eventStartTz < dayStart ? dayStart : eventStartTz);
@@ -81,6 +79,14 @@
         map[key].push(event);
         cursor = addDays(cursor, 1);
       }
+    }
+
+    for (const key in map) {
+      map[key].sort((a, b) => {
+        const aStart = toZonedTime(a.start, calendarTimezone).getTime();
+        const bStart = toZonedTime(b.start, calendarTimezone).getTime();
+        return aStart - bStart;
+      });
     }
 
     return map;
