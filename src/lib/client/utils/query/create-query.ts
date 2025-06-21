@@ -1,21 +1,22 @@
 import { writable } from "svelte/store";
 
-import { registerQuery } from "./query-client";
+import { getCachedQuery, isQueryStale, registerQuery, setCachedQuery } from "./query-client";
 
 // biome-ignore lint:
 type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
   queryFn: Fn;
-  queryKeys?: string[];
+  queryKeys: string[];
   onPending?: () => void;
   onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
   onError?: (err: ErrorType) => void;
+  staleTime?: number;
 };
 
 // biome-ignore lint:
 export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   opts: CreateQueryOptions<Fn, ErrorType>
 ) {
-  const { queryFn, queryKeys, onPending, onSuccess, onError } = opts;
+  const { queryFn, queryKeys, onPending, onSuccess, onError, staleTime = 60_000 } = opts;
 
   type DataType = Awaited<ReturnType<Fn>>;
 
@@ -25,7 +26,18 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   const isSuccess = writable(false);
   const isError = writable(false);
 
-  async function fetchData() {
+  const key = queryKeys.join("::");
+
+  async function fetchData(force = false) {
+    const cached = getCachedQuery(key);
+
+    if (!force && cached && !isQueryStale(key, staleTime)) {
+      data.set(cached.data);
+      isSuccess.set(true);
+      isPending.set(false);
+      return;
+    }
+
     isPending.set(true);
     isSuccess.set(false);
     isError.set(false);
@@ -34,6 +46,7 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
     try {
       const result = await queryFn();
       data.set(result);
+      setCachedQuery(key, result);
       error.set(null);
       isSuccess.set(true);
       onSuccess?.(result);
@@ -47,13 +60,8 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
     }
   }
 
-  if (queryKeys) {
-    for (const key of queryKeys) {
-      registerQuery(key, fetchData);
-    }
-  }
-
+  registerQuery(key, () => fetchData(true));
   fetchData();
 
-  return { data, error, isPending, isSuccess, isError };
+  return { data, error, isPending, isSuccess, isError, refetch: () => fetchData(true) };
 }
