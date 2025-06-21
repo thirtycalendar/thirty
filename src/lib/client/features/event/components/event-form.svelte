@@ -148,7 +148,7 @@
         <div class="w-full basis-[75%]">
           <CalendarChoiceField
             name="calendarId"
-            calendarId={$eventData.calendarId}
+            data={eventData}
             calendars={$calendarList}
             placeholder="calendarId"
           />

@@ -7,45 +7,42 @@
 
   interface CalendarChoiceFieldProps {
     name: string;
-    calendarId: string;
+    data: any;
     calendars: Calendar[];
     placeholder?: string;
     className?: string;
   }
 
-  let { calendarId, calendars, className }: CalendarChoiceFieldProps = $props();
-
-  let selectedCalendar: Calendar | undefined = $derived(calendars.find((c) => c.id === calendarId));
+  let { name, data, calendars, className }: CalendarChoiceFieldProps = $props();
 
   let open = $state(false);
-  let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
-  let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
+  let dropdownRef = $state<HTMLDivElement>();
+  let triggerButtonRef = $state<HTMLButtonElement>();
+
+  let selectedCalendar = $derived.by(() => calendars.find((c) => c.id === $data[name]));
 
   function selectChoice(choice: Calendar) {
-    if (calendarId === choice.id) {
+    if ($data[name] === choice.id) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
 
-    calendarId = choice.id;
-
+    $data[name] = choice.id;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
 
-  function handleClickOutside(event: MouseEvent): void {
+  function handleClickOutside(event: MouseEvent) {
     if (!open) return;
 
-    if (dropdownRef && triggerButtonRef) {
-      const target = event.target as Node;
-      if (!dropdownRef.contains(target) && !triggerButtonRef.contains(target)) {
-        open = false;
-      }
+    const target = event.target as Node;
+    if (!dropdownRef?.contains(target) && !triggerButtonRef?.contains(target)) {
+      open = false;
     }
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
+  function handleKeydown(event: KeyboardEvent) {
     if (event.key === "Escape" && open) {
       event.preventDefault();
       open = false;
@@ -71,7 +68,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{selectedCalendar?.name}</span>
+    <span>{$data[name] ? selectedCalendar?.name : "Select a calendar"}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -87,11 +84,11 @@
           <button
             type="button"
             class="flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors
-              {calendarId === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}
+              {$data[name] === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}
               hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
             onclick={() => selectChoice(choice)}
             role="option"
-            aria-selected={calendarId === choice.id}
+            aria-selected={$data[name] === choice.id}
             tabindex="0"
             onkeydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -103,14 +100,15 @@
                 triggerButtonRef?.focus();
               }
             }}
-            disabled={calendarId === choice.id}
+            disabled={$data[name] === choice.id}
           >
             {choice.name}
-            {#if calendarId === choice.id}
+            {#if $data[name] === choice.id}
               <Check size="16" />
             {/if}
           </button>
         {/each}
+
         {#if calendars.length === 0}
           <div class="px-3 py-2 text-sm text-base-content/60">No calendars available.</div>
         {/if}

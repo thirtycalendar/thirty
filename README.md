@@ -1,5 +1,10 @@
 # calen
 
+## Ids
+
+- Work - 7f6465d5-18ed-4143-9daa-21982dfed9e0
+- Sithu Khant - 95500107-b06e-4c5f-9afb-a03acaeeccb5
+
 ## Design concepts
 
 - Calendar designs
@@ -10,6 +15,7 @@
 
 - Sat Jun 21, 2025
   - (6.21.01) - Time field input deleted value working.
+  - (6.21.02) - Calendar choice field updated.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.
