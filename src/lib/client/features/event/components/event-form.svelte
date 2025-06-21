@@ -64,6 +64,21 @@
     });
   });
 
+  $effect(() => {
+    if ($calendarList) {
+      const cal = $calendarList.find((c) => c.id === $eventData.calendarId);
+      if (cal) {
+        if ($eventData.colorId !== cal.colorId) {
+          $eventData.colorId = cal.colorId;
+        }
+
+        if ($eventData.timezone !== cal.timezone) {
+          $eventData.timezone = cal.timezone;
+        }
+      }
+    }
+  });
+
   let defaultValues: EventForm = {
     calendarId: $eventData.calendarId,
     externalId: null,

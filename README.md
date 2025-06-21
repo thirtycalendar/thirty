@@ -17,6 +17,7 @@
   - (6.21.01) - Time field input deleted value working.
   - (6.21.02) - Calendar choice field updated.
   - (6.21.03) - Showed selected color as checked.
+  - (6.21.04) - Update the colorId automatically after the updated calendar choice.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.
