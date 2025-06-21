@@ -55,7 +55,7 @@ export async function syncGoogleEvents(userId: string) {
   const colorMap = colorsRes.data.event ?? {};
 
   const userCalendars = await db
-    .select({ id: calendars.id, externalId: calendars.externalId })
+    .select({ id: calendars.id, externalId: calendars.externalId, colorId: calendars.colorId })
     .from(calendars)
     .where(and(eq(calendars.userId, userId), eq(calendars.source, "google")));
 
@@ -91,7 +91,7 @@ export async function syncGoogleEvents(userId: string) {
         externalId: gEvent.id,
         source: "google",
         name: gEvent.summary ?? "(No title)",
-        colorId: getNearestColorIdFromHexCode(colorHex),
+        colorId: gEvent.colorId ? getNearestColorIdFromHexCode(colorHex) : cal.colorId,
         description: gEvent.description ?? null,
         location: gEvent.location ?? null,
         start: gEvent.start?.dateTime ?? gEvent.start?.date ?? "",

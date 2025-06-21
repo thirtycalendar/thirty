@@ -26,6 +26,7 @@
   - (6.21.10) - Added sync page.
   - (6.21.11) - Synced all the calendar and events from Google. But not fully working.
   - (6.21.12) - Synced all the events and calendars from Google.
+  - (6.21.13) - Show confirmation message before syncing is finished.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.

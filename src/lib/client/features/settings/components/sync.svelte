@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
+  import { beforeNavigate } from "$app/navigation";
+
   import { GoogleCalendarIcon } from "$lib/client/components";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -18,15 +21,38 @@
   function syncGoogleCalendar() {
     googleMutate();
   }
+
+  const unsavedChangesMessage =
+    "Syncing is in progress. Leaving this page will stop it. Are you sure?";
+
+  beforeNavigate(({ cancel }) => {
+    if ($isPending && !window.confirm(unsavedChangesMessage)) {
+      cancel();
+    }
+  });
+
+  $effect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    if (browser && $isPending) {
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }
+  });
 </script>
 
 <div class="space-y-5">
-  <!-- Google -->
   <div class="space-y-2">
     <p class="font-bold">Google</p>
 
     <button class="btn btn-primary" onclick={syncGoogleCalendar} disabled={$isPending}>
-      <GoogleCalendarIcon size={16} /> {$isPending ? "syncing..." : "Google Calendar"}</button
-    >
+      <GoogleCalendarIcon size={16} />
+      {$isPending ? "Syncing..." : "Google Calendar"}
+    </button>
   </div>
 </div>
