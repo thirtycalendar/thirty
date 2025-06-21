@@ -29,6 +29,7 @@
   - (6.21.13) - Show confirmation message before syncing is finished.
   - (6.21.14) - Toast component.
   - (6.21.15) - Improved google syncing time.
+  - (6.21.16) - Fixed month calendar component.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.

@@ -3,6 +3,7 @@
 
   import {
     addDays,
+    differenceInCalendarWeeks,
     endOfDay,
     endOfMonth,
     endOfWeek,
@@ -26,17 +27,20 @@
     events: Event[];
   }
 
-  let { events }: MonthCalendarProps = $props();
+  let { events = [] }: MonthCalendarProps = $props();
 
   const MAX_EVENTS_PER_DAY = 4;
 
-  const days = derived(currentDate, ($currentDate) => {
+  const rowsCount = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate));
     const end = endOfWeek(endOfMonth($currentDate));
-    return Array.from(
-      { length: Math.ceil((end.getTime() - start.getTime()) / 86400000) + 1 },
-      (_, i) => addDays(start, i)
-    );
+    return differenceInCalendarWeeks(end, start) + 1;
+  });
+
+  const days = derived([currentDate, rowsCount], ([$currentDate, $rowsCount]) => {
+    const start = startOfWeek(startOfMonth($currentDate));
+    const totalDays = $rowsCount * 7;
+    return Array.from({ length: totalDays }, (_, i) => addDays(start, i));
   });
 
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
@@ -45,30 +49,27 @@
     const start = $days[0];
     const end = endOfDay($days[$days.length - 1]);
 
-    const tempMap: Record<string, { normals: Event[] }> = {};
+    const seen = new Set<string>();
+    const map: Record<string, Event[]> = {};
 
     for (const event of events) {
+      if (!event?.id || seen.has(event.id)) continue;
+      seen.add(event.id);
+
       const isVisible =
         !(event.calendarId in $checkedCalendars) || $checkedCalendars[event.calendarId];
       if (!isVisible) continue;
 
       const startDate = parseISO(event.start);
-      if (isWithinInterval(startDate, { start, end })) {
-        const key = getDayString(startDate);
-        if (!tempMap[key]) tempMap[key] = { normals: [] };
+      if (!isWithinInterval(startDate, { start, end })) continue;
 
-        tempMap[key].normals.push({
-          ...event
-        });
-      }
+      const key = format(startDate, "yyyy-MM-dd");
+      if (!map[key]) map[key] = [];
+
+      map[key].push(event);
     }
 
-    const finalMap: Record<string, Event[]> = {};
-    for (const key in tempMap) {
-      finalMap[key] = [...tempMap[key].normals.reverse()];
-    }
-
-    return finalMap;
+    return map;
   });
 
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -83,7 +84,10 @@
     {/each}
   </div>
 
-  <div class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full">
+  <div
+    class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full"
+    style="grid-template-rows: repeat({$rowsCount}, minmax(0, 1fr))"
+  >
     {#each $days as day}
       {@const key = getDayString(day)}
       {@const dayEvents = $eventsByDay[key] || []}
@@ -102,7 +106,7 @@
             class:rounded={isToday(day)}
             class:p-[1px]={isToday(day)}
             class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
-            class:text-base={!isSameMonth(day, $currentDate)}
+            class:opacity-40={!isSameMonth(day, $currentDate)}
           >
             {format(day, "d")}
           </span>
