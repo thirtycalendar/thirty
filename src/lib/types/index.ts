@@ -50,6 +50,7 @@ export interface Event {
   status: EventStatus;
   recurrence: string[] | null;
 
+  notifyInMin: number;
   notificationSent: boolean;
 
   createdAt: string;
