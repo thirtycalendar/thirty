@@ -23,6 +23,7 @@
   - (6.21.07) - sync google calendars and sync google events.
   - (6.21.08) - Improved sync google calendars and events codes.
   - (6.21.09) - Sync api route. Only sync specific events and calendars.
+  - (6.21.10) - Added sync page.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.
