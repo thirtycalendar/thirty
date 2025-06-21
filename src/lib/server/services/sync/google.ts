@@ -52,17 +52,12 @@ export async function syncGoogleEvents(userId: string) {
   const { calendar } = await getGoogleClients(userId);
 
   const colorsRes = await calendar.colors.get();
-  const colorMap = colorsRes.data.calendar ?? {};
-
-  const res = await calendar.events.list({ calendarId: "primary", maxResults: 2500 });
-  const googleEvents = res.data.items ?? [];
+  const colorMap = colorsRes.data.event ?? {};
 
   const userCalendars = await db
-    .select({ id: calendars.id, externalId: calendars.externalId, colorId: calendars.colorId })
+    .select({ id: calendars.id, externalId: calendars.externalId })
     .from(calendars)
     .where(and(eq(calendars.userId, userId), eq(calendars.source, "google")));
-
-  const calendarIdMap = new Map(userCalendars.map((c) => [c.externalId, c.id]));
 
   const existing = await db
     .select({ externalId: events.externalId })
@@ -71,37 +66,42 @@ export async function syncGoogleEvents(userId: string) {
 
   const existingIds = new Set(existing.map((e) => e.externalId));
 
-  for (const gEvent of googleEvents) {
-    if (!gEvent.id || existingIds.has(gEvent.id)) continue;
-    if (gEvent.eventType === "birthday") continue;
+  for (const cal of userCalendars) {
+    if (!cal.externalId) continue;
 
-    const localCalendarId = calendarIdMap.get(
-      gEvent.organizer?.id || gEvent.creator?.id || "primary"
-    );
-    if (!localCalendarId) continue;
+    const res = await calendar.events.list({
+      calendarId: cal.externalId,
+      maxResults: 2500,
+      singleEvents: true,
+      orderBy: "startTime"
+    });
 
-    const googleColorId = gEvent.colorId;
-    const fallbackHex = "#9a9a9a";
+    const googleEvents = res.data.items ?? [];
 
-    const colorHex = googleColorId
-      ? (colorMap[googleColorId]?.background ?? fallbackHex)
-      : fallbackHex;
+    for (const gEvent of googleEvents) {
+      if (!gEvent.id || existingIds.has(gEvent.id)) continue;
+      if (gEvent.eventType === "birthday") continue;
 
-    const data: EventForm = {
-      calendarId: localCalendarId,
-      externalId: gEvent.id,
-      source: "google",
-      name: gEvent.summary ?? "(No title)",
-      colorId: getNearestColorIdFromHexCode(colorHex),
-      description: gEvent.description ?? null,
-      location: gEvent.location ?? null,
-      start: gEvent.start?.dateTime ?? gEvent.start?.date ?? "",
-      end: gEvent.end?.dateTime ?? gEvent.end?.date ?? "",
-      timezone: gEvent.start?.timeZone ?? "UTC",
-      allDay: !!gEvent.start?.date,
-      status: gEvent.status === "cancelled" ? "cancelled" : "confirmed"
-    };
+      const colorHex = gEvent.colorId
+        ? (colorMap[gEvent.colorId]?.background ?? "#9a9a9a")
+        : "#9a9a9a";
 
-    await createEvent(userId, data);
+      const data: EventForm = {
+        calendarId: cal.id,
+        externalId: gEvent.id,
+        source: "google",
+        name: gEvent.summary ?? "(No title)",
+        colorId: getNearestColorIdFromHexCode(colorHex),
+        description: gEvent.description ?? null,
+        location: gEvent.location ?? null,
+        start: gEvent.start?.dateTime ?? gEvent.start?.date ?? "",
+        end: gEvent.end?.dateTime ?? gEvent.end?.date ?? "",
+        timezone: gEvent.start?.timeZone ?? "UTC",
+        allDay: !!gEvent.start?.date,
+        status: gEvent.status === "cancelled" ? "cancelled" : "confirmed"
+      };
+
+      await createEvent(userId, data);
+    }
   }
 }
