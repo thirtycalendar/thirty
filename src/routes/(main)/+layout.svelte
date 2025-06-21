@@ -4,7 +4,7 @@
 
   import { CalSidebar } from "$lib/client/features/calendar/components";
   import { SettingsSidebar } from "$lib/client/features/settings/components";
-  import { Sidebar, SidebarMenu } from "$lib/client/components";
+  import { Sidebar, SidebarMenu, Toast } from "$lib/client/components";
   import { mainSidebarId, sidebars } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
 
@@ -23,6 +23,8 @@
 </script>
 
 <div class="max-h-screen overflow-y-scroll">
+  <Toast />
+
   <div class="relative h-screen overflow-hidden">
     <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0 absolute z-200" mainSidebar>
       <SidebarMenu />

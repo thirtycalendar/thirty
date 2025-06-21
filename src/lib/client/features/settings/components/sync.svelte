@@ -3,6 +3,7 @@
   import { beforeNavigate } from "$app/navigation";
 
   import { GoogleCalendarIcon } from "$lib/client/components";
+  import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
@@ -12,7 +13,19 @@
 
       if (res.ok) {
         const { message } = await res.json();
-        console.log("Message:", message);
+        return { message };
+      }
+
+      throw new Error("Failed to sync with Google Calendar");
+    },
+    onSuccess: (data) => {
+      showToast(data.message);
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        showToast(error.message, true);
+      } else {
+        showToast("An unknown error occurred", true);
       }
     },
     queryKeys: ["cal-list", "event-list"]

@@ -33,16 +33,16 @@
   --color-neutral: oklch(25% 0 0);
   --color-neutral-content: oklch(95% 0 0);
 
-  --color-info: oklch(75% 0 0);
+  --color-info: oklch(75% 0.1 250);
   --color-info-content: oklch(15% 0 0);
 
-  --color-success: oklch(70% 0 0);
+  --color-success: oklch(70% 0.15 145);
   --color-success-content: oklch(15% 0 0);
 
-  --color-warning: oklch(60% 0 0);
+  --color-warning: oklch(75% 0.16 85);
   --color-warning-content: oklch(15% 0 0);
 
-  --color-error: oklch(50% 0 0);
+  --color-error: oklch(65% 0.18 27);
   --color-error-content: oklch(95% 0 0);
 
   --radius-selector: 0.5rem;
@@ -81,16 +81,16 @@
   --color-neutral: oklch(85% 0 0); /* subtle border lines */
   --color-neutral-content: oklch(12% 0 0);
 
-  --color-info: oklch(25% 0 0); /* info in dark gray */
+  --color-info: oklch(55% 0.12 250);
   --color-info-content: oklch(98% 0 0);
 
-  --color-success: oklch(30% 0 0); /* success in dark gray */
+  --color-success: oklch(60% 0.14 145);
   --color-success-content: oklch(98% 0 0);
 
-  --color-warning: oklch(40% 0 0); /* warning in mid-dark */
-  --color-warning-content: oklch(98% 0 0);
+  --color-warning: oklch(70% 0.15 85);
+  --color-warning-content: oklch(12% 0 0);
 
-  --color-error: oklch(50% 0 0); /* error still mid-dark */
+  --color-error: oklch(60% 0.18 27);
   --color-error-content: oklch(98% 0 0);
 
   --radius-selector: 0.5rem;
