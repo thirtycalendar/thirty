@@ -44,23 +44,26 @@ function hexToRgb(hex: string): [number, number, number] {
   ];
 }
 
-export function getNearestColorHexCode(hexCode: string): string {
+function getNearestColor(hexCode: string) {
   const targetRgb = hexToRgb(hexCode);
 
-  let closestColor = colors[0];
-  let minDistance = Number.POSITIVE_INFINITY;
+  return colors.reduce(
+    (closest, color) => {
+      const [r1, g1, b1] = targetRgb;
+      const [r2, g2, b2] = hexToRgb(color.colorHexCode);
 
-  for (const color of colors) {
-    const [r1, g1, b1] = targetRgb;
-    const [r2, g2, b2] = hexToRgb(color.colorHexCode);
+      const distance = Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
 
-    const distance = Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+      return distance < closest.distance ? { color, distance } : closest;
+    },
+    { color: colors[0], distance: Number.POSITIVE_INFINITY }
+  ).color;
+}
 
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestColor = color;
-    }
-  }
+export function getNearestColorHexCode(hexCode: string): string {
+  return getNearestColor(hexCode).colorHexCode;
+}
 
-  return closestColor.colorHexCode;
+export function getNearestColorIdFromHexCode(hexCode: string): string {
+  return getNearestColor(hexCode).id;
 }

@@ -20,6 +20,7 @@
   - (6.21.04) - Update the colorId automatically after the updated calendar choice.
   - (6.21.05) - Updated event form component.
   - (6.21.06) - Updated query util functions.
+  - (6.21.07) - sync google calendars and sync google events.
 - Wed Jun 18, 2025
   - (6.18.01) - Updated form components.
   - (6.18.02) - Kinda working, just wired.
