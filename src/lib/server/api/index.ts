@@ -9,6 +9,7 @@ import type { Context } from "./context";
 import auth from "./routes/auth";
 import calendar from "./routes/calendar";
 import event from "./routes/event";
+import sync from "./routes/sync";
 import task from "./routes/task";
 
 const app = new Hono<Context>().basePath("/api");
@@ -19,7 +20,8 @@ const routes = app
   .route("/auth", auth)
   .route("/calendar", calendar)
   .route("/event", event)
-  .route("/task", task);
+  .route("/task", task)
+  .route("/sync", sync);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

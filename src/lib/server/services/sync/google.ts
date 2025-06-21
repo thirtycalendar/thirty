@@ -28,7 +28,10 @@ export async function syncGoogleCalendars(userId: string) {
   const colorMap = colorsRes.data.calendar ?? {};
 
   for (const gCal of list) {
-    if (!gCal.id || existingIds.has(gCal.id)) continue;
+    const isSystemCalendar = /holiday@|contacts@|birthday@/.test(gCal.id ?? "");
+    const isNotOwner = gCal.accessRole !== "owner";
+
+    if (!gCal.id || existingIds.has(gCal.id) || isSystemCalendar || isNotOwner) continue;
 
     const colorHex = colorMap[gCal.colorId as string]?.background ?? "#9a9a9a";
 
@@ -70,6 +73,7 @@ export async function syncGoogleEvents(userId: string) {
 
   for (const gEvent of googleEvents) {
     if (!gEvent.id || existingIds.has(gEvent.id)) continue;
+    if (gEvent.eventType === "birthday") continue;
 
     const localCalendarId = calendarIdMap.get(
       gEvent.organizer?.id || gEvent.creator?.id || "primary"
