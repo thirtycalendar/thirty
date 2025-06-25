@@ -236,7 +236,7 @@
               "py-1 rounded-md w-full transition-colors outline-none",
               selected ? "bg-base-300 font-semibold text-base-content" : "",
               !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
-              isToday(day) && !selected ? "text-primary font-medium" : "",
+              isToday(day) && !selected ? "font-medium" : "",
               isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))
                 ? "opacity-30 cursor-not-allowed"
                 : "hover:bg-base-200/60"

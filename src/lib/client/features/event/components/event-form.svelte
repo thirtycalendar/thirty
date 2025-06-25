@@ -86,7 +86,7 @@
       $formData.end = `${$event.endDate}T${$event.endTime}`;
       $formData.timezone = $event.timezone;
 
-      if (isNextDay) {
+      if (isNextDay && $event.endDate === format(now, "yyyy-MM-dd")) {
         $event.endDate = format(addDays(now, 1), "yyyy-MM-dd");
       }
     });
