@@ -1,7 +1,7 @@
 <script lang="ts">
   import { writable, type Writable } from "svelte/store";
 
-  import { AlignLeft, CalendarCheck2, Clock3, MapPin } from "@lucide/svelte";
+  import { AlignLeft, CalendarCheck2, ChevronRight, Clock3, MapPin } from "@lucide/svelte";
 
   import { addDays, addMinutes } from "date-fns";
   import { format } from "date-fns-tz";
@@ -34,6 +34,7 @@
 
   let isLocation = $state(false);
   let isDescription = $state(false);
+  let isMoreOptions = $state(false);
 
   const { data: calendars } = getCalendars();
   const now = new Date();
@@ -185,6 +186,7 @@
           />
         {:else}
           <button
+            type="button"
             class="p-1 cursor-pointer text-sm w-full text-left justify-start"
             onclick={() => (isLocation = true)}
           >
@@ -210,6 +212,7 @@
           />
         {:else}
           <button
+            type="button"
             class="p-1 cursor-pointer text-sm w-full text-left justify-start"
             onclick={() => (isDescription = true)}
           >
@@ -219,7 +222,21 @@
       </div>
     </div>
 
-    <TimezoneField name="timezone" data={eventData} className="w-full" />
+    <button
+      type="button"
+      class="flex gap-1 items-center cursor-pointer opacity-75 text-sm w-full my-3"
+      onclick={() => (isMoreOptions = !isMoreOptions)}
+    >
+      <ChevronRight
+        size="16"
+        class={`transition-transform duration-300 ${isMoreOptions && "rotate-90"}`}
+      />
+      <p>more options</p>
+    </button>
+
+    {#if isMoreOptions}
+      <TimezoneField name="timezone" data={eventData} className="w-full" />
+    {/if}
 
     <button type="submit" class="btn bg-base-200 font-bold w-full" disabled={$isSubmitting}>
       Save
