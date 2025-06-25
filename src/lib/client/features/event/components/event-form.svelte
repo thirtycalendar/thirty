@@ -105,10 +105,15 @@
     });
   });
 
+  let previousCalendarId = $state("");
+
   $effect(() => {
     if ($calendars) {
       const selectedCalendar = $calendars.find((c) => c.id === $eventData.calendarId);
-      if (selectedCalendar) {
+
+      if (selectedCalendar && previousCalendarId !== $eventData.calendarId) {
+        previousCalendarId = selectedCalendar.id;
+
         if ($eventData.colorId !== selectedCalendar.colorId) {
           $eventData.colorId = selectedCalendar.colorId;
         }
@@ -244,7 +249,7 @@
     </button>
 
     {#if isMoreOptions}
-      <div>
+      <div class="w-full">
         <label class="cursor-pointer w-full">
           <input
             name="allDay"
