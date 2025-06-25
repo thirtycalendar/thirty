@@ -5,6 +5,7 @@
     AlignLeft,
     CalendarCheck2,
     ChevronRight,
+    CircleCheck,
     Clock3,
     ClockFading,
     Globe,
@@ -23,9 +24,10 @@
     TimeField,
     TimezoneField
   } from "$lib/client/components";
+  import ChoiceField from "$lib/client/components/form/choice-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import type { Calendar, EventForm } from "$lib/types";
+  import { EventStatus, type Calendar, type EventForm } from "$lib/types";
 
   import { CalendarChoiceField } from "../../calendar/components";
   import { getCalendars } from "../../calendar/query";
@@ -262,6 +264,16 @@
 
           <span class="text-sm">All day</span>
         </label>
+      </div>
+
+      <div class="flex items-start gap-3">
+        <div class="pt-1.5 text-muted-foreground">
+          <CircleCheck size="20" strokeWidth="2.5" />
+        </div>
+
+        <div class="flex gap-2 flex-1">
+          <ChoiceField name="status" choiceList={EventStatus} {handleInput} {formData} />
+        </div>
       </div>
 
       <div class="flex items-start gap-3">

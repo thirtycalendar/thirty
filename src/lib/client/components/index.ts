@@ -1,3 +1,4 @@
+export { default as ChoiceField } from "./form/choice-field.svelte";
 export { default as ColorChoiceField } from "./form/color-choice-field.svelte";
 export { default as DateField } from "./form/date-field.svelte";
 export { default as InputField } from "./form/input-field.svelte";

@@ -22,6 +22,7 @@
   - (6.25.06) - Added more options show toggle button.
   - (6.25.07) - Added more day option checkbox.
   - (6.25.08) - Bug fixed.
+  - (6.25.09) - Event form UI is kinda finished.
 - Sat Jun 21, 2025
   - (6.21.01) - Time field input deleted value working.
   - (6.21.02) - Calendar choice field updated.
