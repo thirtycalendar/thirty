@@ -1,7 +1,16 @@
 <script lang="ts">
   import { writable, type Writable } from "svelte/store";
 
-  import { AlignLeft, CalendarCheck2, ChevronRight, Clock3, MapPin } from "@lucide/svelte";
+  import {
+    AlignLeft,
+    CalendarCheck2,
+    ChevronRight,
+    Clock3,
+    ClockFading,
+    Globe,
+    Hourglass,
+    MapPin
+  } from "@lucide/svelte";
 
   import { addDays, addMinutes } from "date-fns";
   import { format } from "date-fns-tz";
@@ -187,7 +196,7 @@
         {:else}
           <button
             type="button"
-            class="p-1 cursor-pointer text-sm w-full text-left justify-start"
+            class="p-1.5 cursor-pointer text-sm w-full text-left justify-start"
             onclick={() => (isLocation = true)}
           >
             Add <span class="hover:underline">location</span>
@@ -213,7 +222,7 @@
         {:else}
           <button
             type="button"
-            class="p-1 cursor-pointer text-sm w-full text-left justify-start"
+            class="p-1.5 cursor-pointer text-sm w-full text-left justify-start"
             onclick={() => (isDescription = true)}
           >
             Add <span class="hover:underline">description</span>
@@ -224,7 +233,7 @@
 
     <button
       type="button"
-      class="flex gap-1 items-center cursor-pointer opacity-75 text-sm w-full my-3"
+      class="flex gap-2 items-center cursor-pointer opacity-75 text-sm w-full my-3"
       onclick={() => (isMoreOptions = !isMoreOptions)}
     >
       <ChevronRight
@@ -235,7 +244,30 @@
     </button>
 
     {#if isMoreOptions}
-      <TimezoneField name="timezone" data={eventData} className="w-full" />
+      <div>
+        <label class="cursor-pointer w-full">
+          <input
+            name="allDay"
+            type="checkbox"
+            class="checkbox checkbox-sm mr-2"
+            oninput={handleInput}
+            checked={$formData.allDay}
+            disabled={isNextDay}
+          />
+
+          <span class="text-sm">All day</span>
+        </label>
+      </div>
+
+      <div class="flex items-start gap-3">
+        <div class="pt-1.5 text-muted-foreground">
+          <Globe size="20" strokeWidth="2.5" />
+        </div>
+
+        <div class="flex gap-2 flex-1">
+          <TimezoneField name="timezone" data={eventData} />
+        </div>
+      </div>
     {/if}
 
     <button type="submit" class="btn bg-base-200 font-bold w-full" disabled={$isSubmitting}>

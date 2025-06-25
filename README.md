@@ -20,6 +20,7 @@
   - (6.25.04) - End date bug fixed.
   - (6.25.05) - Made location and description on click input showing.
   - (6.25.06) - Added more options show toggle button.
+  - (6.25.07) - Added more day option checkbox.
 - Sat Jun 21, 2025
   - (6.21.01) - Time field input deleted value working.
   - (6.21.02) - Calendar choice field updated.
