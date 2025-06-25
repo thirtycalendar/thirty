@@ -19,7 +19,7 @@
   import type { Calendar, EventForm } from "$lib/types";
 
   import { CalendarChoiceField } from "../../calendar/components";
-  import { getCalList } from "../../calendar/query";
+  import { getCalendars } from "../../calendar/query";
   import { eventSchema } from "../schema";
 
   interface EventDataType {
@@ -32,7 +32,7 @@
     timezone: string;
   }
 
-  const { calendarList } = getCalList();
+  const { data: calendars } = getCalendars();
   const now = new Date();
 
   const eventData: Writable<EventDataType> = writable({
@@ -69,8 +69,8 @@
   });
 
   $effect(() => {
-    if ($calendarList) {
-      const primaryCalendar = $calendarList.find((cal) => cal.isPrimary);
+    if ($calendars) {
+      const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
         $eventData.calendarId = primaryCalendar.id;
@@ -93,8 +93,8 @@
   });
 
   $effect(() => {
-    if ($calendarList) {
-      const selectedCalendar = $calendarList.find((c) => c.id === $eventData.calendarId);
+    if ($calendars) {
+      const selectedCalendar = $calendars.find((c) => c.id === $eventData.calendarId);
       if (selectedCalendar) {
         if ($eventData.colorId !== selectedCalendar.colorId) {
           $eventData.colorId = selectedCalendar.colorId;
@@ -112,7 +112,7 @@
   }
 </script>
 
-{#if $calendarList}
+{#if $calendars}
   <form onsubmit={handleSubmit(onSubmit)} class="space-y-2">
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
@@ -158,7 +158,7 @@
         <CalendarChoiceField
           name="calendarId"
           data={eventData}
-          calendars={$calendarList}
+          calendars={$calendars}
           placeholder="Select Calendar"
           className="flex-[3]"
         />

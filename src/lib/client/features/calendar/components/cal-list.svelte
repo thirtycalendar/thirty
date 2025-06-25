@@ -9,9 +9,9 @@
   import type { Calendar } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
-  import { getCalList } from "../query";
+  import { getCalendars } from "../query";
 
-  const { calendarList } = getCalList();
+  const { data: calendars } = getCalendars();
 
   const getToggledStates = (): Record<string, boolean> => {
     if (!browser) return {};
@@ -46,14 +46,14 @@
   };
 </script>
 
-{#if !$calendarList}
+{#if !$calendars}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
     </div>
   </div>
 {:else}
-  {@render CalendarList("My Calendars", $calendarList)}
+  {@render CalendarList("My Calendars", $calendars)}
 {/if}
 
 {#snippet CalendarList(title: string, cal: Calendar[])}
@@ -80,7 +80,7 @@
         </div>
       </div>
 
-      {#if $calendarList && isExpanded(title)}
+      {#if $calendars && isExpanded(title)}
         <div class="my-1" transition:slide>
           {#each cal as { id, name, colorId }}
             <label
