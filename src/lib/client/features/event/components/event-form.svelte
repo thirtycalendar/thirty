@@ -1,7 +1,7 @@
 <script lang="ts">
   import { writable, type Writable } from "svelte/store";
 
-  import { AlignLeft, CalendarCheck2, Clock3 } from "@lucide/svelte";
+  import { AlignLeft, CalendarCheck2, Clock3, MapPin } from "@lucide/svelte";
 
   import { addDays, addMinutes } from "date-fns";
   import { format } from "date-fns-tz";
@@ -31,6 +31,9 @@
     endTime: string;
     timezone: string;
   }
+
+  let isLocation = $state(false);
+  let isDescription = $state(false);
 
   const { data: calendars } = getCalendars();
   const now = new Date();
@@ -168,17 +171,51 @@
 
     <div class="flex items-start gap-3">
       <div class="pt-1.5 text-muted-foreground">
+        <MapPin size="20" strokeWidth="2.5" />
+      </div>
+
+      <div class="flex-1">
+        {#if isLocation}
+          <InputField
+            name="location"
+            placeholder="e.g., London, England"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        {:else}
+          <button
+            class="p-1 cursor-pointer text-sm w-full text-left justify-start"
+            onclick={() => (isLocation = true)}
+          >
+            Add <span class="hover:underline">location</span>
+          </button>
+        {/if}
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="pt-1.5 text-muted-foreground">
         <AlignLeft size="20" strokeWidth="2.5" />
       </div>
 
       <div class="flex-1">
-        <TextareaField
-          name="description"
-          placeholder="Description"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
+        {#if isDescription}
+          <TextareaField
+            name="description"
+            placeholder="Description"
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
+        {:else}
+          <button
+            class="p-1 cursor-pointer text-sm w-full text-left justify-start"
+            onclick={() => (isDescription = true)}
+          >
+            Add <span class="hover:underline">description</span>
+          </button>
+        {/if}
       </div>
     </div>
 

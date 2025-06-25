@@ -18,6 +18,7 @@
   - (6.25.02) - Signout user if it is invalid google token.
   - (6.25.03) - Refetch both calendar and events after syncing.
   - (6.25.04) - End date bug fixed.
+  - (6.25.05) - Made location and description on click input showing.
 - Sat Jun 21, 2025
   - (6.21.01) - Time field input deleted value working.
   - (6.21.02) - Calendar choice field updated.
