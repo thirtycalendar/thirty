@@ -8,6 +8,7 @@
   import { authClient, client } from "$lib/client/utils/rpc";
 
   import { getCalendars } from "../../calendar/query";
+  import { getEvents } from "../../event/query";
 
   let { mutate: googleMutate, isPending } = createMutation({
     mutationFn: async () => {
@@ -24,6 +25,7 @@
       showToast(data.message);
 
       getCalendars().refetch();
+      getEvents().refetch();
     },
     onError: async () => {
       await authClient.signOut();
