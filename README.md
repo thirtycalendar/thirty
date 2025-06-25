@@ -15,6 +15,7 @@
 
 - Wed Jun 25, 2025
   - (6.25.01) - Updated query utils for better improvement.
+  - (6.25.02) - Signout user if it is invalid google token.
 - Sat Jun 21, 2025
   - (6.21.01) - Time field input deleted value working.
   - (6.21.02) - Calendar choice field updated.

@@ -23,7 +23,7 @@ export const auth = betterAuth({
   },
   databaseHooks: {
     account: {
-      create: {
+      update: {
         after: async (session) => {
           const { userId, accessToken, refreshToken, accessTokenExpiresAt, idToken } = session;
 

@@ -1,11 +1,13 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { beforeNavigate } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
 
   import { GoogleCalendarIcon } from "$lib/client/components";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
-  import { client } from "$lib/client/utils/rpc";
+  import { authClient, client } from "$lib/client/utils/rpc";
+
+  import { getCalendars } from "../../calendar/query";
 
   let { mutate: googleMutate, isPending } = createMutation({
     mutationFn: async () => {
@@ -20,13 +22,12 @@
     },
     onSuccess: (data) => {
       showToast(data.message);
+
+      getCalendars().refetch();
     },
-    onError: (error) => {
-      if (error instanceof Error) {
-        showToast(error.message, true);
-      } else {
-        showToast("An unknown error occurred", true);
-      }
+    onError: async () => {
+      await authClient.signOut();
+      goto("/auth");
     },
     queryKeys: ["cal-list", "event-list"]
   });
