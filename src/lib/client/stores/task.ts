@@ -1,7 +1,7 @@
 import { toggleModal } from "$lib/client/components/utils";
 
-export const taskModalId = "task-modal-id";
+export const taskCreateModalId = "task-modal-id";
 
-export function toggleTaskModal() {
-  toggleModal(taskModalId);
+export function toggleTaskCreateModal() {
+  toggleModal(taskCreateModalId);
 }

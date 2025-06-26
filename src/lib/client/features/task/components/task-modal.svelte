@@ -2,7 +2,7 @@
   import { CreateTask } from ".";
 
   import { Modal } from "$lib/client/components";
-  import { taskModalId } from "$lib/client/stores/task";
+  import { taskCreateModalId } from "$lib/client/stores/task";
 </script>
 
-<Modal modalId={taskModalId}><CreateTask /></Modal>
+<Modal modalId={taskCreateModalId}><CreateTask /></Modal>

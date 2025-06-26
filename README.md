@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Thu Jun 26, 2025
+  - (6.26.01) - Updated event and task stores.
 - Wed Jun 25, 2025
   - (6.25.01) - Updated query utils for better improvement.
   - (6.25.02) - Signout user if it is invalid google token.

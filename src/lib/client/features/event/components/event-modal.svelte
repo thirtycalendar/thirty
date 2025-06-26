@@ -2,7 +2,7 @@
   import { CreateEvent } from ".";
 
   import { Modal } from "$lib/client/components";
-  import { eventModalId } from "$lib/client/stores/event";
+  import { eventCreateModalId } from "$lib/client/stores/event";
 </script>
 
-<Modal modalId={eventModalId} title="Event"><CreateEvent /></Modal>
+<Modal modalId={eventCreateModalId} title="Event"><CreateEvent /></Modal>
