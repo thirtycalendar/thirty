@@ -49,7 +49,11 @@
     "^\\.\\./\\.\\./\\.\\./",
     "^\\.\\./\\.\\./",
     "^\\.\\./",
-    "^\\./"
+    "^\\./",
+
+    "",
+
+    "^\\."
   ],
   "importOrderParserPlugins": ["typescript", "svelte", "decorators-legacy"],
   "overrides": [

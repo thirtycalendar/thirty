@@ -2,10 +2,16 @@
   import { differenceInMinutes, startOfHour } from "date-fns";
   import { toZonedTime } from "date-fns-tz";
 
+  import { Modal } from "$lib/client/components";
+  import { toggleModal } from "$lib/client/components/utils";
+  import { toggleEventModal } from "$lib/client/stores/event";
+
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getColorIdFromCalendarId } from "../../calendar/utils";
+
+  import { EventDetails, EventModal } from ".";
 
   interface EventBlockProps {
     event: Event;
@@ -48,12 +54,17 @@
     const suffix = d.getHours() < 12 ? "am" : "pm";
     return m ? `${h}:${m.toString().padStart(2, "0")} ${suffix}` : `${h} ${suffix}`;
   }
+
+  function onclick() {
+    toggleModal(event.id);
+  }
 </script>
 
-<div
+<button
   class="absolute left-1 right-1 z-10 text-xs text-white cursor-pointer select-none opacity-90 overflow-hidden rounded-md flex items-start gap-1"
   style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}; pointer-events: auto;`}
   title={event.name}
+  {onclick}
 >
   <!-- Color bar -->
   <div
@@ -62,7 +73,7 @@
   ></div>
 
   <div
-    class="text-primary w-full"
+    class="text-primary w-full text-left"
     style={`background-color: ${getColorHexCodeFromId(event.colorId)};`}
   >
     {#if heightPx < 28}
@@ -84,4 +95,6 @@
       </div>
     {/if}
   </div>
-</div>
+</button>
+
+<Modal modalId={event.id} title="Event"><EventDetails {event} /></Modal>

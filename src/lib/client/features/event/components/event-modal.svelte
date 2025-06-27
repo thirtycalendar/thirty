@@ -1,8 +1,16 @@
 <script lang="ts">
-  import { CreateEvent } from ".";
-
   import { Modal } from "$lib/client/components";
-  import { eventCreateModalId } from "$lib/client/stores/event";
+  import { eventModalId } from "$lib/client/stores/event";
+
+  import type { Event } from "$lib/types";
+
+  import { EventDetails } from ".";
+
+  interface EventModalProps {
+    event: Event;
+  }
+
+  let { event }: EventModalProps = $props();
 </script>
 
-<Modal modalId={eventCreateModalId} title="Event"><CreateEvent /></Modal>
+<Modal modalId={eventModalId} title="Event"><EventDetails {event} /></Modal>
