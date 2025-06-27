@@ -123,14 +123,11 @@
     </div>
   </div>
 
-  <div
-    bind:this={scrollContainer}
-    class="flex-1 overflow-y-auto bg-base-100 relative rounded-2xl text-xs"
-  >
+  <div bind:this={scrollContainer} class="flex-1 overflow-y-auto bg-base-100 relative rounded-2xl">
     <div class="grid grid-cols-[50px_1fr]">
       {#each hours as hour}
         <div
-          class="h-15 flex justify-center items-center select-none leading-none text-primary-content/70 border-r border-base-200"
+          class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
         >
           {format(new Date().setHours(hour, 0, 0, 0), "h a")}
         </div>

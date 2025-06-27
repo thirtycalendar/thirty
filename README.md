@@ -15,6 +15,7 @@
 
 - Fri Jun 27, 2025
   - (6.27.01) - Committed for safety.
+  - (6.27.02) - Fixed font size bug.
 - Thu Jun 26, 2025
   - (6.26.01) - Updated event and task stores.
 - Wed Jun 25, 2025
