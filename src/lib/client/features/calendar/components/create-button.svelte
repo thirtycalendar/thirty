@@ -1,8 +1,12 @@
 <script lang="ts">
   import { Plus } from "@lucide/svelte";
 
-  import { toggleEventCreateModal } from "$lib/client/stores/event";
-  import { toggleTaskCreateModal } from "$lib/client/stores/task";
+  import { Modal } from "$lib/client/components";
+  import { toggleModal } from "$lib/client/components/utils";
+  import { eventCreateModalId } from "$lib/client/stores/event";
+  import { taskCreateModalId } from "$lib/client/stores/task";
+
+  import { CreateEvent } from "../../event/components";
 </script>
 
 <div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">
@@ -15,7 +19,7 @@
     <li>
       <button
         onclick={() => {
-          toggleEventCreateModal();
+          toggleModal(eventCreateModalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >
@@ -25,7 +29,7 @@
     <li>
       <button
         onclick={() => {
-          toggleTaskCreateModal();
+          toggleModal(taskCreateModalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >
@@ -45,7 +49,7 @@
     <li>
       <button
         onclick={() => {
-          toggleEventCreateModal();
+          toggleModal(eventCreateModalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >
@@ -55,7 +59,7 @@
     <li>
       <button
         onclick={() => {
-          toggleTaskCreateModal();
+          toggleModal(taskCreateModalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >
@@ -64,3 +68,5 @@
     </li>
   </ul>
 </div>
+
+<Modal modalId={eventCreateModalId} title="Event"><CreateEvent /></Modal>

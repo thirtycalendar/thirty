@@ -1,17 +1,12 @@
 <script lang="ts">
   import { calView } from "$lib/client/stores/cal-view";
 
-  import { EventCreateModal } from "../../event/components";
   import { getEvents } from "../../event/query";
-  import { TaskModal } from "../../task/components";
-  
+
   import { DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
   const { data: events } = getEvents();
 </script>
-
-<EventCreateModal />
-<TaskModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}
