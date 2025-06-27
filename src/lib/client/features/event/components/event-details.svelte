@@ -5,6 +5,7 @@
   import { formatInTimeZone } from "date-fns-tz";
 
   import type { Event } from "$lib/types";
+  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getNameFromCalendarId } from "../../calendar/utils";
 
@@ -51,8 +52,14 @@
     <div class="pt-0.5 text-muted-foreground">
       <CalendarCheck2 size="20" strokeWidth="2.5" />
     </div>
-    <div class="flex-1 capitalize">
-      Calendar: {getNameFromCalendarId(event.calendarId)}
+
+    <div class="flex-1 flex items-center gap-2 capitalize">
+      <span>Calendar:</span>
+      <div
+        class="w-5 aspect-square rounded-full"
+        style="background-color: {getColorHexCodeFromId(event.colorId)}"
+      ></div>
+      <span>{getNameFromCalendarId(event.calendarId)}</span>
     </div>
   </div>
 
