@@ -1,6 +1,13 @@
+import { onDestroy } from "svelte";
 import { writable } from "svelte/store";
 
-import { getCachedQuery, isQueryStale, registerQuery, setCachedQuery } from "./query-client";
+import {
+  getCachedQuery,
+  isQueryStale,
+  registerQuery,
+  setCachedQuery,
+  unregisterQuery
+} from "./query-client";
 
 // biome-ignore lint:
 type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
@@ -61,6 +68,11 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   }
 
   registerQuery(key, () => fetchData(true));
+
+  onDestroy(() => {
+    unregisterQuery(key, () => fetchData(true));
+  });
+
   fetchData();
 
   return { data, error, isPending, isSuccess, isError, refetch: () => fetchData(true) };

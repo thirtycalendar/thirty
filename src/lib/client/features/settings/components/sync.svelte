@@ -23,9 +23,6 @@
     },
     onSuccess: async (data) => {
       showToast(data.message);
-
-      await getCalendars().refetch();
-      await getEvents().refetch();
     },
     onError: async () => {
       await authClient.signOut();

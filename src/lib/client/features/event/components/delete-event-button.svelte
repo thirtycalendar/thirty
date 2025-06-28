@@ -6,8 +6,6 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { getEvents } from "../query";
-
   interface DeleteEventButtonProps {
     id: string;
   }
@@ -32,8 +30,6 @@
     onSuccess: async (data) => {
       toggleModal(id);
       showToast(data.message);
-
-      getEvents().refetch();
     },
     onError: (message: Error["message"]) => {
       showToast(message, true);

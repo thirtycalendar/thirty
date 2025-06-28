@@ -1,13 +1,22 @@
 type QueryKey = string;
 type RefetchFn = () => void;
 
-const queryRegistry = new Map<QueryKey, Set<RefetchFn>>();
 // biome-ignore lint:
-const queryCache = new Map<QueryKey, { data: any; updatedAt: number }>();
+const globalScope = globalThis as any;
+
+globalScope.__queryRegistry ??= new Map<QueryKey, Set<RefetchFn>>();
+// biome-ignore lint:
+globalScope.__queryCache ??= new Map<QueryKey, { data: any; updatedAt: number }>();
+
+const queryRegistry: Map<QueryKey, Set<RefetchFn>> = globalScope.__queryRegistry;
+// biome-ignore lint:
+const queryCache: Map<QueryKey, { data: any; updatedAt: number }> = globalScope.__queryCache;
 
 const defaultStaleTime = 1000 * 60;
 
 export function registerQuery(key: QueryKey, refetchFn: RefetchFn) {
+  console.log("Registering...:", key);
+
   if (!queryRegistry.has(key)) {
     queryRegistry.set(key, new Set());
   }
@@ -15,11 +24,18 @@ export function registerQuery(key: QueryKey, refetchFn: RefetchFn) {
 }
 
 export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
-  queryRegistry.get(key)?.delete(refetchFn);
+  console.log("Unregistering...:", key);
+
+  const set = queryRegistry.get(key);
+  if (!set) return;
+
+  set.delete(refetchFn);
+  if (set.size === 0) queryRegistry.delete(key);
 }
 
 export function refetchQueries(keys?: QueryKey[]) {
   if (!keys) return;
+  console.log("Refetching...:", keys);
 
   for (const key of keys) {
     const fns = queryRegistry.get(key);
