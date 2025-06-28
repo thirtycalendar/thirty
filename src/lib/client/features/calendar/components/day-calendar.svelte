@@ -139,9 +139,12 @@
         >
           {#if isToday($currentDate) && hour === 0}
             <div
-              class="z-100 absolute left-0 right-0 h-px bg-red-500"
-              style="top: {getLineOffset()}px"
-            ></div>
+              class="z-20 absolute left-0 right-0 flex items-center"
+              style={`top: ${getLineOffset()}px`}
+            >
+              <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>
+              <div class="h-[1px] bg-primary-content flex-1"></div>
+            </div>
           {/if}
 
           {#each $dayEvents as { event, start }}

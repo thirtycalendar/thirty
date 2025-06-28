@@ -114,8 +114,6 @@
     const minutes = now.getHours() * 60 + now.getMinutes();
     return (minutes / 60) * 60; // 60px = 1 hour
   };
-
-  const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -157,9 +155,12 @@
         >
           {#if isToday(day) && hour === 0}
             <div
-              class="z-20 absolute left-0 right-0 h-px bg-red-500"
+              class="z-20 absolute left-0 right-0 flex items-center"
               style={`top: ${getLineOffset()}px`}
-            ></div>
+            >
+              <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>
+              <div class="h-[1px] bg-primary-content flex-1"></div>
+            </div>
           {/if}
 
           {#each $weekEvents as { event, day: eventDay, start, end }}
