@@ -20,6 +20,7 @@
   - (6.28.04) - Improved query utils codes.
   - (6.28.05) - More updates to query utils.
   - (6.28.06) - Automatically the ui after events got updated.
+  - (6.28.07) - Separated current time indicator component.
 - Fri Jun 27, 2025
   - (6.27.01) - Committed for safety.
   - (6.27.02) - Fixed font size bug.

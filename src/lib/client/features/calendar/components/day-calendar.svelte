@@ -1,14 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount, tick } from "svelte";
-
-  import {
-    differenceInMinutes,
-    endOfDay,
-    format,
-    isToday,
-    isWithinInterval,
-    startOfDay
-  } from "date-fns";
+  import { endOfDay, format, isToday, isWithinInterval, startOfDay } from "date-fns";
   import { toZonedTime } from "date-fns-tz";
 
   import { currentDate } from "$lib/client/stores/change-date";
@@ -17,6 +8,8 @@
   import type { Event } from "$lib/types";
 
   import { EventBlock } from "../../event/components";
+
+  import { CurrentTimeIndicator } from ".";
 
   interface DayCalendarProps {
     events: Event[];
@@ -86,36 +79,6 @@
 
     return { chunks, offsets };
   });
-
-  const lineOffset = $derived.by(() => {
-    const minutes = differenceInMinutes(now, startOfDay(now));
-    return (minutes / 60) * 60; // 60px per hour
-  });
-
-  async function scrollToCurrentTime() {
-    await tick();
-    if (scrollContainer) {
-      scrollContainer.scrollTop = lineOffset;
-    }
-  }
-
-  $effect(() => {
-    // This effect runs when currentDate changes
-    if (isToday($currentDate)) {
-      now = new Date();
-      scrollToCurrentTime();
-    }
-  });
-
-  onMount(() => {
-    timer = setInterval(() => {
-      now = new Date();
-    }, 60 * 1000);
-  });
-
-  onDestroy(() => {
-    clearInterval(timer);
-  });
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -146,14 +109,8 @@
           data-day={format($currentDate, "yyyy-MM-dd")}
           data-hour={hour}
         >
-          {#if isToday($currentDate) && hour === 0}
-            <div
-              class="z-20 absolute left-0 right-0 flex items-center"
-              style={`top: ${lineOffset}px`}
-            >
-              <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>
-              <div class="h-[1px] bg-primary-content flex-1"></div>
-            </div>
+          {#if hour === 0}
+            <CurrentTimeIndicator day={$currentDate} />
           {/if}
 
           {#each dayEvents.chunks as { event, start }}

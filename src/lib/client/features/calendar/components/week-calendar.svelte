@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
-
   import {
     addDays,
     endOfDay,
@@ -19,6 +17,8 @@
   import type { Event } from "$lib/types";
 
   import { EventBlock } from "../../event/components";
+
+  import { CurrentTimeIndicator } from ".";
 
   interface WeekCalendarProps {
     events: Event[];
@@ -107,27 +107,7 @@
     }));
   });
 
-  let now = $state(new Date());
   let scrollContainer: HTMLDivElement;
-  let timer: ReturnType<typeof setInterval>;
-
-  onMount(() => {
-    requestAnimationFrame(() => {
-      if (scrollContainer) {
-        scrollContainer.scrollTop = getLineOffset();
-      }
-    });
-    timer = setInterval(() => {
-      now = new Date();
-    }, 60 * 1000);
-  });
-
-  onDestroy(() => clearInterval(timer));
-
-  const getLineOffset = () => {
-    const minutes = now.getHours() * 60 + now.getMinutes();
-    return (minutes / 60) * 60; // 60px = 1 hour
-  };
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -164,14 +144,8 @@
           data-day={format(day, "yyyy-MM-dd")}
           data-hour={hour}
         >
-          {#if isToday(day) && hour === 0}
-            <div
-              class="z-20 absolute left-0 right-0 flex items-center"
-              style={`top: ${getLineOffset()}px`}
-            >
-              <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>
-              <div class="h-[1px] bg-primary-content flex-1"></div>
-            </div>
+          {#if hour === 0}
+            <CurrentTimeIndicator {day} />
           {/if}
 
           {#each weekEvents as { event, day: eventDay, start, end, offset }}
