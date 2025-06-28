@@ -13,6 +13,7 @@ import {
 type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
   queryFn: Fn;
   queryKeys: string[];
+  onQuery?: () => void;
   onPending?: () => void;
   onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
   onError?: (err: ErrorType) => void;
@@ -23,7 +24,7 @@ type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
 export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   opts: CreateQueryOptions<Fn, ErrorType>
 ) {
-  const { queryFn, queryKeys, onPending, onSuccess, onError, staleTime = 60_000 } = opts;
+  const { queryFn, queryKeys, onQuery, onPending, onSuccess, onError, staleTime = 60_000 } = opts;
 
   type DataType = Awaited<ReturnType<Fn>>;
 
@@ -36,6 +37,8 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   const key = queryKeys.join("::");
 
   async function fetchData(force = false) {
+    onQuery?.();
+
     const cached = getCachedQuery(key);
 
     if (!force && cached && !isQueryStale(key, staleTime)) {
