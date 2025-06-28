@@ -19,6 +19,7 @@
   - (6.28.03) - Overlapping events.
   - (6.28.04) - Improved query utils codes.
   - (6.28.05) - More updates to query utils.
+  - (6.28.06) - Automatically the ui after events got updated.
 - Fri Jun 27, 2025
   - (6.27.01) - Committed for safety.
   - (6.27.02) - Fixed font size bug.

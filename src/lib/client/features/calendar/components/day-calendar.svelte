@@ -1,9 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
-  import { derived } from "svelte/store";
 
   import {
-    addDays,
     differenceInMinutes,
     endOfDay,
     format,
@@ -20,50 +18,39 @@
 
   import { EventBlock } from "../../event/components";
 
-  interface WeekCalendarProps {
+  interface DayCalendarProps {
     events: Event[];
   }
 
-  let { events }: WeekCalendarProps = $props();
+  let { events }: DayCalendarProps = $props();
 
   let scrollContainer: HTMLDivElement;
-  let now = new Date();
+  let now = $state(new Date());
   let timer: ReturnType<typeof setInterval>;
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  function splitEventByDay(
-    event: Event,
-    dayStart: Date
-  ): { event: Event; start: Date; end: Date }[] {
-    const chunks = [];
+  function splitEventByDay(event: Event, dayStart: Date) {
     const eventStartTz = toZonedTime(event.start, calendarTimezone);
     const eventEndTz = toZonedTime(event.end, calendarTimezone);
-
     const dayEnd = endOfDay(dayStart);
 
     const start = eventStartTz < dayStart ? dayStart : eventStartTz;
     const end = eventEndTz > dayEnd ? dayEnd : eventEndTz;
 
-    chunks.push({ event, start, end });
-    return chunks;
+    return { event, start, end };
   }
 
-  // Calculate overlapping offsets per hour
-  function calculateOffsets(events: { event: Event; start: Date; end: Date }[]) {
-    // Sort events by start time
-    events.sort((a, b) => a.start.getTime() - b.start.getTime());
+  function calculateOffsets(chunks: { event: Event; start: Date; end: Date }[]) {
+    chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-    const offsets = new Map<string, number>(); // event.id => offset
-    const active: { event: Event; start: Date; end: Date; offset: number }[] = [];
+    const offsets = new Map<string, number>();
+    const active: { end: Date; offset: number }[] = [];
 
-    for (const current of events) {
-      // Remove finished events
+    for (const current of chunks) {
       for (let i = active.length - 1; i >= 0; i--) {
-        if (active[i].end <= current.start) {
-          active.splice(i, 1);
-        }
+        if (active[i].end <= current.start) active.splice(i, 1);
       }
 
       const usedOffsets = new Set(active.map((a) => a.offset));
@@ -71,64 +58,56 @@
       while (usedOffsets.has(offset)) offset++;
 
       offsets.set(current.event.id, offset);
-      active.push({ ...current, offset });
+      active.push({ end: current.end, offset });
     }
-
     return offsets;
   }
 
-  const dayEvents = derived(
-    [currentDate, checkedCalendars],
-    ([$currentDate, $checkedCalendars]) => {
-      const dayStart = startOfDay($currentDate);
-      const dayEnd = endOfDay($currentDate);
+  const dayEvents = $derived.by(() => {
+    const dayStart = startOfDay($currentDate);
+    const dayEnd = endOfDay($currentDate);
 
-      const filtered = events.filter((event) => {
-        const calendarId = event.calendarId;
-        const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
-        if (!isVisible) return false;
+    const filtered = events.filter((event) => {
+      const isVisible = !($checkedCalendars[event.calendarId] === false);
+      if (!isVisible) return false;
 
-        const eventStartTz = toZonedTime(event.start, calendarTimezone);
-        const eventEndTz = toZonedTime(event.end, calendarTimezone);
+      const eventStartTz = toZonedTime(event.start, calendarTimezone);
+      const eventEndTz = toZonedTime(event.end, calendarTimezone);
 
-        return (
-          isWithinInterval(eventStartTz, { start: dayStart, end: dayEnd }) ||
-          isWithinInterval(eventEndTz, { start: dayStart, end: dayEnd }) ||
-          (eventStartTz < dayStart && eventEndTz > dayEnd)
-        );
-      });
+      return (
+        isWithinInterval(eventStartTz, { start: dayStart, end: dayEnd }) ||
+        isWithinInterval(eventEndTz, { start: dayStart, end: dayEnd }) ||
+        (eventStartTz < dayStart && eventEndTz > dayEnd)
+      );
+    });
 
-      const chunks = filtered.flatMap((event) => splitEventByDay(event, dayStart));
-      chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const chunks = filtered.map((event) => splitEventByDay(event, dayStart));
+    const offsets = calculateOffsets(chunks);
 
-      const offsets = calculateOffsets(chunks);
+    return { chunks, offsets };
+  });
 
-      return { chunks, offsets };
-    }
-  );
-
-  const getLineOffset = () => {
+  const lineOffset = $derived.by(() => {
     const minutes = differenceInMinutes(now, startOfDay(now));
-    return (minutes / 60) * 60;
-  };
+    return (minutes / 60) * 60; // 60px per hour
+  });
 
   async function scrollToCurrentTime() {
     await tick();
     if (scrollContainer) {
-      scrollContainer.scrollTop = getLineOffset();
+      scrollContainer.scrollTop = lineOffset;
     }
   }
 
-  currentDate.subscribe((value) => {
-    if (isToday(value)) {
+  $effect(() => {
+    // This effect runs when currentDate changes
+    if (isToday($currentDate)) {
       now = new Date();
       scrollToCurrentTime();
     }
   });
 
   onMount(() => {
-    if (isToday($currentDate)) scrollToCurrentTime();
-
     timer = setInterval(() => {
       now = new Date();
     }, 60 * 1000);
@@ -159,7 +138,7 @@
         <div
           class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
         >
-          {format(new Date().setHours(hour, 0, 0, 0), "h a")}
+          {format(new Date(0).setHours(hour), "h a")}
         </div>
 
         <div
@@ -170,23 +149,21 @@
           {#if isToday($currentDate) && hour === 0}
             <div
               class="z-20 absolute left-0 right-0 flex items-center"
-              style={`top: ${getLineOffset()}px`}
+              style={`top: ${lineOffset}px`}
             >
               <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>
               <div class="h-[1px] bg-primary-content flex-1"></div>
             </div>
           {/if}
 
-          {#if $dayEvents}
-            {#each $dayEvents.chunks as { event, start }}
-              {#if start.getHours() === hour}
-                <EventBlock
-                  event={{ ...event, start: start.toISOString() }}
-                  offset={$dayEvents.offsets.get(event.id) ?? 0}
-                />
-              {/if}
-            {/each}
-          {/if}
+          {#each dayEvents.chunks as { event, start }}
+            {#if start.getHours() === hour}
+              <EventBlock
+                event={{ ...event, start: start.toISOString() }}
+                offset={dayEvents.offsets.get(event.id) ?? 0}
+              />
+            {/if}
+          {/each}
         </div>
       {/each}
     </div>

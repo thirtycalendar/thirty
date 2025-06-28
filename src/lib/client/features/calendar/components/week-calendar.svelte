@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import { derived } from "svelte/store";
 
   import {
     addDays,
@@ -29,43 +28,32 @@
 
   const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const days = derived(currentDate, ($currentDate) => {
+  const days = $derived.by(() => {
     const start = startOfWeek($currentDate);
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   });
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  function splitEventByDay(event: Event): { event: Event; day: Date; start: Date; end: Date }[] {
-    const chunks = [];
-
+  function splitEventByDay(event: Event) {
+    const chunks: { event: Event; day: Date; start: Date; end: Date }[] = [];
     const eventStartTz = toZonedTime(event.start, calendarTimezone);
     const eventEndTz = toZonedTime(event.end, calendarTimezone);
 
     let currentStart = eventStartTz;
-
     while (currentStart < eventEndTz) {
       const dayStart = startOfDay(currentStart);
       const dayEnd = endOfDay(currentStart);
-
       const chunkEnd = eventEndTz < dayEnd ? eventEndTz : dayEnd;
 
-      chunks.push({
-        event,
-        day: dayStart,
-        start: currentStart,
-        end: chunkEnd
-      });
-
+      chunks.push({ event, day: dayStart, start: currentStart, end: chunkEnd });
       currentStart = addDays(dayStart, 1);
     }
-
     return chunks;
   }
 
   function calculateOffsets(chunks: { event: Event; day: Date; start: Date; end: Date }[]) {
     const byDay = new Map<string, typeof chunks>();
-
     for (const chunk of chunks) {
       const dayKey = format(chunk.day, "yyyy-MM-dd");
       if (!byDay.has(dayKey)) byDay.set(dayKey, []);
@@ -73,36 +61,30 @@
     }
 
     const result = new Map<(typeof chunks)[number], number>();
-
     for (const [, dayChunks] of byDay.entries()) {
       dayChunks.sort((a, b) => a.start.getTime() - b.start.getTime());
-
       const active: { chunk: (typeof dayChunks)[number]; offset: number }[] = [];
 
       for (const chunk of dayChunks) {
         for (let i = active.length - 1; i >= 0; i--) {
           if (active[i].chunk.end <= chunk.start) active.splice(i, 1);
         }
-
         const usedOffsets = new Set(active.map((a) => a.offset));
         let offset = 0;
         while (usedOffsets.has(offset)) offset++;
-
         active.push({ chunk, offset });
         result.set(chunk, offset);
       }
     }
-
     return result;
   }
 
-  const weekEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
-    const weekStart = startOfDay($days[0]);
-    const weekEnd = endOfDay($days[6]);
+  const weekEvents = $derived.by(() => {
+    const weekStart = startOfDay(days[0]);
+    const weekEnd = endOfDay(days[6]);
 
     const filtered = events.filter((event) => {
-      const calendarId = event.calendarId;
-      const isVisible = !(calendarId in $checkedCalendars) || $checkedCalendars[calendarId];
+      const isVisible = !($checkedCalendars[event.calendarId] === false);
       if (!isVisible) return false;
 
       const eventStart = toZonedTime(event.start, calendarTimezone);
@@ -116,11 +98,7 @@
     });
 
     const chunks = filtered.flatMap(splitEventByDay);
-
-    const validChunks = chunks.filter(({ day }) => {
-      return day >= weekStart && day <= weekEnd;
-    });
-
+    const validChunks = chunks.filter(({ day }) => day >= weekStart && day <= weekEnd);
     const offsets = calculateOffsets(validChunks);
 
     return validChunks.map((chunk) => ({
@@ -129,9 +107,9 @@
     }));
   });
 
-  let now = new Date();
-  let timer: ReturnType<typeof setInterval>;
+  let now = $state(new Date());
   let scrollContainer: HTMLDivElement;
+  let timer: ReturnType<typeof setInterval>;
 
   onMount(() => {
     requestAnimationFrame(() => {
@@ -139,7 +117,6 @@
         scrollContainer.scrollTop = getLineOffset();
       }
     });
-
     timer = setInterval(() => {
       now = new Date();
     }, 60 * 1000);
@@ -154,10 +131,9 @@
 </script>
 
 <div class="flex flex-col h-full py-3">
-  <!-- Day Headers -->
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
     <div></div>
-    {#each $days as day}
+    {#each days as day}
       <div
         class="min-h-8 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
       >
@@ -171,20 +147,18 @@
     {/each}
   </div>
 
-  <!-- Time Grid -->
   <div
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
   >
     {#each hours as hour}
-      <!-- Time Labels -->
       <div
         class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
       >
         {format(setHours(new Date(), hour), "h a")}
       </div>
 
-      {#each $days as day}
+      {#each days as day}
         <div
           class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
           data-day={format(day, "yyyy-MM-dd")}
@@ -200,7 +174,7 @@
             </div>
           {/if}
 
-          {#each $weekEvents as { event, day: eventDay, start, end, offset }}
+          {#each weekEvents as { event, day: eventDay, start, end, offset }}
             {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
               {#if start.getHours() === hour}
                 <EventBlock
