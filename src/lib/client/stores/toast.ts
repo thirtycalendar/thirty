@@ -8,7 +8,7 @@ interface Toast {
 
 const toasts = writable<Toast[]>([]);
 
-const showToast = (message: string, isError = false, durationInMs = 3000) => {
+const showToast = (message: string, isError = false, durationInMs = 5000) => {
   const id = Math.random().toString(36).substring(2, 9);
 
   toasts.update((currentToasts) => [...currentToasts, { id, message, isError }]);

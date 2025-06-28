@@ -21,11 +21,11 @@
 
       throw new Error("Failed to sync with Google Calendar");
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       showToast(data.message);
 
-      getCalendars().refetch();
-      getEvents().refetch();
+      await getCalendars().refetch();
+      await getEvents().refetch();
     },
     onError: async () => {
       await authClient.signOut();

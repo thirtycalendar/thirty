@@ -21,6 +21,7 @@
   - (6.27.05) - Styling event details component.
   - (6.27.06) - Showed color of the calendar in event details.
   - (6.27.07) - Event delete button.
+  - (6.27.08) - Event delete button logics.
 - Thu Jun 26, 2025
   - (6.26.01) - Updated event and task stores.
 - Wed Jun 25, 2025

@@ -1,8 +1,12 @@
 <script lang="ts">
   import { Trash } from "@lucide/svelte";
 
+  import { toggleModal } from "$lib/client/components/utils";
+  import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
+
+  import { getEvents } from "../query";
 
   interface DeleteEventButtonProps {
     id: string;
@@ -22,6 +26,17 @@
       const data = await res.json();
 
       if (!data.success) throw new Error(data.message);
+
+      return data;
+    },
+    onSuccess: async (data) => {
+      toggleModal(id);
+      showToast(data.message);
+
+      getEvents().refetch();
+    },
+    onError: (message: Error["message"]) => {
+      showToast(message, true);
     },
     queryKeys: ["event-list"]
   });
