@@ -8,7 +8,6 @@
     format,
     isToday,
     isWithinInterval,
-    parseISO,
     setHours,
     startOfDay,
     startOfWeek
@@ -64,6 +63,39 @@
     return chunks;
   }
 
+  function calculateOffsets(chunks: { event: Event; day: Date; start: Date; end: Date }[]) {
+    const byDay = new Map<string, typeof chunks>();
+
+    for (const chunk of chunks) {
+      const dayKey = format(chunk.day, "yyyy-MM-dd");
+      if (!byDay.has(dayKey)) byDay.set(dayKey, []);
+      byDay.get(dayKey)!.push(chunk);
+    }
+
+    const result = new Map<(typeof chunks)[number], number>();
+
+    for (const [, dayChunks] of byDay.entries()) {
+      dayChunks.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+      const active: { chunk: (typeof dayChunks)[number]; offset: number }[] = [];
+
+      for (const chunk of dayChunks) {
+        for (let i = active.length - 1; i >= 0; i--) {
+          if (active[i].chunk.end <= chunk.start) active.splice(i, 1);
+        }
+
+        const usedOffsets = new Set(active.map((a) => a.offset));
+        let offset = 0;
+        while (usedOffsets.has(offset)) offset++;
+
+        active.push({ chunk, offset });
+        result.set(chunk, offset);
+      }
+    }
+
+    return result;
+  }
+
   const weekEvents = derived([days, checkedCalendars], ([$days, $checkedCalendars]) => {
     const weekStart = startOfDay($days[0]);
     const weekEnd = endOfDay($days[6]);
@@ -83,13 +115,18 @@
       );
     });
 
-    // Split each filtered event into daily chunks
     const chunks = filtered.flatMap(splitEventByDay);
 
-    // Only keep chunks that fall within the displayed week days
-    return chunks.filter(({ day }) => {
+    const validChunks = chunks.filter(({ day }) => {
       return day >= weekStart && day <= weekEnd;
     });
+
+    const offsets = calculateOffsets(validChunks);
+
+    return validChunks.map((chunk) => ({
+      ...chunk,
+      offset: offsets.get(chunk) ?? 0
+    }));
   });
 
   let now = new Date();
@@ -163,7 +200,7 @@
             </div>
           {/if}
 
-          {#each $weekEvents as { event, day: eventDay, start, end }}
+          {#each $weekEvents as { event, day: eventDay, start, end, offset }}
             {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
               {#if start.getHours() === hour}
                 <EventBlock
@@ -172,6 +209,7 @@
                     start: start.toISOString(),
                     end: end.toISOString()
                   }}
+                  {offset}
                 />
               {/if}
             {/if}

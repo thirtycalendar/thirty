@@ -14,9 +14,10 @@
 
   interface EventBlockProps {
     event: Event;
+    offset?: number;
   }
 
-  let { event }: EventBlockProps = $props();
+  let { event, offset = 0 }: EventBlockProps = $props();
 
   const start = toZonedTime(event.start, event.timezone);
   const end = toZonedTime(event.end, event.timezone);
@@ -27,6 +28,8 @@
   const verticalGap = 2;
   const topPx = differenceInMinutes(start, startOfHour(start)) * minuteHeight + verticalGap;
   const heightPx = differenceInMinutes(end, start) * minuteHeight - verticalGap;
+
+  const horizontalOffsetPx = offset * 10;
 
   function formatTimeRange(start: Date, end: Date): string {
     const isSamePeriod = (a: Date, b: Date) => a.getHours() < 12 === b.getHours() < 12;
@@ -61,7 +64,7 @@
 
 <button
   class="absolute left-1 right-1 z-10 text-white cursor-pointer select-none overflow-hidden rounded-xl flex items-start gap-1 backdrop-blur-md border border-white/10 shadow-md hover:shadow-lg transition-shadow duration-200"
-  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}33; pointer-events: auto;`}
+  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}33; pointer-events: auto; transform: translateX(${horizontalOffsetPx}px);`}
   title={event.name}
   {onclick}
 >

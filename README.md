@@ -16,6 +16,7 @@
 - Sat Jun 28, 2025
   - (6.28.01) - Glass ui style for event blocks.
   - (6.28.02) - Updated minute line offset.
+  - (6.28.03) - Overlapping events.
 - Fri Jun 27, 2025
   - (6.27.01) - Committed for safety.
   - (6.27.02) - Fixed font size bug.

@@ -31,7 +31,6 @@
   let timer: ReturnType<typeof setInterval>;
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
-
   const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   function splitEventByDay(
@@ -49,6 +48,33 @@
 
     chunks.push({ event, start, end });
     return chunks;
+  }
+
+  // Calculate overlapping offsets per hour
+  function calculateOffsets(events: { event: Event; start: Date; end: Date }[]) {
+    // Sort events by start time
+    events.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+    const offsets = new Map<string, number>(); // event.id => offset
+    const active: { event: Event; start: Date; end: Date; offset: number }[] = [];
+
+    for (const current of events) {
+      // Remove finished events
+      for (let i = active.length - 1; i >= 0; i--) {
+        if (active[i].end <= current.start) {
+          active.splice(i, 1);
+        }
+      }
+
+      const usedOffsets = new Set(active.map((a) => a.offset));
+      let offset = 0;
+      while (usedOffsets.has(offset)) offset++;
+
+      offsets.set(current.event.id, offset);
+      active.push({ ...current, offset });
+    }
+
+    return offsets;
   }
 
   const dayEvents = derived(
@@ -73,10 +99,11 @@
       });
 
       const chunks = filtered.flatMap((event) => splitEventByDay(event, dayStart));
-
       chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-      return chunks;
+      const offsets = calculateOffsets(chunks);
+
+      return { chunks, offsets };
     }
   );
 
@@ -123,7 +150,10 @@
     </div>
   </div>
 
-  <div bind:this={scrollContainer} class="flex-1 overflow-y-auto bg-base-100 relative rounded-2xl">
+  <div
+    bind:this={scrollContainer}
+    class="flex-1 overflow-y-auto overflow-x-hidden bg-base-100 relative rounded-2xl"
+  >
     <div class="grid grid-cols-[50px_1fr]">
       {#each hours as hour}
         <div
@@ -147,11 +177,16 @@
             </div>
           {/if}
 
-          {#each $dayEvents as { event, start }}
-            {#if start.getHours() === hour}
-              <EventBlock event={{ ...event, start: start.toISOString() }} />
-            {/if}
-          {/each}
+          {#if $dayEvents}
+            {#each $dayEvents.chunks as { event, start }}
+              {#if start.getHours() === hour}
+                <EventBlock
+                  event={{ ...event, start: start.toISOString() }}
+                  offset={$dayEvents.offsets.get(event.id) ?? 0}
+                />
+              {/if}
+            {/each}
+          {/if}
         </div>
       {/each}
     </div>
