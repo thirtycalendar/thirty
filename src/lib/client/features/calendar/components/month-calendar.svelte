@@ -135,8 +135,8 @@
         <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
             <div
-              class="font-semibold truncate px-1 rounded"
-              style:color={getColorHexCodeFromId(event.colorId)}
+              class="truncate px-1.5 py-0.5 text-[10px] font-medium rounded-full shadow-sm backdrop-blur-sm border border-white/10"
+              style={`background-color: ${getColorHexCodeFromId(event.colorId)}22; color: ${getColorHexCodeFromId(event.colorId)};`}
               title={event.name}
             >
               {event.name}

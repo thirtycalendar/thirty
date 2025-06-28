@@ -60,35 +60,34 @@
 </script>
 
 <button
-  class="absolute left-1 right-1 z-10 text-xs text-white cursor-pointer select-none opacity-90 overflow-hidden rounded-md flex items-start gap-1"
-  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}; pointer-events: auto;`}
+  class="absolute left-1 right-1 z-10 text-white cursor-pointer select-none overflow-hidden rounded-xl flex items-start gap-1 backdrop-blur-md border border-white/10 shadow-md hover:shadow-lg transition-shadow duration-200"
+  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}33; pointer-events: auto;`}
   title={event.name}
   {onclick}
 >
-  <!-- Color bar -->
+  <!-- Accent bar -->
   <div
     class="w-1 h-full rounded-sm shrink-0"
     style={`background-color: ${getColorHexCodeFromId(getColorIdFromCalendarId(event.calendarId))};`}
   ></div>
 
-  <div
-    class="text-primary w-full text-left"
-    style={`background-color: ${getColorHexCodeFromId(event.colorId)};`}
-  >
+  <div class="w-full text-left p-1">
     {#if heightPx < 28}
-      <p class={`${heightPx < 24 ? "text-[10px]" : "text-xs"} ${heightPx < 40 ? "truncate" : ""}`}>
+      <p
+        class={`${heightPx < 24 ? "text-[10px]" : "text-xs"} ${heightPx < 40 ? "truncate" : ""} text-white/90`}
+      >
         {event.name}, {formatStartTime(start)}
       </p>
     {:else}
-      <div class="py-1">
+      <div class="py-0.5 space-y-0.5">
         <p
-          class="text-xs font-medium"
+          class="text-xs font-semibold text-white/90"
           class:truncate={heightPx < 40}
           class:line-clamp-2={heightPx >= 40 && heightPx < 60}
         >
           {event.name}
         </p>
-        <p class="text-[10px] truncate">
+        <p class="text-[10px] text-white/70 truncate">
           {formatTimeRange(start, end)}
         </p>
       </div>
@@ -96,4 +95,6 @@
   </div>
 </button>
 
-<Modal modalId={event.id} title="Event"><EventDetails {event} /></Modal>
+<Modal modalId={event.id} title="Event">
+  <EventDetails {event} />
+</Modal>
