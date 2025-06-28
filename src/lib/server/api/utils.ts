@@ -3,7 +3,7 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 
 import type { ErrorResponse } from "$lib/types";
 
-export function requireParamId(c: Context, name: string): Response {
+export function requireParamId(c: Context, name: string) {
   return c.json<ErrorResponse>({ success: false, message: `Missing ${name} Id` }, 400);
 }
 

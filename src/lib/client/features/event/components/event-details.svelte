@@ -1,5 +1,13 @@
 <script lang="ts">
-  import { AlignLeft, CalendarCheck2, CircleCheck, Clock3, Globe, MapPin } from "@lucide/svelte";
+  import {
+    AlignLeft,
+    CalendarCheck2,
+    CircleCheck,
+    Clock3,
+    Globe,
+    MapPin,
+    Pen
+  } from "@lucide/svelte";
 
   import { parseISO } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
@@ -8,6 +16,8 @@
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getNameFromCalendarId } from "../../calendar/utils";
+
+  import { DeleteEventButton } from ".";
 
   interface EventDetailsProps {
     event: Event;
@@ -95,5 +105,11 @@
       <Globe size="20" strokeWidth="2.5" />
     </div>
     <div class="flex-1">{event.timezone}</div>
+  </div>
+
+  <div class="flex justify-end">
+    <DeleteEventButton id={event.id} />
+
+    <button class="btn btn-sm btn-square btn-ghost"><Pen size="17" /></button>
   </div>
 </div>
