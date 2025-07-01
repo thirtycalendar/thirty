@@ -129,7 +129,7 @@
 
   <div
     bind:this={scrollContainer}
-    class="flex-1 overflow-y-auto grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
+    class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
   >
     {#each hours as hour}
       <div
