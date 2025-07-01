@@ -21,6 +21,7 @@
   - (7.1.05) - Committed for safety.
   - (7.1.06) - Show actual calendar and color id on edit.
   - (7.1.07) - Added mutation codes for create and edit event, but not working.
+  - (7.1.08) - Started writing codes for calendar curd.
 - Sat Jun 28, 2025
   - (6.28.01) - Glass ui style for event blocks.
   - (6.28.02) - Updated minute line offset.
