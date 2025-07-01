@@ -12,9 +12,10 @@
     name: string;
     data: Writable<any>;
     className?: string;
+    isLeftDiv?: boolean;
   }
 
-  let { name, data, className }: ColorChoiceFieldProps = $props();
+  let { name, data, className, isLeftDiv }: ColorChoiceFieldProps = $props();
 
   let colorId = $derived($data[name]);
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
@@ -135,7 +136,7 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class="absolute right-0 mt-1 z-50 w-35 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3"
+      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} mt-1 z-50 w-35 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3`}
       role="listbox"
       tabindex="-1"
     >

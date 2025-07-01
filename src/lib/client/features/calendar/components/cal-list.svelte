@@ -4,6 +4,8 @@
 
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
+  import { toggleModal } from "$lib/client/components/utils";
+  import { calendarCreateModalId } from "$lib/client/stores/calendar";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Calendar } from "$lib/types";
@@ -66,7 +68,10 @@
 
         <div>
           {#if title === "My Calendars"}
-            <button class="btn btn-xs btn-ghost btn-square">
+            <button
+              class="btn btn-xs btn-ghost btn-square"
+              onclick={() => toggleModal(calendarCreateModalId)}
+            >
               <Plus size="16" />
             </button>
           {/if}

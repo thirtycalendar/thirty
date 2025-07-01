@@ -22,6 +22,7 @@
   - (7.1.06) - Show actual calendar and color id on edit.
   - (7.1.07) - Added mutation codes for create and edit event, but not working.
   - (7.1.08) - Started writing codes for calendar curd.
+  - (7.1.09) - Can create a new calendar now.
 - Sat Jun 28, 2025
   - (6.28.01) - Glass ui style for event blocks.
   - (6.28.02) - Updated minute line offset.
