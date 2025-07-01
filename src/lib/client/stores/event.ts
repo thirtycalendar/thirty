@@ -10,7 +10,7 @@ export function handleEventStopEditing() {
 }
 
 export function handleEventStartEditing() {
-  isEventEditing.set(false);
+  isEventEditing.set(true);
 }
 
 export function toggleEventEditMode() {

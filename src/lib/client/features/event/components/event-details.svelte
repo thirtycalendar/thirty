@@ -12,6 +12,8 @@
   import { parseISO } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
 
+  import { handleEventStartEditing } from "$lib/client/stores/event";
+
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
@@ -110,6 +112,8 @@
   <div class="flex justify-end">
     <DeleteEventButton id={event.id} />
 
-    <button class="btn btn-sm btn-square btn-ghost"><Pen size="17" /></button>
+    <button class="btn btn-sm btn-square btn-ghost" onclick={handleEventStartEditing}>
+      <Pen size="17" />
+    </button>
   </div>
 </div>

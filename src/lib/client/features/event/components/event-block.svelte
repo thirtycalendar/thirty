@@ -4,13 +4,14 @@
 
   import { Modal } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
+  import { isEventEditing } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getColorIdFromCalendarId } from "../../calendar/utils";
 
-  import { EventDetails } from ".";
+  import { EditEvent, EventDetails } from ".";
 
   interface EventBlockProps {
     event: Event;
@@ -99,5 +100,9 @@
 </button>
 
 <Modal modalId={event.id} title="Event">
-  <EventDetails {event} />
+  {#if $isEventEditing}
+    <EditEvent {event} />
+  {:else}
+    <EventDetails {event} />
+  {/if}
 </Modal>
