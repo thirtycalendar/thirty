@@ -7,9 +7,7 @@
     ChevronRight,
     CircleCheck,
     Clock3,
-    ClockFading,
     Globe,
-    Hourglass,
     MapPin
   } from "@lucide/svelte";
 

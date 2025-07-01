@@ -15,6 +15,7 @@
 
 - Tue Jul 1, 2025
   - (7.1.01) - Overflow x hidden in week-calendar.
+  - (7.1.02) - Typed bug fixed.
 - Sat Jun 28, 2025
   - (6.28.01) - Glass ui style for event blocks.
   - (6.28.02) - Updated minute line offset.

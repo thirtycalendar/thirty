@@ -1,7 +1,9 @@
 import { createQuery } from "$lib/client/utils/query/create-query";
 import { client } from "$lib/client/utils/rpc";
 
-let queryInstance: ReturnType<typeof createQuery> | null = null;
+import type { Event } from "$lib/types";
+
+let queryInstance: ReturnType<typeof createQuery<() => Promise<Event[]>>> | null = null;
 
 export function getEvents() {
   if (!queryInstance) {

@@ -1,7 +1,9 @@
 import { createQuery } from "$lib/client/utils/query/create-query";
 import { client } from "$lib/client/utils/rpc";
 
-let queryInstance: ReturnType<typeof createQuery> | null = null;
+import type { Calendar } from "$lib/types";
+
+let queryInstance: ReturnType<typeof createQuery<() => Promise<Calendar[]>>> | null = null;
 
 // Use ({fun1, fun2}) instead of (fun1, fun2)
 export function getCalendars() {
