@@ -36,10 +36,17 @@
     eventData: Writable<EventDataType>;
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
+    isMutationPending: boolean;
     isCreateEvent?: boolean;
   }
 
-  let { eventData, defaultValues, onSubmit, isCreateEvent = false }: EventFormProps = $props();
+  let {
+    eventData,
+    defaultValues,
+    onSubmit,
+    isMutationPending,
+    isCreateEvent = false
+  }: EventFormProps = $props();
 
   let isLocation = $state(false);
   let isDescription = $state(false);
@@ -261,13 +268,17 @@
           type="submit"
           class="btn font-bold btn-ghost"
           onclick={handleEventStopEditing}
-          disabled={$isSubmitting}
+          disabled={$isSubmitting || isMutationPending}
         >
           Cancel
         </button>
       {/if}
 
-      <button type="submit" class="btn btn-base-300 font-bold" disabled={$isSubmitting}>
+      <button
+        type="submit"
+        class="btn btn-base-300 font-bold"
+        disabled={$isSubmitting || isMutationPending}
+      >
         Save
       </button>
     </div>

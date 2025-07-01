@@ -1,7 +1,12 @@
 <script lang="ts">
   import { writable, type Writable } from "svelte/store";
 
-  import { addMinutes, format } from "date-fns";
+  import { format, parseISO } from "date-fns";
+
+  import { handleEventStopEditing } from "$lib/client/stores/event";
+  import { showToast } from "$lib/client/stores/toast";
+  import { createMutation } from "$lib/client/utils/query/create-mutation";
+  import { client } from "$lib/client/utils/rpc";
 
   import type { Event, EventDataType, EventForm as EventFromType } from "$lib/types";
 
@@ -13,15 +18,16 @@
 
   let { event }: EditEventProps = $props();
 
-  const now = new Date();
+  const start = parseISO(event.start);
+  const end = parseISO(event.end);
 
   const eventData: Writable<EventDataType> = writable({
     calendarId: event.calendarId,
     colorId: event.colorId,
-    startDate: format(now, "yyyy-MM-dd"),
-    startTime: format(now, "HH:mm"),
-    endDate: format(now, "yyyy-MM-dd"),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
+    startDate: format(start, "yyyy-MM-dd"),
+    startTime: format(start, "HH:mm"),
+    endDate: format(end, "yyyy-MM-dd"),
+    endTime: format(end, "HH:mm"),
     timezone: event.timezone
   });
 
@@ -40,9 +46,31 @@
     status: event.status
   };
 
+  let { mutate, isPending } = createMutation({
+    mutationFn: async (formData: EventFromType) => {
+      const res = await client.api.event.update[":id"].$put({
+        param: { id: event.id },
+        json: formData
+      });
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.message);
+
+      return data;
+    },
+    onSuccess: (data) => {
+      showToast(data.message);
+      handleEventStopEditing();
+    },
+    onError: (message: Error["message"]) => {
+      showToast(message, true);
+    },
+    queryKeys: ["event-list"]
+  });
+
   async function onSubmit(data: EventFromType) {
-    console.log("Data:", data);
+    await mutate(data);
   }
 </script>
 
-<EventForm {eventData} {defaultValues} {onSubmit} />
+<EventForm {eventData} {defaultValues} {onSubmit} isMutationPending={$isPending} />

@@ -4,7 +4,7 @@
 
   import { Modal } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
-  import { isEventEditing } from "$lib/client/stores/event";
+  import { handleEventStopEditing, isEventEditing } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
@@ -61,6 +61,10 @@
   function onclick() {
     toggleModal(event.id);
   }
+
+  function onModalClose() {
+    handleEventStopEditing();
+  }
 </script>
 
 <button
@@ -99,7 +103,7 @@
   </div>
 </button>
 
-<Modal modalId={event.id} title="Event">
+<Modal modalId={event.id} title="Event" {onModalClose}>
   {#if $isEventEditing}
     <EditEvent {event} />
   {:else}
