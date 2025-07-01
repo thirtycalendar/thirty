@@ -18,6 +18,7 @@
   - (7.1.02) - Typed bug fixed.
   - (7.1.03) - Separated event form and create event form.
   - (7.1.04) - Edit event form.
+  - (7.1.05) - Committed for safety.
 - Sat Jun 28, 2025
   - (6.28.01) - Glass ui style for event blocks.
   - (6.28.02) - Updated minute line offset.

@@ -18,8 +18,6 @@
   let { events }: DayCalendarProps = $props();
 
   let scrollContainer: HTMLDivElement;
-  let now = $state(new Date());
-  let timer: ReturnType<typeof setInterval>;
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

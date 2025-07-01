@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable } from "svelte/store";
 
   import {
     AlignLeft,
@@ -15,6 +15,7 @@
   import { format } from "date-fns-tz";
 
   import {
+    ChoiceField,
     ColorChoiceField,
     DateField,
     InputField,
@@ -22,7 +23,7 @@
     TimeField,
     TimezoneField
   } from "$lib/client/components";
-  import ChoiceField from "$lib/client/components/form/choice-field.svelte";
+  import { handleEventStopEditing } from "$lib/client/stores/event";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { EventStatus, type EventDataType, type EventForm } from "$lib/types";
@@ -253,8 +254,19 @@
       </div>
     {/if}
 
-    <button type="submit" class="btn bg-base-200 font-bold w-full" disabled={$isSubmitting}>
-      Save
-    </button>
+    <div class="flex justify-end gap-2">
+      <button
+        type="submit"
+        class="btn font-bold btn-ghost"
+        onclick={handleEventStopEditing}
+        disabled={$isSubmitting}
+      >
+        Cancel
+      </button>
+
+      <button type="submit" class="btn btn-base-300 font-bold" disabled={$isSubmitting}>
+        Save
+      </button>
+    </div>
   </form>
 {/if}

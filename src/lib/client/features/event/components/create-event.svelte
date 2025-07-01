@@ -3,6 +3,8 @@
 
   import { addMinutes, format } from "date-fns";
 
+  import { createMutation } from "$lib/client/utils/query/create-mutation";
+
   import type { EventDataType, EventForm as EventFromType } from "$lib/types";
 
   import { EventForm } from ".";
@@ -33,6 +35,11 @@
     allDay: false,
     status: "confirmed"
   };
+
+  let { mutate, isPending } = createMutation({
+    mutationFn: async (data: EventFromType) => {},
+    queryKeys: ["event-list"]
+  });
 
   async function onSubmit(data: EventFromType) {
     console.log("Data:", data);
