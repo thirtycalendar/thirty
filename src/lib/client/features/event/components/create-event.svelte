@@ -46,4 +46,4 @@
   }
 </script>
 
-<EventForm {eventData} {defaultValues} {onSubmit} />
+<EventForm {eventData} {defaultValues} {onSubmit} isCreateEvent />

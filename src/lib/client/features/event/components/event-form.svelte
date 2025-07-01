@@ -36,9 +36,10 @@
     eventData: Writable<EventDataType>;
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
+    isCreateEvent?: boolean;
   }
 
-  let { eventData, defaultValues, onSubmit }: EventFormProps = $props();
+  let { eventData, defaultValues, onSubmit, isCreateEvent = false }: EventFormProps = $props();
 
   let isLocation = $state(false);
   let isDescription = $state(false);
@@ -56,7 +57,7 @@
   });
 
   $effect(() => {
-    if ($calendars) {
+    if (isCreateEvent && $calendars) {
       const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
@@ -255,14 +256,16 @@
     {/if}
 
     <div class="flex justify-end gap-2">
-      <button
-        type="submit"
-        class="btn font-bold btn-ghost"
-        onclick={handleEventStopEditing}
-        disabled={$isSubmitting}
-      >
-        Cancel
-      </button>
+      {#if !isCreateEvent}
+        <button
+          type="submit"
+          class="btn font-bold btn-ghost"
+          onclick={handleEventStopEditing}
+          disabled={$isSubmitting}
+        >
+          Cancel
+        </button>
+      {/if}
 
       <button type="submit" class="btn btn-base-300 font-bold" disabled={$isSubmitting}>
         Save
