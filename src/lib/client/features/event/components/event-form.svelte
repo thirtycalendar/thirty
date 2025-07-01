@@ -11,7 +11,7 @@
     MapPin
   } from "@lucide/svelte";
 
-  import { addDays, addMinutes } from "date-fns";
+  import { addDays } from "date-fns";
   import { format } from "date-fns-tz";
 
   import {
@@ -25,21 +25,19 @@
   import ChoiceField from "$lib/client/components/form/choice-field.svelte";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import { EventStatus, type Calendar, type EventForm } from "$lib/types";
+  import { EventStatus, type EventDataType, type EventForm } from "$lib/types";
 
   import { CalendarChoiceField } from "../../calendar/components";
   import { getCalendars } from "../../calendar/query";
   import { eventSchema } from "../schema";
 
-  interface EventDataType {
-    calendarId: string;
-    colorId: string;
-    startDate: string;
-    startTime: string;
-    endDate: string;
-    endTime: string;
-    timezone: string;
+  interface EventFormProps {
+    eventData: Writable<EventDataType>;
+    defaultValues: EventForm;
+    onSubmit: (data: EventForm) => Promise<void>;
   }
+
+  let { eventData, defaultValues, onSubmit }: EventFormProps = $props();
 
   let isLocation = $state(false);
   let isDescription = $state(false);
@@ -48,32 +46,7 @@
   const { data: calendars } = getCalendars();
   const now = new Date();
 
-  const eventData: Writable<EventDataType> = writable({
-    calendarId: "",
-    colorId: "",
-    startDate: format(now, "yyyy-MM-dd"),
-    startTime: format(now, "HH:mm"),
-    endDate: format(now, "yyyy-MM-dd"),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
-    timezone: ""
-  });
-
   const isNextDay = $derived($eventData.startTime > $eventData.endTime);
-
-  const defaultValues: EventForm = {
-    calendarId: "",
-    externalId: null,
-    source: "local",
-    name: "",
-    description: null,
-    location: null,
-    colorId: "",
-    start: "",
-    end: "",
-    timezone: "",
-    allDay: false,
-    status: "confirmed"
-  };
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
@@ -123,15 +96,10 @@
       }
     }
   });
-
-  async function onSubmit() {
-    // TODO: Implement form submission logic
-    console.log("Form submitted:", $formData);
-  }
 </script>
 
 {#if $calendars}
-  <form onsubmit={handleSubmit(onSubmit)} class="space-y-2">
+  <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
     <div class="flex items-start gap-3">

@@ -58,6 +58,16 @@ export interface Event {
   deletedAt: string | null;
 }
 
+export interface EventDataType {
+  calendarId: string;
+  colorId: string;
+  startDate: string;
+  startTime: string;
+  endDate: string;
+  endTime: string;
+  timezone: string;
+}
+
 export interface EventForm {
   calendarId: string;
   externalId: string | null;
