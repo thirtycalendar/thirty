@@ -17,13 +17,31 @@
   let open = $state(false);
   let filterText = $state("");
 
-  const timezones = getTimeZones()
-    .map((tz) => tz.name)
-    .sort((a, b) => a.localeCompare(b));
+  function formatOffset(offsetMinutes: number) {
+    const sign = offsetMinutes >= 0 ? "+" : "-";
+    const abs = Math.abs(offsetMinutes);
+    const hours = String(Math.floor(abs / 60)).padStart(2, "0");
+    const minutes = String(abs % 60).padStart(2, "0");
+    return `UTC${sign}${hours}:${minutes}`;
+  }
+
+  const zones = getTimeZones();
+
+  const timezones = zones
+    .map((tz) => ({
+      label: `(${formatOffset(tz.currentTimeOffsetInMinutes)}) ${tz.name}`,
+      value: tz.name,
+      offset: tz.currentTimeOffsetInMinutes
+    }))
+    .sort((a, b) => {
+      return a.offset !== b.offset ? a.offset - b.offset : a.label.localeCompare(b.label);
+    });
 
   let filtered = $derived.by(() => {
     const q = filterText.toLowerCase();
-    return timezones.filter((tz) => tz.toLowerCase().includes(q));
+    return timezones.filter(
+      (tz) => tz.label.toLowerCase().includes(q) || tz.value.toLowerCase().includes(q)
+    );
   });
 
   function selectTimezone(tz: string) {
@@ -37,7 +55,7 @@
     switch (event.key) {
       case "Enter":
         event.preventDefault();
-        if (filtered.length > 0) selectTimezone(filtered[0]);
+        if (filtered.length > 0) selectTimezone(filtered[0].value);
         break;
       case "Escape":
         open = false;
@@ -65,13 +83,9 @@
     setTimeout(() => {
       const related = event.relatedTarget as Node;
       const isOutside = !triggerButton?.contains(related) && !dropdown?.contains(related);
-
       if (isOutside) {
         open = false;
-
-        if (!filterText.trim()) {
-          filterText = "";
-        }
+        if (!filterText.trim()) filterText = "";
       }
     }, 100);
   }
@@ -120,10 +134,10 @@
         <button
           type="button"
           class="w-full px-3 py-2 text-left text-sm hover:bg-base-200 focus:bg-base-200 outline-none"
-          onclick={() => selectTimezone(tz)}
+          onclick={() => selectTimezone(tz.value)}
           tabindex="-1"
         >
-          {tz}
+          {tz.label}
         </button>
       {/each}
       {#if filtered.length === 0}

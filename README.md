@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Wed Jul 2, 2025
+  - (7.2.01) - Updated timezone field.
 - Tue Jul 1, 2025
   - (7.1.01) - Overflow x hidden in week-calendar.
   - (7.1.02) - Typed bug fixed.
