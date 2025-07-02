@@ -10,6 +10,7 @@ export { default as CreateButton } from "./create-button.svelte";
 export { default as CreateCal } from "./create-cal.svelte";
 export { default as CurrentTimeIndicator } from "./current-time-indicator.svelte";
 export { default as DayCalendar } from "./day-calendar.svelte";
+export { default as DeleteCalButton } from "./delete-cal-button.svelte";
 export { default as EditCal } from "./edit-cal.svelte";
 export { default as MiniCalendar } from "./mini-calendar.svelte";
 export { default as MonthCalendar } from "./month-calendar.svelte";
