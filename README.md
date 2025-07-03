@@ -18,6 +18,7 @@
   - (7.3.02) - Show cal details instancing.
   - (7.3.03) - Showed last updated time for cal and event.
   - (7.3.04) - Better method for for showing cal and event details.
+  - (7.3.05) - Show description and location on event edit form.
 - Wed Jul 2, 2025
   - (7.2.01) - Updated timezone field.
   - (7.2.02) - Added cal details component.

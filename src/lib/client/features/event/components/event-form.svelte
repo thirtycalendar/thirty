@@ -48,8 +48,8 @@
     isCreateEvent = false
   }: EventFormProps = $props();
 
-  let isLocation = $state(false);
-  let isDescription = $state(false);
+  let isLocation = $state(defaultValues.location ? true : false);
+  let isDescription = $state(defaultValues.description ? true : false);
   let isMoreOptions = $state(false);
 
   const { data: calendars } = getCalendars();
