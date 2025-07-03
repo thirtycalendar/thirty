@@ -3,7 +3,7 @@
 
   import { format, parseISO } from "date-fns";
 
-  import { handleEventStopEditing } from "$lib/client/stores/event";
+  import { currentEventDetails, handleEventStopEditing } from "$lib/client/stores/event";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -59,6 +59,8 @@
       return data;
     },
     onSuccess: (data) => {
+      currentEventDetails.set(data.data);
+
       showToast(data.message);
       handleEventStopEditing();
     },

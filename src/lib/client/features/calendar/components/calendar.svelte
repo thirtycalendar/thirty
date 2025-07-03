@@ -1,6 +1,7 @@
 <script lang="ts">
   import { calView } from "$lib/client/stores/cal-view";
 
+  import { EventModal } from "../../event/components";
   import { getEvents } from "../../event/query";
 
   import { CalModal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
@@ -9,6 +10,7 @@
 </script>
 
 <CalModal />
+<EventModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}

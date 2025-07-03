@@ -17,6 +17,7 @@
   - (7.3.01) - Separated cal modal for cal details.
   - (7.3.02) - Show cal details instancing.
   - (7.3.03) - Showed last updated time for cal and event.
+  - (7.3.04) - Better method for for showing cal and event details.
 - Wed Jul 2, 2025
   - (7.2.01) - Updated timezone field.
   - (7.2.02) - Added cal details component.

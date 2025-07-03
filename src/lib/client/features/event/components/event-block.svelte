@@ -2,16 +2,13 @@
   import { differenceInMinutes, startOfHour } from "date-fns";
   import { toZonedTime } from "date-fns-tz";
 
-  import { Modal } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
-  import { handleEventStopEditing, isEventEditing } from "$lib/client/stores/event";
+  import { handleEventModal } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getColorIdFromCalendarId } from "../../calendar/utils";
-
-  import { EditEvent, EventDetails } from ".";
 
   interface EventBlockProps {
     event: Event;
@@ -57,21 +54,13 @@
     const suffix = d.getHours() < 12 ? "am" : "pm";
     return m ? `${h}:${m.toString().padStart(2, "0")} ${suffix}` : `${h} ${suffix}`;
   }
-
-  function onclick() {
-    toggleModal(event.id);
-  }
-
-  function onModalClose() {
-    handleEventStopEditing();
-  }
 </script>
 
 <button
   class="absolute left-1 right-1 z-10 text-white cursor-pointer select-none overflow-hidden rounded-xl flex items-start gap-1 backdrop-blur-md border border-white/10 shadow-md hover:shadow-lg transition-shadow duration-200"
   style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}33; pointer-events: auto; transform: translateX(${horizontalOffsetPx}px);`}
   title={event.name}
-  {onclick}
+  onclick={() => handleEventModal(event)}
 >
   <!-- Accent bar -->
   <div
@@ -102,11 +91,3 @@
     {/if}
   </div>
 </button>
-
-<Modal modalId={event.id} title="Event" {onModalClose}>
-  {#if $isEventEditing}
-    <EditEvent {event} />
-  {:else}
-    <EventDetails {event} />
-  {/if}
-</Modal>

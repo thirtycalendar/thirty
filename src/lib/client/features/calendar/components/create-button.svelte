@@ -1,12 +1,9 @@
 <script lang="ts">
   import { Plus } from "@lucide/svelte";
 
-  import { Modal } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
   import { eventCreateModalId } from "$lib/client/stores/event";
   import { taskCreateModalId } from "$lib/client/stores/task";
-
-  import { CreateEvent } from "../../event/components";
 </script>
 
 <div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">
@@ -68,5 +65,3 @@
     </li>
   </ul>
 </div>
-
-<Modal modalId={eventCreateModalId} title="Event"><CreateEvent /></Modal>
