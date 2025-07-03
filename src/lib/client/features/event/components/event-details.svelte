@@ -5,11 +5,12 @@
     CircleCheck,
     Clock3,
     Globe,
+    HistoryIcon,
     MapPin,
     Pen
   } from "@lucide/svelte";
 
-  import { parseISO } from "date-fns";
+  import { format, parseISO } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
 
   import { handleEventStartEditing } from "$lib/client/stores/event";
@@ -41,6 +42,8 @@
     event.timezone,
     event.allDay ? "EEE, MMM d" : "h:mm a"
   );
+
+  const updated = format(new Date(event.updatedAt), "PPp");
 </script>
 
 <div class="space-y-3">
@@ -107,6 +110,13 @@
       <Globe size="20" strokeWidth="2.5" />
     </div>
     <div class="flex-1">{event.timezone}</div>
+  </div>
+
+  <div class="flex mt-4 items-center">
+    <HistoryIcon size="14" strokeWidth="2.5" class="mr-2" />
+    <p class="text-sm font-semibold">
+      Last edited: {updated}
+    </p>
   </div>
 
   <div class="flex justify-end">
