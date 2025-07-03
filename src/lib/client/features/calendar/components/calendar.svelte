@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { Modal } from "$lib/client/components";
   import { calView } from "$lib/client/stores/cal-view";
-  import { calendarCreateModalId } from "$lib/client/stores/calendar";
 
   import { getEvents } from "../../event/query";
 
-  import { CreateCal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
+  import { CalModal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
   const { data: events } = getEvents();
 </script>
 
-<Modal modalId={calendarCreateModalId} title="Calendar"><CreateCal /></Modal>
+<CalModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}

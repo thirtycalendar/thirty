@@ -1,6 +1,7 @@
 export { default as CalDetails } from "./cal-details.svelte";
 export { default as CalForm } from "./cal-form.svelte";
 export { default as CalList } from "./cal-list.svelte";
+export { default as CalModal } from "./cal-modal.svelte";
 export { default as CalSidebar } from "./cal-sidebar.svelte";
 export { default as Calendar } from "./calendar.svelte";
 export { default as CalendarChoiceField } from "./calendar-choice-field.svelte";

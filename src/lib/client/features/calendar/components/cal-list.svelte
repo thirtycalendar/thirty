@@ -5,7 +5,7 @@
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { calendarCreateModalId } from "$lib/client/stores/calendar";
+  import { calendarCreateModalId, currentCalendarDetails } from "$lib/client/stores/calendar";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Calendar } from "$lib/types";
@@ -28,24 +28,30 @@
 
   const isExpanded = (title: string) => !collapsedCalendars[title];
 
-  const toggleCalendar = (title: string) => {
+  function toggleCalendar(title: string) {
     collapsedCalendars[title] = !collapsedCalendars[title];
     if (browser) {
       localStorage.setItem("toggle-calendar-list", JSON.stringify(collapsedCalendars));
     }
-  };
+  }
 
-  const isChecked = (id: string) => {
+  function isChecked(id: string) {
     const storeVal = $checkedCalendars;
     return storeVal[id] ?? true;
-  };
+  }
 
-  const toggleChecked = (id: string) => {
+  function toggleChecked(id: string) {
     checkedCalendars.update((curr) => ({
       ...curr,
       [id]: !(curr[id] ?? true)
     }));
-  };
+  }
+
+  function handleCalModal(cal: Calendar) {
+    currentCalendarDetails.set(cal);
+
+    toggleModal(cal.id);
+  }
 </script>
 
 {#if !$calendars}
@@ -87,7 +93,7 @@
 
       {#if $calendars && isExpanded(title)}
         <div class="my-1" transition:slide>
-          {#each cal as { id, name, colorId }}
+          {#each cal as c}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
             >
@@ -95,20 +101,21 @@
                 <input
                   type="checkbox"
                   class="checkbox checkbox-xs"
-                  checked={isChecked(id)}
-                  onchange={() => toggleChecked(id)}
+                  checked={isChecked(c.id)}
+                  onchange={() => toggleChecked(c.id)}
                 />
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${getColorHexCodeFromId(colorId)}`}
+                  style={`color: ${getColorHexCodeFromId(c.colorId)}`}
                 >
-                  {name}
+                  {c.name}
                 </span>
               </div>
 
               {#if title !== "Holidays"}
                 <button
                   class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+                  onclick={() => handleCalModal(c)}
                 >
                   <Bolt size="15" />
                 </button>

@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Thu Jul 3, 2025
+  - (7.3.01) - Separated cal modal for cal details.
 - Wed Jul 2, 2025
   - (7.2.01) - Updated timezone field.
   - (7.2.02) - Added cal details component.

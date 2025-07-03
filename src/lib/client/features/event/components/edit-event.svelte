@@ -8,7 +8,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import type { Event, EventDataType, EventForm as EventFromType } from "$lib/types";
+  import type { Event, EventDataType, EventForm as EventFormType } from "$lib/types";
 
   import { EventForm } from ".";
 
@@ -31,7 +31,7 @@
     timezone: event.timezone
   });
 
-  const defaultValues: EventFromType = {
+  const defaultValues: EventFormType = {
     calendarId: event.calendarId,
     externalId: event.externalId,
     source: event.source,
@@ -47,7 +47,7 @@
   };
 
   let { mutate, isPending } = createMutation({
-    mutationFn: async (formData: EventFromType) => {
+    mutationFn: async (formData: EventFormType) => {
       const res = await client.api.event.update[":id"].$put({
         param: { id: event.id },
         json: formData
@@ -68,7 +68,7 @@
     queryKeys: ["event-list"]
   });
 
-  async function onSubmit(data: EventFromType) {
+  async function onSubmit(data: EventFormType) {
     await mutate(data);
   }
 </script>

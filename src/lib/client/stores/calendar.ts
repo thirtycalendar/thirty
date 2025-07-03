@@ -1,5 +1,9 @@
 import { writable } from "svelte/store";
 
+import type { Calendar } from "$lib/types";
+
+export const currentCalendarDetails = writable<Calendar | null>();
+
 export const calendarModalId = "calendar-modal-id";
 export const calendarCreateModalId = "calendar-create-modal-id";
 
