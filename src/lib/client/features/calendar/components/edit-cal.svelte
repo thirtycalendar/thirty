@@ -3,7 +3,7 @@
 
   import { format, parseISO } from "date-fns";
 
-  import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
+  import { currentCalendarDetails, handleCalendarStopEditing } from "$lib/client/stores/calendar";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -40,6 +40,8 @@
       return data;
     },
     onSuccess: (data) => {
+      currentCalendarDetails.set(data.data);
+
       showToast(data.message);
       handleCalendarStopEditing();
     },

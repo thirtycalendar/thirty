@@ -5,7 +5,7 @@
   import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { calendarCreateModalId, currentCalendarDetails } from "$lib/client/stores/calendar";
+  import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Calendar } from "$lib/types";
@@ -45,12 +45,6 @@
       ...curr,
       [id]: !(curr[id] ?? true)
     }));
-  }
-
-  function handleCalModal(cal: Calendar) {
-    currentCalendarDetails.set(cal);
-
-    toggleModal(cal.id);
   }
 </script>
 

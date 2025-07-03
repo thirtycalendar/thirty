@@ -17,7 +17,7 @@
 <Modal modalId={calendarCreateModalId} title="Calendar"><CreateCal /></Modal>
 
 {#if $currentCalendarDetails}
-  <Modal modalId={$currentCalendarDetails.id} title="Event" onModalClose={onDetailsModalClose}>
+  <Modal modalId={$currentCalendarDetails.id} title="Calendar" onModalClose={onDetailsModalClose}>
     {#if $isCalendarEditing}
       <EditCal calendar={$currentCalendarDetails} />
     {:else}
