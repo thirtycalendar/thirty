@@ -1,23 +1,15 @@
 import { getTimeZones } from "@vvo/tzdb";
 
 const tzdb = getTimeZones();
-const validTzNames = new Set(tzdb.map((t) => t.name));
-
-function normalize(str: string) {
-  return str.toLowerCase().replace(/[^a-z]/g, "");
-}
 
 export function getValidTimeZone(): string {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  if (validTzNames.has(tz)) return tz;
+  const exact = tzdb.find((t) => t.name === tz);
+  if (exact) return exact.name;
 
-  const normalized = normalize(tz);
+  const alias = tzdb.find((t) => t.group.includes(tz));
+  if (alias) return alias.name;
 
-  const fuzzyMatch = tzdb.find(
-    (tzObj) =>
-      normalize(tzObj.name) === normalized || normalize(tzObj.alternativeName ?? "") === normalized
-  );
-
-  return fuzzyMatch?.name ?? "UTC";
+  return "UTC";
 }

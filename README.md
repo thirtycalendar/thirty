@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Fri Jul 4, 2025
+  - (7.4.01) - Fixed getting valid timezone name.
 - Thu Jul 3, 2025
   - (7.3.01) - Separated cal modal for cal details.
   - (7.3.02) - Show cal details instancing.
