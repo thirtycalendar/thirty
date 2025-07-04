@@ -43,6 +43,10 @@
     event.allDay ? "EEE, MMM d" : "h:mm a"
   );
 
+  const calendarColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
+
+  const calendarName = $derived.by(() => getNameFromCalendarId(event.calendarId));
+
   const updated = format(new Date(event.updatedAt), "PPp");
 </script>
 
@@ -70,11 +74,8 @@
 
     <div class="flex-1 flex items-center gap-2 capitalize">
       <span>Calendar:</span>
-      <div
-        class="w-5 aspect-square rounded-full"
-        style="background-color: {getColorHexCodeFromId(event.colorId)}"
-      ></div>
-      <span>{getNameFromCalendarId(event.calendarId)}</span>
+      <div class="w-5 aspect-square rounded-full" style="background-color: {calendarColor}"></div>
+      <span>{calendarName}</span>
     </div>
   </div>
 

@@ -19,6 +19,11 @@
   const start = toZonedTime(event.start, event.timezone);
   const end = toZonedTime(event.end, event.timezone);
 
+  const eventColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
+  const calendarColor = $derived.by(() =>
+    getColorHexCodeFromId(getColorIdFromCalendarId(event.calendarId))
+  );
+
   const hourHeight = 60;
   const minuteHeight = hourHeight / 60;
 
@@ -57,15 +62,12 @@
 
 <button
   class="absolute left-1 right-1 z-10 text-white cursor-pointer select-none overflow-hidden rounded-xl flex items-start gap-1 backdrop-blur-md border border-white/10 shadow-md hover:shadow-lg transition-shadow duration-200"
-  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${getColorHexCodeFromId(event.colorId)}33; pointer-events: auto; transform: translateX(${horizontalOffsetPx}px);`}
+  style={`top: ${topPx}px; height: ${heightPx}px; background-color: ${eventColor}33; pointer-events: auto; transform: translateX(${horizontalOffsetPx}px);`}
   title={event.name}
   onclick={() => handleEventModal(event)}
 >
   <!-- Accent bar -->
-  <div
-    class="w-1 h-full rounded-sm shrink-0"
-    style={`background-color: ${getColorHexCodeFromId(getColorIdFromCalendarId(event.calendarId))};`}
-  ></div>
+  <div class="w-1 h-full rounded-sm shrink-0" style={`background-color: ${calendarColor};`}></div>
 
   <div class="w-full text-left p-1">
     {#if heightPx < 28}

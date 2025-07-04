@@ -17,6 +17,7 @@
   - (7.4.01) - Fixed getting valid timezone name.
   - (7.4.02) - Revalidate the cal list and event list automatically after deleting a cal.
   - (7.4.03) - Added more todos.
+  - (7.4.04) - Bug fixed for showing actual calendar name and color every time.
 - Thu Jul 3, 2025
   - (7.3.01) - Separated cal modal for cal details.
   - (7.3.02) - Show cal details instancing.
