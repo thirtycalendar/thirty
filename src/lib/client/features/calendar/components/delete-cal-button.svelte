@@ -34,7 +34,7 @@
     onError: (message: Error["message"]) => {
       showToast(message, true);
     },
-    queryKeys: ["event-list"]
+    queryKeys: ["cal-list", "event-list"]
   });
 
   function handleDelete() {
