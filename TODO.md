@@ -1,2 +1,7 @@
-- [ ] Make the event blocks better like Google Calendar events if they have shared time.
-- [ ] Clean, faster, and reduce redundancy codes in `week-calendar`, `day-calendar`, and `month-calendar` components.
+- [x] - Make the event blocks better like Google Calendar events if they have shared time.
+- [x] - Clean, faster, and reduce redundancy codes in `week-calendar`, `day-calendar`, and `month-calendar` components.
+- [ ] - Bug fix to scroll to current time in `week-calendar` and `day-calendar`.
+- [ ] - Reset the default values after creating and updating the form.
+- [ ] - (important!) Bug fix for showing actual time for event block.
+- [ ] - Make to show the event block at the top if it is all day.
+- [ ] - Show holiday calendars.

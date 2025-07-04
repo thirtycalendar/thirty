@@ -2,7 +2,6 @@
   import { differenceInMinutes, startOfHour } from "date-fns";
   import { toZonedTime } from "date-fns-tz";
 
-  import { toggleModal } from "$lib/client/components/utils";
   import { handleEventModal } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/types";
