@@ -6,12 +6,13 @@ import { KV_CALENDARS } from "$lib/utils/kv-keys";
 import { db } from "../db";
 import { calendars } from "../db/schemas/calendar-table";
 import { kv } from "../libs/upstash/kv";
+import { refreshEventsFromDb } from "./event";
 
-async function cacheCalendars(userId: string, list: Calendar[]) {
+export async function cacheCalendars(userId: string, list: Calendar[]) {
   await kv.set(KV_CALENDARS(userId), list, { ex: 3600 });
 }
 
-async function refreshCalendarsFromDb(userId: string) {
+export async function refreshCalendarsFromDb(userId: string) {
   const list = await db.select().from(calendars).where(eq(calendars.userId, userId));
 
   await cacheCalendars(userId, list);
@@ -125,6 +126,8 @@ export async function deleteCalendar(calendarId: string): Promise<Calendar> {
   } else {
     await refreshCalendarsFromDb(userId);
   }
+
+  await refreshEventsFromDb(userId);
 
   return deleted;
 }

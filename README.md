@@ -22,6 +22,7 @@
   - (7.4.06) - Fixed reactivity bug.
   - (7.4.07) - Separated into event action buttons.
   - (7.4.08) - Separated into cal action buttons.
+  - (7.4.09) - Bug fixed for updating event cache after a cal was deleted.
 - Thu Jul 3, 2025
   - (7.3.01) - Separated cal modal for cal details.
   - (7.3.02) - Show cal details instancing.

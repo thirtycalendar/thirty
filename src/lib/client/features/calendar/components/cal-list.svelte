@@ -68,12 +68,14 @@
 
         <div>
           {#if title === "My Calendars"}
-            <button
-              class="btn btn-xs btn-ghost btn-square"
-              onclick={() => toggleModal(calendarCreateModalId)}
-            >
-              <Plus size="16" />
-            </button>
+            <div class="tooltip font-normal" data-tip="New">
+              <button
+                class="btn btn-xs btn-ghost btn-square"
+                onclick={() => toggleModal(calendarCreateModalId)}
+              >
+                <Plus size="16" />
+              </button>
+            </div>
           {/if}
 
           <button

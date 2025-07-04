@@ -7,11 +7,11 @@ import { db } from "../db";
 import { events } from "../db/schemas/event-table";
 import { kv } from "../libs/upstash/kv";
 
-async function cacheEvents(userId: string, list: Event[]) {
+export async function cacheEvents(userId: string, list: Event[]) {
   await kv.set(KV_EVENTS(userId), list, { ex: 900 });
 }
 
-async function refreshEventsFromDb(userId: string) {
+export async function refreshEventsFromDb(userId: string) {
   const list = await db.select().from(events).where(eq(events.userId, userId));
 
   await cacheEvents(userId, list);

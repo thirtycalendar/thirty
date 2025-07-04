@@ -5,3 +5,4 @@
 - [ ] - (important!) Bug fix for showing actual time for event block.
 - [ ] - Make to show the event block at the top if it is all day.
 - [ ] - Show holiday calendars.
+- [ ] - Reset to default form values after creating a cal or event.
