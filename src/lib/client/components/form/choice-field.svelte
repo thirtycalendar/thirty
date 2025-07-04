@@ -3,7 +3,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { capitalize } from "$lib/utils/char";
+  import { capitalizeFirstLetter } from "$lib/utils/char";
 
   interface ChoiceFieldProps {
     name: string;
@@ -80,7 +80,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{capitalize(selectedValue)}</span>
+    <span>{capitalizeFirstLetter(selectedValue)}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -114,7 +114,7 @@
             }}
             disabled={$formData[name] === choice}
           >
-            {capitalize(choice)}
+            {capitalizeFirstLetter(choice)}
             {#if $formData[name] === choice}
               <Check size="16" />
             {/if}

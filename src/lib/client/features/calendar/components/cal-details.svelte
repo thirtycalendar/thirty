@@ -1,11 +1,20 @@
 <script lang="ts">
-  import { CalendarCheck2, CircleCheck, Clock3, Globe, HistoryIcon, Pen } from "@lucide/svelte";
+  import {
+    CalendarCheck2,
+    CircleCheck,
+    Clock3,
+    Globe,
+    HistoryIcon,
+    Pen,
+    RefreshCcw
+  } from "@lucide/svelte";
 
   import { format } from "date-fns";
 
   import { handleCalendarStartEditing } from "$lib/client/stores/calendar";
 
   import type { Calendar } from "$lib/types";
+  import { capitalizeFirstLetter } from "$lib/utils/char";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { DeleteCalButton } from ".";
@@ -51,11 +60,22 @@
     </div>
   {/if}
 
-  <div class="flex mt-4 items-center">
-    <HistoryIcon size="14" strokeWidth="2.5" class="mr-2" />
-    <p class="text-sm font-semibold">
-      Last edited: {updated}
-    </p>
+  <div class="mt-4 space-y-1">
+    {#if calendar.source !== "local"}
+      <div class="flex items-center">
+        <RefreshCcw size="14" strokeWidth="2.5" class="mr-2" />
+        <p class="text-sm font-semibold">
+          Synced from {capitalizeFirstLetter(calendar.source)}
+        </p>
+      </div>
+    {/if}
+
+    <div class="flex items-center">
+      <HistoryIcon size="14" strokeWidth="2.5" class="mr-2" />
+      <p class="text-sm font-semibold">
+        Last edited: {updated}
+      </p>
+    </div>
   </div>
 
   <div class="flex justify-end">

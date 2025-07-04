@@ -2,7 +2,7 @@
   import { slide } from "svelte/transition";
   import { browser } from "$app/environment";
 
-  import { Bolt, ChevronDown, Plus } from "@lucide/svelte";
+  import { ChevronDown, Plus, Settings } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
@@ -111,7 +111,7 @@
                   class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
                   onclick={() => handleCalModal(c)}
                 >
-                  <Bolt size="15" />
+                  <Settings size="15" />
                 </button>
               {/if}
             </label>

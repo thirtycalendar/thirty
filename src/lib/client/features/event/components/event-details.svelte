@@ -7,7 +7,8 @@
     Globe,
     HistoryIcon,
     MapPin,
-    Pen
+    Pen,
+    RefreshCcw
   } from "@lucide/svelte";
 
   import { format, parseISO } from "date-fns";
@@ -16,6 +17,7 @@
   import { handleEventStartEditing } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/types";
+  import { capitalizeFirstLetter } from "$lib/utils/char";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getNameFromCalendarId } from "../../calendar/utils";
@@ -59,8 +61,10 @@
     </div>
     <div class="flex-1">
       {#if event.allDay}
-        {formattedStart}{#if event.start !== event.end}
-          - {formattedEnd}{/if}
+        <div class="flex items-center gap-2">
+          <div class="badge badge-outline badge-sm">All Day</div>
+          <div>{formattedStart}</div>
+        </div>
       {:else}
         {formattedStart} - {formattedEnd}
       {/if}
@@ -113,11 +117,22 @@
     <div class="flex-1">{event.timezone}</div>
   </div>
 
-  <div class="flex mt-4 items-center">
-    <HistoryIcon size="14" strokeWidth="2.5" class="mr-2" />
-    <p class="text-sm font-semibold">
-      Last edited: {updated}
-    </p>
+  <div class="mt-4 space-y-1">
+    {#if event.source !== "local"}
+      <div class="flex items-center">
+        <RefreshCcw size="14" strokeWidth="2.5" class="mr-2" />
+        <p class="text-sm font-semibold">
+          Synced from {capitalizeFirstLetter(event.source)}
+        </p>
+      </div>
+    {/if}
+
+    <div class="flex items-center">
+      <HistoryIcon size="14" strokeWidth="2.5" class="mr-2" />
+      <p class="text-sm font-semibold">
+        Last edited: {updated}
+      </p>
+    </div>
   </div>
 
   <div class="flex justify-end">
