@@ -20,6 +20,7 @@
   - (7.4.04) - Bug fixed for showing actual calendar name and color every time.
   - (7.4.05) - Showed sync source text and improved function name.
   - (7.4.06) - Fixed reactivity bug.
+  - (7.4.07) - Separated into event action buttons.
 - Thu Jul 3, 2025
   - (7.3.01) - Separated cal modal for cal details.
   - (7.3.02) - Show cal details instancing.

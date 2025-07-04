@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { Trash } from "@lucide/svelte";
+  import { onDestroy } from "svelte";
+
+  import { Pen, Trash } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
+  import { handleEventStartEditing } from "$lib/client/stores/event";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -40,19 +43,38 @@
   function handleDelete() {
     mutate(id);
   }
+
+  onDestroy(() => {
+    confirmDelete = false;
+  });
 </script>
 
-{#if confirmDelete}
-  <div>
-    <button class="btn btn-sm btn-neutral text-xs mr-1" {onclick} disabled={$isPending}>
-      No
+<div class="flex justify-end">
+  {#if confirmDelete}
+    <div>
+      <button class="btn btn-sm btn-neutral text-xs mr-1" {onclick} disabled={$isPending}>
+        No
+      </button>
+
+      <button
+        class="btn btn-sm btn-error text-xs mr-1"
+        onclick={handleDelete}
+        disabled={$isPending}
+      >
+        Yes
+      </button>
+    </div>
+  {:else}
+    <button class="btn btn-sm btn-square btn-ghost hover:bg-error" {onclick} disabled={$isPending}>
+      <Trash size="17" />
     </button>
-    <button class="btn btn-sm btn-error text-xs mr-1" onclick={handleDelete} disabled={$isPending}>
-      Yes
-    </button>
-  </div>
-{:else}
-  <button class="btn btn-sm btn-square btn-ghost hover:bg-error" {onclick}>
-    <Trash size="17" />
+  {/if}
+
+  <button
+    class="btn btn-sm btn-square btn-ghost"
+    onclick={handleEventStartEditing}
+    disabled={$isPending}
+  >
+    <Pen size="17" />
   </button>
-{/if}
+</div>

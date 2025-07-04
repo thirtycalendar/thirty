@@ -22,7 +22,7 @@
 
   import { getCalendars } from "../../calendar/query";
 
-  import { DeleteEventButton } from ".";
+  import { EventActionButtons } from ".";
 
   interface EventDetailsProps {
     event: Event;
@@ -139,11 +139,5 @@
     </div>
   </div>
 
-  <div class="flex justify-end">
-    <DeleteEventButton id={event.id} />
-
-    <button class="btn btn-sm btn-square btn-ghost" onclick={handleEventStartEditing}>
-      <Pen size="17" />
-    </button>
-  </div>
+  <EventActionButtons id={event.id} />
 </div>
