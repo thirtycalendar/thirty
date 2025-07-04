@@ -7,7 +7,7 @@
   import type { Event } from "$lib/types";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
-  import { getColorIdFromCalendarId } from "../../calendar/utils";
+  import { getCalendars } from "../../calendar/query";
 
   interface EventBlockProps {
     event: Event;
@@ -20,9 +20,13 @@
   const end = toZonedTime(event.end, event.timezone);
 
   const eventColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
-  const calendarColor = $derived.by(() =>
-    getColorHexCodeFromId(getColorIdFromCalendarId(event.calendarId))
-  );
+
+  const { data: calendars } = getCalendars();
+
+  const calendarColor = $derived.by(() => {
+    const colorId = $calendars?.find((cal) => cal.id === event.calendarId)?.colorId ?? "-1";
+    return getColorHexCodeFromId(colorId);
+  });
 
   const hourHeight = 60;
   const minuteHeight = hourHeight / 60;

@@ -20,7 +20,7 @@
   import { capitalizeFirstLetter } from "$lib/utils/char";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
-  import { getNameFromCalendarId } from "../../calendar/utils";
+  import { getCalendars } from "../../calendar/query";
 
   import { DeleteEventButton } from ".";
 
@@ -47,7 +47,11 @@
 
   const calendarColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
 
-  const calendarName = $derived.by(() => getNameFromCalendarId(event.calendarId));
+  const { data: calendars } = getCalendars();
+
+  const calendarName = $derived.by(() => {
+    return $calendars?.find((cal) => cal.id === event.calendarId)?.name ?? "Unknown calendar";
+  });
 
   const updated = format(new Date(event.updatedAt), "PPp");
 </script>
