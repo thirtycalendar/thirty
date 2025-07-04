@@ -1,3 +1,4 @@
+export { default as CalActionButtons } from "./cal-action-buttons.svelte";
 export { default as CalDetails } from "./cal-details.svelte";
 export { default as CalForm } from "./cal-form.svelte";
 export { default as CalList } from "./cal-list.svelte";
@@ -11,7 +12,6 @@ export { default as CreateButton } from "./create-button.svelte";
 export { default as CreateCal } from "./create-cal.svelte";
 export { default as CurrentTimeIndicator } from "./current-time-indicator.svelte";
 export { default as DayCalendar } from "./day-calendar.svelte";
-export { default as DeleteCalButton } from "./delete-cal-button.svelte";
 export { default as EditCal } from "./edit-cal.svelte";
 export { default as MiniCalendar } from "./mini-calendar.svelte";
 export { default as MonthCalendar } from "./month-calendar.svelte";

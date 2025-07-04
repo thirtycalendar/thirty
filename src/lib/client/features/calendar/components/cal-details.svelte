@@ -11,13 +11,11 @@
 
   import { format } from "date-fns";
 
-  import { handleCalendarStartEditing } from "$lib/client/stores/calendar";
-
   import type { Calendar } from "$lib/types";
   import { capitalizeFirstLetter } from "$lib/utils/char";
   import { getColorHexCodeFromId } from "$lib/utils/colors";
 
-  import { DeleteCalButton } from ".";
+  import { CalActionButtons } from ".";
 
   interface CalendarDetailsProps {
     calendar: Calendar;
@@ -78,11 +76,5 @@
     </div>
   </div>
 
-  <div class="flex justify-end">
-    <DeleteCalButton id={calendar.id} />
-
-    <button class="btn btn-sm btn-square btn-ghost" onclick={handleCalendarStartEditing}>
-      <Pen size="17" />
-    </button>
-  </div>
+  <CalActionButtons id={calendar.id} />
 </div>

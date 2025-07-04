@@ -1,6 +1,6 @@
 export { default as CreateEvent } from "./create-event.svelte";
-export { default as EventActionButtons } from "./event-action-buttons.svelte";
 export { default as EditEvent } from "./edit-event.svelte";
+export { default as EventActionButtons } from "./event-action-buttons.svelte";
 export { default as EventBlock } from "./event-block.svelte";
 export { default as EventCreateModal } from "./event-create-modal.svelte";
 export { default as EventDetails } from "./event-details.svelte";

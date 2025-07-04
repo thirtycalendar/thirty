@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { Trash } from "@lucide/svelte";
+  import { onDestroy } from "svelte";
+
+  import { Pen, Trash } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
+  import { handleCalendarStartEditing } from "$lib/client/stores/calendar";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -28,6 +31,8 @@
       return data;
     },
     onSuccess: async (data) => {
+      confirmDelete = false;
+
       toggleModal(id);
       showToast(data.message);
     },
@@ -40,19 +45,43 @@
   function handleDelete() {
     mutate(id);
   }
+
+  onDestroy(() => {
+    confirmDelete = false;
+  });
 </script>
 
 {#if confirmDelete}
-  <div>
-    <button class="btn btn-sm btn-neutral text-xs mr-1" {onclick} disabled={$isPending}>
-      No
-    </button>
-    <button class="btn btn-sm btn-error text-xs mr-1" onclick={handleDelete} disabled={$isPending}>
-      Yes
-    </button>
-  </div>
-{:else}
-  <button class="btn btn-sm btn-square btn-ghost hover:bg-error" {onclick}>
-    <Trash size="17" />
-  </button>
+  <p class="text-xs text-error text-right mr-10">
+    Deleting this calendar will also delete its events. Sure?
+  </p>
 {/if}
+
+<div class="flex justify-end">
+  {#if confirmDelete}
+    <div>
+      <button class="btn btn-sm btn-neutral text-xs mr-1" {onclick} disabled={$isPending}>
+        No
+      </button>
+      <button
+        class="btn btn-sm btn-error text-xs mr-1"
+        onclick={handleDelete}
+        disabled={$isPending}
+      >
+        Yes
+      </button>
+    </div>
+  {:else}
+    <button class="btn btn-sm btn-square btn-ghost hover:bg-error" {onclick}>
+      <Trash size="17" />
+    </button>
+  {/if}
+
+  <button
+    class="btn btn-sm btn-square btn-ghost"
+    onclick={handleCalendarStartEditing}
+    disabled={$isPending || confirmDelete}
+  >
+    <Pen size="17" />
+  </button>
+</div>

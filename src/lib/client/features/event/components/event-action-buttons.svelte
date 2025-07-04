@@ -31,6 +31,8 @@
       return data;
     },
     onSuccess: async (data) => {
+      confirmDelete = false;
+
       toggleModal(id);
       showToast(data.message);
     },
@@ -48,6 +50,10 @@
     confirmDelete = false;
   });
 </script>
+
+{#if confirmDelete}
+  <p class="text-xs text-error text-right mr-10">Are you sure?</p>
+{/if}
 
 <div class="flex justify-end">
   {#if confirmDelete}
@@ -73,7 +79,7 @@
   <button
     class="btn btn-sm btn-square btn-ghost"
     onclick={handleEventStartEditing}
-    disabled={$isPending}
+    disabled={$isPending || confirmDelete}
   >
     <Pen size="17" />
   </button>
