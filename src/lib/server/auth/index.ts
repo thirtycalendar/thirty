@@ -8,6 +8,7 @@ import { getRandomColorId } from "$lib/utils/colors";
 import { googleEnvConfig } from "$lib/utils/env-configs";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
+import { initCalendarToKV } from "../calendars/local/init-calendar";
 import { db } from "../db";
 import { account, session, user, verification } from "../db/schemas/auth-table";
 import { createCalendar } from "../services/calendar";
@@ -46,7 +47,10 @@ export const auth = betterAuth({
         after: async (user) => {
           const { id, name } = user;
 
+          const calendarId = crypto.randomUUID();
+
           const calendar: CalendarForm = {
+            id: calendarId,
             externalId: null,
             source: "local",
             name,
@@ -56,6 +60,8 @@ export const auth = betterAuth({
           };
 
           await createCalendar(id, calendar);
+
+          await initCalendarToKV(id, calendarId);
         }
       }
     }

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { writable } from "svelte/store";
+
   import { calView } from "$lib/client/stores/cal-view";
 
   import { EventModal } from "../../event/components";
@@ -6,7 +9,17 @@
 
   import { CalModal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
-  const { data: events } = getEvents();
+  let { data: events } = getEvents();
+
+  let state = writable(false);
+
+  onMount(() => {
+    if (!$state) {
+      console.log("Mounted...");
+    }
+
+    state.set(true);
+  });
 </script>
 
 <CalModal />

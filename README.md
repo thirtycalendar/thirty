@@ -15,6 +15,7 @@
 
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
+  - (7.5.02) - Added init calendar codes to store to KV.
 - Fri Jul 4, 2025
   - (7.4.01) - Fixed getting valid timezone name.
   - (7.4.02) - Revalidate the cal list and event list automatically after deleting a cal.

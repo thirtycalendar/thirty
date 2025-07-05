@@ -20,6 +20,7 @@ import { errorResponse, requireParamId } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
+  .post("/init", async (c) => {})
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;

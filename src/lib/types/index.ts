@@ -23,6 +23,7 @@ export interface Calendar {
 }
 
 export interface CalendarForm {
+  id?: string;
   externalId: string | null;
   source: Source;
 
@@ -69,6 +70,7 @@ export interface EventDataType {
 }
 
 export interface EventForm {
+  id?: string;
   calendarId: string;
   externalId: string | null;
   source: Source;
@@ -104,6 +106,7 @@ export interface Task {
 }
 
 export interface TaskForm {
+  id?: string;
   externalId: string | null;
   source: Source;
 

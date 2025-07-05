@@ -5,3 +5,8 @@ export interface GoogleSession {
   accessTokenExpiresAt: string;
   idToken: string;
 }
+
+export interface InitCalendar {
+  calendarId: string;
+  isUpdatedTimezone: boolean;
+}
