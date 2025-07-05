@@ -7,7 +7,7 @@
 
   import type { CalendarForm } from "$lib/types";
 
-  import { calendarSchema } from "../schema";
+  import { calendarSchema } from "../../../../shared/schemas/calendar";
 
   interface CalFormProps {
     defaultValues: CalendarForm;

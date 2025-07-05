@@ -2,8 +2,6 @@ import { zValidator } from "@hono/zod-validator";
 
 import { Hono } from "hono";
 
-import { calendarSchema } from "$lib/client/features/calendar/schema";
-
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
@@ -14,6 +12,7 @@ import {
   updateCalendar
 } from "$lib/server/services/calendar";
 
+import { calendarSchema } from "$lib/shared/schemas/calendar";
 import type { Calendar, SuccessResponse, User } from "$lib/types";
 
 import { errorResponse, requireParamId } from "../utils";

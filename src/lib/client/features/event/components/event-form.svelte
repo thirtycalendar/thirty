@@ -28,9 +28,9 @@
 
   import { EventStatus, type EventDataType, type EventForm } from "$lib/types";
 
+  import { eventSchema } from "../../../../shared/schemas/event";
   import { CalendarChoiceField } from "../../calendar/components";
   import { getCalendars } from "../../calendar/query";
-  import { eventSchema } from "../schema";
 
   interface EventFormProps {
     eventData: Writable<EventDataType>;

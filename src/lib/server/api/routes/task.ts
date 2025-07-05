@@ -2,8 +2,6 @@ import { zValidator } from "@hono/zod-validator";
 
 import { Hono } from "hono";
 
-import { taskSchema } from "$lib/client/features/task/schema";
-
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
@@ -14,6 +12,7 @@ import {
   updateTask
 } from "$lib/server/services/task";
 
+import { taskSchema } from "$lib/shared/schemas/task";
 import type { SuccessResponse, Task, User } from "$lib/types";
 
 import { errorResponse, requireParamId } from "../utils";

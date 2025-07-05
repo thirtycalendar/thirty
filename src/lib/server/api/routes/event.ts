@@ -2,8 +2,6 @@ import { zValidator } from "@hono/zod-validator";
 
 import { Hono } from "hono";
 
-import { eventSchema } from "$lib/client/features/event/schema";
-
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
@@ -14,6 +12,7 @@ import {
   updateEvent
 } from "$lib/server/services/event";
 
+import { eventSchema } from "$lib/shared/schemas/event";
 import type { Event, SuccessResponse, User } from "$lib/types";
 
 import { errorResponse, requireParamId } from "../utils";
