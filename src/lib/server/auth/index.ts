@@ -2,10 +2,10 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
+import { getRandomColorId } from "$lib/shared/utils/colors";
+import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 import type { CalendarForm } from "$lib/types";
 import type { GoogleSession } from "$lib/types/server";
-import { getRandomColorId } from "$lib/utils/colors";
-import { googleEnvConfig } from "$lib/utils/env-configs";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { initCalendarToKV } from "../calendars/local/init-calendar";

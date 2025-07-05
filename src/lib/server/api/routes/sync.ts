@@ -5,8 +5,8 @@ import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { syncGoogleCalendars, syncGoogleEvents } from "$lib/server/services/sync/google";
 import { kv } from "$lib/server/libs/upstash/kv";
 
+import { KV_CALENDARS, KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { SuccessResponse, User } from "$lib/types";
-import { KV_CALENDARS, KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { errorResponse } from "../utils";
 

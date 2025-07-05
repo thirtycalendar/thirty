@@ -3,8 +3,8 @@
 
   import { cn } from "$lib/client/utils/cn"; // Assuming this utility is still available
 
+  import { colors } from "$lib/shared/utils/colors";
   import type { Color } from "$lib/types";
-  import { colors } from "$lib/utils/colors";
 
   interface ColorChoiceFieldProps {
     name: string;

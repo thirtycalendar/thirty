@@ -40,8 +40,12 @@
 
     "",
 
+    "^\\$lib/shared/schemas",
+    "^\\$lib/shared/utils",
+    "^\\$lib/shared",
     "^\\$lib/types",
-    "^\\$lib/utils",
+    "^\\$lib/types/client",
+    "^\\$lib/types/server",
     "^\\$lib",
 
     "",

@@ -1,7 +1,7 @@
 import { eq, sql } from "drizzle-orm";
 
+import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { Event, EventForm } from "$lib/types";
-import { KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
 import { events } from "../db/tables/event";

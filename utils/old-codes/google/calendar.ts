@@ -8,8 +8,8 @@ import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { kv } from "$lib/server/utils/upstash/kv";
 
+import { KV_GOOGLE_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, ErrorResponse, SuccessResponse, User } from "$lib/types";
-import { KV_GOOGLE_CALENDARS } from "$lib/utils/kv-keys";
 
 const app = new Hono<Context>()
   .use(loggedIn)

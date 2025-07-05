@@ -14,9 +14,9 @@
   import { format, parseISO } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
 
+  import { capitalizeFirstLetter } from "$lib/shared/utils/char";
+  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/types";
-  import { capitalizeFirstLetter } from "$lib/utils/char";
-  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { getCalendars } from "../../calendar/query";
 

@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 
+import { isProd } from "$lib/shared/utils/is-prod";
 import type { ErrorResponse } from "$lib/types";
-import { isProd } from "$lib/utils/is-prod";
 
 import type { Context } from "./context";
 import auth from "./routes/auth";

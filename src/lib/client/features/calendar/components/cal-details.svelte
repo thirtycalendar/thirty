@@ -11,9 +11,9 @@
 
   import { format } from "date-fns";
 
+  import { capitalizeFirstLetter } from "$lib/shared/utils/char";
+  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Calendar } from "$lib/types";
-  import { capitalizeFirstLetter } from "$lib/utils/char";
-  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   import { CalActionButtons } from ".";
 

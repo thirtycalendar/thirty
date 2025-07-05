@@ -18,8 +18,8 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
+  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/types";
-  import { getColorHexCodeFromId } from "$lib/utils/colors";
 
   interface MonthCalendarProps {
     events: Event[];

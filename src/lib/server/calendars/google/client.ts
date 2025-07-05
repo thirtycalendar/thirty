@@ -1,7 +1,7 @@
 import { auth, calendar } from "@googleapis/calendar";
 import { tasks } from "@googleapis/tasks";
 
-import { googleEnvConfig } from "$lib/utils/env-configs";
+import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 
 import { getGoogleAccessToken } from "./token";
 

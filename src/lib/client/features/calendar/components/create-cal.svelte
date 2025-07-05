@@ -5,9 +5,9 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
+  import { getRandomColorId } from "$lib/shared/utils/colors";
+  import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { CalendarForm as CalendarFormType } from "$lib/types";
-  import { getRandomColorId } from "$lib/utils/colors";
-  import { getValidTimeZone } from "$lib/utils/timezone";
 
   import { CalForm } from ".";
 

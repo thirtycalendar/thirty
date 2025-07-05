@@ -2,14 +2,14 @@ import type { calendar_v3 } from "@googleapis/calendar";
 
 import { kv } from "$lib/server/utils/upstash/kv";
 
-import type { Calendar, Color, ColorMap, Event, Task, UtilEvent } from "$lib/types";
 import {
   KV_GOOGLE_CALENDARS,
   KV_GOOGLE_COLORS,
   KV_GOOGLE_EVENTS,
   KV_GOOGLE_TASKS,
   KV_GOOGLE_UTIL_EVENTS
-} from "$lib/utils/kv-keys";
+} from "$lib/shared/utils/kv-keys";
+import type { Calendar, Color, ColorMap, Event, Task, UtilEvent } from "$lib/types";
 
 import { getGoogleClients } from "./client";
 

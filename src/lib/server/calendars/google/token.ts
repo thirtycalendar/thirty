@@ -2,9 +2,9 @@ import { google } from "googleapis";
 
 import { kv } from "$lib/server/libs/upstash/kv";
 
+import { googleEnvConfig } from "$lib/shared/utils/env-configs";
+import { KV_GOOGLE_TOKEN } from "$lib/shared/utils/kv-keys";
 import type { GoogleSession } from "$lib/types/server";
-import { googleEnvConfig } from "$lib/utils/env-configs";
-import { KV_GOOGLE_TOKEN } from "$lib/utils/kv-keys";
 
 export async function storeGoogleSessionToKV(session: GoogleSession) {
   await kv.set(KV_GOOGLE_TOKEN(session.userId), session);

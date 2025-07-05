@@ -5,8 +5,8 @@ import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { cacheGoogleCalData } from "$lib/server/calendars/google/cache";
 import { kv } from "$lib/server/utils/upstash/kv";
 
+import { KV_GOOGLE_COLORS } from "$lib/shared/utils/kv-keys";
 import type { Color, ErrorResponse, SuccessResponse, User } from "$lib/types";
-import { KV_GOOGLE_COLORS } from "$lib/utils/kv-keys";
 
 const app = new Hono<Context>().use(loggedIn).get("/getAll", async (c) => {
   try {
