@@ -66,7 +66,7 @@
       >
         <p>{title}</p>
 
-        <div>
+        <div class="flex items-center gap-1">
           {#if title === "My Calendars"}
             <div class="tooltip font-normal" data-tip="New">
               <button
@@ -87,11 +87,11 @@
         </div>
       </div>
 
-      {#if $calendars && isExpanded(title)}
+      {#if isExpanded(title)}
         <div class="my-1" transition:slide>
           {#each cal as c}
             <label
-              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md"
+              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
             >
               <div class="flex items-center gap-2">
                 <input

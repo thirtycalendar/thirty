@@ -6,3 +6,4 @@
 - [ ] - Make to show the event block at the top if it is all day.
 - [ ] - Show holiday calendars.
 - [ ] - Reset to default form values after creating a cal or event.
+- [ ] - (test) Try to sync google calendars without giving access.

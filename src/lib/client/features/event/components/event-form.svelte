@@ -161,8 +161,8 @@
       </div>
     </div>
 
-    <div class="flex items-start gap-3">
-      <div class="pt-1.5 text-muted-foreground">
+    <div class="flex items-center gap-3">
+      <div class="pb-1.5 text-muted-foreground">
         <MapPin size="20" strokeWidth="2.5" />
       </div>
 
