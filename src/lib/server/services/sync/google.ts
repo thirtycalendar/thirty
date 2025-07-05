@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "$lib/server/db";
-import { calendars } from "$lib/server/db/schemas/calendar-table";
-import { events } from "$lib/server/db/schemas/event-table";
+import { calendars } from "$lib/server/db/tables/calendar";
+import { events } from "$lib/server/db/tables/event";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { getLock, releaseLock, setLock } from "$lib/server/utils/lock";
 

@@ -4,7 +4,7 @@ import type { Task, TaskForm } from "$lib/types";
 import { KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
-import { tasks } from "../db/schemas/task-table";
+import { tasks } from "../db/tables/task";
 import { kv } from "../libs/upstash/kv";
 
 async function cacheTasks(userId: string, list: Task[]) {

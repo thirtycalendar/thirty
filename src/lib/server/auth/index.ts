@@ -10,7 +10,7 @@ import { googleEnvConfig } from "$lib/utils/env-configs";
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { initCalendarToKV } from "../calendars/local/init-calendar";
 import { db } from "../db";
-import { account, session, user, verification } from "../db/schemas/auth-table";
+import { account, session, user, verification } from "../db/tables/auth";
 import { createCalendar } from "../services/calendar";
 
 export const auth = betterAuth({

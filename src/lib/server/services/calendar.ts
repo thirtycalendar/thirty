@@ -4,7 +4,7 @@ import type { Calendar, CalendarForm } from "$lib/types";
 import { KV_CALENDARS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
-import { calendars } from "../db/schemas/calendar-table";
+import { calendars } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
 import { refreshEventsFromDb } from "./event";
 

@@ -2,7 +2,7 @@ import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import type { Source } from "$lib/types";
 
-import { user } from "./auth-table";
+import { user } from "./auth";
 import { timestamps } from "./utils";
 
 export const calendars = pgTable("calendars", {

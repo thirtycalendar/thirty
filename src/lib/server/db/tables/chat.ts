@@ -1,6 +1,6 @@
 import { pgTable, serial, text } from "drizzle-orm/pg-core";
 
-import { user } from "./auth-table";
+import { user } from "./auth";
 import { timestamps } from "./utils";
 
 export const chats = pgTable("chats", {

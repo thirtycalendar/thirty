@@ -4,7 +4,7 @@ import type { Event, EventForm } from "$lib/types";
 import { KV_EVENTS } from "$lib/utils/kv-keys";
 
 import { db } from "../db";
-import { events } from "../db/schemas/event-table";
+import { events } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
 
 export async function cacheEvents(userId: string, list: Event[]) {

@@ -1,6 +1,6 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
-import { chats } from "./chat-table";
+import { chats } from "./chat";
 import { timestamps, userSystemEnum } from "./utils";
 
 export const messages = pgTable("messages", {

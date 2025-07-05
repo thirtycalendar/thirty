@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { Source, TaskStatus } from "$lib/types";
 
-import { user } from "./auth-table";
+import { user } from "./auth";
 import { notification, timestamps } from "./utils";
 
 export const tasks = pgTable("tasks", {
