@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { Source, TaskStatus } from "$lib/types";
 
-import { user } from "./auth";
+import { userTable } from "./auth";
 import { notification, timestamps } from "./utils";
 
 export const tasks = pgTable("tasks", {
@@ -12,7 +12,7 @@ export const tasks = pgTable("tasks", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => user.id),
+    .references(() => userTable.id),
 
   name: text("name").notNull(),
   notes: text("notes"),

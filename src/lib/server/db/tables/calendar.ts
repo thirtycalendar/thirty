@@ -2,7 +2,7 @@ import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import type { Source } from "$lib/types";
 
-import { user } from "./auth";
+import { userTable } from "./auth";
 import { timestamps } from "./utils";
 
 export const calendars = pgTable("calendars", {
@@ -12,7 +12,7 @@ export const calendars = pgTable("calendars", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
   colorId: text("colorId").notNull(),

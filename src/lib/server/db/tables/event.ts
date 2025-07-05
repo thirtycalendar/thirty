@@ -2,7 +2,7 @@ import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-c
 
 import type { EventAttendeeStatus, EventStatus, Source } from "$lib/types";
 
-import { user } from "./auth";
+import { userTable } from "./auth";
 import { calendars } from "./calendar";
 import { notification, timestamps } from "./utils";
 
@@ -13,7 +13,7 @@ export const events = pgTable("events", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade" }),
   calendarId: uuid("calendar_id")
     .notNull()
     .references(() => calendars.id, { onDelete: "cascade" }),

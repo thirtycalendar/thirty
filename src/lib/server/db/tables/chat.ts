@@ -1,6 +1,6 @@
 import { pgTable, serial, text } from "drizzle-orm/pg-core";
 
-import { user } from "./auth";
+import { userTable } from "./auth";
 import { timestamps } from "./utils";
 
 export const chats = pgTable("chats", {
@@ -8,7 +8,7 @@ export const chats = pgTable("chats", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade" }),
 
   ...timestamps
 });
