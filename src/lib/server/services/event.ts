@@ -4,7 +4,7 @@ import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { Event, EventForm } from "$lib/types";
 
 import { db } from "../db";
-import { events } from "../db/tables/event";
+import { eventTable } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
 
 export async function cacheEvents(userId: string, list: Event[]) {
@@ -12,7 +12,7 @@ export async function cacheEvents(userId: string, list: Event[]) {
 }
 
 export async function refreshEventsFromDb(userId: string) {
-  const list = await db.select().from(events).where(eq(events.userId, userId));
+  const list = await db.select().from(eventTable).where(eq(eventTable.userId, userId));
 
   await cacheEvents(userId, list);
   return list;
@@ -26,7 +26,7 @@ export async function getAllEvents(userId: string): Promise<Event[]> {
 }
 
 export async function getEvent(eventId: string): Promise<Event> {
-  const [event] = await db.select().from(events).where(eq(events.id, eventId)).limit(1);
+  const [event] = await db.select().from(eventTable).where(eq(eventTable.id, eventId)).limit(1);
 
   if (!event) throw new Error("No event with id found");
 
@@ -35,7 +35,7 @@ export async function getEvent(eventId: string): Promise<Event> {
 
 export async function createEvent(userId: string, eventForm: EventForm): Promise<Event> {
   const [inserted] = await db
-    .insert(events)
+    .insert(eventTable)
     .values({ userId, ...eventForm })
     .returning();
 
@@ -56,9 +56,9 @@ export async function createEvent(userId: string, eventForm: EventForm): Promise
 
 export async function updateEvent(eventId: string, updates: Partial<EventForm>): Promise<Event> {
   const [updated] = await db
-    .update(events)
+    .update(eventTable)
     .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(events.id, eventId))
+    .where(eq(eventTable.id, eventId))
     .returning();
 
   if (!updated) throw new Error("Failed to update event");
@@ -81,7 +81,7 @@ export async function updateEvent(eventId: string, updates: Partial<EventForm>):
 }
 
 export async function deleteEvent(eventId: string): Promise<Event> {
-  const [deleted] = await db.delete(events).where(eq(events.id, eventId)).returning();
+  const [deleted] = await db.delete(eventTable).where(eq(eventTable.id, eventId)).returning();
 
   if (!deleted) throw new Error("Failed to delete event");
 
@@ -101,5 +101,5 @@ export async function deleteEvent(eventId: string): Promise<Event> {
 
 export async function createEventsBulk(userId: string, data: EventForm[]) {
   if (data.length === 0) return;
-  await db.insert(events).values(data.map((e) => ({ ...e, userId })));
+  await db.insert(eventTable).values(data.map((e) => ({ ...e, userId })));
 }

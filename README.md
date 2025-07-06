@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Sun Jul 6, 2025
+  - (7.6.01) - Added Table suffix for all tables.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.

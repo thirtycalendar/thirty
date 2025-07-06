@@ -4,7 +4,7 @@ import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, CalendarForm } from "$lib/types";
 
 import { db } from "../db";
-import { calendars } from "../db/tables/calendar";
+import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
 import { refreshEventsFromDb } from "./event";
 
@@ -13,7 +13,7 @@ export async function cacheCalendars(userId: string, list: Calendar[]) {
 }
 
 export async function refreshCalendarsFromDb(userId: string) {
-  const list = await db.select().from(calendars).where(eq(calendars.userId, userId));
+  const list = await db.select().from(calendarTable).where(eq(calendarTable.userId, userId));
 
   await cacheCalendars(userId, list);
   return list;
@@ -27,7 +27,11 @@ export async function getAllCalendars(userId: string): Promise<Calendar[]> {
 }
 
 export async function getCalendar(calendarId: string): Promise<Calendar> {
-  const [calendar] = await db.select().from(calendars).where(eq(calendars.id, calendarId)).limit(1);
+  const [calendar] = await db
+    .select()
+    .from(calendarTable)
+    .where(eq(calendarTable.id, calendarId))
+    .limit(1);
 
   if (!calendar) throw new Error("No calendar with id found");
 
@@ -40,13 +44,13 @@ export async function createCalendar(
 ): Promise<Calendar> {
   if (calendarForm.isPrimary) {
     await db
-      .update(calendars)
+      .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })
-      .where(and(eq(calendars.userId, userId), eq(calendars.isPrimary, true)));
+      .where(and(eq(calendarTable.userId, userId), eq(calendarTable.isPrimary, true)));
   }
 
   const [inserted] = await db
-    .insert(calendars)
+    .insert(calendarTable)
     .values({ userId, ...calendarForm })
     .returning();
 
@@ -69,27 +73,31 @@ export async function updateCalendar(
   calendarId: string,
   updates: Partial<CalendarForm>
 ): Promise<Calendar> {
-  const [existing] = await db.select().from(calendars).where(eq(calendars.id, calendarId)).limit(1);
+  const [existing] = await db
+    .select()
+    .from(calendarTable)
+    .where(eq(calendarTable.id, calendarId))
+    .limit(1);
 
   if (!existing) throw new Error("Calendar not found");
 
   if (updates.isPrimary) {
     await db
-      .update(calendars)
+      .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })
       .where(
         and(
-          eq(calendars.userId, existing.userId),
-          eq(calendars.isPrimary, true),
-          ne(calendars.id, calendarId)
+          eq(calendarTable.userId, existing.userId),
+          eq(calendarTable.isPrimary, true),
+          ne(calendarTable.id, calendarId)
         )
       );
   }
 
   const [updated] = await db
-    .update(calendars)
+    .update(calendarTable)
     .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(calendars.id, calendarId))
+    .where(eq(calendarTable.id, calendarId))
     .returning();
 
   if (!updated) throw new Error("Failed to update calendar");
@@ -112,7 +120,10 @@ export async function updateCalendar(
 }
 
 export async function deleteCalendar(calendarId: string): Promise<Calendar> {
-  const [deleted] = await db.delete(calendars).where(eq(calendars.id, calendarId)).returning();
+  const [deleted] = await db
+    .delete(calendarTable)
+    .where(eq(calendarTable.id, calendarId))
+    .returning();
 
   if (!deleted) throw new Error("Failed to delete calendar");
 
@@ -134,5 +145,5 @@ export async function deleteCalendar(calendarId: string): Promise<Calendar> {
 
 export async function createCalendarsBulk(userId: string, data: CalendarForm[]) {
   if (data.length === 0) return;
-  await db.insert(calendars).values(data.map((c) => ({ ...c, userId })));
+  await db.insert(calendarTable).values(data.map((c) => ({ ...c, userId })));
 }

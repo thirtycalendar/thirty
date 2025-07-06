@@ -4,7 +4,7 @@ import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { Task, TaskForm } from "$lib/types";
 
 import { db } from "../db";
-import { tasks } from "../db/tables/task";
+import { taskTable } from "../db/tables/task";
 import { kv } from "../libs/upstash/kv";
 
 async function cacheTasks(userId: string, list: Task[]) {
@@ -12,7 +12,7 @@ async function cacheTasks(userId: string, list: Task[]) {
 }
 
 async function refreshTasksFromDb(userId: string) {
-  const list = await db.select().from(tasks).where(eq(tasks.userId, userId));
+  const list = await db.select().from(taskTable).where(eq(taskTable.userId, userId));
 
   await cacheTasks(userId, list);
   return list;
@@ -26,7 +26,7 @@ export async function getAllTasks(userId: string): Promise<Task[]> {
 }
 
 export async function getTask(taskId: string): Promise<Task> {
-  const [task] = await db.select().from(tasks).where(eq(tasks.id, taskId)).limit(1);
+  const [task] = await db.select().from(taskTable).where(eq(taskTable.id, taskId)).limit(1);
 
   if (!task) throw new Error("No task with id found");
 
@@ -35,7 +35,7 @@ export async function getTask(taskId: string): Promise<Task> {
 
 export async function createTask(userId: string, taskForm: TaskForm): Promise<Task> {
   const [inserted] = await db
-    .insert(tasks)
+    .insert(taskTable)
     .values({ userId, ...taskForm })
     .returning();
 
@@ -56,9 +56,9 @@ export async function createTask(userId: string, taskForm: TaskForm): Promise<Ta
 
 export async function updateTask(taskId: string, updates: TaskForm): Promise<Task> {
   const [updated] = await db
-    .update(tasks)
+    .update(taskTable)
     .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(tasks.id, taskId))
+    .where(eq(taskTable.id, taskId))
     .returning();
 
   if (!updated) throw new Error("Failed to update task");
@@ -81,7 +81,7 @@ export async function updateTask(taskId: string, updates: TaskForm): Promise<Tas
 }
 
 export async function deleteTask(taskId: string): Promise<Task> {
-  const [deleted] = await db.delete(tasks).where(eq(tasks.id, taskId)).returning();
+  const [deleted] = await db.delete(taskTable).where(eq(taskTable.id, taskId)).returning();
 
   if (!deleted) throw new Error("Failed to delete task");
 

@@ -3,7 +3,7 @@ import { pgTable, serial, text } from "drizzle-orm/pg-core";
 import { userTable } from "./auth";
 import { timestamps } from "./utils";
 
-export const chats = pgTable("chats", {
+export const chatTable = pgTable("chats", {
   id: serial("id").primaryKey(),
 
   userId: text("user_id")

@@ -3,10 +3,10 @@ import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-c
 import type { EventAttendeeStatus, EventStatus, Source } from "$lib/types";
 
 import { userTable } from "./auth";
-import { calendars } from "./calendar";
+import { calendarTable } from "./calendar";
 import { notification, timestamps } from "./utils";
 
-export const events = pgTable("events", {
+export const eventTable = pgTable("events", {
   id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),
@@ -16,7 +16,7 @@ export const events = pgTable("events", {
     .references(() => userTable.id, { onDelete: "cascade" }),
   calendarId: uuid("calendar_id")
     .notNull()
-    .references(() => calendars.id, { onDelete: "cascade" }),
+    .references(() => calendarTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
   colorId: text("colorId").notNull(),
@@ -39,7 +39,7 @@ export const eventAttendees = pgTable("event_attendees", {
 
   eventId: uuid("event_id")
     .notNull()
-    .references(() => events.id, { onDelete: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade" }),
 
   email: text("email").notNull(),
   name: text("name"),
@@ -56,7 +56,7 @@ export const eventMetadata = pgTable("event_metadata", {
 
   eventId: uuid("event_id")
     .notNull()
-    .references(() => events.id, { onDelete: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade" }),
 
   aiSummary: text("ai_summary"),
   aiTags: jsonb("ai_tags").$type<string[] | null>(),

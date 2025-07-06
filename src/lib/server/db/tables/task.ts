@@ -5,7 +5,7 @@ import type { Source, TaskStatus } from "$lib/types";
 import { userTable } from "./auth";
 import { notification, timestamps } from "./utils";
 
-export const tasks = pgTable("tasks", {
+export const taskTable = pgTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),

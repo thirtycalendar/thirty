@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
 import { db } from "$lib/server/db";
-import { calendars } from "$lib/server/db/tables/calendar";
-import { events } from "$lib/server/db/tables/event";
+import { calendarTable } from "$lib/server/db/tables/calendar";
+import { eventTable } from "$lib/server/db/tables/event";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 import { getLock, releaseLock, setLock } from "$lib/server/utils/lock";
 
@@ -24,9 +24,9 @@ export async function syncGoogleCalendars(userId: string) {
     const list = res.data.items ?? [];
 
     const existing = await db
-      .select({ externalId: calendars.externalId })
-      .from(calendars)
-      .where(and(eq(calendars.userId, userId), eq(calendars.source, "google")));
+      .select({ externalId: calendarTable.externalId })
+      .from(calendarTable)
+      .where(and(eq(calendarTable.userId, userId), eq(calendarTable.source, "google")));
 
     const existingIds = new Set(existing.map((c) => c.externalId));
     const colorsRes = await calendar.colors.get();
@@ -70,14 +70,18 @@ export async function syncGoogleEvents(userId: string) {
     const colorMap = colorsRes.data.event ?? {};
 
     const userCalendars = await db
-      .select({ id: calendars.id, externalId: calendars.externalId, colorId: calendars.colorId })
-      .from(calendars)
-      .where(and(eq(calendars.userId, userId), eq(calendars.source, "google")));
+      .select({
+        id: calendarTable.id,
+        externalId: calendarTable.externalId,
+        colorId: calendarTable.colorId
+      })
+      .from(calendarTable)
+      .where(and(eq(calendarTable.userId, userId), eq(calendarTable.source, "google")));
 
     const existing = await db
-      .select({ externalId: events.externalId })
-      .from(events)
-      .where(and(eq(events.userId, userId), eq(events.source, "google")));
+      .select({ externalId: eventTable.externalId })
+      .from(eventTable)
+      .where(and(eq(eventTable.userId, userId), eq(eventTable.source, "google")));
 
     const existingIds = new Set(existing.map((e) => e.externalId));
     const oneYearAgo = new Date();
