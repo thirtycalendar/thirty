@@ -16,6 +16,7 @@ export default ts.config(
   globalIgnores([
     ".svelte-kit/",
     ".vercel/",
+    ".husky/pre-commit",
     "utils/",
     "**/migrations-dev/**",
     "**/migrations-prod/**"

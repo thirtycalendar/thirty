@@ -12,19 +12,18 @@
   let { seo }: SeoProps = $props();
   let { title, description, url, image, twitterHandle } = seo;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let structuredData = JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: title,
-    description: description,
-    url: url,
-    image: image,
-    author: {
-      "@type": "Person",
-      name: { title }
-    }
-  });
+  // let structuredData = JSON.stringify({
+  //   "@context": "https://schema.org",
+  //   "@type": "WebPage",
+  //   name: title,
+  //   description: description,
+  //   url: url,
+  //   image: image,
+  //   author: {
+  //     "@type": "Person",
+  //     name: { title }
+  //   }
+  // });
 </script>
 
 <svelte:head>
@@ -53,9 +52,4 @@
 
   <!-- Theme Color (for mobile browsers) -->
   <meta name="theme-color" content="#ffffff" />
-
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-    {structuredData}
-  </script>
 </svelte:head>

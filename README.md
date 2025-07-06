@@ -22,6 +22,7 @@
   - (7.6.06) - Setup ESLint instead of Biome.
   - (7.6.07) - Added unicorn filename case plugin.
   - (7.6.08) - Fixed some ESLint linting errors.
+  - (7.6.09) - Fixed all ESLint linting errors and set up Husky and lint-staged.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.

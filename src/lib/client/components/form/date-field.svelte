@@ -221,7 +221,7 @@
       </div>
 
       <div class="grid grid-cols-7 text-[10px] text-center opacity-50 mb-1">
-        {#each dayLabels as label}
+        {#each dayLabels as label (label)}
           <div>{label}</div>
         {/each}
       </div>

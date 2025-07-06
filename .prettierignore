@@ -1,5 +1,6 @@
 .vercel/
 .svelte-kit/
+.husky/
 
 package-lock.json
 pnpm-lock.yaml

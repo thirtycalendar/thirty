@@ -86,7 +86,7 @@
 
 <div class="flex flex-col h-full py-3">
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
-    {#each dayLabels as label}
+    {#each dayLabels as label (label)}
       <div class="h-8 flex items-center justify-center font-semibold">{label}</div>
     {/each}
   </div>
@@ -95,7 +95,7 @@
     class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full"
     style="grid-template-rows: repeat({rowsCount}, minmax(0, 1fr))"
   >
-    {#each days as day}
+    {#each days as day (day)}
       {@const key = getDayString(day)}
       {@const dayEvents = eventsByDay[key] || []}
       <button
@@ -120,7 +120,7 @@
         </div>
 
         <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
-          {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event}
+          {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
             <div
               class="truncate px-1.5 py-0.5 text-[10px] font-medium rounded-full shadow-sm backdrop-blur-sm border border-white/10"
               style={`background-color: ${getColorHexCodeFromId(event.colorId)}22; color: ${getColorHexCodeFromId(event.colorId)};`}

@@ -35,18 +35,18 @@
 
 <div class="bg-base-100/70 my-3 rounded-2xl h-full overflow-y-auto">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4">
-    {#each $months as month}
+    {#each $months as month (month)}
       <div class="flex flex-col">
         <div class="text-center font-semibold mb-1 text-xs">
           {format(month, "MMMM")}
         </div>
         <div class="grid grid-cols-7 text-center mb-1 opacity-60">
-          {#each dayLabels as d}
+          {#each dayLabels as d (d)}
             <div>{d}</div>
           {/each}
         </div>
         <div class="grid grid-cols-7 text-center gap-1 items-center justify-center">
-          {#each getDays(month) as day}
+          {#each getDays(month) as day (day)}
             <button
               class={`p-[2px] rounded-md ${
                 isToday(day) ? "bg-base-300 font-semibold" : ""

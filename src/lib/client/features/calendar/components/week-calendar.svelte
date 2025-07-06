@@ -113,7 +113,7 @@
 <div class="flex flex-col h-full py-3">
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
     <div></div>
-    {#each days as day}
+    {#each days as day (day)}
       <div
         class="min-h-8 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
       >
@@ -131,14 +131,14 @@
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
   >
-    {#each hours as hour}
+    {#each hours as hour (hour)}
       <div
         class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
       >
         {format(setHours(new Date(), hour), "h a")}
       </div>
 
-      {#each days as day}
+      {#each days as day (day)}
         <div
           class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
           data-day={format(day, "yyyy-MM-dd")}
@@ -148,7 +148,7 @@
             <CurrentTimeIndicator {day} />
           {/if}
 
-          {#each weekEvents as { event, day: eventDay, start, end, offset }}
+          {#each weekEvents as { event, day: eventDay, start, end, offset } (event.id)}
             {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
               {#if start.getHours() === hour}
                 <EventBlock

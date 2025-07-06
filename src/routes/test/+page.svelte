@@ -73,7 +73,7 @@
   <p class="text-red-500">Error: {$queryError.message}</p>
 {:else if $posts}
   <ul class="space-y-2">
-    {#each $posts as post}
+    {#each $posts as post (post.id)}
       <li class="border p-2 rounded">
         <strong>{post.title}</strong>
         <p>{post.body}</p>

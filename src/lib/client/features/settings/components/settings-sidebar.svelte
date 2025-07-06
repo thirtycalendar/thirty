@@ -25,7 +25,7 @@
 <div class="flex flex-col mt-5">
   <UserProfile />
 
-  {#each links as { href, icon: Icon, label }}
+  {#each links as { href, icon: Icon, label } (href)}
     <a
       href={`/settings/${href}`}
       class="flex items-center gap-3 text-sm p-2 w-full rounded-lg

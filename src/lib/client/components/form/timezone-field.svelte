@@ -131,7 +131,7 @@
       bind:this={dropdown}
       class="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-base-300 bg-base-100 shadow-xl"
     >
-      {#each filtered.slice(0, 100) as tz}
+      {#each filtered.slice(0, 100) as tz (tz.value)}
         <button
           type="button"
           class="w-full px-3 py-2 text-left text-sm hover:bg-base-200 focus:bg-base-200 outline-none"

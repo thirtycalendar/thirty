@@ -47,14 +47,14 @@
 
   <!-- Day labels -->
   <div class="grid grid-cols-7 gap-1 text-center opacity-50 mb-1">
-    {#each dayLabels as label}
+    {#each dayLabels as label (label)}
       <div>{label}</div>
     {/each}
   </div>
 
   <!-- Mini month grid -->
   <div class="grid grid-cols-7 gap-1 text-center">
-    {#each $days as day}
+    {#each $days as day (day)}
       <button
         class={`rounded-md py-[2px] transition-colors
           ${isToday(day) ? "bg-base-300 text-primary-content font-semibold" : ""}

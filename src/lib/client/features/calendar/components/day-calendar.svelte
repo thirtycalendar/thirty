@@ -95,7 +95,7 @@
     class="flex-1 overflow-y-auto overflow-x-hidden bg-base-100 relative rounded-2xl"
   >
     <div class="grid grid-cols-[50px_1fr]">
-      {#each hours as hour}
+      {#each hours as hour (hour)}
         <div
           class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
         >
@@ -111,7 +111,7 @@
             <CurrentTimeIndicator day={$currentDate} />
           {/if}
 
-          {#each dayEvents.chunks as { event, start }}
+          {#each dayEvents.chunks as { event, start } (event.id)}
             {#if start.getHours() === hour}
               <EventBlock
                 event={{ ...event, start: start.toISOString() }}

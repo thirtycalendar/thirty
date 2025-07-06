@@ -7,7 +7,7 @@
 </script>
 
 <div class="hidden lg:block tabs tabs-sm tabs-box bg-base-300">
-  {#each views as view}
+  {#each views as view (view)}
     <input
       type="radio"
       name={view}
@@ -27,7 +27,7 @@
     <ChevronDown size="16" />
   </button>
   <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-auto mt-1 border border-base-200">
-    {#each views as view}
+    {#each views as view (view)}
       <input
         type="radio"
         name={view}

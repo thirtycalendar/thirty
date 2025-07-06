@@ -89,7 +89,7 @@
 
       {#if isExpanded(title)}
         <div class="my-1" transition:slide>
-          {#each cal as c}
+          {#each cal as c (c.id)}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
             >
