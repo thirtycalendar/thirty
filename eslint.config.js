@@ -5,6 +5,7 @@ import js from "@eslint/js";
 
 import prettier from "eslint-config-prettier";
 import svelte from "eslint-plugin-svelte";
+import unicorn from "eslint-plugin-unicorn";
 import { globalIgnores } from "eslint/config";
 import globals from "globals";
 import ts from "typescript-eslint";
@@ -19,7 +20,6 @@ export default ts.config(
     "**/migrations-dev/**",
     "**/migrations-prod/**"
   ]),
-
   includeIgnoreFile(gitignorePath),
   js.configs.recommended,
   ...ts.configs.recommended,
@@ -36,11 +36,24 @@ export default ts.config(
   },
   {
     files: ["**/*.svelte"],
-
     languageOptions: {
       parserOptions: {
         parser: ts.parser
       }
+    }
+  },
+  {
+    plugins: {
+      unicorn
+    },
+    rules: {
+      "unicorn/filename-case": [
+        "error",
+        {
+          case: "kebabCase",
+          ignore: ["README.md"]
+        }
+      ]
     }
   }
 );
