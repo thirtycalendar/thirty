@@ -6,7 +6,7 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { colors } from "$lib/shared/utils/colors";
-  import type { Color } from "$lib/types";
+  import type { Color } from "$lib/shared/types";
 
   interface ColorChoiceFieldProps {
     name: string;

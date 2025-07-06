@@ -8,7 +8,7 @@ import { getLock, releaseLock, setLock } from "$lib/server/utils/lock";
 
 import { getNearestColorIdFromHexCode } from "$lib/shared/utils/colors";
 import { KV_SYNC_LOCK_CALENDARS, KV_SYNC_LOCK_EVENTS } from "$lib/shared/utils/kv-keys";
-import type { CalendarForm, EventForm } from "$lib/types";
+import type { CalendarForm, EventForm } from "$lib/shared/types";
 
 import { createCalendarsBulk } from "../calendar";
 import { createEventsBulk } from "../event";

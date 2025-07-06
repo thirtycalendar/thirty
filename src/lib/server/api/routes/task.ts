@@ -13,7 +13,7 @@ import {
 } from "$lib/server/services/task";
 
 import { taskSchema } from "$lib/shared/schemas/task";
-import type { SuccessResponse, Task, User } from "$lib/types";
+import type { SuccessResponse, Task, User } from "$lib/shared/types";
 
 import { errorResponse, requireParamId } from "../utils";
 

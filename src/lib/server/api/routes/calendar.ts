@@ -13,7 +13,7 @@ import {
 } from "$lib/server/services/calendar";
 
 import { calendarSchema } from "$lib/shared/schemas/calendar";
-import type { Calendar, SuccessResponse, User } from "$lib/types";
+import type { Calendar, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParamId } from "../utils";
 

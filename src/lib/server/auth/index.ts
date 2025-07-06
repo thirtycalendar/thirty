@@ -4,8 +4,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
 import { getRandomColorId } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
-import type { CalendarForm } from "$lib/types";
-import type { GoogleSession } from "$lib/types/server";
+import type { CalendarForm, GoogleSession } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { initCalendarToKV } from "../calendars/local/init-calendar";

@@ -9,7 +9,7 @@
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Calendar } from "$lib/types";
+  import type { Calendar } from "$lib/shared/types";
 
   import { getCalendars } from "../query";
 

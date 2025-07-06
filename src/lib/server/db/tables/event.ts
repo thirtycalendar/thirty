@@ -1,6 +1,6 @@
 import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-import type { EventAttendeeStatus, EventStatus, Source } from "$lib/types";
+import type { EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
 
 import { userTable } from "./auth";
 import { calendarTable } from "./calendar";

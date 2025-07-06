@@ -3,7 +3,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  import type { Calendar } from "$lib/types";
+  import type { Calendar } from "$lib/shared/types";
 
   interface CalendarChoiceFieldProps {
     name: string;

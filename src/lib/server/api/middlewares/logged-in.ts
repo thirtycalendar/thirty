@@ -2,7 +2,7 @@ import { createMiddleware } from "hono/factory";
 
 import { auth } from "$lib/server/auth";
 
-import type { ErrorResponse } from "$lib/types";
+import type { ErrorResponse } from "$lib/shared/types";
 
 import type { Context } from "../context";
 

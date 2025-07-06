@@ -7,7 +7,7 @@
 
   import { getRandomColorId } from "$lib/shared/utils/colors";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
-  import type { CalendarForm as CalendarFormType } from "$lib/types";
+  import type { CalendarForm as CalendarFormType } from "$lib/shared/types";
 
   import { CalForm } from ".";
 

@@ -5,7 +5,7 @@
   import { handleEventModal } from "$lib/client/stores/event";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Event } from "$lib/types";
+  import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
 

@@ -8,7 +8,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import type { Calendar, CalendarForm as CalendarFormType } from "$lib/types";
+  import type { Calendar, CalendarForm as CalendarFormType } from "$lib/shared/types";
 
   import { CalForm } from ".";
 

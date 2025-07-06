@@ -1,7 +1,7 @@
 import { createQuery } from "$lib/client/utils/query/create-query";
 import { client } from "$lib/client/utils/rpc";
 
-import type { Calendar } from "$lib/types";
+import type { Calendar } from "$lib/shared/types";
 
 let queryInstance: ReturnType<typeof createQuery<() => Promise<Calendar[]>>> | null = null;
 

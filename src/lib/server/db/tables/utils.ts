@@ -1,6 +1,6 @@
 import { boolean, integer, pgEnum, timestamp } from "drizzle-orm/pg-core";
 
-import type { NotifyInMin } from "$lib/types";
+import type { NotifyInMin } from "$lib/shared/types";
 
 export const userSystemEnum = pgEnum("user_system_enum", ["system", "user"]);
 

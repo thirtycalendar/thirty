@@ -1,7 +1,7 @@
 import { tick } from "svelte";
 import { get, writable } from "svelte/store";
 
-import type { Calendar } from "$lib/types";
+import type { Calendar } from "$lib/shared/types";
 
 import { toggleModal } from "../components/utils";
 

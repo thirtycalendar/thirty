@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import type { Source } from "$lib/types";
+import type { Source } from "$lib/shared/types";
 
 import { userTable } from "./auth";
 import { timestamps } from "./utils";

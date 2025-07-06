@@ -6,7 +6,7 @@ import { syncGoogleCalendars, syncGoogleEvents } from "$lib/server/services/sync
 import { kv } from "$lib/server/libs/upstash/kv";
 
 import { KV_CALENDARS, KV_EVENTS } from "$lib/shared/utils/kv-keys";
-import type { SuccessResponse, User } from "$lib/types";
+import type { SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 

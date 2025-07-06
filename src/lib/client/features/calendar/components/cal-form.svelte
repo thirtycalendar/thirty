@@ -5,7 +5,7 @@
   import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import type { CalendarForm } from "$lib/types";
+  import type { CalendarForm } from "$lib/shared/types";
 
   import { calendarSchema } from "../../../../shared/schemas/calendar";
 

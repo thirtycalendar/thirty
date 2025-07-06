@@ -5,7 +5,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import type { Event } from "$lib/types";
+  import type { Event } from "$lib/shared/types";
 
   import { EventBlock } from "../../event/components";
 

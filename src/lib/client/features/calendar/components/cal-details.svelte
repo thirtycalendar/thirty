@@ -13,7 +13,7 @@
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Calendar } from "$lib/types";
+  import type { Calendar } from "$lib/shared/types";
 
   import { CalActionButtons } from ".";
 

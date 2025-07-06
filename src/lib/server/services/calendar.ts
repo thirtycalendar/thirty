@@ -1,7 +1,7 @@
 import { and, eq, ne, sql } from "drizzle-orm";
 
 import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
-import type { Calendar, CalendarForm } from "$lib/types";
+import type { Calendar, CalendarForm } from "$lib/shared/types";
 
 import { db } from "../db";
 import { calendarTable } from "../db/tables/calendar";

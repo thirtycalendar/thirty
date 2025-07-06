@@ -16,7 +16,7 @@
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Event } from "$lib/types";
+  import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
 

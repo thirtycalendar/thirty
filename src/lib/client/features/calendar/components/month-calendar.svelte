@@ -19,7 +19,7 @@
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Event } from "$lib/types";
+  import type { Event } from "$lib/shared/types";
 
   interface MonthCalendarProps {
     events: Event[];

@@ -42,10 +42,9 @@
 
     "^\\$lib/shared/schemas",
     "^\\$lib/shared/utils",
+    "^\\$lib/shared/constants",
+    "^\\$lib/shared/types",
     "^\\$lib/shared",
-    "^\\$lib/types",
-    "^\\$lib/types/client",
-    "^\\$lib/types/server",
     "^\\$lib",
 
     "",
