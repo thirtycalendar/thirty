@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 
+
 try {
   console.log("🔍 Running lint check...");
   execSync("npm run lint:check", { stdio: "inherit" });
@@ -13,7 +14,7 @@ try {
 
   console.log("✅ Auto-fixes applied. Re-adding changes...");
   execSync("git add .", { stdio: "inherit" });
-} catch (error) {
+} catch {
   console.error("❌ Lint or format check failed. Commit aborted.");
   process.exit(1);
 }

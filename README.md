@@ -19,6 +19,7 @@
   - (7.6.03) - Moved types as file into shared folder. Removed types folder.
   - (7.6.04) - Used zod and drizzle types instead of hard coded types.
   - (7.6.05) - Removed biome linter to use eslint.
+  - (7.6.06) - Setup ESLint instead of Biome.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.
