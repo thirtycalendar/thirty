@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Source } from "$lib/types";
+import { Source } from "../constants";
 
 export const calendarSchema = z.object({
   externalId: z.string().nullable(),

@@ -26,7 +26,8 @@
   import { handleEventStopEditing } from "$lib/client/stores/event";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import { EventStatus, type EventDataType, type EventForm } from "$lib/types";
+  import { EventStatus } from "$lib/shared/constants";
+  import { type EventDataType, type EventForm } from "$lib/types";
 
   import { eventSchema } from "../../../../shared/schemas/event";
   import { CalendarChoiceField } from "../../calendar/components";

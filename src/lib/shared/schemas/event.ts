@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { EventStatus, Source } from "$lib/types";
+import { EventStatus, Source } from "../constants";
 
 export const eventSchema = z.object({
   calendarId: z.string().min(1, { message: "Calendar ID is required" }),

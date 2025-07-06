@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Source, TaskStatus } from "$lib/types";
+import { Source, TaskStatus } from "../constants";
 
 export const taskSchema = z.object({
   externalId: z.string().nullable(),
