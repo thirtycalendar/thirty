@@ -47,7 +47,7 @@
 
   <!-- Day labels -->
   <div class="grid grid-cols-7 gap-1 text-center opacity-50 mb-1">
-    {#each dayLabels as label (label)}
+    {#each dayLabels as label, i (i)}
       <div>{label}</div>
     {/each}
   </div>

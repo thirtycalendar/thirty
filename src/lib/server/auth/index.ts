@@ -4,7 +4,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
 import { getRandomColorId } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
-import type { CalendarForm, GoogleSession } from "$lib/shared/types";
+import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
@@ -32,7 +32,7 @@ export const auth = betterAuth({
           const { userId, accessToken, refreshToken, accessTokenExpiresAt, idToken } = session;
 
           if (userId && accessToken && refreshToken && accessTokenExpiresAt && idToken) {
-            const googleSession: GoogleSession = {
+            const googleSession: GoogleSessionKV = {
               userId,
               accessToken,
               refreshToken,

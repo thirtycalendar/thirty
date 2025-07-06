@@ -4,14 +4,14 @@ import { kv } from "$lib/server/libs/upstash/kv";
 
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 import { KV_GOOGLE_TOKEN } from "$lib/shared/utils/kv-keys";
-import type { GoogleSession } from "$lib/shared/types";
+import type { GoogleSessionKV } from "$lib/shared/types";
 
-export async function storeGoogleSessionToKV(session: GoogleSession) {
+export async function storeGoogleSessionToKV(session: GoogleSessionKV) {
   await kv.set(KV_GOOGLE_TOKEN(session.userId), session);
 }
 
 export async function getGoogleAccessToken(userId: string): Promise<string | null> {
-  const session = await kv.get<GoogleSession>(KV_GOOGLE_TOKEN(userId));
+  const session = await kv.get<GoogleSessionKV>(KV_GOOGLE_TOKEN(userId));
   if (!session) return null;
 
   const expiresInMs = new Date(session.accessTokenExpiresAt).getTime() - Date.now();
@@ -29,7 +29,7 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
   try {
     const { credentials } = await client.refreshAccessToken();
 
-    const updated: GoogleSession = {
+    const updated: GoogleSessionKV = {
       userId,
       accessToken: credentials.access_token as string,
       refreshToken: credentials.refresh_token ?? session.refreshToken,

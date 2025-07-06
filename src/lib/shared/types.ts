@@ -8,7 +8,7 @@ import type { taskTable } from "$lib/server/db/tables/task";
 
 import type * as Const from "$lib/shared/constants";
 
-import type { calendarSchema } from "./schemas/calendar";
+import type { calendarSchema, initCalendarStateSchema } from "./schemas/calendar";
 import type { eventSchema } from "./schemas/event";
 import type { taskSchema } from "./schemas/task";
 
@@ -19,6 +19,13 @@ export interface Color {
 
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;
+
+export type InitCalendarStateForm = z.infer<typeof initCalendarStateSchema>;
+
+export interface InitCalendarStateKV {
+  calendarId: string;
+  isUpdatedTimezone: boolean;
+}
 
 export type Event = InferSelectModel<typeof eventTable>;
 
@@ -61,15 +68,10 @@ export type ErrorResponse = {
   isFormError?: boolean;
 };
 
-export interface GoogleSession {
+export interface GoogleSessionKV {
   userId: string;
   accessToken: string;
   refreshToken: string;
   accessTokenExpiresAt: string;
   idToken: string;
-}
-
-export interface InitCalendar {
-  calendarId: string;
-  isUpdatedTimezone: boolean;
 }

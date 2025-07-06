@@ -11,3 +11,9 @@ export const calendarSchema = z.object({
   timezone: z.string().min(1, { message: "Timezone Id is required" }).default("UTC"),
   isPrimary: z.boolean().default(false)
 });
+
+export const initCalendarStateSchema = z.object({
+  calendarId: z.string().min(1),
+  timezone: z.string().min(1),
+  isUpdatedTimezone: z.boolean().default(false)
+});

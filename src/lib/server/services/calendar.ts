@@ -3,7 +3,7 @@ import { and, eq, ne, sql } from "drizzle-orm";
 import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, CalendarForm } from "$lib/shared/types";
 
-import { initCalendarToKV } from "../calendars/local/init-calendar";
+import { storeInitCalendarStateToKV } from "../calendars/local/init-calendar";
 import { db } from "../db";
 import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
@@ -48,10 +48,10 @@ export async function createCalendar(
 
   const calendarId = crypto.randomUUID();
   if (initCalendar) {
-    await initCalendarToKV(userId, calendarId);
+    await storeInitCalendarStateToKV(userId, calendarId);
   }
 
-  if (calendarForm.isPrimary) {
+  if (calendarForm.isPrimary && !initCalendar) {
     await db
       .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })
