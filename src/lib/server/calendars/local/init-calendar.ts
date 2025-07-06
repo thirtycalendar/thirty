@@ -11,3 +11,12 @@ export async function initCalendarToKV(userId: string, calendarId: string) {
 
   await kv.set(KV_INIT_CALENDAR(userId), initCalendar);
 }
+
+export async function initCalendarUpdatedToKV(userId: string, calendarId: string) {
+  const initCalendar: InitCalendar = {
+    calendarId,
+    isUpdatedTimezone: true
+  };
+
+  await kv.set(KV_INIT_CALENDAR(userId), initCalendar);
+}

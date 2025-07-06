@@ -7,7 +7,6 @@ import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 import type { CalendarForm, GoogleSession } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
-import { initCalendarToKV } from "../calendars/local/init-calendar";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
 import { createCalendar } from "../services/calendar";
@@ -51,8 +50,6 @@ export const auth = betterAuth({
         after: async (user) => {
           const { id, name } = user;
 
-          const calendarId = crypto.randomUUID();
-
           const calendar: CalendarForm = {
             externalId: null,
             source: "local",
@@ -62,9 +59,7 @@ export const auth = betterAuth({
             isPrimary: true
           };
 
-          await createCalendar(id, calendar);
-
-          await initCalendarToKV(id, calendarId);
+          await createCalendar(id, calendar, { initCalendar: true });
         }
       }
     }

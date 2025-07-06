@@ -23,6 +23,7 @@
   - (7.6.07) - Added unicorn filename case plugin.
   - (7.6.08) - Fixed some ESLint linting errors.
   - (7.6.09) - Fixed all ESLint linting errors and set up Husky and lint-staged.
+  - (7.6.10) - Init calendar store to kv.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.
