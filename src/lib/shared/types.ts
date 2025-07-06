@@ -1,65 +1,26 @@
+import type { InferSelectModel } from "drizzle-orm";
+import type { z } from "zod";
+
 import type { auth } from "$lib/server/auth";
+import type { calendarTable } from "$lib/server/db/tables/calendar";
+import type { eventTable } from "$lib/server/db/tables/event";
+import type { taskTable } from "$lib/server/db/tables/task";
 
 import type * as Const from "$lib/shared/constants";
+
+import type { calendarSchema } from "./schemas/calendar";
+import type { eventSchema } from "./schemas/event";
+import type { taskSchema } from "./schemas/task";
 
 export interface Color {
   id: string;
   colorHexCode: string;
 }
 
-export interface Calendar {
-  id: string;
-  userId: string;
-  externalId: string | null;
-  source: Source;
+export type Calendar = InferSelectModel<typeof calendarTable>;
+export type CalendarForm = z.infer<typeof calendarSchema>;
 
-  name: string;
-  colorId: string;
-  timezone: string;
-  isPrimary: boolean;
-  isSynced: boolean;
-
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
-
-export interface CalendarForm {
-  id?: string;
-  externalId: string | null;
-  source: Source;
-
-  name: string;
-  colorId: string;
-  timezone: string;
-  isPrimary: boolean;
-}
-
-export interface Event {
-  id: string;
-  userId: string;
-  calendarId: string;
-  externalId: string | null;
-  source: Source;
-
-  name: string;
-  colorId: string;
-  description: string | null;
-  location: string | null;
-  start: string;
-  end: string;
-  timezone: string;
-  allDay: boolean;
-  status: EventStatus;
-  recurrence: string[] | null;
-
-  notifyInMin: number;
-  notificationSent: boolean;
-
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
+export type Event = InferSelectModel<typeof eventTable>;
 
 export interface EventDataType {
   calendarId: string;
@@ -71,53 +32,10 @@ export interface EventDataType {
   timezone: string;
 }
 
-export interface EventForm {
-  id?: string;
-  calendarId: string;
-  externalId: string | null;
-  source: Source;
+export type EventForm = z.infer<typeof eventSchema>;
 
-  name: string;
-  colorId: string;
-  description: string | null;
-  location: string | null;
-  start: string;
-  end: string;
-  timezone: string;
-  allDay: boolean;
-  status: EventStatus;
-}
-
-export interface Task {
-  id: string;
-  userId: string;
-  externalId: string | null;
-  source: Source;
-
-  name: string;
-  notes: string | null;
-  colorId: string;
-  due: string;
-  status: TaskStatus;
-
-  notificationSent: boolean;
-
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
-
-export interface TaskForm {
-  id?: string;
-  externalId: string | null;
-  source: Source;
-
-  name: string;
-  notes: string | null;
-  colorId: string;
-  due: string;
-  status: TaskStatus;
-}
+export type Task = InferSelectModel<typeof taskTable>;
+export type TaskForm = z.infer<typeof taskSchema>;
 
 export type Source = (typeof Const.Source)[number];
 

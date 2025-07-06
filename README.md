@@ -17,6 +17,7 @@
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.
   - (7.6.03) - Moved types as file into shared folder. Removed types folder.
+  - (7.6.04) - Used zod and drizzle types instead of hard coded types.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.

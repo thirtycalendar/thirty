@@ -7,3 +7,4 @@
 - [ ] - Show holiday calendars.
 - [ ] - Reset to default form values after creating a cal or event.
 - [ ] - (test) Try to sync google calendars without giving access.
+- [ ] - Fix init calendar on auth index file.

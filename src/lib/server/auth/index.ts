@@ -54,7 +54,6 @@ export const auth = betterAuth({
           const calendarId = crypto.randomUUID();
 
           const calendar: CalendarForm = {
-            id: calendarId,
             externalId: null,
             source: "local",
             name,
