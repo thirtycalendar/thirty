@@ -1,15 +1,15 @@
 type QueryKey = string;
 type RefetchFn = () => void;
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalScope = globalThis as any;
 
 globalScope.__queryRegistry ??= new Map<QueryKey, Set<RefetchFn>>();
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 globalScope.__queryCache ??= new Map<QueryKey, { data: any; updatedAt: number }>();
 
 const queryRegistry: Map<QueryKey, Set<RefetchFn>> = globalScope.__queryRegistry;
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const queryCache: Map<QueryKey, { data: any; updatedAt: number }> = globalScope.__queryCache;
 
 const defaultStaleTime = 1000 * 60;
@@ -51,7 +51,7 @@ export function getCachedQuery(key: QueryKey) {
   return queryCache.get(key);
 }
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setCachedQuery(key: QueryKey, data: any) {
   queryCache.set(key, { data, updatedAt: Date.now() });
 }

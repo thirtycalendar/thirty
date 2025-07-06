@@ -7,9 +7,6 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { authClient, client } from "$lib/client/utils/rpc";
 
-  import { getCalendars } from "../../calendar/query";
-  import { getEvents } from "../../event/query";
-
   let { mutate: googleMutate, isPending } = createMutation({
     mutationFn: async () => {
       const res = await client.api.sync.google.$post();

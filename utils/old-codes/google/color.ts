@@ -22,7 +22,7 @@ const app = new Hono<Context>().use(loggedIn).get("/getAll", async (c) => {
       message: "Success",
       data: colors
     });
-    // biome-ignore lint:
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.log("error:", err);
     return c.json<ErrorResponse>({ success: false, message: err.message });

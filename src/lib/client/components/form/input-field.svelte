@@ -10,7 +10,9 @@
     legendClassName?: string;
     className?: string;
     disabled?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: any;
     handleInput: (event: Event) => void;
   }

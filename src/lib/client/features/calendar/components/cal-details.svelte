@@ -1,13 +1,5 @@
 <script lang="ts">
-  import {
-    CalendarCheck2,
-    CircleCheck,
-    Clock3,
-    Globe,
-    HistoryIcon,
-    Pen,
-    RefreshCcw
-  } from "@lucide/svelte";
+  import { CalendarCheck2, CircleCheck, Globe, HistoryIcon, RefreshCcw } from "@lucide/svelte";
 
   import { format } from "date-fns";
 

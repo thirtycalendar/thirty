@@ -12,6 +12,7 @@
   let { seo }: SeoProps = $props();
   let { title, description, url, image, twitterHandle } = seo;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let structuredData = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",

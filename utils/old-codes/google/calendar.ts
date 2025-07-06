@@ -32,7 +32,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: calendars
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log("error:", err);
       return c.json<ErrorResponse>({ success: false, message: err.message });
@@ -51,7 +51,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -70,7 +70,7 @@ const app = new Hono<Context>()
         message: "Calendar created",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -90,7 +90,7 @@ const app = new Hono<Context>()
         message: "Calendar updated",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -109,7 +109,7 @@ const app = new Hono<Context>()
         message: "Calendar deleted",
         data: null
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }

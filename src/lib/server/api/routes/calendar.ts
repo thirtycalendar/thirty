@@ -19,7 +19,7 @@ import { errorResponse, requireParamId } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
-  .post("/init", async (c) => {})
+  // .post("/init", async (c) => {})
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
@@ -31,7 +31,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: calendars
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -48,7 +48,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: calendar
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -65,7 +65,7 @@ const app = new Hono<Context>()
         message: `${calendar.name} created`,
         data: calendar
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -84,7 +84,7 @@ const app = new Hono<Context>()
         message: `${calendar.name} updated`,
         data: calendar
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -101,7 +101,7 @@ const app = new Hono<Context>()
         message: `${calendar.name} deleted`,
         data: calendar
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }

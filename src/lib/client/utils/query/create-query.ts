@@ -9,7 +9,7 @@ import {
   unregisterQuery
 } from "./query-client";
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
   queryFn: Fn;
   queryKeys: string[];
@@ -20,7 +20,7 @@ type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
   staleTime?: number;
 };
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   opts: CreateQueryOptions<Fn, ErrorType>
 ) {
@@ -60,7 +60,7 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
       error.set(null);
       isSuccess.set(true);
       onSuccess?.(result);
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       error.set(err);
       isError.set(true);

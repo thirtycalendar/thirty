@@ -2,19 +2,18 @@ import { writable } from "svelte/store";
 
 import { refetchQueries } from "./query-client";
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CreateMutationOptions<Fn extends (...args: any) => Promise<any>, ErrorType> = {
   mutationFn: Fn;
   queryKeys?: string[];
   onPending?: () => void;
-  // biome-ignore lint:
   onMutate?: (...args: Parameters<Fn>) => (() => void) | void;
   onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
   onError?: (err: ErrorType) => void;
   onRollback?: (...args: Parameters<Fn>) => void;
 };
 
-// biome-ignore lint:
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createMutation<Fn extends (...args: any) => Promise<any>, ErrorType = unknown>(
   opts: CreateMutationOptions<Fn, ErrorType>
 ) {
@@ -46,7 +45,7 @@ export function createMutation<Fn extends (...args: any) => Promise<any>, ErrorT
       isSuccess.set(true);
       onSuccess?.(result);
       refetchQueries(queryKeys);
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       error.set(err);
       isError.set(true);

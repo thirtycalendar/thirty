@@ -16,6 +16,7 @@ const app = new Hono<Context>().basePath("/api");
 
 app.use("*", cors());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
   .route("/auth", auth)
   .route("/calendar", calendar)

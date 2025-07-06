@@ -39,7 +39,7 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
 
     await kv.set(KV_GOOGLE_TOKEN(userId), updated);
     return updated.accessToken;
-    // biome-ignore lint:
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     const code = err?.response?.data?.error;
     if (code === "invalid_grant") {

@@ -26,7 +26,7 @@ const app = new Hono<Context>().use(loggedIn).post("/google", async (c) => {
       message: "Successfully synced all Google Calendars and Events",
       data: null
     });
-    // biome-ignore lint:
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     return errorResponse(c, err.message);
   }

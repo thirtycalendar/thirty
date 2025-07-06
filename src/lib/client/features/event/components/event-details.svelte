@@ -7,7 +7,6 @@
     Globe,
     HistoryIcon,
     MapPin,
-    Pen,
     RefreshCcw
   } from "@lucide/svelte";
 

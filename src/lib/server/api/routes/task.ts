@@ -30,7 +30,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: tasks
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -47,7 +47,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: task
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -64,7 +64,7 @@ const app = new Hono<Context>()
         message: `${task.name} created`,
         data: task
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -83,7 +83,7 @@ const app = new Hono<Context>()
         message: `${task.name} updated`,
         data: task
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }
@@ -100,7 +100,7 @@ const app = new Hono<Context>()
         message: `${task.name} deleted`,
         data: task
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return errorResponse(c, err.message);
     }

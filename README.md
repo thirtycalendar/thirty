@@ -21,6 +21,7 @@
   - (7.6.05) - Removed biome linter to use eslint.
   - (7.6.06) - Setup ESLint instead of Biome.
   - (7.6.07) - Added unicorn filename case plugin.
+  - (7.6.08) - Fixed some ESLint linting errors.
 - Sat Jul 5, 2025
   - (7.5.01) - Improved cal list ux.
   - (7.5.02) - Added init calendar codes to store to KV.

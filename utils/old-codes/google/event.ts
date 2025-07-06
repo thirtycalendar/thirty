@@ -34,7 +34,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: { events, utilEvents }
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -55,7 +55,7 @@ const app = new Hono<Context>()
         message: "Success",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -80,7 +80,7 @@ const app = new Hono<Context>()
         message: "Event created",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -109,7 +109,7 @@ const app = new Hono<Context>()
         message: "Event updated",
         data: res.data
       });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
@@ -132,7 +132,7 @@ const app = new Hono<Context>()
       await cacheGoogleCalData(user.id);
 
       return c.json<SuccessResponse<null>>({ success: true, message: "Event deleted", data: null });
-      // biome-ignore lint:
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return c.json<ErrorResponse>({ success: false, message: err.message });
     }
