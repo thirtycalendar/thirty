@@ -8,3 +8,4 @@
 - [ ] - (test) Try to sync google calendars without giving access.
 - [x] - Fix init calendar on auth index file.
 - [ ] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
+- [ ] - Sync birthdays from Google calendars to db.
