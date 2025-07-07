@@ -52,7 +52,8 @@ export const auth = betterAuth({
 
           const res = await fetch("https://ipwho.is/");
           const data = await res.json();
-          const timezone = data.timezone.id;
+
+          const timezone = data.timezone.id || "UTC";
 
           const calendar: CalendarForm = {
             externalId: null,
