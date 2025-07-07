@@ -8,7 +8,7 @@ import { birthdayTable } from "../db/tables/birthday";
 import { kv } from "../libs/upstash/kv";
 
 export async function cacheBirthdays(userId: string, list: Birthday[]) {
-  await kv.set(KV_BIRTHDAYS(userId), list, { ex: 900 });
+  await kv.set(KV_BIRTHDAYS(userId), list, { ex: 86000 });
 }
 
 export async function refreshBirthdaysFromDb(userId: string) {

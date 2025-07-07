@@ -7,6 +7,7 @@ import type { ErrorResponse } from "$lib/shared/types";
 
 import type { Context } from "./context";
 import auth from "./routes/auth";
+import birthday from "./routes/birthday";
 import calendar from "./routes/calendar";
 import event from "./routes/event";
 import holiday from "./routes/holiday";
@@ -23,6 +24,7 @@ const routes = app
   .route("/calendar", calendar)
   .route("/event", event)
   .route("/task", task)
+  .route("/birthday", birthday)
   .route("/holiday", holiday)
   .route("/sync", sync);
 
