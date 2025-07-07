@@ -19,6 +19,7 @@
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
+  import { combineDateTimeUTC } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   interface MonthCalendarProps {
@@ -27,10 +28,17 @@
 
   let { events }: MonthCalendarProps = $props();
 
-  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const MAX_EVENTS_PER_DAY = 4;
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
+
+  function getEventDateTimes(event: Event) {
+    const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
+    const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+    const start = toZonedTime(startUtc, event.timezone);
+    const end = toZonedTime(endUtc, event.timezone);
+    return { start, end };
+  }
 
   const rowsCount = $derived.by(() => {
     const start = startOfWeek(startOfMonth($currentDate));
@@ -44,8 +52,8 @@
   });
 
   const eventsByDay = $derived.by(() => {
-    const monthStart = startOfDay(days[0]);
-    const monthEnd = endOfDay(days[days.length - 1]);
+    const viewStart = startOfDay(days[0]);
+    const viewEnd = endOfDay(days[days.length - 1]);
     const map: Record<string, Event[]> = {};
 
     for (const event of events) {
@@ -54,13 +62,12 @@
       const isVisible = !($checkedCalendars[event.calendarId] === false);
       if (!isVisible) continue;
 
-      const eventStartTz = toZonedTime(event.start, calendarTimezone);
-      const eventEndTz = toZonedTime(event.end, calendarTimezone);
+      const { start: eventStart, end: eventEnd } = getEventDateTimes(event);
 
-      if (eventStartTz > monthEnd || eventEndTz < monthStart) continue;
+      if (eventStart > viewEnd || eventEnd < viewStart) continue;
 
-      const dayCursorStart = eventStartTz < monthStart ? monthStart : eventStartTz;
-      const dayCursorEnd = eventEndTz > monthEnd ? monthEnd : eventEndTz;
+      const dayCursorStart = eventStart < viewStart ? viewStart : eventStart;
+      const dayCursorEnd = eventEnd > viewEnd ? viewEnd : eventEnd;
 
       let cursor = startOfDay(dayCursorStart);
       while (cursor <= dayCursorEnd) {
@@ -71,13 +78,12 @@
       }
     }
 
-    // Sort events within each day
     for (const key in map) {
-      map[key].sort(
-        (a, b) =>
-          toZonedTime(a.start, calendarTimezone).getTime() -
-          toZonedTime(b.start, calendarTimezone).getTime()
-      );
+      map[key].sort((a, b) => {
+        const { start: startA } = getEventDateTimes(a);
+        const { start: startB } = getEventDateTimes(b);
+        return startA.getTime() - startB.getTime();
+      });
     }
 
     return map;

@@ -5,6 +5,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
+  import { combineDateTimeUTC } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { EventBlock } from "../../event/components";
@@ -17,39 +18,41 @@
 
   let { events }: DayCalendarProps = $props();
 
-  let scrollContainer: HTMLDivElement;
-
   const hours = Array.from({ length: 24 }, (_, i) => i);
-  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  function splitEventByDay(event: Event, dayStart: Date) {
-    const eventStartTz = toZonedTime(event.start, calendarTimezone);
-    const eventEndTz = toZonedTime(event.end, calendarTimezone);
-    const dayEnd = endOfDay(dayStart);
+  function getEventDateTimes(event: Event) {
+    const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
+    const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+    const start = toZonedTime(startUtc, event.timezone);
+    const end = toZonedTime(endUtc, event.timezone);
+    return { start, end };
+  }
 
-    const start = eventStartTz < dayStart ? dayStart : eventStartTz;
-    const end = eventEndTz > dayEnd ? dayEnd : eventEndTz;
+  function splitEventByDay(event: Event) {
+    const { start, end } = getEventDateTimes(event);
+    const dayStart = startOfDay($currentDate);
+    const dayEnd = endOfDay($currentDate);
 
-    return { event, start, end };
+    const chunkStart = start < dayStart ? dayStart : start;
+    const chunkEnd = end > dayEnd ? dayEnd : end;
+
+    return { event, start: chunkStart, end: chunkEnd };
   }
 
   function calculateOffsets(chunks: { event: Event; start: Date; end: Date }[]) {
     chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-    const offsets = new Map<string, number>();
     const active: { end: Date; offset: number }[] = [];
+    const offsets = new Map<string, number>();
 
-    for (const current of chunks) {
-      for (let i = active.length - 1; i >= 0; i--) {
-        if (active[i].end <= current.start) active.splice(i, 1);
-      }
-
-      const usedOffsets = new Set(active.map((a) => a.offset));
+    for (const chunk of chunks) {
+      active.filter((a) => a.end > chunk.start);
+      const used = new Set(active.map((a) => a.offset));
       let offset = 0;
-      while (usedOffsets.has(offset)) offset++;
+      while (used.has(offset)) offset++;
 
-      offsets.set(current.event.id, offset);
-      active.push({ end: current.end, offset });
+      active.push({ end: chunk.end, offset });
+      offsets.set(chunk.event.id, offset);
     }
     return offsets;
   }
@@ -59,24 +62,26 @@
     const dayEnd = endOfDay($currentDate);
 
     const filtered = events.filter((event) => {
+      const { start, end } = getEventDateTimes(event);
       const isVisible = !($checkedCalendars[event.calendarId] === false);
       if (!isVisible) return false;
-
-      const eventStartTz = toZonedTime(event.start, calendarTimezone);
-      const eventEndTz = toZonedTime(event.end, calendarTimezone);
-
       return (
-        isWithinInterval(eventStartTz, { start: dayStart, end: dayEnd }) ||
-        isWithinInterval(eventEndTz, { start: dayStart, end: dayEnd }) ||
-        (eventStartTz < dayStart && eventEndTz > dayEnd)
+        isWithinInterval(start, { start: dayStart, end: dayEnd }) ||
+        isWithinInterval(end, { start: dayStart, end: dayEnd }) ||
+        (start < dayStart && end > dayEnd)
       );
     });
 
-    const chunks = filtered.map((event) => splitEventByDay(event, dayStart));
+    const chunks = filtered.map(splitEventByDay);
     const offsets = calculateOffsets(chunks);
 
-    return { chunks, offsets };
+    return chunks.map((chunk) => ({
+      ...chunk,
+      offset: offsets.get(chunk.event.id) ?? 0
+    }));
   });
+
+  let scrollContainer: HTMLDivElement;
 </script>
 
 <div class="flex flex-col h-full py-3">
@@ -111,12 +116,9 @@
             <CurrentTimeIndicator day={$currentDate} />
           {/if}
 
-          {#each dayEvents.chunks as { event, start } (event.id)}
+          {#each dayEvents as { event, start, offset } (event.id + start.toISOString())}
             {#if start.getHours() === hour}
-              <EventBlock
-                event={{ ...event, start: start.toISOString() }}
-                offset={dayEvents.offsets.get(event.id) ?? 0}
-              />
+              <EventBlock {event} {offset} />
             {/if}
           {/each}
         </div>

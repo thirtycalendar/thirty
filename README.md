@@ -30,6 +30,7 @@
   - (7.7.14) - Updated event block, event details, and event form components.
   - (7.7.15) - Fixed type errors mostly.
   - (7.7.16) - Fixed week calendar component.
+  - (7.7.17) - Fixed all type errors, but not sure if it is fully working.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

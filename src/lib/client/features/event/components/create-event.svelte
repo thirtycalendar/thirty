@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { writable, type Writable } from "svelte/store";
-
   import { addMinutes, format } from "date-fns";
 
   import { toggleModal } from "$lib/client/components/utils";

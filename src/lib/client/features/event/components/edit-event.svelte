@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { writable, type Writable } from "svelte/store";
-
-  import { format, parseISO } from "date-fns";
-
   import { currentEventDetails, handleEventStopEditing } from "$lib/client/stores/event";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
