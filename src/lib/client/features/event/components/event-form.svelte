@@ -9,8 +9,7 @@
     MapPin
   } from "@lucide/svelte";
 
-  import { addDays } from "date-fns";
-  import { format } from "date-fns-tz";
+  import { addDays, format } from "date-fns";
 
   import {
     ChoiceField,
@@ -45,12 +44,7 @@
     isCreateEvent = false
   }: EventFormProps = $props();
 
-  let isLocation = $state(defaultValues.location ? true : false);
-  let isDescription = $state(defaultValues.description ? true : false);
-  let isMoreOptions = $state(false);
-
   const { data: calendars } = getCalendars();
-  const now = new Date();
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
@@ -58,45 +52,42 @@
     disabledFields: ["timezone"]
   });
 
-  const isNextDay = $derived($formData.startTime > $formData.endTime);
+  let isLocation = $state(defaultValues.location ? true : false);
+  let isDescription = $state(defaultValues.description ? true : false);
+  let isMoreOptions = $state(false);
+  let previousCalendarId = $state("");
+
+  const isMultiDay = $derived($formData.startDate !== $formData.endDate);
+  const isTimeInverted = $derived(
+    $formData.startDate === $formData.endDate && $formData.startTime > $formData.endTime
+  );
 
   $effect(() => {
     if (isCreateEvent && $calendars) {
       const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
-
       if (primaryCalendar) {
         $formData.calendarId = primaryCalendar.id;
         $formData.colorId = primaryCalendar.colorId;
         $formData.timezone = primaryCalendar.timezone;
       }
     }
-
-    formData.subscribe(($event) => {
-      $formData.calendarId = $event.calendarId;
-      $formData.colorId = $event.colorId;
-      $formData.timezone = $event.timezone;
-
-      if (isNextDay && $event.endDate === format(now, "yyyy-MM-dd")) {
-        $event.endDate = format(addDays(now, 1), "yyyy-MM-dd");
-      }
-    });
   });
 
-  let previousCalendarId = $state("");
+  // Automatically set end date if end time is before start time on the same day
+  $effect(() => {
+    if (isTimeInverted) {
+      $formData.endDate = format(addDays(new Date($formData.startDate), 1), "yyyy-MM-dd");
+    }
+  });
 
+  //  Sync color and timezone when the selected calendar changes
   $effect(() => {
     if ($calendars) {
       const selectedCalendar = $calendars.find((c) => c.id === $formData.calendarId);
-
       if (selectedCalendar && previousCalendarId !== $formData.calendarId) {
         previousCalendarId = selectedCalendar.id;
-
-        if ($formData.colorId !== selectedCalendar.colorId) {
-          $formData.colorId = selectedCalendar.colorId;
-        }
-        if ($formData.timezone !== selectedCalendar.timezone) {
-          $formData.timezone = selectedCalendar.timezone;
-        }
+        $formData.colorId = selectedCalendar.colorId;
+        $formData.timezone = selectedCalendar.timezone;
       }
     }
   });
@@ -112,23 +103,23 @@
       </div>
 
       <div class="flex-1">
-        {#if isNextDay}
+        {#if isMultiDay}
           <div class="space-y-2">
             <div class="flex gap-2">
               <DateField name="startDate" {formData} className="flex-[3]" />
               <TimeField name="startTime" {formData} className="flex-[2]" />
             </div>
-
             <div class="flex gap-2">
-              <DateField name="endDate" {formData} className="flex-[3]" isDisablePast={true} />
+              <DateField name="endDate" {formData} className="flex-[3]" />
               <TimeField name="endTime" {formData} className="flex-[2]" />
             </div>
           </div>
         {:else}
-          <div class="flex gap-2">
+          <div class="flex items-center gap-2">
             <DateField name="startDate" {formData} className="flex-[2]" />
             <TimeField name="startTime" {formData} className="flex-1" />
-            <TimeField name="endTime" {formData} className="flex-1" isRightDiv={true} />
+            <span class="text-muted-foreground">-</span>
+            <TimeField name="endTime" {formData} className="flex-1" />
           </div>
         {/if}
       </div>
@@ -138,8 +129,7 @@
       <div class="pt-1.5 text-muted-foreground">
         <CalendarCheck2 size="20" strokeWidth="2.5" />
       </div>
-
-      <div class="flex gap-2 flex-1">
+      <div class="flex flex-1 gap-2">
         <CalendarChoiceField
           name="calendarId"
           data={formData}
@@ -152,10 +142,9 @@
     </div>
 
     <div class="flex items-center gap-3">
-      <div class="pb-1.5 text-muted-foreground">
+      <div class="text-muted-foreground">
         <MapPin size="20" strokeWidth="2.5" />
       </div>
-
       <div class="flex-1">
         {#if isLocation}
           <InputField
@@ -168,7 +157,7 @@
         {:else}
           <button
             type="button"
-            class="p-1.5 cursor-pointer text-sm w-full text-left justify-start"
+            class="p-1.5 w-full text-left text-sm"
             onclick={() => (isLocation = true)}
           >
             Add <span class="hover:underline">location</span>
@@ -181,7 +170,6 @@
       <div class="pt-1.5 text-muted-foreground">
         <AlignLeft size="20" strokeWidth="2.5" />
       </div>
-
       <div class="flex-1">
         {#if isDescription}
           <TextareaField
@@ -194,7 +182,7 @@
         {:else}
           <button
             type="button"
-            class="p-1.5 cursor-pointer text-sm w-full text-left justify-start"
+            class="p-1.5 w-full text-left text-sm"
             onclick={() => (isDescription = true)}
           >
             Add <span class="hover:underline">description</span>
@@ -205,65 +193,59 @@
 
     <button
       type="button"
-      class="flex gap-2 items-center cursor-pointer opacity-75 text-sm w-full my-3"
+      class="flex items-center gap-2 w-full my-3 text-sm opacity-75"
       onclick={() => (isMoreOptions = !isMoreOptions)}
     >
       <ChevronRight
         size="16"
         class={`transition-transform duration-300 ${isMoreOptions && "rotate-90"}`}
       />
-      <p>more options</p>
+      <p>More options</p>
     </button>
 
     {#if isMoreOptions}
-      <div class="w-full">
-        <label class="cursor-pointer w-full">
-          <input
-            name="allDay"
-            type="checkbox"
-            class="checkbox checkbox-sm mr-2"
-            oninput={handleInput}
-            checked={$formData.allDay}
-            disabled={isNextDay}
-          />
-
-          <span class="text-sm">All day</span>
-        </label>
-      </div>
-
-      <div class="flex items-start gap-3">
-        <div class="pt-1.5 text-muted-foreground">
-          <CircleCheck size="20" strokeWidth="2.5" />
+      <div class="space-y-3 pl-8">
+        <div>
+          <label class="flex items-center cursor-pointer">
+            <input
+              name="allDay"
+              type="checkbox"
+              class="checkbox checkbox-sm mr-2"
+              oninput={handleInput}
+              checked={$formData.allDay}
+              disabled={isMultiDay}
+            />
+            <span class="text-sm">All day</span>
+          </label>
         </div>
 
-        <div class="flex gap-2 flex-1">
+        <div class="flex items-center gap-3">
+          <div class="text-muted-foreground">
+            <CircleCheck size="20" strokeWidth="2.5" />
+          </div>
           <ChoiceField name="status" choiceList={EventStatus} {handleInput} {formData} />
         </div>
-      </div>
 
-      <div class="flex items-start gap-3">
-        <div class="pt-1.5 text-muted-foreground">
-          <Globe size="20" strokeWidth="2.5" />
-        </div>
-
-        <div class="flex gap-2 flex-1">
+        <div class="flex items-center gap-3">
+          <div class="text-muted-foreground">
+            <Globe size="20" strokeWidth="2.5" />
+          </div>
           <TimezoneField name="timezone" {formData} />
         </div>
       </div>
     {/if}
 
-    <div class="flex justify-end gap-2">
+    <div class="flex justify-end gap-2 pt-4">
       {#if !isCreateEvent}
         <button
-          type="submit"
-          class="btn font-bold btn-ghost"
+          type="button"
+          class="btn btn-ghost font-bold"
           onclick={handleEventStopEditing}
           disabled={$isSubmitting || isMutationPending}
         >
           Cancel
         </button>
       {/if}
-
       <button
         type="submit"
         class="btn btn-base-300 font-bold"

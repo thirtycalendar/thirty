@@ -15,9 +15,13 @@ export const eventSchema = z.object({
   startDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Invalid date format (YYYY-MM-DD)" }),
-  startTime: z.string().regex(/^\d{2}:\d{2}:\d{2}$/, { message: "Invalid time format (HH:mm:ss)" }),
+  startTime: z
+    .string()
+    .regex(/^([0-1]?\d|2[0-3]):([0-5]\d)$/, { message: "Invalid time format (HH:mm)" }),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { message: "Invalid date format (YYYY-MM-DD)" }),
-  endTime: z.string().regex(/^\d{2}:\d{2}:\d{2}$/, { message: "Invalid time format (HH:mm:ss)" }),
+  endTime: z
+    .string()
+    .regex(/^([0-1]?\d|2[0-3]):([0-5]\d)$/, { message: "Invalid time format (HH:mm)" }),
 
   timezone: z.string().min(1, { message: "Timezone Id is required" }).default("UTC"),
   allDay: z.boolean().default(false),

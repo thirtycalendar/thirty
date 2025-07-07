@@ -31,6 +31,7 @@
   - (7.7.15) - Fixed type errors mostly.
   - (7.7.16) - Fixed week calendar component.
   - (7.7.17) - Fixed all type errors, but not sure if it is fully working.
+  - (7.7.18) - Kinda working in tricky ways.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.
