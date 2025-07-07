@@ -3,7 +3,6 @@ import { and, eq, ne, sql } from "drizzle-orm";
 import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, CalendarForm } from "$lib/shared/types";
 
-import { storeInitCalendarStateToKV } from "../calendars/local/init-calendar";
 import { db } from "../db";
 import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
@@ -41,17 +40,9 @@ export async function getCalendar(calendarId: string): Promise<Calendar> {
 
 export async function createCalendar(
   userId: string,
-  calendarForm: CalendarForm,
-  opts: { initCalendar?: boolean } = {}
+  calendarForm: CalendarForm
 ): Promise<Calendar> {
-  const { initCalendar = false } = opts;
-
-  const calendarId = crypto.randomUUID();
-  if (initCalendar) {
-    await storeInitCalendarStateToKV(userId, calendarId);
-  }
-
-  if (calendarForm.isPrimary && !initCalendar) {
+  if (calendarForm.isPrimary) {
     await db
       .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })
@@ -60,7 +51,7 @@ export async function createCalendar(
 
   const [inserted] = await db
     .insert(calendarTable)
-    .values({ userId, id: calendarId, ...calendarForm })
+    .values({ userId, ...calendarForm })
     .returning();
 
   if (!inserted) throw new Error("Failed to create calendar");

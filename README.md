@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Mon Jul 7, 2025
+  - (7.7.01) - Removed all the init calendar timezone update things.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

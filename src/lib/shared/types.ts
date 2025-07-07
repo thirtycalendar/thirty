@@ -8,7 +8,7 @@ import type { taskTable } from "$lib/server/db/tables/task";
 
 import type * as Const from "$lib/shared/constants";
 
-import type { calendarSchema, initCalendarStateSchema } from "./schemas/calendar";
+import type { calendarSchema } from "./schemas/calendar";
 import type { eventSchema } from "./schemas/event";
 import type { taskSchema } from "./schemas/task";
 
@@ -19,8 +19,6 @@ export interface Color {
 
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;
-
-export type InitCalendarStateForm = z.infer<typeof initCalendarStateSchema>;
 
 export interface InitCalendarStateKV {
   calendarId: string;

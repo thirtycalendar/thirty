@@ -11,32 +11,14 @@ import {
   getCalendar,
   updateCalendar
 } from "$lib/server/services/calendar";
-import { updateInitCalendarTimezone } from "$lib/server/calendars/local/init-calendar";
 
-import { calendarSchema, initCalendarStateSchema } from "$lib/shared/schemas/calendar";
+import { calendarSchema } from "$lib/shared/schemas/calendar";
 import type { Calendar, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParamId } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
-  .post("/updateInit", zValidator("json", initCalendarStateSchema), async (c) => {
-    try {
-      const user = c.get("user") as User;
-      const data = c.req.valid("json");
-
-      const calendar = await updateInitCalendarTimezone(user.id, data);
-
-      return c.json<SuccessResponse<Calendar>>({
-        success: true,
-        message: `Updated initialized ${calendar.name} calendar`,
-        data: calendar
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
-    }
-  })
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
