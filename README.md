@@ -20,6 +20,7 @@
   - (7.7.04) - Added holiday routes and services.
   - (7.7.05) - Better hono error response. Improved ipwhois util functions.
   - (7.7.06) - Add detect holiday routes. Finished all holiday codes.
+  - (7.7.07) - Added clear caches function for calendar, event, and tasks.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

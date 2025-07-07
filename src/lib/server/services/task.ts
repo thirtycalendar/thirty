@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 
-import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
+import { KV_EVENTS, KV_TASKS } from "$lib/shared/utils/kv-keys";
 import type { Task, TaskForm } from "$lib/shared/types";
 
 import { db } from "../db";
@@ -97,4 +97,8 @@ export async function deleteTask(taskId: string): Promise<Task> {
   }
 
   return deleted;
+}
+
+export async function clearTasks(userId: string) {
+  await kv.del(KV_TASKS(userId));
 }

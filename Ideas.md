@@ -1,0 +1,2 @@
+- [ ] Notify users for the upcoming birthdays
+  - 1 day, 7 days, 10 days, 30 days

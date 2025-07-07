@@ -87,7 +87,7 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .post("/clearHolidays", async (c) => {
+  .post("/clear", async (c) => {
     try {
       const user = c.get("user") as User;
 

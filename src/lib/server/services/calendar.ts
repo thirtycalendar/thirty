@@ -143,6 +143,10 @@ export async function deleteCalendar(calendarId: string): Promise<Calendar> {
   return deleted;
 }
 
+export async function clearCalendars(userId: string) {
+  await kv.del(KV_CALENDARS(userId));
+}
+
 export async function createCalendarsBulk(userId: string, data: CalendarForm[]) {
   if (data.length === 0) return;
   await db.insert(calendarTable).values(data.map((c) => ({ ...c, userId })));

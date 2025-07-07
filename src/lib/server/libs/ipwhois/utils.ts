@@ -18,7 +18,7 @@ export function getCountryNameFromIP(data: unknown): string {
   return "Unknown";
 }
 
-export async function storeIPLocationToKV(userId: string): Promise<IP_LOCATION_KV> {
+export async function cacheIPLocation(userId: string): Promise<IP_LOCATION_KV> {
   const res = await fetch("https://ipwho.is/");
   const data: unknown = await res.json();
 
@@ -37,5 +37,5 @@ export async function getIPLocation(userId: string): Promise<IP_LOCATION_KV> {
 
   if (cached) return cached;
 
-  return await storeIPLocationToKV(userId);
+  return await cacheIPLocation(userId);
 }

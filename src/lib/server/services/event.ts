@@ -99,6 +99,10 @@ export async function deleteEvent(eventId: string): Promise<Event> {
   return deleted;
 }
 
+export async function clearEvents(userId: string) {
+  await kv.del(KV_EVENTS(userId));
+}
+
 export async function createEventsBulk(userId: string, data: EventForm[]) {
   if (data.length === 0) return;
   await db.insert(eventTable).values(data.map((e) => ({ ...e, userId })));
