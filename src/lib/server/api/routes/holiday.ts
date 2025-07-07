@@ -10,14 +10,36 @@ import {
   getHolidays,
   removeHoliday
 } from "$lib/server/services/holiday";
+import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { holidaySchema } from "$lib/shared/schemas/holiday";
-import type { Holiday, SuccessResponse, User } from "$lib/shared/types";
+import type { Holiday, HolidayForm, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
+  .post("/detect", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      const ipLocation = await getIPLocation(user.id);
+
+      const data: HolidayForm = {
+        country: ipLocation.country
+      };
+
+      const holiday = await addHoliday(user.id, data);
+
+      return c.json<SuccessResponse<Holiday>>({
+        success: true,
+        message: `${holiday.country} added`,
+        data: holiday
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
   .get("/getAll", async (c) => {
     try {
       const user = c.get("user") as User;
@@ -42,7 +64,7 @@ const app = new Hono<Context>()
 
       return c.json<SuccessResponse<Holiday>>({
         success: true,
-        message: `${holiday.countryName} added`,
+        message: `${holiday.country} added`,
         data: holiday
       });
     } catch (err: unknown) {
@@ -58,7 +80,7 @@ const app = new Hono<Context>()
 
       return c.json<SuccessResponse<Holiday>>({
         success: true,
-        message: `${removed.countryName} removed`,
+        message: `${removed.country} removed`,
         data: removed
       });
     } catch (err: unknown) {

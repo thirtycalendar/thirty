@@ -1,4 +1,8 @@
 import { isObject } from "$lib/shared/utils";
+import { KV_IP_LOCATION } from "$lib/shared/utils/kv-keys";
+import type { IP_LOCATION_KV } from "$lib/shared/types";
+
+import { kv } from "../upstash/kv";
 
 export function getTimezoneIdFromIP(data: unknown): string {
   if (isObject(data) && isObject(data.timezone) && typeof data.timezone.id === "string") {
@@ -12,4 +16,26 @@ export function getCountryNameFromIP(data: unknown): string {
     return data.country;
   }
   return "Unknown";
+}
+
+export async function storeIPLocationToKV(userId: string): Promise<IP_LOCATION_KV> {
+  const res = await fetch("https://ipwho.is/");
+  const data: unknown = await res.json();
+
+  const timezone = getTimezoneIdFromIP(data);
+  const country = getCountryNameFromIP(data);
+
+  const value = { timezone, country };
+
+  await kv.set(KV_IP_LOCATION(userId), value, { ex: 43200 });
+
+  return value;
+}
+
+export async function getIPLocation(userId: string): Promise<IP_LOCATION_KV> {
+  const cached = await kv.get<IP_LOCATION_KV>(KV_IP_LOCATION(userId));
+
+  if (cached) return cached;
+
+  return await storeIPLocationToKV(userId);
 }

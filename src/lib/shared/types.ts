@@ -56,6 +56,11 @@ export type TaskStatus = (typeof Const.TaskStatus)[number];
 
 export type NotifyInMin = (typeof Const.NotifyInMin)[number];
 
+export type IP_LOCATION_KV = {
+  country: string;
+  timezone: string;
+};
+
 export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session.session;
 

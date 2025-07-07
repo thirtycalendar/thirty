@@ -19,6 +19,7 @@
   - (7.7.03) - Added billing notes and used "UTC" for fallback timezone on user create.
   - (7.7.04) - Added holiday routes and services.
   - (7.7.05) - Better hono error response. Improved ipwhois util functions.
+  - (7.7.06) - Add detect holiday routes. Finished all holiday codes.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

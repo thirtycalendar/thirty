@@ -15,8 +15,13 @@ export async function getHolidays(userId: string): Promise<Holiday[]> {
 
 export async function addHoliday(userId: string, holiday: HolidayForm): Promise<Holiday> {
   const holidays = await getHolidays(userId);
-  holidays.push(holiday);
+  const exists = holidays.some((h) => h.country === holiday.country);
 
+  if (exists) {
+    return holiday;
+  }
+
+  holidays.push(holiday);
   await cacheHolidays(userId, holidays);
 
   return holiday;
@@ -24,7 +29,7 @@ export async function addHoliday(userId: string, holiday: HolidayForm): Promise<
 
 export async function removeHoliday(userId: string, holiday: HolidayForm): Promise<Holiday> {
   const holidays = await getHolidays(userId);
-  const index = holidays.findIndex((h) => h.countryName === holiday.countryName);
+  const index = holidays.findIndex((h) => h.country === holiday.country);
 
   if (index === -1) {
     throw new Error("Holiday not found");
