@@ -24,6 +24,7 @@
   - (7.7.08) - Added birthday db table and zod schema.
   - (7.7.09) - Added birthday service codes.
   - (7.7.10) - Added birthday hono routes
+  - (7.7.11) - Updated event table.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

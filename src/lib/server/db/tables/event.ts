@@ -1,4 +1,4 @@
-import { boolean, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, date, jsonb, pgTable, text, time, uuid } from "drizzle-orm/pg-core";
 
 import type { EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
 
@@ -22,8 +22,12 @@ export const eventTable = pgTable("events", {
   colorId: text("colorId").notNull(),
   description: text("description"),
   location: text("location"),
-  start: timestamp("start", { withTimezone: true, mode: "string" }).notNull(),
-  end: timestamp("end", { withTimezone: true, mode: "string" }).notNull(),
+
+  startDate: date("start_date").notNull(),
+  startTime: time("start_time", { precision: 0 }).notNull(),
+  endDate: date("end_date").notNull(),
+  endTime: time("end_time", { precision: 0 }).notNull(),
+
   timezone: text("timezone").default("UTC").notNull(),
   allDay: boolean("all_day").default(false).notNull(),
   status: text("status").$type<EventStatus>().default("confirmed").notNull(),

@@ -47,6 +47,19 @@ CREATE TABLE "verification" (
 	"updated_at" timestamp
 );
 --> statement-breakpoint
+CREATE TABLE "birthdays" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text NOT NULL,
+	"name" text NOT NULL,
+	"colorId" text NOT NULL,
+	"description" text,
+	"notifyInDay" integer DEFAULT 1 NOT NULL,
+	"notificationSent" boolean DEFAULT false NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"deleted_at" timestamp with time zone
+);
+--> statement-breakpoint
 CREATE TABLE "calendars" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"external_id" text,
@@ -103,8 +116,10 @@ CREATE TABLE "events" (
 	"colorId" text NOT NULL,
 	"description" text,
 	"location" text,
-	"start" timestamp with time zone NOT NULL,
-	"end" timestamp with time zone NOT NULL,
+	"start_date" date NOT NULL,
+	"start_time" time(0) NOT NULL,
+	"end_date" date NOT NULL,
+	"end_time" time(0) NOT NULL,
 	"timezone" text DEFAULT 'UTC' NOT NULL,
 	"all_day" boolean DEFAULT false NOT NULL,
 	"status" text DEFAULT 'confirmed' NOT NULL,
@@ -145,6 +160,7 @@ CREATE TABLE "tasks" (
 --> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "birthdays" ADD CONSTRAINT "birthdays_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "calendars" ADD CONSTRAINT "calendars_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "chats" ADD CONSTRAINT "chats_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "event_attendees" ADD CONSTRAINT "event_attendees_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
