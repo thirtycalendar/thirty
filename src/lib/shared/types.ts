@@ -2,12 +2,14 @@ import type { InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
 import type { auth } from "$lib/server/auth";
+import type { birthdayTable } from "$lib/server/db/tables/birthday";
 import type { calendarTable } from "$lib/server/db/tables/calendar";
 import type { eventTable } from "$lib/server/db/tables/event";
 import type { taskTable } from "$lib/server/db/tables/task";
 
 import type * as Const from "$lib/shared/constants";
 
+import type { birthdaySchema } from "./schemas/birthday";
 import type { calendarSchema } from "./schemas/calendar";
 import type { eventSchema } from "./schemas/event";
 import type { holidaySchema } from "./schemas/holiday";
@@ -43,6 +45,9 @@ export type EventForm = z.infer<typeof eventSchema>;
 export type Task = InferSelectModel<typeof taskTable>;
 export type TaskForm = z.infer<typeof taskSchema>;
 
+export type Birthday = InferSelectModel<typeof birthdayTable>;
+export type BirthdayForm = z.infer<typeof birthdaySchema>;
+
 export type Holiday = z.infer<typeof holidaySchema>;
 export type HolidayForm = z.infer<typeof holidaySchema>;
 
@@ -55,6 +60,8 @@ export type EventAttendeeStatus = (typeof Const.EventAttendeeStatus)[number];
 export type TaskStatus = (typeof Const.TaskStatus)[number];
 
 export type NotifyInMin = (typeof Const.NotifyInMin)[number];
+
+export type NotifyInDay = (typeof Const.NotifyInDay)[number];
 
 export type IP_LOCATION_KV = {
   country: string;
