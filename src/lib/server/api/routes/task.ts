@@ -30,9 +30,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: tasks
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .get("/get/:id", async (c) => {
@@ -47,9 +46,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: task
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .post("/create", zValidator("json", taskSchema), async (c) => {
@@ -64,9 +62,8 @@ const app = new Hono<Context>()
         message: `${task.name} created`,
         data: task
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .put("/update/:id", zValidator("json", taskSchema), async (c) => {
@@ -83,9 +80,8 @@ const app = new Hono<Context>()
         message: `${task.name} updated`,
         data: task
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .delete("/delete/:id", async (c) => {
@@ -100,9 +96,8 @@ const app = new Hono<Context>()
         message: `${task.name} deleted`,
         data: task
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   });
 

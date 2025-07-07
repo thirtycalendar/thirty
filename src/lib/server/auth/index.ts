@@ -9,6 +9,7 @@ import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
+import { getTimezoneIdFromIP } from "../libs/ipwhois/utils";
 import { createCalendar } from "../services/calendar";
 
 export const auth = betterAuth({
@@ -51,9 +52,9 @@ export const auth = betterAuth({
           const { id, name } = user;
 
           const res = await fetch("https://ipwho.is/");
-          const data = await res.json();
+          const data: unknown = await res.json();
 
-          const timezone = data.timezone.id || "UTC";
+          const timezone = getTimezoneIdFromIP(data);
 
           const calendar: CalendarForm = {
             externalId: null,

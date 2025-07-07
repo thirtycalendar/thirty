@@ -29,9 +29,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: holidays
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .post("/add", zValidator("json", holidaySchema), async (c) => {
@@ -46,9 +45,8 @@ const app = new Hono<Context>()
         message: `${holiday.countryName} added`,
         data: holiday
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .delete("/remove", zValidator("json", holidaySchema), async (c) => {
@@ -63,9 +61,8 @@ const app = new Hono<Context>()
         message: `${removed.countryName} removed`,
         data: removed
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .post("/clearHolidays", async (c) => {
@@ -79,9 +76,8 @@ const app = new Hono<Context>()
         message: "Successfully cleared all the holidays",
         data: null
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   });
 

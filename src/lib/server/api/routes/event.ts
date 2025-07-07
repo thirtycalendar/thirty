@@ -30,9 +30,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: events
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .get("/get/:id", async (c) => {
@@ -47,9 +46,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: event
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .post("/create", zValidator("json", eventSchema), async (c) => {
@@ -64,9 +62,8 @@ const app = new Hono<Context>()
         message: `${event.name} created`,
         data: event
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .put("/update/:id", zValidator("json", eventSchema), async (c) => {
@@ -83,9 +80,8 @@ const app = new Hono<Context>()
         message: `${event.name} updated`,
         data: event
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .delete("/delete/:id", async (c) => {
@@ -100,9 +96,8 @@ const app = new Hono<Context>()
         message: `${event.name} deleted`,
         data: event
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   });
 

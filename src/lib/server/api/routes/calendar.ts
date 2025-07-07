@@ -30,9 +30,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: calendars
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .get("/get/:id", async (c) => {
@@ -47,9 +46,8 @@ const app = new Hono<Context>()
         message: "Success",
         data: calendar
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .post("/create", zValidator("json", calendarSchema), async (c) => {
@@ -64,9 +62,8 @@ const app = new Hono<Context>()
         message: `${calendar.name} created`,
         data: calendar
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .put("/update/:id", zValidator("json", calendarSchema), async (c) => {
@@ -83,9 +80,8 @@ const app = new Hono<Context>()
         message: `${calendar.name} updated`,
         data: calendar
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   })
   .delete("/delete/:id", async (c) => {
@@ -100,9 +96,8 @@ const app = new Hono<Context>()
         message: `${calendar.name} deleted`,
         data: calendar
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return errorResponse(c, err.message);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
     }
   });
 
