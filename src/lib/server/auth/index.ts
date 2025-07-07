@@ -50,16 +50,20 @@ export const auth = betterAuth({
         after: async (user) => {
           const { id, name } = user;
 
+          const res = await fetch("https://ipwho.is/");
+          const data = await res.json();
+          const timezone = data.timezone.id;
+
           const calendar: CalendarForm = {
             externalId: null,
             source: "local",
             name,
             colorId: getRandomColorId(),
-            timezone: "UTC",
+            timezone,
             isPrimary: true
           };
 
-          await createCalendar(id, calendar, { initCalendar: true });
+          await createCalendar(id, calendar);
         }
       }
     }

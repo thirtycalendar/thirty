@@ -16,7 +16,7 @@
 </script>
 
 <button
-  class="btn btn-lg btn-soft btn-info w-full my-2 font-semibold"
+  class="btn btn-lg btn-soft w-full my-2 font-semibold"
   {onclick}
   disabled={$isPending || $isSuccess}
 >
