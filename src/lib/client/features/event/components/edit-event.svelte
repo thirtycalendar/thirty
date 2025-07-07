@@ -8,7 +8,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import type { Event, EventDataType, EventForm as EventFormType } from "$lib/shared/types";
+  import type { Event, EventForm as EventFormType } from "$lib/shared/types";
 
   import { EventForm } from ".";
 

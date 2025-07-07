@@ -14,6 +14,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
+  import { combineDateTimeUTC } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { EventBlock } from "../../event/components";
@@ -26,8 +27,6 @@
 
   let { events }: WeekCalendarProps = $props();
 
-  const calendarTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   const days = $derived.by(() => {
     const start = startOfWeek($currentDate);
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
@@ -35,16 +34,23 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  function splitEventByDay(event: Event) {
-    const chunks: { event: Event; day: Date; start: Date; end: Date }[] = [];
-    const eventStartTz = toZonedTime(event.start, calendarTimezone);
-    const eventEndTz = toZonedTime(event.end, calendarTimezone);
+  function getEventDateTimes(event: Event) {
+    const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
+    const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+    const start = toZonedTime(startUtc, event.timezone);
+    const end = toZonedTime(endUtc, event.timezone);
+    return { start, end };
+  }
 
-    let currentStart = eventStartTz;
-    while (currentStart < eventEndTz) {
+  function splitEventByDay(event: Event) {
+    const { start, end } = getEventDateTimes(event);
+    const chunks: { event: Event; day: Date; start: Date; end: Date }[] = [];
+
+    let currentStart = start;
+    while (currentStart < end) {
       const dayStart = startOfDay(currentStart);
       const dayEnd = endOfDay(currentStart);
-      const chunkEnd = eventEndTz < dayEnd ? eventEndTz : dayEnd;
+      const chunkEnd = end < dayEnd ? end : dayEnd;
 
       chunks.push({ event, day: dayStart, start: currentStart, end: chunkEnd });
       currentStart = addDays(dayStart, 1);
@@ -66,9 +72,7 @@
       const active: { chunk: (typeof dayChunks)[number]; offset: number }[] = [];
 
       for (const chunk of dayChunks) {
-        for (let i = active.length - 1; i >= 0; i--) {
-          if (active[i].chunk.end <= chunk.start) active.splice(i, 1);
-        }
+        active.filter((a) => a.chunk.end > chunk.start);
         const usedOffsets = new Set(active.map((a) => a.offset));
         let offset = 0;
         while (usedOffsets.has(offset)) offset++;
@@ -84,16 +88,13 @@
     const weekEnd = endOfDay(days[6]);
 
     const filtered = events.filter((event) => {
+      const { start, end } = getEventDateTimes(event);
       const isVisible = !($checkedCalendars[event.calendarId] === false);
       if (!isVisible) return false;
-
-      const eventStart = toZonedTime(event.start, calendarTimezone);
-      const eventEnd = toZonedTime(event.end, calendarTimezone);
-
       return (
-        isWithinInterval(eventStart, { start: weekStart, end: weekEnd }) ||
-        isWithinInterval(eventEnd, { start: weekStart, end: weekEnd }) ||
-        (eventStart < weekStart && eventEnd > weekEnd)
+        isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
+        isWithinInterval(end, { start: weekStart, end: weekEnd }) ||
+        (start < weekStart && end > weekEnd)
       );
     });
 
@@ -148,17 +149,10 @@
             <CurrentTimeIndicator {day} />
           {/if}
 
-          {#each weekEvents as { event, day: eventDay, start, end, offset } (event.id)}
+          {#each weekEvents as { event, day: eventDay, start, offset } (event.id + start.toISOString())}
             {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
               {#if start.getHours() === hour}
-                <EventBlock
-                  event={{
-                    ...event,
-                    start: start.toISOString(),
-                    end: end.toISOString()
-                  }}
-                  {offset}
-                />
+                <EventBlock {event} {offset} />
               {/if}
             {/if}
           {/each}

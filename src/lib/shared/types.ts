@@ -29,17 +29,6 @@ export interface InitCalendarStateKV {
 }
 
 export type Event = InferSelectModel<typeof eventTable>;
-
-export interface EventDataType {
-  calendarId: string;
-  colorId: string;
-  startDate: string;
-  startTime: string;
-  endDate: string;
-  endTime: string;
-  timezone: string;
-}
-
 export type EventForm = z.infer<typeof eventSchema>;
 
 export type Task = InferSelectModel<typeof taskTable>;

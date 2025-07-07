@@ -25,7 +25,7 @@
   import { createForm } from "$lib/client/utils/create-form";
 
   import { EventStatus } from "$lib/shared/constants";
-  import { type EventDataType, type EventForm } from "$lib/shared/types";
+  import type { EventForm } from "$lib/shared/types";
 
   import { eventSchema } from "../../../../shared/schemas/event";
   import { CalendarChoiceField } from "../../calendar/components";
