@@ -33,7 +33,7 @@
     </div>
 
     <div class="flex gap-2 flex-1">
-      <ColorChoiceField name="colorId" data={formData} isLeftDiv />
+      <ColorChoiceField name="colorId" {formData} isLeftDiv />
     </div>
   </div>
 
@@ -43,7 +43,7 @@
     </div>
 
     <div class="flex gap-2 flex-1">
-      <TimezoneField name="timezone" data={formData} />
+      <TimezoneField name="timezone" {formData} />
     </div>
   </div>
 

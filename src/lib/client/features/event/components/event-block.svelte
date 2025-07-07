@@ -5,6 +5,7 @@
   import { handleEventModal } from "$lib/client/stores/event";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
+  import { combineDateTimeUTC } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
@@ -16,8 +17,11 @@
 
   let { event, offset = 0 }: EventBlockProps = $props();
 
-  const start = toZonedTime(event.start, event.timezone);
-  const end = toZonedTime(event.end, event.timezone);
+  const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
+  const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+
+  const start = toZonedTime(startUtc, event.timezone);
+  const end = toZonedTime(endUtc, event.timezone);
 
   const eventColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
 

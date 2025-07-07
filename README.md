@@ -27,6 +27,8 @@
   - (7.7.11) - Updated event table.
   - (7.7.12) - Updated google sync codes.
   - (7.7.13) - Fixed event types errors for curd.
+  - (7.7.14) - Updated event block, event details, and event form components.
+  - (7.7.15) - Fixed type errors mostly.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.

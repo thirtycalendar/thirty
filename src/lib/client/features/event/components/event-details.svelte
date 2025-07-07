@@ -10,11 +10,12 @@
     RefreshCcw
   } from "@lucide/svelte";
 
-  import { format, parseISO } from "date-fns";
-  import { formatInTimeZone } from "date-fns-tz";
+  import { format } from "date-fns";
+  import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
+  import { combineDateTimeUTC } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
@@ -27,8 +28,11 @@
 
   let { event }: EventDetailsProps = $props();
 
-  const start = parseISO(event.start);
-  const end = parseISO(event.end);
+  const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
+  const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+
+  const start = toZonedTime(startUtc, event.timezone);
+  const end = toZonedTime(endUtc, event.timezone);
 
   const formattedStart = formatInTimeZone(
     start,
