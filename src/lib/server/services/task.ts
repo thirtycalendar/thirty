@@ -99,6 +99,11 @@ export async function deleteTask(taskId: string): Promise<Task> {
   return deleted;
 }
 
+export async function createTasksBulk(userId: string, data: TaskForm[]) {
+  if (data.length === 0) return;
+  await db.insert(taskTable).values(data.map((b) => ({ ...b, userId })));
+}
+
 export async function clearTasks(userId: string) {
   await kv.del(KV_TASKS(userId));
 }

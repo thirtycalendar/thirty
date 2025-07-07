@@ -22,6 +22,7 @@
   - (7.7.06) - Add detect holiday routes. Finished all holiday codes.
   - (7.7.07) - Added clear caches function for calendar, event, and tasks.
   - (7.7.08) - Added birthday db table and zod schema.
+  - (7.7.09) - Added birthday service codes.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.
