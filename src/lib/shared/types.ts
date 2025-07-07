@@ -10,6 +10,7 @@ import type * as Const from "$lib/shared/constants";
 
 import type { calendarSchema } from "./schemas/calendar";
 import type { eventSchema } from "./schemas/event";
+import type { holidaySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
 
 export interface Color {
@@ -41,6 +42,9 @@ export type EventForm = z.infer<typeof eventSchema>;
 
 export type Task = InferSelectModel<typeof taskTable>;
 export type TaskForm = z.infer<typeof taskSchema>;
+
+export type Holiday = z.infer<typeof holidaySchema>;
+export type HolidayForm = z.infer<typeof holidaySchema>;
 
 export type Source = (typeof Const.Source)[number];
 

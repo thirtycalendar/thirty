@@ -13,6 +13,8 @@ try {
 
   console.log("✅ Auto-fixes applied. Re-adding changes...");
   execSync("git add .", { stdio: "inherit" });
+  execSync("git push", { stdio: "inherit" });
+  console.log("✅ Published to GitHub");
 } catch {
   console.error("❌ Lint or format check failed. Commit aborted.");
   process.exit(1);

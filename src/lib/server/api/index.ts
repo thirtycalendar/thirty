@@ -9,6 +9,7 @@ import type { Context } from "./context";
 import auth from "./routes/auth";
 import calendar from "./routes/calendar";
 import event from "./routes/event";
+import holiday from "./routes/holiday";
 import sync from "./routes/sync";
 import task from "./routes/task";
 
@@ -22,6 +23,7 @@ const routes = app
   .route("/calendar", calendar)
   .route("/event", event)
   .route("/task", task)
+  .route("/holiday", holiday)
   .route("/sync", sync);
 
 app.onError((err, c) => {

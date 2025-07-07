@@ -17,6 +17,7 @@
   - (7.7.01) - Removed all the init calendar timezone update things.
   - (7.7.02) - Get the timezone of a user via IP address. Fixed drizzle config schemas to tables.
   - (7.7.03) - Added billing notes and used "UTC" for fallback timezone on user create.
+  - (7.7.04) - Added holiday routes and services.
 - Sun Jul 6, 2025
   - (7.6.01) - Added Table suffix for all tables.
   - (7.6.02) - Added constants file.
