@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import {
     addMinutes,
     format as formatDate,
@@ -17,12 +19,12 @@
   interface TimeFieldProps {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
+    formData: Writable<any>;
     className?: string;
     isRightDiv?: boolean;
   }
 
-  let { name, data, className, isRightDiv = false }: TimeFieldProps = $props();
+  let { name, formData, className, isRightDiv = false }: TimeFieldProps = $props();
 
   const timeSlotInterval = 15;
 
@@ -50,20 +52,20 @@
 
   function parseTime(timeString: string): Date {
     if (!timeString) return new Date();
-    // Allow HH:mm format which is used for data storage
+    // Allow HH:mm format which is used for formData storage
     if (/^\d{1,2}:\d{2}$/.test(timeString)) timeString += ":00";
     const parsed = parse(timeString, "HH:mm:ss", new Date());
     return isValid(parsed) ? parsed : new Date();
   }
 
-  const currentDate = $derived.by(() => parseTime($data[name]));
+  const currentDate = $derived.by(() => parseTime($formData[name]));
 
   // FIX: Allow the input to be empty while focused (open).
   // When closed, it reverts to the formatted `currentDate`.
   const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
 
   function selectTime(date: Date) {
-    $data[name] = formatDate(date, "HH:mm");
+    $formData[name] = formatDate(date, "HH:mm");
     filterText = "";
     open = false;
     triggerButtonElement?.blur();
@@ -100,7 +102,7 @@
     }
 
     if (parsed) {
-      $data[name] = formatDate(parsed, "HH:mm");
+      $formData[name] = formatDate(parsed, "HH:mm");
     }
 
     filterText = "";
@@ -195,7 +197,7 @@
     value={inputValue}
     onfocus={() => {
       open = true;
-      filterText = $data[name] ? formatDate(parseTime($data[name]), "h:mm aa") : "";
+      filterText = $formData[name] ? formatDate(parseTime($formData[name]), "h:mm aa") : "";
     }}
     onblur={handleBlur}
     oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}

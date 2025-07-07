@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { Check, ChevronDown } from "@lucide/svelte";
 
   import { cn } from "$lib/client/utils/cn";
@@ -8,7 +10,7 @@
   interface ChoiceFieldProps {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formData: any;
+    formData: Writable<any>;
     choiceList: readonly string[];
     handleInput: (event: Event) => void;
     className?: string;

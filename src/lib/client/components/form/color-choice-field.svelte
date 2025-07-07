@@ -11,14 +11,14 @@
   interface ColorChoiceFieldProps {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: Writable<any>;
+    formData: Writable<any>;
     className?: string;
     isLeftDiv?: boolean;
   }
 
-  let { name, data, className, isLeftDiv }: ColorChoiceFieldProps = $props();
+  let { name, formData, className, isLeftDiv }: ColorChoiceFieldProps = $props();
 
-  let colorId = $derived($data[name]);
+  let colorId = $derived($formData[name]);
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
 
   let open = $state(false);
@@ -32,7 +32,7 @@
       return;
     }
 
-    $data[name] = choice.id;
+    $formData[name] = choice.id;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
@@ -94,7 +94,7 @@
 
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       const nextButton = dropdownRef?.querySelector(
-        `[data-color-id="${colors[nextIndex].id}"]`
+        `[formData-color-id="${colors[nextIndex].id}"]`
       ) as HTMLButtonElement;
       nextButton?.focus();
     }

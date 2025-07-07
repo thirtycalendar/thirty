@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { ChevronLeft, ChevronRight } from "@lucide/svelte";
 
   import {
@@ -22,12 +24,12 @@
   interface DateFieldProps {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
+    formData: Writable<any>;
     isDisablePast?: boolean;
     className?: string;
   }
 
-  let { name, data, isDisablePast = false, className }: DateFieldProps = $props();
+  let { name, formData, isDisablePast = false, className }: DateFieldProps = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let calendarDropdown = $state<HTMLDivElement | undefined>();
@@ -35,7 +37,7 @@
   let filterText = $state("");
 
   let parsedDate = $derived.by(() => {
-    const raw = $data[name];
+    const raw = $formData[name];
     const parsed = parse(raw, "yyyy-MM-dd", new Date());
     return isValid(parsed) ? parsed : new Date();
   });
@@ -62,7 +64,7 @@
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (isDisablePast && day < today) return;
-    $data[name] = formatDate(day, "yyyy-MM-dd");
+    $formData[name] = formatDate(day, "yyyy-MM-dd");
     filterText = "";
     open = false;
     triggerButton?.blur();
@@ -71,7 +73,7 @@
   function commitInput() {
     const trimmed = filterText.trim();
     const parsed = parse(trimmed, "yyyy-MM-dd", new Date());
-    if (isValid(parsed)) $data[name] = formatDate(parsed, "yyyy-MM-dd");
+    if (isValid(parsed)) $formData[name] = formatDate(parsed, "yyyy-MM-dd");
     filterText = "";
     open = false;
     triggerButton?.blur();
@@ -107,7 +109,7 @@
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       if (!isDisablePast || d >= today) {
-        $data[name] = formatDate(d, "yyyy-MM-dd");
+        $formData[name] = formatDate(d, "yyyy-MM-dd");
       }
     };
 
@@ -161,13 +163,13 @@
     const prev = subMonths(visibleMonth, 1);
     const now = new Date();
     if (!isDisablePast || startOfMonth(prev) >= startOfMonth(now)) {
-      $data[name] = formatDate(prev, "yyyy-MM-dd");
+      $formData[name] = formatDate(prev, "yyyy-MM-dd");
     }
   }
 
   function nextMonth() {
     const next = addMonths(visibleMonth, 1);
-    $data[name] = formatDate(next, "yyyy-MM-dd");
+    $formData[name] = formatDate(next, "yyyy-MM-dd");
   }
 </script>
 

@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { type Writable } from "svelte/store";
-
   import {
     AlignLeft,
     CalendarCheck2,
@@ -34,7 +32,6 @@
   import { getCalendars } from "../../calendar/query";
 
   interface EventFormProps {
-    eventData: Writable<EventDataType>;
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
     isMutationPending: boolean;
@@ -42,7 +39,6 @@
   }
 
   let {
-    eventData,
     defaultValues,
     onSubmit,
     isMutationPending,
@@ -56,30 +52,28 @@
   const { data: calendars } = getCalendars();
   const now = new Date();
 
-  const isNextDay = $derived($eventData.startTime > $eventData.endTime);
-
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
     defaultValues,
-    disabledFields: ["start", "end", "timezone"]
+    disabledFields: ["timezone"]
   });
+
+  const isNextDay = $derived($formData.startTime > $formData.endTime);
 
   $effect(() => {
     if (isCreateEvent && $calendars) {
       const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
 
       if (primaryCalendar) {
-        $eventData.calendarId = primaryCalendar.id;
-        $eventData.colorId = primaryCalendar.colorId;
-        $eventData.timezone = primaryCalendar.timezone;
+        $formData.calendarId = primaryCalendar.id;
+        $formData.colorId = primaryCalendar.colorId;
+        $formData.timezone = primaryCalendar.timezone;
       }
     }
 
-    eventData.subscribe(($event) => {
+    formData.subscribe(($event) => {
       $formData.calendarId = $event.calendarId;
       $formData.colorId = $event.colorId;
-      $formData.start = `${$event.startDate}T${$event.startTime}`;
-      $formData.end = `${$event.endDate}T${$event.endTime}`;
       $formData.timezone = $event.timezone;
 
       if (isNextDay && $event.endDate === format(now, "yyyy-MM-dd")) {
@@ -92,16 +86,16 @@
 
   $effect(() => {
     if ($calendars) {
-      const selectedCalendar = $calendars.find((c) => c.id === $eventData.calendarId);
+      const selectedCalendar = $calendars.find((c) => c.id === $formData.calendarId);
 
-      if (selectedCalendar && previousCalendarId !== $eventData.calendarId) {
+      if (selectedCalendar && previousCalendarId !== $formData.calendarId) {
         previousCalendarId = selectedCalendar.id;
 
-        if ($eventData.colorId !== selectedCalendar.colorId) {
-          $eventData.colorId = selectedCalendar.colorId;
+        if ($formData.colorId !== selectedCalendar.colorId) {
+          $formData.colorId = selectedCalendar.colorId;
         }
-        if ($eventData.timezone !== selectedCalendar.timezone) {
-          $eventData.timezone = selectedCalendar.timezone;
+        if ($formData.timezone !== selectedCalendar.timezone) {
+          $formData.timezone = selectedCalendar.timezone;
         }
       }
     }
@@ -121,25 +115,20 @@
         {#if isNextDay}
           <div class="space-y-2">
             <div class="flex gap-2">
-              <DateField name="startDate" data={eventData} className="flex-[3]" />
-              <TimeField name="startTime" data={eventData} className="flex-[2]" />
+              <DateField name="startDate" {formData} className="flex-[3]" />
+              <TimeField name="startTime" {formData} className="flex-[2]" />
             </div>
 
             <div class="flex gap-2">
-              <DateField
-                name="endDate"
-                data={eventData}
-                className="flex-[3]"
-                isDisablePast={true}
-              />
-              <TimeField name="endTime" data={eventData} className="flex-[2]" />
+              <DateField name="endDate" {formData} className="flex-[3]" isDisablePast={true} />
+              <TimeField name="endTime" {formData} className="flex-[2]" />
             </div>
           </div>
         {:else}
           <div class="flex gap-2">
-            <DateField name="startDate" data={eventData} className="flex-[2]" />
-            <TimeField name="startTime" data={eventData} className="flex-1" />
-            <TimeField name="endTime" data={eventData} className="flex-1" isRightDiv={true} />
+            <DateField name="startDate" {formData} className="flex-[2]" />
+            <TimeField name="startTime" {formData} className="flex-1" />
+            <TimeField name="endTime" {formData} className="flex-1" isRightDiv={true} />
           </div>
         {/if}
       </div>
@@ -153,12 +142,12 @@
       <div class="flex gap-2 flex-1">
         <CalendarChoiceField
           name="calendarId"
-          data={eventData}
+          data={formData}
           calendars={$calendars}
           placeholder="Select Calendar"
           className="flex-[3]"
         />
-        <ColorChoiceField name="colorId" data={eventData} className="flex-1" />
+        <ColorChoiceField name="colorId" {formData} className="flex-1" />
       </div>
     </div>
 
@@ -258,7 +247,7 @@
         </div>
 
         <div class="flex gap-2 flex-1">
-          <TimezoneField name="timezone" data={eventData} />
+          <TimezoneField name="timezone" {formData} />
         </div>
       </div>
     {/if}

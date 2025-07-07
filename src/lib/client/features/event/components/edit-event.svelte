@@ -18,19 +18,6 @@
 
   let { event }: EditEventProps = $props();
 
-  const start = parseISO(event.start);
-  const end = parseISO(event.end);
-
-  const eventData: Writable<EventDataType> = writable({
-    calendarId: event.calendarId,
-    colorId: event.colorId,
-    startDate: format(start, "yyyy-MM-dd"),
-    startTime: format(start, "HH:mm"),
-    endDate: format(end, "yyyy-MM-dd"),
-    endTime: format(end, "HH:mm"),
-    timezone: event.timezone
-  });
-
   const defaultValues: EventFormType = {
     calendarId: event.calendarId,
     externalId: event.externalId,
@@ -39,8 +26,10 @@
     description: event.description,
     location: event.location,
     colorId: event.colorId,
-    start: event.start,
-    end: event.end,
+    startDate: event.startDate,
+    startTime: event.startTime,
+    endDate: event.endDate,
+    endTime: event.endTime,
     timezone: event.timezone,
     allDay: event.allDay,
     status: event.status
@@ -75,4 +64,4 @@
   }
 </script>
 
-<EventForm {eventData} {defaultValues} {onSubmit} isMutationPending={$isPending} />
+<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} />

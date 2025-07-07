@@ -15,16 +15,6 @@
 
   const now = new Date();
 
-  const eventData: Writable<EventDataType> = writable({
-    calendarId: "",
-    colorId: "",
-    startDate: format(now, "yyyy-MM-dd"),
-    startTime: format(now, "HH:mm"),
-    endDate: format(now, "yyyy-MM-dd"),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
-    timezone: ""
-  });
-
   const defaultValues: EventFormType = {
     calendarId: "",
     externalId: null,
@@ -33,8 +23,10 @@
     description: null,
     location: null,
     colorId: "",
-    start: "",
-    end: "",
+    startDate: format(now, "yyyy-MM-dd"),
+    startTime: format(now, "HH:mm"),
+    endDate: format(now, "yyyy-MM-dd"),
+    endTime: format(addMinutes(now, 30), "HH:mm"),
     timezone: "",
     allDay: false,
     status: "confirmed"
@@ -64,4 +56,4 @@
   }
 </script>
 
-<EventForm {eventData} {defaultValues} {onSubmit} isMutationPending={$isPending} isCreateEvent />
+<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreateEvent />

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { ChevronDown } from "@lucide/svelte";
   import { getTimeZones } from "@vvo/tzdb";
 
@@ -7,11 +9,11 @@
   interface TimezoneFieldProps {
     name: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
+    formData: Writable<any>;
     className?: string;
   }
 
-  let { name, data, className }: TimezoneFieldProps = $props();
+  let { name, formData, className }: TimezoneFieldProps = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let dropdown = $state<HTMLDivElement | undefined>();
@@ -46,7 +48,7 @@
   });
 
   function selectTimezone(tz: string) {
-    $data[name] = tz;
+    $formData[name] = tz;
     open = false;
     filterText = "";
     triggerButton?.blur();
@@ -107,10 +109,10 @@
     type="text"
     aria-label="Timezone input"
     bind:this={triggerButton}
-    value={open ? filterText : $data[name]}
+    value={open ? filterText : $formData[name]}
     onfocus={() => {
       open = true;
-      filterText = $data[name];
+      filterText = $formData[name];
     }}
     onblur={handleBlur}
     oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}

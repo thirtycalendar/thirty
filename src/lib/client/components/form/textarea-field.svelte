@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { cn } from "$lib/client/utils/cn";
 
   interface InputFieldProps {
@@ -10,9 +12,9 @@
     className?: string;
     disabled?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formData: any;
+    formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formErrors: any;
+    formErrors: Writable<any>;
     handleInput: (event: Event) => void;
   }
 
