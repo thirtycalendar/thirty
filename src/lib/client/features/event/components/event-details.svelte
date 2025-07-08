@@ -11,11 +11,11 @@
   } from "@lucide/svelte";
 
   import { format } from "date-fns";
-  import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+  import { formatInTimeZone } from "date-fns-tz";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import { combineDateTimeUTC } from "$lib/shared/utils/time";
+  import { getEventDateObjects } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
@@ -28,31 +28,33 @@
 
   let { event }: EventDetailsProps = $props();
 
-  const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
-  const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
+  const { start, end } = getEventDateObjects(event);
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const start = toZonedTime(startUtc, event.timezone);
-  const end = toZonedTime(endUtc, event.timezone);
+  const formattedEventTime = $derived.by(() => {
+    const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+    const startFormatted = formatInTimeZone(start, event.timezone, formatString);
+    if (event.allDay) return startFormatted;
+    const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
+    return `${startFormatted} - ${endFormatted}`;
+  });
 
-  const formattedStart = formatInTimeZone(
-    start,
-    event.timezone,
-    event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a"
-  );
+  const formattedLocalTime = $derived.by(() => {
+    if (event.timezone === userTimezone) return "";
+    const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+    const startFormatted = format(start, formatString);
+    if (event.allDay) return startFormatted;
+    const endFormatted = format(end, "h:mm a");
+    return `${startFormatted} - ${endFormatted}`;
+  });
 
-  const formattedEnd = formatInTimeZone(
-    end,
-    event.timezone,
-    event.allDay ? "EEE, MMM d" : "h:mm a"
-  );
-
-  const calendarColor = $derived.by(() => getColorHexCodeFromId(event.colorId));
+  const calendarColor = $derived(getColorHexCodeFromId(event.colorId));
 
   const { data: calendars } = getCalendars();
 
-  const calendarName = $derived.by(() => {
-    return $calendars?.find((cal) => cal.id === event.calendarId)?.name ?? "Unknown calendar";
-  });
+  const calendarName = $derived.by(
+    () => $calendars?.find((cal) => cal.id === event.calendarId)?.name ?? "Unknown"
+  );
 
   const updated = format(new Date(event.updatedAt), "PPp");
 </script>
@@ -61,64 +63,52 @@
   <h2 class="text-xl font-semibold">{event.name}</h2>
 
   <div class="flex items-start gap-3">
-    <div class="pt-0.5 text-muted-foreground">
-      <Clock3 size="20" strokeWidth="2.5" />
-    </div>
+    <Clock3 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
     <div class="flex-1">
+      <p class="font-medium">{formattedEventTime}</p>
+      {#if formattedLocalTime}
+        <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
+      {/if}
       {#if event.allDay}
-        <div class="flex items-center gap-2">
-          <div class="badge badge-outline badge-sm">All Day</div>
-          <div>{formattedStart}</div>
-        </div>
-      {:else}
-        {formattedStart} - {formattedEnd}
+        <div class="badge badge-outline badge-sm">All Day</div>
       {/if}
     </div>
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="pt-0.5 text-muted-foreground">
-      <CalendarCheck2 size="20" strokeWidth="2.5" />
-    </div>
+    <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
     <div class="flex-1 flex items-center gap-2 capitalize">
-      <span>Calendar:</span>
-      <div class="w-5 aspect-square rounded-full" style="background-color: {calendarColor}"></div>
+      <div
+        class="w-5 h-5 aspect-square rounded-full"
+        style="background-color: {calendarColor}"
+      ></div>
       <span>{calendarName}</span>
     </div>
   </div>
 
   {#if event.location}
     <div class="flex items-start gap-3">
-      <div class="pt-0.5 text-muted-foreground">
-        <MapPin size="20" strokeWidth="2.5" />
-      </div>
+      <MapPin size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+
       <div class="flex-1">{event.location}</div>
     </div>
   {/if}
 
   {#if event.description}
     <div class="flex items-start gap-3">
-      <div class="pt-0.5 text-muted-foreground">
-        <AlignLeft size="20" strokeWidth="2.5" />
-      </div>
+      <AlignLeft size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
       <div class="flex-1 whitespace-pre-wrap">{event.description}</div>
     </div>
   {/if}
 
   <div class="flex items-start gap-3">
-    <div class="pt-0.5 text-muted-foreground">
-      <CircleCheck size="20" strokeWidth="2.5" />
-    </div>
-    <div class="flex-1 capitalize">
-      Status: {event.status}
-    </div>
+    <CircleCheck size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+    <div class="flex-1 capitalize">Status: {event.status}</div>
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="pt-0.5 text-muted-foreground">
-      <Globe size="20" strokeWidth="2.5" />
-    </div>
+    <Globe size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
     <div class="flex-1">{event.timezone}</div>
   </div>
 
@@ -139,6 +129,5 @@
       </p>
     </div>
   </div>
-
   <EventActionButtons id={event.id} />
 </div>

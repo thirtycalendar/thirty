@@ -2,7 +2,6 @@
   import {
     addDays,
     differenceInCalendarWeeks,
-    endOfDay,
     endOfMonth,
     endOfWeek,
     format,
@@ -12,65 +11,46 @@
     startOfMonth,
     startOfWeek
   } from "date-fns";
-  import { toZonedTime } from "date-fns-tz";
 
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import { combineDateTimeUTC } from "$lib/shared/utils/time";
+  import { getEventDateObjects } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   interface MonthCalendarProps {
     events: Event[];
   }
-
   let { events }: MonthCalendarProps = $props();
 
-  const MAX_EVENTS_PER_DAY = 4;
+  const MAX_EVENTS_PER_DAY = 3;
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
 
-  function getEventDateTimes(event: Event) {
-    const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
-    const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
-    const start = toZonedTime(startUtc, event.timezone);
-    const end = toZonedTime(endUtc, event.timezone);
-    return { start, end };
-  }
-
-  const rowsCount = $derived.by(() => {
-    const start = startOfWeek(startOfMonth($currentDate));
-    const end = endOfWeek(endOfMonth($currentDate));
-    return differenceInCalendarWeeks(end, start) + 1;
-  });
-
-  const days = $derived.by(() => {
-    const start = startOfWeek(startOfMonth($currentDate));
-    return Array.from({ length: rowsCount * 7 }, (_, i) => addDays(start, i));
+  const monthInfo = $derived.by(() => {
+    const monthStart = startOfMonth($currentDate);
+    const viewStart = startOfWeek(monthStart);
+    const viewEnd = endOfWeek(endOfMonth($currentDate));
+    const weekCount = differenceInCalendarWeeks(viewEnd, viewStart, { weekStartsOn: 0 }) + 1;
+    const days = Array.from({ length: weekCount * 7 }, (_, i) => addDays(viewStart, i));
+    return { days, viewStart, viewEnd, weekCount };
   });
 
   const eventsByDay = $derived.by(() => {
-    const viewStart = startOfDay(days[0]);
-    const viewEnd = endOfDay(days[days.length - 1]);
+    const { viewStart, viewEnd } = monthInfo;
     const map: Record<string, Event[]> = {};
 
     for (const event of events) {
-      if (!event?.id) continue;
+      if ($checkedCalendars[event.calendarId] === false) continue;
 
-      const isVisible = !($checkedCalendars[event.calendarId] === false);
-      if (!isVisible) continue;
-
-      const { start: eventStart, end: eventEnd } = getEventDateTimes(event);
-
+      const { start: eventStart, end: eventEnd } = getEventDateObjects(event);
       if (eventStart > viewEnd || eventEnd < viewStart) continue;
 
-      const dayCursorStart = eventStart < viewStart ? viewStart : eventStart;
-      const dayCursorEnd = eventEnd > viewEnd ? viewEnd : eventEnd;
+      let cursor = startOfDay(eventStart < viewStart ? viewStart : eventStart);
 
-      let cursor = startOfDay(dayCursorStart);
-      while (cursor <= dayCursorEnd) {
+      while (cursor < eventEnd && cursor <= viewEnd) {
         const key = getDayString(cursor);
         if (!map[key]) map[key] = [];
         map[key].push(event);
@@ -80,12 +60,13 @@
 
     for (const key in map) {
       map[key].sort((a, b) => {
-        const { start: startA } = getEventDateTimes(a);
-        const { start: startB } = getEventDateTimes(b);
+        const { start: startA } = getEventDateObjects(a);
+        const { start: startB } = getEventDateObjects(b);
+        if (a.allDay && !b.allDay) return -1; // all-day events first
+        if (!a.allDay && b.allDay) return 1;
         return startA.getTime() - startB.getTime();
       });
     }
-
     return map;
   });
 </script>
@@ -98,14 +79,14 @@
   </div>
 
   <div
-    class="grid grid-cols-7 auto-rows-fr bg-base-100 text-xs rounded-2xl w-full h-full"
-    style="grid-template-rows: repeat({rowsCount}, minmax(0, 1fr))"
+    class="grid flex-1 grid-cols-7 bg-base-100 rounded-2xl border-l border-t border-base-200"
+    style="grid-template-rows: repeat({monthInfo.weekCount}, minmax(0, 1fr))"
   >
-    {#each days as day (day)}
+    {#each monthInfo.days as day (day.toISOString())}
       {@const key = getDayString(day)}
       {@const dayEvents = eventsByDay[key] || []}
       <button
-        class="border border-base-200 px-1 py-1 text-left relative hover:bg-base-300/10 transition-colors flex flex-col items-start"
+        class="border-b border-r border-base-200 px-1 py-1 text-left relative hover:bg-base-300/10 transition-colors flex flex-col items-start"
         onclick={() => {
           currentDate.set(day);
           changeToDayView();
@@ -113,31 +94,29 @@
       >
         <div class="self-end text-xs font-medium mb-1">
           <span
-            class:text-primary={isToday(day)}
-            class:bg-primary-content={isToday(day)}
+            class="grid place-content-center h-6 w-6 rounded-full"
+            class:bg-primary={isToday(day)}
+            class:text-primary-content={isToday(day)}
             class:font-bold={isToday(day)}
-            class:rounded={isToday(day)}
-            class:p-[1px]={isToday(day)}
             class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
             class:opacity-40={!isSameMonth(day, $currentDate)}
           >
             {format(day, "d")}
           </span>
         </div>
-
-        <div class="w-full space-y-1 text-[10px] leading-tight overflow-hidden">
+        <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
+            {@const color = getColorHexCodeFromId(event.colorId)}
             <div
-              class="truncate px-1.5 py-0.5 text-[10px] font-medium rounded-full shadow-sm backdrop-blur-sm border border-white/10"
-              style={`background-color: ${getColorHexCodeFromId(event.colorId)}22; color: ${getColorHexCodeFromId(event.colorId)};`}
+              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              style={`background-color: ${color}22; color: ${color};`}
               title={event.name}
             >
               {event.name}
             </div>
           {/each}
-
           {#if dayEvents.length > MAX_EVENTS_PER_DAY}
-            <div class="font-bold text-base-content/80">
+            <div class="font-bold text-base-content/80 pt-0.5">
               + {dayEvents.length - MAX_EVENTS_PER_DAY} more
             </div>
           {/if}

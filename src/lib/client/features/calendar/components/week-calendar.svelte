@@ -9,12 +9,11 @@
     startOfDay,
     startOfWeek
   } from "date-fns";
-  import { toZonedTime } from "date-fns-tz";
 
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import { combineDateTimeUTC } from "$lib/shared/utils/time";
+  import { getEventDateObjects } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { EventBlock } from "../../event/components";
@@ -34,53 +33,50 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  function getEventDateTimes(event: Event) {
-    const startUtc = combineDateTimeUTC(event.startDate, event.startTime);
-    const endUtc = combineDateTimeUTC(event.endDate, event.endTime);
-    const start = toZonedTime(startUtc, event.timezone);
-    const end = toZonedTime(endUtc, event.timezone);
-    return { start, end };
-  }
+  type EventChunk = { event: Event; day: Date; start: Date; end: Date };
 
-  function splitEventByDay(event: Event) {
-    const { start, end } = getEventDateTimes(event);
-    const chunks: { event: Event; day: Date; start: Date; end: Date }[] = [];
+  function splitEventByDay(event: Event): EventChunk[] {
+    const { start, end } = getEventDateObjects(event);
+    const chunks: EventChunk[] = [];
+    let dayCursor = startOfDay(start);
 
-    let currentStart = start;
-    while (currentStart < end) {
-      const dayStart = startOfDay(currentStart);
-      const dayEnd = endOfDay(currentStart);
+    while (dayCursor < end) {
+      const dayEnd = endOfDay(dayCursor);
+      const chunkStart = start > dayCursor ? start : dayCursor;
       const chunkEnd = end < dayEnd ? end : dayEnd;
 
-      chunks.push({ event, day: dayStart, start: currentStart, end: chunkEnd });
-      currentStart = addDays(dayStart, 1);
+      chunks.push({ event, day: dayCursor, start: chunkStart, end: chunkEnd });
+      dayCursor = addDays(dayCursor, 1);
+      if (dayCursor > end) break;
     }
     return chunks;
   }
 
-  function calculateOffsets(chunks: { event: Event; day: Date; start: Date; end: Date }[]) {
-    const byDay = new Map<string, typeof chunks>();
+  function calculateOffsets(chunks: EventChunk[]) {
+    const offsets = new Map<EventChunk, number>();
+    const dayChunksMap = new Map<string, EventChunk[]>();
+
     for (const chunk of chunks) {
       const dayKey = format(chunk.day, "yyyy-MM-dd");
-      if (!byDay.has(dayKey)) byDay.set(dayKey, []);
-      byDay.get(dayKey)!.push(chunk);
+      if (!dayChunksMap.has(dayKey)) dayChunksMap.set(dayKey, []);
+      dayChunksMap.get(dayKey)!.push(chunk);
     }
 
-    const result = new Map<(typeof chunks)[number], number>();
-    for (const [, dayChunks] of byDay.entries()) {
+    for (const [, dayChunks] of dayChunksMap) {
       dayChunks.sort((a, b) => a.start.getTime() - b.start.getTime());
-      const active: { chunk: (typeof dayChunks)[number]; offset: number }[] = [];
+      const activeLanes: { end: Date; offset: number }[] = [];
 
       for (const chunk of dayChunks) {
-        active.filter((a) => a.chunk.end > chunk.start);
-        const usedOffsets = new Set(active.map((a) => a.offset));
+        const remainingLanes = activeLanes.filter((lane) => lane.end > chunk.start);
+        const usedOffsets = new Set(remainingLanes.map((lane) => lane.offset));
         let offset = 0;
         while (usedOffsets.has(offset)) offset++;
-        active.push({ chunk, offset });
-        result.set(chunk, offset);
+        offsets.set(chunk, offset);
+        remainingLanes.push({ end: chunk.end, offset });
+        activeLanes.splice(0, activeLanes.length, ...remainingLanes);
       }
     }
-    return result;
+    return offsets;
   }
 
   const weekEvents = $derived.by(() => {
@@ -88,9 +84,10 @@
     const weekEnd = endOfDay(days[6]);
 
     const filtered = events.filter((event) => {
-      const { start, end } = getEventDateTimes(event);
-      const isVisible = !($checkedCalendars[event.calendarId] === false);
-      if (!isVisible) return false;
+      const isVisible = $checkedCalendars[event.calendarId] !== false;
+      if (!isVisible || event.allDay) return false;
+
+      const { start, end } = getEventDateObjects(event);
       return (
         isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
         isWithinInterval(end, { start: weekStart, end: weekEnd }) ||
@@ -99,10 +96,9 @@
     });
 
     const chunks = filtered.flatMap(splitEventByDay);
-    const validChunks = chunks.filter(({ day }) => day >= weekStart && day <= weekEnd);
-    const offsets = calculateOffsets(validChunks);
+    const offsets = calculateOffsets(chunks);
 
-    return validChunks.map((chunk) => ({
+    return chunks.map((chunk) => ({
       ...chunk,
       offset: offsets.get(chunk) ?? 0
     }));
@@ -113,17 +109,19 @@
 
 <div class="flex flex-col h-full py-3">
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
-    <div></div>
-    {#each days as day (day)}
-      <div
-        class="min-h-8 flex flex-col border-b border-base-200 items-center justify-start relative px-1 py-1 gap-1"
-      >
-        <div class={`font-semibold text-center ${isToday(day) ? "text-secondary-content" : ""}`}>
-          <p>
-            {format(day, "EEE")}
-            <span class="block sm:inline mb-2 sm:mb-0">{format(day, "d")}</span>
-          </p>
-        </div>
+    <div class="border-r border-base-200"></div>
+    {#each days as day (day.toISOString())}
+      <div class="flex items-center justify-center p-1 border-b border-r border-base-200">
+        <span
+          class={`font-bold flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+        >
+          {#if isToday(day)}
+            <span class="w-2 h-2 rounded-full bg-primary-content"></span>
+          {/if}
+
+          {format(day, "EEE")}
+          {format(day, "d")}
+        </span>
       </div>
     {/each}
   </div>
@@ -132,32 +130,37 @@
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
   >
-    {#each hours as hour (hour)}
-      <div
-        class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
-      >
-        {format(setHours(new Date(), hour), "h a")}
-      </div>
-
-      {#each days as day (day)}
+    <div class="col-start-1 row-start-1 grid">
+      {#each hours as hour (hour)}
         <div
-          class="relative h-15 border border-base-200 hover:bg-base-300/10 transition-colors"
-          data-day={format(day, "yyyy-MM-dd")}
-          data-hour={hour}
+          class="h-15 flex justify-center items-center text-center select-none text-xs text-primary-content/70 border-r border-base-200"
         >
-          {#if hour === 0}
-            <CurrentTimeIndicator {day} />
-          {/if}
-
-          {#each weekEvents as { event, day: eventDay, start, offset } (event.id + start.toISOString())}
-            {#if format(eventDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")}
-              {#if start.getHours() === hour}
-                <EventBlock {event} {offset} />
-              {/if}
-            {/if}
-          {/each}
+          <span class="relative">
+            {format(setHours(new Date(), hour), "h a")}
+          </span>
         </div>
       {/each}
+    </div>
+
+    {#each days as day, i (day.toISOString())}
+      <div
+        class="relative grid grid-rows-24 border-r border-base-200"
+        style="grid-column: {i + 2}; grid-row: 1;"
+      >
+        {#each hours as hour (hour)}
+          <div class="h-15 border-b border-base-200"></div>
+        {/each}
+
+        <div class="absolute inset-0">
+          {#each weekEvents.filter((e) => format(e.day, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as { event, start, end, offset } (event.id + start.toISOString())}
+            <EventBlock {event} {start} {end} {offset} />
+          {/each}
+        </div>
+
+        {#if isToday(day)}
+          <CurrentTimeIndicator {day} />
+        {/if}
+      </div>
     {/each}
   </div>
 </div>

@@ -41,7 +41,7 @@
           {format(month, "MMMM")}
         </div>
         <div class="grid grid-cols-7 text-center mb-1 opacity-60">
-          {#each dayLabels as d (d)}
+          {#each dayLabels as d, i (i)}
             <div>{d}</div>
           {/each}
         </div>
