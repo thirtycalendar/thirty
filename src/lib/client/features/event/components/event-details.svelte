@@ -32,21 +32,19 @@
 
   const { start, end } = getEventDateObjects(event);
 
-  const userTimezone = $derived(getValidTimeZone());
-  const normalizedEventTimezone = $derived(getValidTimeZone(event.timezone));
-  const sameTimezone = $derived(normalizedEventTimezone === userTimezone);
+  const userTimezone = getValidTimeZone();
+  const normalizedEventTimezone = getValidTimeZone(event.timezone);
 
   const formattedEventTime = $derived.by(() => {
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
-    const startFormatted = formatInTimeZone(start, normalizedEventTimezone, formatString);
+    const startFormatted = formatInTimeZone(start, event.timezone, formatString);
     if (event.allDay) return startFormatted;
-
-    const endFormatted = formatInTimeZone(end, normalizedEventTimezone, "h:mm a");
+    const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
     return `${startFormatted} - ${endFormatted}`;
   });
 
   const formattedLocalTime = $derived.by(() => {
-    if (sameTimezone) return "";
+    if (normalizedEventTimezone === userTimezone) return "";
 
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
     const startFormatted = format(start, formatString);
