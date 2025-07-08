@@ -16,6 +16,7 @@
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import { getEventDateObjects } from "$lib/shared/utils/time";
+  import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
@@ -29,7 +30,7 @@
   let { event }: EventDetailsProps = $props();
 
   const { start, end } = getEventDateObjects(event);
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const userTimezone = getValidTimeZone();
 
   const formattedEventTime = $derived.by(() => {
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
@@ -67,7 +68,10 @@
     <div class="flex-1">
       <p class="font-medium">{formattedEventTime}</p>
       {#if formattedLocalTime}
-        <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
+        <div class="flex gap-1 items-center">
+          <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
+          <div class="badge badge-outline badge-xs">{userTimezone}</div>
+        </div>
       {/if}
       {#if event.allDay}
         <div class="badge badge-outline badge-sm">All Day</div>
