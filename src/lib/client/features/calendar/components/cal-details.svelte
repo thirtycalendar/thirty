@@ -3,8 +3,8 @@
 
   import { format } from "date-fns";
 
-  import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
+  import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import type { Calendar } from "$lib/shared/types";
 
   import { CalActionButtons } from ".";

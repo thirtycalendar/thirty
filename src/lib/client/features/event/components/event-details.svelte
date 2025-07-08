@@ -15,8 +15,8 @@
 
   import { getEventDateObjects } from "$lib/client/features/event/utils";
 
-  import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
+  import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { Event } from "$lib/shared/types";
 
@@ -31,18 +31,23 @@
   let { event }: EventDetailsProps = $props();
 
   const { start, end } = getEventDateObjects(event);
-  const userTimezone = getValidTimeZone();
+
+  const userTimezone = $derived(getValidTimeZone());
+  const normalizedEventTimezone = $derived(getValidTimeZone(event.timezone));
+  const sameTimezone = $derived(normalizedEventTimezone === userTimezone);
 
   const formattedEventTime = $derived.by(() => {
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
-    const startFormatted = formatInTimeZone(start, event.timezone, formatString);
+    const startFormatted = formatInTimeZone(start, normalizedEventTimezone, formatString);
     if (event.allDay) return startFormatted;
-    const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
+
+    const endFormatted = formatInTimeZone(end, normalizedEventTimezone, "h:mm a");
     return `${startFormatted} - ${endFormatted}`;
   });
 
   const formattedLocalTime = $derived.by(() => {
-    if (event.timezone === userTimezone) return "";
+    if (sameTimezone) return "";
+
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
     const startFormatted = format(start, formatString);
     if (event.allDay) return startFormatted;
@@ -103,17 +108,20 @@
   {#if event.description}
     <div class="flex items-start gap-3">
       <AlignLeft size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+
       <div class="flex-1 whitespace-pre-wrap">{event.description}</div>
     </div>
   {/if}
 
   <div class="flex items-start gap-3">
     <CircleCheck size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+
     <div class="flex-1 capitalize">Status: {event.status}</div>
   </div>
 
   <div class="flex items-start gap-3">
     <Globe size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+
     <div class="flex-1">{event.timezone}</div>
   </div>
 

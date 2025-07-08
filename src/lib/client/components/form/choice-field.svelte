@@ -5,7 +5,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { capitalizeFirstLetter } from "$lib/shared/utils/char";
+  import { capitalizeFirstLetter } from "$lib/shared/utils/string";
 
   interface ChoiceFieldProps {
     name: string;

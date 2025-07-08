@@ -65,7 +65,7 @@
   const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
 
   function selectTime(date: Date) {
-    $formData[name] = formatDate(date, "HH:mm");
+    $formData[name] = formatDate(date, "HH:mm:ss");
     filterText = "";
     open = false;
     triggerButtonElement?.blur();
@@ -102,7 +102,7 @@
     }
 
     if (parsed) {
-      $formData[name] = formatDate(parsed, "HH:mm");
+      $formData[name] = formatDate(parsed, "HH:mm:ss");
     }
 
     filterText = "";
