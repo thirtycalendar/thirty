@@ -128,9 +128,9 @@ export async function syncGoogleEvents(userId: string) {
           const end = parseISO(gEvent.end.dateTime);
 
           startDate = format(start, "yyyy-MM-dd");
-          startTime = format(start, "HH:mm:ss");
+          startTime = format(start, "HH:mm");
           endDate = format(end, "yyyy-MM-dd");
-          endTime = format(end, "HH:mm:ss");
+          endTime = format(end, "HH:mm");
         } else {
           continue;
         }

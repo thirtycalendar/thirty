@@ -74,7 +74,9 @@
 
 <div class="flex flex-col h-full py-3">
   <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200 px-1 py-1">
-    <div class="font-semibold text-center {isToday($currentDate) ? 'text-secondary-content' : ''}">
+    <div
+      class={`font-semibold text-center ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
+    >
       {format($currentDate, "EEEE, MMM d")}
     </div>
   </div>
@@ -83,24 +85,27 @@
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto overflow-x-hidden bg-base-100 relative rounded-2xl"
   >
-    <div class="grid grid-cols-[50px_1fr]">
+    <div class="grid grid-cols-[50px_1fr] relative">
       {#each hours as hour (hour)}
         <div
-          class="h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
+          class="col-start-1 h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-b border-base-200"
         >
           {format(setHours(new Date(), hour), "h a")}
         </div>
-        <div class="relative h-15 border-b border-base-200"></div>
+
+        <div class="col-start-2 border-b border-base-200"></div>
       {/each}
 
-      <div class="col-start-2 row-start-1 row-span-full relative">
-        {#each dayEvents as { event, start, end, offset } (event.id)}
-          <EventBlock {event} {start} {end} {offset} />
-        {/each}
+      <div class="col-start-2 row-start-1 col-span-1 row-span-full relative pointer-events-none">
+        <div class="absolute inset-0 pointer-events-auto">
+          {#each dayEvents as { event, start, end, offset } (event.id)}
+            <EventBlock {event} {start} {end} {offset} />
+          {/each}
 
-        {#if isToday($currentDate)}
-          <CurrentTimeIndicator day={$currentDate} />
-        {/if}
+          {#if isToday($currentDate)}
+            <CurrentTimeIndicator day={$currentDate} />
+          {/if}
+        </div>
       </div>
     </div>
   </div>
