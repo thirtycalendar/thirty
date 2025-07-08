@@ -1,10 +1,10 @@
 <script lang="ts">
   import { endOfDay, format, isToday, isWithinInterval, setHours, startOfDay } from "date-fns";
 
+  import { getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
-  import { getEventDateObjects } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { EventBlock } from "../../event/components";

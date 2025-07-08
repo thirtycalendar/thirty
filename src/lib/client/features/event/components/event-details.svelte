@@ -13,9 +13,10 @@
   import { format } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
 
+  import { getEventDateObjects } from "$lib/client/features/event/utils";
+
   import { capitalizeFirstLetter } from "$lib/shared/utils/char";
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import { getEventDateObjects } from "$lib/shared/utils/time";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { Event } from "$lib/shared/types";
 

@@ -17,6 +17,7 @@
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.
   - (7.8.03) - Fixed timezone rendering error.
+  - (7.8.04) - Better event utils.
 - Mon Jul 7, 2025
   - (7.7.01) - Removed all the init calendar timezone update things.
   - (7.7.02) - Get the timezone of a user via IP address. Fixed drizzle config schemas to tables.

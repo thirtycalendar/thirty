@@ -1,10 +1,10 @@
 <script lang="ts">
   import { differenceInMinutes, startOfDay } from "date-fns";
 
+  import { formatEventTime, formatTimeRange } from "$lib/client/features/event/utils";
   import { handleEventModal } from "$lib/client/stores/event";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import { formatEventTime, formatTimeRange } from "$lib/shared/utils/time";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";

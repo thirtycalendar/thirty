@@ -11,3 +11,4 @@
 - [ ] - Sync birthdays from Google calendars to db.
 - [ ] - Cache also country code alongside with country name for holiday
 - [ ] - Remove requireParamId, and keep only requireParam for Hono api response.
+- [ ] - Sticky all day events at the top.
