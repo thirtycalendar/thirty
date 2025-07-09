@@ -1,24 +1,13 @@
 <script lang="ts">
-  import {
-    addDays,
-    differenceInDays,
-    endOfDay,
-    format,
-    isToday,
-    max,
-    min,
-    setHours,
-    startOfDay,
-    startOfWeek
-  } from "date-fns";
+  import { addDays, endOfDay, format, isToday, setHours, startOfDay, startOfWeek } from "date-fns";
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
 
-  import type { AllDayLayoutInfo, Event } from "$lib/shared/types";
+  import type { Event } from "$lib/shared/types";
 
   import { AllDayEventBlock, EventBlock } from "../../event/components";
-  import { getVisibleEvents } from "../utils";
+  import { calculateAllDayLayout, getVisibleEvents } from "../utils";
 
   import { CurrentTimeIndicator } from ".";
 
@@ -52,48 +41,11 @@
     return chunks;
   }
 
-  function calculateAllDayLayout(allDayEvents: Event[]): AllDayLayoutInfo[] {
-    const sortedEvents = [...allDayEvents].sort((a, b) => {
-      const startA = getEventDateObjects(a).start;
-      const startB = getEventDateObjects(b).start;
-      return startA.getTime() - startB.getTime();
-    });
-
-    const lanes: (string | null)[][] = [];
-    const layout: AllDayLayoutInfo[] = [];
-
-    for (const event of sortedEvents) {
-      const { start, end } = getEventDateObjects(event);
-      const eventStart = max([startOfDay(start), weekStart]);
-      const eventEnd = min([startOfDay(end), weekEnd]);
-      const startColumn = differenceInDays(eventStart, weekStart);
-      const endColumn = differenceInDays(eventEnd, weekStart);
-
-      let targetLane = 0;
-      while (true) {
-        if (!lanes[targetLane]) lanes[targetLane] = new Array(7).fill(null);
-        const isOccupied = lanes[targetLane].slice(startColumn, endColumn + 1).some((c) => c);
-        if (!isOccupied) break;
-        targetLane++;
-      }
-
-      for (let i = startColumn; i <= endColumn; i++) lanes[targetLane][i] = event.id;
-
-      layout.push({
-        ...event,
-        startColumn: startColumn + 1,
-        span: endColumn - startColumn + 1,
-        lane: targetLane
-      });
-    }
-    return layout;
-  }
-
   const { allDayEvents, timedEvents } = $derived.by(() =>
     getVisibleEvents(events, weekStart, weekEnd)
   );
 
-  const allDayLayout = $derived(calculateAllDayLayout(allDayEvents));
+  const allDayLayout = $derived.by(() => calculateAllDayLayout(allDayEvents, weekStart, weekEnd));
 
   const timedEventChunks = $derived.by(() => {
     const chunks = timedEvents.flatMap(splitEventByDay);
