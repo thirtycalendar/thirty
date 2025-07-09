@@ -22,9 +22,9 @@
     location: null,
     colorId: "",
     startDate: format(now, "yyyy-MM-dd"),
-    startTime: format(now, "HH:mm"),
+    startTime: format(now, "HH:mm:ss"),
     endDate: format(now, "yyyy-MM-dd"),
-    endTime: format(addMinutes(now, 30), "HH:mm"),
+    endTime: format(addMinutes(now, 30), "HH:mm:ss"),
     timezone: "",
     allDay: false,
     status: "confirmed"

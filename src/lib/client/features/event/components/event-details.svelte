@@ -96,6 +96,12 @@
     </div>
   </div>
 
+  <div class="flex items-start gap-3">
+    <Globe size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+
+    <div class="flex-1">{event.timezone}</div>
+  </div>
+
   {#if event.location}
     <div class="flex items-start gap-3">
       <MapPin size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
@@ -116,12 +122,6 @@
     <CircleCheck size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
     <div class="flex-1 capitalize">Status: {event.status}</div>
-  </div>
-
-  <div class="flex items-start gap-3">
-    <Globe size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
-
-    <div class="flex-1">{event.timezone}</div>
   </div>
 
   <div class="mt-4 space-y-1">

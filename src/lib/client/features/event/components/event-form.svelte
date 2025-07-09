@@ -143,6 +143,13 @@
 
     <div class="flex items-center gap-3">
       <div class="text-muted-foreground">
+        <Globe size="20" strokeWidth="2.5" />
+      </div>
+      <TimezoneField name="timezone" {formData} />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="text-muted-foreground">
         <MapPin size="20" strokeWidth="2.5" />
       </div>
       <div class="flex-1">
@@ -204,7 +211,7 @@
     </button>
 
     {#if isMoreOptions}
-      <div class="space-y-3 pl-8">
+      <div class="space-y-3">
         <div>
           <label class="flex items-center cursor-pointer">
             <input
@@ -224,13 +231,6 @@
             <CircleCheck size="20" strokeWidth="2.5" />
           </div>
           <ChoiceField name="status" choiceList={EventStatus} {handleInput} {formData} />
-        </div>
-
-        <div class="flex items-center gap-3">
-          <div class="text-muted-foreground">
-            <Globe size="20" strokeWidth="2.5" />
-          </div>
-          <TimezoneField name="timezone" {formData} />
         </div>
       </div>
     {/if}
