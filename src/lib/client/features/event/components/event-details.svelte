@@ -30,10 +30,11 @@
 
   let { event }: EventDetailsProps = $props();
 
-  const { start, end } = getEventDateObjects(event);
+  const { start, end } = getEventDateObjects(event, false);
 
   const userTimezone = getValidTimeZone();
   const normalizedEventTimezone = getValidTimeZone(event.timezone);
+  const sameTimezone = $derived(normalizedEventTimezone === userTimezone);
 
   const formattedEventTime = $derived.by(() => {
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
@@ -44,7 +45,7 @@
   });
 
   const formattedLocalTime = $derived.by(() => {
-    if (normalizedEventTimezone === userTimezone) return "";
+    if (sameTimezone) return "";
 
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
     const startFormatted = format(start, formatString);

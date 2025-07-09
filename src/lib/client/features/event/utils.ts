@@ -3,18 +3,35 @@ import { toZonedTime } from "date-fns-tz";
 
 import type { Event } from "$lib/shared/types";
 
-export function getEventDateObjects(event: Event): { start: Date; end: Date } {
-  const timeZone = event.timezone;
-
+export function getEventDateObjects(
+  event: Event,
+  includeTimezone = true
+): { start: Date; end: Date } {
   if (event.allDay) {
-    const start = toZonedTime(`${event.startDate}T00:00:00`, timeZone);
-    const end = toZonedTime(`${event.endDate}T23:59:59.999`, timeZone);
-    return { start, end };
+    if (includeTimezone) {
+      return {
+        start: toZonedTime(`${event.startDate}T00:00:00`, event.timezone),
+        end: toZonedTime(`${event.endDate}T23:59:59.999`, event.timezone)
+      };
+    } else {
+      return {
+        start: new Date(`${event.startDate}T00:00:00Z`),
+        end: new Date(`${event.endDate}T23:59:59.999Z`)
+      };
+    }
+  } else {
+    if (includeTimezone) {
+      return {
+        start: toZonedTime(`${event.startDate}T${event.startTime}`, event.timezone),
+        end: toZonedTime(`${event.endDate}T${event.endTime}`, event.timezone)
+      };
+    } else {
+      return {
+        start: new Date(`${event.startDate}T${event.startTime}`),
+        end: new Date(`${event.endDate}T${event.endTime}`)
+      };
+    }
   }
-
-  const start = toZonedTime(`${event.startDate}T${event.startTime}`, timeZone);
-  const end = toZonedTime(`${event.endDate}T${event.endTime}`, timeZone);
-  return { start, end };
 }
 
 export function formatEventTime(date: Date): string {
