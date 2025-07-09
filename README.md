@@ -20,6 +20,7 @@
   - (7.9.04) - Improved codes.
   - (7.9.05) - Overlapping event problem.
   - (7.9.06) - Better event blocks overlapping.
+  - (7.9.07) - Disable startTime, endDate, and endTime fields if it is allDay.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.

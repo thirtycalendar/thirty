@@ -52,13 +52,15 @@
     disabledFields: ["timezone"]
   });
 
+  let previousCalendarId = $state("");
+
   let isLocation = $state(defaultValues.location ? true : false);
   let isDescription = $state(defaultValues.description ? true : false);
   let isMoreOptions = $state(false);
-  let previousCalendarId = $state("");
 
-  const isMultiDay = $derived($formData.startDate !== $formData.endDate);
-  const isTimeInverted = $derived(
+  let isAllDay = $derived($formData.allDay === true);
+  let isMultiDay = $derived($formData.startDate !== $formData.endDate);
+  let isTimeInverted = $derived(
     $formData.startDate === $formData.endDate && $formData.startTime > $formData.endTime
   );
 
@@ -70,6 +72,15 @@
         $formData.colorId = primaryCalendar.colorId;
         $formData.timezone = primaryCalendar.timezone;
       }
+    }
+  });
+
+  // Handle all-day event changes
+  $effect(() => {
+    if (isAllDay && $formData.endDate !== $formData.startDate) {
+      $formData.startTime = "00:00:00";
+      $formData.endTime = "23:59:59";
+      $formData.endDate = $formData.startDate;
     }
   });
 
@@ -103,24 +114,28 @@
       </div>
 
       <div class="flex-1">
-        {#if isMultiDay}
-          <div class="space-y-2">
-            <div class="flex gap-2">
-              <DateField name="startDate" {formData} className="flex-[3]" />
-              <TimeField name="startTime" {formData} className="flex-[2]" />
+        {#if !isAllDay}
+          {#if isMultiDay}
+            <div class="space-y-2">
+              <div class="flex gap-2">
+                <DateField name="startDate" {formData} className="flex-[3]" />
+                <TimeField name="startTime" {formData} className="flex-[2]" />
+              </div>
+              <div class="flex gap-2">
+                <DateField name="endDate" {formData} className="flex-[3]" isDisablePast />
+                <TimeField name="endTime" {formData} className="flex-[2]" />
+              </div>
             </div>
-            <div class="flex gap-2">
-              <DateField name="endDate" {formData} className="flex-[3]" />
-              <TimeField name="endTime" {formData} className="flex-[2]" />
+          {:else}
+            <div class="flex items-center gap-2">
+              <DateField name="startDate" {formData} className="flex-[2]" />
+              <TimeField name="startTime" {formData} className="flex-1" />
+              <span class="text-muted-foreground">-</span>
+              <TimeField name="endTime" {formData} className="flex-1" />
             </div>
-          </div>
+          {/if}
         {:else}
-          <div class="flex items-center gap-2">
-            <DateField name="startDate" {formData} className="flex-[2]" />
-            <TimeField name="startTime" {formData} className="flex-1" />
-            <span class="text-muted-foreground">-</span>
-            <TimeField name="endTime" {formData} className="flex-1" />
-          </div>
+          <DateField name="startDate" {formData} className="flex-[3]" />
         {/if}
       </div>
     </div>
@@ -222,7 +237,7 @@
               checked={$formData.allDay}
               disabled={isMultiDay}
             />
-            <span class="text-sm">All day</span>
+            <span class="text-sm select-none">All day</span>
           </label>
         </div>
 
