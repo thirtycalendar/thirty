@@ -30,7 +30,7 @@
 
 {#if isToday(day)}
   <div
-    class="z-20 absolute left-0 right-0 flex items-center pointer-events-none"
+    class="z-2000 absolute left-0 right-0 flex items-center pointer-events-none"
     style:top="{lineOffset}px"
   >
     <div class="w-[8px] h-[8px] bg-primary-content rounded-full ml-[1px]"></div>

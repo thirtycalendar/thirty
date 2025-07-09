@@ -30,6 +30,7 @@ export function calculateEventOffsets(chunks: EventChunk[]) {
   const offsets = new Map<EventChunk, number>();
   const dayChunksMap = new Map<string, EventChunk[]>();
 
+  // Group chunks by day
   for (const chunk of chunks) {
     const dayKey = chunk.day ? chunk.day.toISOString() : "single-day";
     if (!dayChunksMap.has(dayKey)) dayChunksMap.set(dayKey, []);
@@ -53,27 +54,25 @@ export function calculateEventOffsets(chunks: EventChunk[]) {
         j++;
       }
 
-      // Sort overlapping group by duration (longer first), then start time
+      // Sort overlapping group by duration (longest first), then start time
       overlappingGroup.sort((a, b) => {
-        const durA = a.end.getTime() - a.start.getTime();
-        const durB = b.end.getTime() - b.start.getTime();
-        if (durB !== durA) return durB - durA;
+        const durationA = a.end.getTime() - a.start.getTime();
+        const durationB = b.end.getTime() - b.start.getTime();
+
+        // Primary sort by duration (descending)
+        if (durationB !== durationA) {
+          return durationB - durationA;
+        }
+
+        // Secondary sort by start time (ascending)
         return a.start.getTime() - b.start.getTime();
       });
 
-      // Assign offsets within this group
-      const activeLanes: { end: Date; offset: number }[] = [];
-      for (const chunk of overlappingGroup) {
-        const remainingLanes = activeLanes.filter((lane) => lane.end > chunk.start);
-        const usedOffsets = new Set(remainingLanes.map((lane) => lane.offset));
-        let offset = 0;
-        while (usedOffsets.has(offset)) offset++;
-        offsets.set(chunk, offset);
-        remainingLanes.push({ end: chunk.end, offset });
-        activeLanes.splice(0, activeLanes.length, ...remainingLanes);
-      }
+      overlappingGroup.forEach((chunk, index) => {
+        offsets.set(chunk, index);
+      });
 
-      i = j; // Move to next non-overlapping group
+      i = j;
     }
   }
 
