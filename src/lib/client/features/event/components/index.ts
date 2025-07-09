@@ -1,3 +1,4 @@
+export { default as AllDayEventBlock } from "./all-day-event-block.svelte";
 export { default as CreateEvent } from "./create-event.svelte";
 export { default as EditEvent } from "./edit-event.svelte";
 export { default as EventActionButtons } from "./event-action-buttons.svelte";

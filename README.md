@@ -23,6 +23,7 @@
   - (7.9.07) - Disable startTime, endDate, and endTime fields if it is allDay.
   - (7.9.08) - Fixed current day bg background in month calendar.
   - (7.9.09) - All day events.
+  - (9.9.10) - Coding.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.

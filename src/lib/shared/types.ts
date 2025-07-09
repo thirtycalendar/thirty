@@ -33,6 +33,12 @@ export type EventChunk = {
   day?: Date;
 };
 
+export interface AllDayLayoutInfo extends Event {
+  startColumn: number;
+  span: number;
+  lane: number;
+}
+
 export type Task = InferSelectModel<typeof taskTable>;
 export type TaskForm = z.infer<typeof taskSchema>;
 

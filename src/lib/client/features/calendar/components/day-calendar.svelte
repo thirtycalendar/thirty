@@ -6,8 +6,10 @@
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
   import { handleEventModal } from "$lib/client/stores/event";
 
+  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";
 
+  import { getCalendars } from "../../calendar/query";
   import { EventBlock } from "../../event/components";
 
   import { CurrentTimeIndicator } from ".";
@@ -17,48 +19,44 @@
   }
   let { events }: DayCalendarProps = $props();
 
+  const { data: calendars } = getCalendars();
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  const allDayEvents = $derived.by(() =>
-    events.filter(
-      (event) =>
-        event.allDay &&
-        $checkedCalendars[event.calendarId] !== false &&
-        isWithinInterval(getEventDateObjects(event).start, {
-          start: startOfDay($currentDate),
-          end: endOfDay($currentDate)
-        })
-    )
-  );
+  const dayStart = $derived(startOfDay($currentDate));
+  const dayEnd = $derived(endOfDay($currentDate));
 
-  const dayEvents = $derived.by(() => {
-    const dayStart = startOfDay($currentDate);
-    const dayEnd = endOfDay($currentDate);
+  const { allDayEvents, timedEvents } = $derived.by(() => {
+    const all: Event[] = [];
+    const timed: Event[] = [];
 
-    const filtered = events.filter((event) => {
+    for (const event of events) {
       const isVisible = $checkedCalendars[event.calendarId] !== false;
-      if (!isVisible || event.allDay) return false;
+      if (!isVisible) continue;
 
       const { start, end } = getEventDateObjects(event);
-      return (
+      const isForToday =
         isWithinInterval(start, { start: dayStart, end: dayEnd }) ||
         isWithinInterval(end, { start: dayStart, end: dayEnd }) ||
-        (start < dayStart && end > dayEnd)
-      );
-    });
+        (start < dayStart && end > dayEnd);
 
-    const chunks = filtered.map((event) => {
+      if (!isForToday) continue;
+      if (event.allDay) all.push(event);
+      else timed.push(event);
+    }
+    return { allDayEvents: all, timedEvents: timed };
+  });
+
+  const timedEventChunks = $derived.by(() => {
+    const chunks = timedEvents.map((event) => {
       const { start, end } = getEventDateObjects(event);
-      const chunkStart = start < dayStart ? dayStart : start;
-      const chunkEnd = end > dayEnd ? dayEnd : end;
-      return { event, start: chunkStart, end: chunkEnd };
+      return {
+        event,
+        start: start < dayStart ? dayStart : start,
+        end: end > dayEnd ? dayEnd : end
+      };
     });
-
     const offsets = calculateEventOffsets(chunks);
-    return chunks.map((chunk) => ({
-      ...chunk,
-      offset: offsets.get(chunk) ?? 0
-    }));
+    return chunks.map((chunk) => ({ ...chunk, offset: offsets.get(chunk) ?? 0 }));
   });
 
   let scrollContainer: HTMLDivElement;
@@ -74,20 +72,26 @@
   </div>
 
   {#if allDayEvents.length > 0}
-    <div class="sticky top-[2.5rem] z-10 border-b border-base-200 bg-base-100">
-      <div
-        class="flex items-center gap-2 px-2 py-1 border-b border-base-200 text-xs text-primary-content/70"
-      >
-        <span>All Day</span>
-      </div>
-      <div class="px-2 py-1">
+    <div class="bg-base-200 border-b border-base-200 grid grid-cols-[50px_1fr] p-1 gap-x-1">
+      <div></div>
+      <div class="flex flex-col gap-1 py-1">
         {#each allDayEvents as event (event.id)}
+          {@const eventColor = getColorHexCodeFromId(event.colorId)}
+          {@const calendar = $calendars?.find((c) => c.id === event.calendarId)}
+          {@const calendarColor = getColorHexCodeFromId(calendar?.colorId ?? "-1")}
           <button
-            class="bg-primary/10 rounded px-2 py-1 text-xs truncate cursor-pointer mb-1 w-full text-left"
+            class="text-primary-content w-full cursor-pointer rounded-md flex items-center gap-1.5 backdrop-blur-md border border-primary-content/10 shadow-sm p-0 text-left h-[26px]"
+            style:background-color="{eventColor}33"
             title={event.name}
             onclick={() => handleEventModal(event)}
           >
-            {event.name}
+            <div
+              class="w-1 h-full rounded-l-md shrink-0"
+              style:background-color={calendarColor}
+            ></div>
+            <div class="px-1 py-0.5 overflow-hidden">
+              <p class="text-xs font-semibold text-primary-content/90 truncate">{event.name}</p>
+            </div>
           </button>
         {/each}
       </div>
@@ -110,7 +114,7 @@
 
       <div class="col-start-2 row-start-1 col-span-1 row-span-full relative pointer-events-none">
         <div class="absolute inset-0 pointer-events-auto">
-          {#each dayEvents as { event, start, end, offset } (event.id)}
+          {#each timedEventChunks as { event, start, end, offset } (event.id)}
             <EventBlock {event} {start} {end} {offset} />
           {/each}
 
