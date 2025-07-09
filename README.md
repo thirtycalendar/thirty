@@ -18,6 +18,7 @@
   - (7.9.02) - Fixed timezone wrong displaying time.
   - (7.9.03) - Fixed event details start and end derived problem.
   - (7.9.04) - Improved codes.
+  - (7.9.05) - Overlapping event problem.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.

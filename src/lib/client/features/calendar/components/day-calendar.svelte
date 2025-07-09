@@ -1,7 +1,7 @@
 <script lang="ts">
   import { endOfDay, format, isToday, isWithinInterval, setHours, startOfDay } from "date-fns";
 
-  import { getEventDateObjects } from "$lib/client/features/event/utils";
+  import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
@@ -17,27 +17,6 @@
   let { events }: DayCalendarProps = $props();
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
-
-  type EventChunk = { event: Event; start: Date; end: Date };
-
-  function calculateOffsets(chunks: EventChunk[]) {
-    chunks.sort((a, b) => a.start.getTime() - b.start.getTime());
-    const offsets = new Map<string, number>();
-    const activeLanes: { end: Date; offset: number }[] = [];
-
-    for (const chunk of chunks) {
-      const remainingLanes = activeLanes.filter((lane) => lane.end > chunk.start);
-      const usedOffsets = new Set(remainingLanes.map((lane) => lane.offset));
-      let offset = 0;
-      while (usedOffsets.has(offset)) {
-        offset++;
-      }
-      offsets.set(chunk.event.id, offset);
-      remainingLanes.push({ end: chunk.end, offset });
-      activeLanes.splice(0, activeLanes.length, ...remainingLanes);
-    }
-    return offsets;
-  }
 
   const dayEvents = $derived.by(() => {
     const dayStart = startOfDay($currentDate);
@@ -62,10 +41,10 @@
       return { event, start: chunkStart, end: chunkEnd };
     });
 
-    const offsets = calculateOffsets(chunks);
+    const offsets = calculateEventOffsets(chunks);
     return chunks.map((chunk) => ({
       ...chunk,
-      offset: offsets.get(chunk.event.id) ?? 0
+      offset: offsets.get(chunk) ?? 0
     }));
   });
 

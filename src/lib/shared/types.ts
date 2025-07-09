@@ -23,13 +23,15 @@ export interface Color {
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;
 
-export interface InitCalendarStateKV {
-  calendarId: string;
-  isUpdatedTimezone: boolean;
-}
-
 export type Event = InferSelectModel<typeof eventTable>;
 export type EventForm = z.infer<typeof eventSchema>;
+
+export type EventChunk = {
+  event: Event;
+  start: Date;
+  end: Date;
+  day?: Date;
+};
 
 export type Task = InferSelectModel<typeof taskTable>;
 export type TaskForm = z.infer<typeof taskSchema>;

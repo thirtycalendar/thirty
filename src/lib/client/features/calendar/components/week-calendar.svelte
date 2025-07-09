@@ -10,7 +10,7 @@
     startOfWeek
   } from "date-fns";
 
-  import { getEventDateObjects } from "$lib/client/features/event/utils";
+  import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
@@ -52,33 +52,6 @@
     return chunks;
   }
 
-  function calculateOffsets(chunks: EventChunk[]) {
-    const offsets = new Map<EventChunk, number>();
-    const dayChunksMap = new Map<string, EventChunk[]>();
-
-    for (const chunk of chunks) {
-      const dayKey = format(chunk.day, "yyyy-MM-dd");
-      if (!dayChunksMap.has(dayKey)) dayChunksMap.set(dayKey, []);
-      dayChunksMap.get(dayKey)!.push(chunk);
-    }
-
-    for (const [, dayChunks] of dayChunksMap) {
-      dayChunks.sort((a, b) => a.start.getTime() - b.start.getTime());
-      const activeLanes: { end: Date; offset: number }[] = [];
-
-      for (const chunk of dayChunks) {
-        const remainingLanes = activeLanes.filter((lane) => lane.end > chunk.start);
-        const usedOffsets = new Set(remainingLanes.map((lane) => lane.offset));
-        let offset = 0;
-        while (usedOffsets.has(offset)) offset++;
-        offsets.set(chunk, offset);
-        remainingLanes.push({ end: chunk.end, offset });
-        activeLanes.splice(0, activeLanes.length, ...remainingLanes);
-      }
-    }
-    return offsets;
-  }
-
   const weekEvents = $derived.by(() => {
     const weekStart = startOfDay(days[0]);
     const weekEnd = endOfDay(days[6]);
@@ -96,7 +69,7 @@
     });
 
     const chunks = filtered.flatMap(splitEventByDay);
-    const offsets = calculateOffsets(chunks);
+    const offsets = calculateEventOffsets(chunks);
 
     return chunks.map((chunk) => ({
       ...chunk,
