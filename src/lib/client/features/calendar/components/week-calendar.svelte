@@ -147,9 +147,9 @@
   </div>
 
   {#if allDayLayout.length > 0}
-    <div class="grid grid-cols-[50px_repeat(7,1fr)] bg-base-200 border-b border-base-200">
+    <div class="mb-1 grid grid-cols-[50px_repeat(7,1fr)] bg-base-200 border-b border-base-200">
       <div></div>
-      <div class="col-start-2 col-span-7 relative grid grid-cols-7 border-r border-base-200">
+      <div class="gap-1 col-start-2 col-span-7 relative grid grid-cols-7 border-r border-base-200">
         {#each allDayLayout as event (event.id)}
           {@const eventColor = getColorHexCodeFromId(event.colorId)}
           {@const calendar = $calendars?.find((c) => c.id === event.calendarId)}
@@ -175,7 +175,7 @@
 
   <div
     bind:this={scrollContainer}
-    class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-b-2xl bg-base-100 relative"
+    class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
   >
     <div class="col-start-1 row-start-1 grid">
       {#each hours as hour (hour)}
