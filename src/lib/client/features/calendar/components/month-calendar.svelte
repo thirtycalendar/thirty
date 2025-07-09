@@ -94,10 +94,9 @@
       >
         <div class="self-end text-xs font-medium mb-1">
           <span
-            class="grid place-content-center h-6 w-6 rounded-full"
-            class:bg-primary={isToday(day)}
-            class:text-primary-content={isToday(day)}
-            class:font-bold={isToday(day)}
+            class="grid place-content-center h-5 w-5 rounded-md"
+            class:bg-accent={isToday(day)}
+            class:text-accent-content={isToday(day)}
             class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
             class:opacity-40={!isSameMonth(day, $currentDate)}
           >
