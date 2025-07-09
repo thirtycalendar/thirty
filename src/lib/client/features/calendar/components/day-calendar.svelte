@@ -3,6 +3,7 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event } from "$lib/shared/types";
 
@@ -22,9 +23,11 @@
   const dayStart = $derived(startOfDay($currentDate));
   const dayEnd = $derived(endOfDay($currentDate));
 
-  const { allDayEvents, timedEvents } = $derived.by(() =>
-    getVisibleEvents(events, dayStart, dayEnd)
-  );
+  const { allDayEvents, timedEvents } = $derived.by(() => {
+    const calendars = $checkedCalendars;
+
+    return getVisibleEvents(events, dayStart, dayEnd, calendars);
+  });
 
   const timedEventChunks = $derived.by(() => {
     const chunks = timedEvents.map((event) => {
@@ -43,7 +46,7 @@
 </script>
 
 <div class="flex flex-col h-full px-2">
-  <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200 px-1 py-1">
+  <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200">
     <div
       class={`font-semibold text-center ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
     >

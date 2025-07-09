@@ -1,19 +1,19 @@
-import { get } from "svelte/store";
-
 import { differenceInDays, isWithinInterval, max, min, startOfDay } from "date-fns";
-
-import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
 import type { AllDayLayoutInfo, Event } from "$lib/shared/types";
 
 import { getEventDateObjects } from "../event/utils";
 
-export function getVisibleEvents(events: Event[], start: Date, end: Date) {
+export function getVisibleEvents(
+  events: Event[],
+  start: Date,
+  end: Date,
+  calendars: Record<string, boolean>
+) {
   const all: Event[] = [];
   const timed: Event[] = [];
 
   for (const event of events) {
-    const calendars = get(checkedCalendars);
     const isVisible = calendars[event.calendarId] !== false;
     if (!isVisible) continue;
 

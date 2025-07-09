@@ -27,6 +27,7 @@
   - (9.9.11) - Rounded border and spacing in week calendar.
   - (9.9.12) - All day event block component codes.
   - (9.9.13) - Extracted utils function.
+  - (9.9.14) - Automatically update checked calendar's events.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.

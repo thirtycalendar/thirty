@@ -3,6 +3,7 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
 
   import type { Event } from "$lib/shared/types";
 
@@ -41,9 +42,11 @@
     return chunks;
   }
 
-  const { allDayEvents, timedEvents } = $derived.by(() =>
-    getVisibleEvents(events, weekStart, weekEnd)
-  );
+  const { allDayEvents, timedEvents } = $derived.by(() => {
+    const calendars = $checkedCalendars;
+
+    return getVisibleEvents(events, weekStart, weekEnd, calendars);
+  });
 
   const allDayLayout = $derived.by(() => calculateAllDayLayout(allDayEvents, weekStart, weekEnd));
 
