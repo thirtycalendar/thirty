@@ -30,10 +30,10 @@
 
   let { event }: EventDetailsProps = $props();
 
-  const { start, end } = getEventDateObjects(event, false);
+  const { start, end } = $derived.by(() => getEventDateObjects(event, false));
 
   const userTimezone = getValidTimeZone();
-  const normalizedEventTimezone = getValidTimeZone(event.timezone);
+  const normalizedEventTimezone = $derived.by(() => getValidTimeZone(event.timezone));
   const sameTimezone = $derived(normalizedEventTimezone === userTimezone);
 
   const formattedEventTime = $derived.by(() => {
