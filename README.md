@@ -30,6 +30,7 @@
   - (9.9.14) - Automatically update checked calendar's events.
   - (9.9.15) - Stack all days events in week calendar.
   - (9.9.16) - Better styling.
+  - (9.9.17) - Finished all the all day event block things.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.

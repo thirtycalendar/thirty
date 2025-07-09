@@ -49,7 +49,13 @@
     <div
       class={`font-semibold text-center ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
     >
-      {format($currentDate, "EEEE, MMM d")}
+      <span class="flex items-center justify-center">
+        {#if isToday($currentDate)}
+          <span class="w-2 h-2 rounded-full bg-primary-content mr-1"></span>
+        {/if}
+
+        {format($currentDate, "EEEE, MMM d")}
+      </span>
     </div>
   </div>
 
