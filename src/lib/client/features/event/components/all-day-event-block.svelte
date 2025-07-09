@@ -28,9 +28,7 @@
   onclick={() => handleEventModal(event)}
 >
   <div class="w-1 h-full shrink-0" style:background-color={calendarColor}></div>
-  <div class="px-1 py-0.5 overflow-hidden">
-    <p class="text-xs font-semibold text-primary-content/90 truncate whitespace-nowrap">
-      {event.name}
-    </p>
+  <div class="px-1 py-0.5 overflow-hidden min-w-0 w-full">
+    <p class="truncate">{event.name}</p>
   </div>
 </button>
