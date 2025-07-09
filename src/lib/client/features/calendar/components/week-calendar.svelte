@@ -13,6 +13,7 @@
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
   import { checkedCalendars } from "$lib/client/stores/checked-calendars";
+  import { handleEventModal } from "$lib/client/stores/event";
 
   import type { Event } from "$lib/shared/types";
 
@@ -33,6 +34,18 @@
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
+  const allDayEvents = $derived.by(() =>
+    events.filter(
+      (event) =>
+        event.allDay &&
+        $checkedCalendars[event.calendarId] !== false &&
+        isWithinInterval(getEventDateObjects(event).start, {
+          start: startOfDay(days[0]),
+          end: endOfDay(days[6])
+        })
+    )
+  );
+
   type EventChunk = { event: Event; day: Date; start: Date; end: Date };
 
   function splitEventByDay(event: Event): EventChunk[] {
@@ -49,6 +62,7 @@
       dayCursor = addDays(dayCursor, 1);
       if (dayCursor > end) break;
     }
+
     return chunks;
   }
 
@@ -81,17 +95,19 @@
 </script>
 
 <div class="flex flex-col h-full py-3">
+  <!-- Header -->
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-10">
     <div class="border-r border-base-200"></div>
     {#each days as day (day.toISOString())}
       <div class="flex items-center justify-center p-1 border-b border-r border-base-200">
         <span
-          class={`font-bold flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+          class={`font-bold flex items-center gap-1 ${
+            isToday(day) ? "text-primary-content" : "text-primary-content/70"
+          }`}
         >
           {#if isToday(day)}
             <span class="w-2 h-2 rounded-full bg-primary-content"></span>
           {/if}
-
           {format(day, "EEE")}
           {format(day, "d")}
         </span>
@@ -99,6 +115,29 @@
     {/each}
   </div>
 
+  <!-- All Day Events -->
+  {#if allDayEvents.length > 0}
+    <div
+      class="grid grid-cols-[50px_repeat(7,1fr)] text-xs bg-base-100 sticky top-[2.5rem] z-10 border-b border-base-200"
+    >
+      <div class="border-r border-base-200 text-center py-1 text-primary-content/70">All Day</div>
+      {#each days as day (day.toISOString())}
+        <div class="border-r border-base-200 relative min-h-[2rem]">
+          {#each allDayEvents.filter((event) => format(getEventDateObjects(event).start, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
+            <button
+              class="absolute inset-x-1 top-1 bg-primary/10 rounded px-1 text-xs truncate cursor-pointer"
+              title={event.name}
+              onclick={() => handleEventModal(event)}
+            >
+              {event.name}
+            </button>
+          {/each}
+        </div>
+      {/each}
+    </div>
+  {/if}
+
+  <!-- Time Grid -->
   <div
     bind:this={scrollContainer}
     class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
@@ -108,9 +147,7 @@
         <div
           class="h-15 flex justify-center items-center text-center select-none text-xs text-primary-content/70 border-r border-base-200"
         >
-          <span class="relative">
-            {format(setHours(new Date(), hour), "h a")}
-          </span>
+          <span class="relative">{format(setHours(new Date(), hour), "h a")}</span>
         </div>
       {/each}
     </div>
