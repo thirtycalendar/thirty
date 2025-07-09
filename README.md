@@ -28,6 +28,7 @@
   - (9.9.12) - All day event block component codes.
   - (9.9.13) - Extracted utils function.
   - (9.9.14) - Automatically update checked calendar's events.
+  - (9.9.15) - Stack all days events in week calendar.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.
