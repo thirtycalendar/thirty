@@ -5,7 +5,6 @@
     endOfDay,
     format,
     isToday,
-    isWithinInterval,
     max,
     min,
     setHours,
@@ -15,14 +14,11 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
-  import { handleEventModal } from "$lib/client/stores/event";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { AllDayLayoutInfo, Event } from "$lib/shared/types";
 
-  import { EventBlock } from "../../event/components";
-  import { getCalendars } from "../query";
+  import { AllDayEventBlock, EventBlock } from "../../event/components";
+  import { getVisibleEvents } from "../utils";
 
   import { CurrentTimeIndicator } from ".";
 
@@ -93,27 +89,9 @@
     return layout;
   }
 
-  const { allDayEvents, timedEvents } = $derived.by(() => {
-    const all: Event[] = [];
-    const timed: Event[] = [];
-
-    for (const event of events) {
-      const isVisible = $checkedCalendars[event.calendarId] !== false;
-      if (!isVisible) continue;
-
-      const { start, end } = getEventDateObjects(event);
-      const isInWeek =
-        isWithinInterval(start, { start: weekStart, end: weekEnd }) ||
-        isWithinInterval(end, { start: weekStart, end: weekEnd }) ||
-        (start < weekStart && end > weekEnd);
-
-      if (!isInWeek) continue;
-
-      if (event.allDay) all.push(event);
-      else timed.push(event);
-    }
-    return { allDayEvents: all, timedEvents: timed };
-  });
+  const { allDayEvents, timedEvents } = $derived.by(() =>
+    getVisibleEvents(events, weekStart, weekEnd)
+  );
 
   const allDayLayout = $derived(calculateAllDayLayout(allDayEvents));
 
@@ -122,8 +100,6 @@
     const offsets = calculateEventOffsets(chunks);
     return chunks.map((chunk) => ({ ...chunk, offset: offsets.get(chunk) ?? 0 }));
   });
-
-  const { data: calendars } = getCalendars();
 
   let scrollContainer: HTMLDivElement;
 </script>
@@ -151,23 +127,7 @@
       <div></div>
       <div class="gap-1 col-start-2 col-span-7 relative grid grid-cols-7 border-r border-base-200">
         {#each allDayLayout as event (event.id)}
-          {@const eventColor = getColorHexCodeFromId(event.colorId)}
-          {@const calendar = $calendars?.find((c) => c.id === event.calendarId)}
-          {@const calendarColor = getColorHexCodeFromId(calendar?.colorId ?? "-1")}
-          <button
-            class="text-primary-content w-full cursor-pointer rounded-md flex items-center gap-1.5 backdrop-blur-md border border-primary-content/10 shadow-sm p-0 text-left h-[26px]"
-            style:background-color="{eventColor}33"
-            title={event.name}
-            onclick={() => handleEventModal(event)}
-          >
-            <div
-              class="w-1 h-full rounded-l-md shrink-0"
-              style:background-color={calendarColor}
-            ></div>
-            <div class="px-1 py-0.5 overflow-hidden">
-              <p class="text-xs font-semibold text-primary-content/90 truncate">{event.name}</p>
-            </div>
-          </button>
+          <AllDayEventBlock {event} />
         {/each}
       </div>
     </div>

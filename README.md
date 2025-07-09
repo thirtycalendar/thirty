@@ -25,6 +25,7 @@
   - (7.9.09) - All day events.
   - (9.9.10) - Coding.
   - (9.9.11) - Rounded border and spacing in week calendar.
+  - (9.9.12) - All day event block component codes.
 - Tue Jul 8, 2025
   - (7.8.01) - Fixed event ui errors mostly.
   - (7.8.02) - Fixed day calendar time label bug.
