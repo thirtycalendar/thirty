@@ -18,6 +18,7 @@
     formatLocalTimeDetails,
     getEventDateObjects
   } from "$lib/client/features/event/utils";
+  import { isSm } from "$lib/client/stores/responsive";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
@@ -64,18 +65,20 @@
   <div class="flex items-start gap-3">
     <Clock3 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
     <div class="flex-1">
-      <div class="flex gap-2 items-center">
+      <div class={`${$isSm ? "flex" : "block my-1"} gap-2 items-center`}>
         <p class="font-medium">{formattedEventTime}</p>
 
         {#if event.allDay}
           <div class="badge badge-outline badge-xs">All Day</div>
         {:else}
-          <div class="badge badge-outline badge-xs">{totalDuration}</div>
+          <div class="badge badge-outline badge-xs">
+            {totalDuration}
+          </div>
         {/if}
       </div>
 
       {#if formattedLocalTime}
-        <div class="flex gap-2 items-center">
+        <div class={`${$isSm ? "flex" : "block my-1"} items-center gap-2`}>
           <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
           <div class="badge badge-outline badge-xs">{userTimezone}</div>
         </div>
