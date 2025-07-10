@@ -44,11 +44,7 @@
     return isValid(parsed) ? parsed : new Date();
   });
 
-  let inputValue = $derived.by(() =>
-    open ? filterText || formatDate(parsedDate, "EEE d, MMM") : formatDate(parsedDate, "EEE d, MMM")
-  );
-
-  let visibleMonth = $derived(parsedDate);
+  let visibleMonth = $derived.by(() => startOfMonth(parsedDate));
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -64,11 +60,16 @@
 
   let error = $derived($formErrors[name]);
 
+  let inputValue = $derived.by(() =>
+    open ? filterText || formatDate(parsedDate, "EEE d, MMM") : formatDate(parsedDate, "EEE d, MMM")
+  );
+
   function selectDay(day: Date) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (isDisablePast && day < today) return;
     $formData[name] = formatDate(day, "yyyy-MM-dd");
+    visibleMonth = startOfMonth(day); // Sync visible month to picked day
     filterText = "";
     open = false;
     triggerButton?.blur();
@@ -77,7 +78,10 @@
   function commitInput() {
     const trimmed = filterText.trim();
     const parsed = parse(trimmed, "yyyy-MM-dd", new Date());
-    if (isValid(parsed)) $formData[name] = formatDate(parsed, "yyyy-MM-dd");
+    if (isValid(parsed)) {
+      $formData[name] = formatDate(parsed, "yyyy-MM-dd");
+      visibleMonth = startOfMonth(parsed);
+    }
     filterText = "";
     open = false;
     triggerButton?.blur();
@@ -114,6 +118,7 @@
       today.setHours(0, 0, 0, 0);
       if (!isDisablePast || d >= today) {
         $formData[name] = formatDate(d, "yyyy-MM-dd");
+        visibleMonth = startOfMonth(d);
       }
     };
 
@@ -167,13 +172,12 @@
     const prev = subMonths(visibleMonth, 1);
     const now = new Date();
     if (!isDisablePast || startOfMonth(prev) >= startOfMonth(now)) {
-      $formData[name] = formatDate(prev, "yyyy-MM-dd");
+      visibleMonth = startOfMonth(prev);
     }
   }
 
   function nextMonth() {
-    const next = addMonths(visibleMonth, 1);
-    $formData[name] = formatDate(next, "yyyy-MM-dd");
+    visibleMonth = startOfMonth(addMonths(visibleMonth, 1));
   }
 </script>
 
