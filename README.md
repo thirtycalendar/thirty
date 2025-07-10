@@ -29,6 +29,7 @@
   - (7.10.13) - Disable creating a new event if there is no calendar created.
   - (7.10.14) - Updated unchecked store for better usage.
   - (7.10.15) - For better naming convention.
+  - (7.10.16) - Updated cal list.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.
