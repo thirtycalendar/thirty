@@ -59,67 +59,61 @@
 {/if}
 
 {#snippet CalendarList(title: string, cal: Calendar[])}
-  {#if cal.length > 0}
-    <div class="my-2">
-      <div
-        class="flex items-center justify-between gap-1 px-1 text-sm font-semibold w-full rounded-md"
-      >
-        <p>{title}</p>
+  <div class="my-2">
+    <div
+      class="flex items-center justify-between gap-1 px-1 text-sm font-semibold w-full rounded-md"
+    >
+      <p>{title}</p>
 
-        <div class="flex items-center gap-1">
-          {#if title === "My Calendars"}
-            <div class="tooltip font-normal" data-tip="New">
-              <button
-                class="btn btn-xs btn-ghost btn-square"
-                onclick={() => toggleModal(calendarCreateModalId)}
-              >
-                <Plus size="16" />
-              </button>
-            </div>
-          {/if}
-
+      <div class="flex items-center gap-1">
+        <div class="tooltip font-normal" data-tip="New">
           <button
-            class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${isExpanded(title) && "rotate-180"}`}
-            onclick={() => toggleCalendar(title)}
+            class="btn btn-xs btn-ghost btn-square"
+            onclick={() => toggleModal(calendarCreateModalId)}
           >
-            <ChevronDown size="16" />
+            <Plus size="16" />
           </button>
         </div>
+
+        <button
+          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${isExpanded(title) && "rotate-180"}`}
+          onclick={() => toggleCalendar(title)}
+        >
+          <ChevronDown size="16" />
+        </button>
       </div>
-
-      {#if isExpanded(title)}
-        <div class="my-1" transition:slide>
-          {#each cal as c (c.id)}
-            <label
-              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
-            >
-              <div class="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  class="checkbox checkbox-xs"
-                  checked={isChecked(c.id)}
-                  onchange={() => toggleChecked(c.id)}
-                />
-                <span
-                  class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${getColorHexCodeFromId(c.colorId)}`}
-                >
-                  {c.name}
-                </span>
-              </div>
-
-              {#if title !== "Holidays"}
-                <button
-                  class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
-                  onclick={() => handleCalModal(c)}
-                >
-                  <Settings size="15" />
-                </button>
-              {/if}
-            </label>
-          {/each}
-        </div>
-      {/if}
     </div>
-  {/if}
+
+    {#if isExpanded(title) && cal.length > 0}
+      <div class="my-1" transition:slide>
+        {#each cal as c (c.id)}
+          <label
+            class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
+          >
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-xs"
+                checked={isChecked(c.id)}
+                onchange={() => toggleChecked(c.id)}
+              />
+              <span
+                class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
+                style={`color: ${getColorHexCodeFromId(c.colorId)}`}
+              >
+                {c.name}
+              </span>
+            </div>
+
+            <button
+              class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+              onclick={() => handleCalModal(c)}
+            >
+              <Settings size="15" />
+            </button>
+          </label>
+        {/each}
+      </div>
+    {/if}
+  </div>
 {/snippet}

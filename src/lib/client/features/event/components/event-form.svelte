@@ -48,6 +48,8 @@
 
   const { data: calendars } = getCalendars();
 
+  let hasCalendars = $derived(!!$calendars?.length);
+
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
     defaultValues,
@@ -135,6 +137,10 @@
 
 {#if $calendars}
   <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
+    {#if !hasCalendars}
+      <p class="text-sm text-error mt-2">You need to create a calendar before adding events.</p>
+    {/if}
+
     {#if isErrorMessage}
       <p class="text-sm text-error mt-2">{errorMessage}</p>
     {/if}
@@ -302,7 +308,7 @@
           type="button"
           class="btn btn-ghost font-bold"
           onclick={handleEventStopEditing}
-          disabled={$isSubmitting || isMutationPending || isErrorMessage}
+          disabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
         >
           Cancel
         </button>
@@ -310,7 +316,7 @@
       <button
         type="submit"
         class="btn btn-base-300 font-bold"
-        disabled={$isSubmitting || isMutationPending || isErrorMessage}
+        disabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
       >
         Save
       </button>
