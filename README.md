@@ -30,6 +30,7 @@
   - (7.10.14) - Updated unchecked store for better usage.
   - (7.10.15) - For better naming convention.
   - (7.10.16) - Updated cal list.
+  - (7.10.17) - Finished to cal list codes.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

@@ -16,40 +16,44 @@
 
   const { data: calendars } = getCalendars();
   const { data: birthdays } = getBirthdays();
+
+  const { store: collapsed } = collapsedLists;
 </script>
 
-{#if !$calendars || !$birthdays}
+{#if !$calendars}
   <div class="relative h-[200px]">
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3">
       <span class="loading loading-spinner loading-md"></span>
     </div>
   </div>
 {:else}
-  {@render CalendarList<Calendar>({
+  {@render ListSection<Calendar>({
     title: "My Calendars",
-    cal: $calendars,
+    items: $calendars,
     onAdd: () => toggleModal(calendarCreateModalId),
     onSettings: handleCalModal
   })}
+{/if}
 
-  {@render CalendarList<Birthday>({
+{#if $birthdays}
+  {@render ListSection<Birthday>({
     title: "Birthdays",
-    cal: $birthdays,
+    items: $birthdays,
     onAdd: () => toggleModal(birthdayCreateModalId),
     onSettings: handleBirthdayModal
   })}
 {/if}
 
-{#snippet CalendarList<T extends Calendar | Birthday>({
+{#snippet ListSection<T extends Calendar | Birthday>({
   title,
-  cal,
+  items,
   onAdd,
   onSettings
 }: {
   title: string;
-  cal: T[];
+  items: T[];
   onAdd?: () => void;
-  onSettings?: (c: T) => void;
+  onSettings?: (item: T) => void;
 })}
   <div class="my-2">
     <div
@@ -65,7 +69,7 @@
         </div>
 
         <button
-          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${collapsedLists.isChecked(title) && "rotate-180"}`}
+          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${$collapsed.includes(title) && "rotate-180"}`}
           onclick={() => collapsedLists.toggle(title)}
         >
           <ChevronDown size="16" />
@@ -73,39 +77,45 @@
       </div>
     </div>
 
-    {#if collapsedLists.isChecked(title) && cal.length > 0}
-      <div class="my-1" transition:slide>
-        {#each cal as c (c.id)}
-          <label
-            class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
-          >
-            <div class="flex items-center gap-2">
-              <input
-                type="checkbox"
-                class="checkbox checkbox-xs"
-                checked={uncheckedCalendars.isChecked(c.id)}
-                onchange={() => uncheckedCalendars.toggle(c.id)}
-              />
+    {#if !$collapsed.includes(title)}
+      {#if items.length > 0}
+        <div class="my-1" transition:slide>
+          {#each items as item (item.id)}
+            <label
+              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
+            >
+              <div class="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  class="checkbox checkbox-xs"
+                  checked={uncheckedCalendars.isChecked(item.id)}
+                  onchange={() => uncheckedCalendars.toggle(item.id)}
+                />
 
-              <span
-                class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                style={`color: ${getColorHexCodeFromId(c.colorId)}`}
-              >
-                {c.name}
-              </span>
-            </div>
+                <span
+                  class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
+                  style={`color: ${getColorHexCodeFromId(item.colorId)}`}
+                >
+                  {item.name}
+                </span>
+              </div>
 
-            {#if onSettings}
-              <button
-                class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
-                onclick={() => onSettings(c)}
-              >
-                <Settings size="15" />
-              </button>
-            {/if}
-          </label>
-        {/each}
-      </div>
+              {#if onSettings}
+                <button
+                  class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+                  onclick={() => onSettings(item)}
+                >
+                  <Settings size="15" />
+                </button>
+              {/if}
+            </label>
+          {/each}
+        </div>
+      {:else}
+        <p class="text-sm m-1 text-primary-content/70">
+          No {title.toLowerCase().replace(/s$/, "")} yet. Create one.
+        </p>
+      {/if}
     {/if}
   </div>
 {/snippet}
