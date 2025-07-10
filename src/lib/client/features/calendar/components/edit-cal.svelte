@@ -14,6 +14,9 @@
 
   let { calendar }: EditCalendarProps = $props();
 
+  let errorMessage = $state("");
+  let isErrorMessage = $derived(errorMessage !== "");
+
   const defaultValues: CalendarFormType = {
     externalId: calendar.externalId,
     source: calendar.source,
@@ -35,14 +38,18 @@
 
       return data;
     },
+    onMutate: () => {
+      errorMessage = "";
+    },
     onSuccess: (data) => {
+      errorMessage = "";
       currentCalendarDetails.set(data.data);
 
       showToast(data.message);
       handleCalendarStopEditing();
     },
     onError: (message: Error["message"]) => {
-      showToast(message, true);
+      errorMessage = message;
     },
     queryKeys: ["cal-list", "event-list"]
   });
@@ -51,5 +58,9 @@
     await mutate(data);
   }
 </script>
+
+{#if isErrorMessage}
+  <p class="text-sm text-error my-1">{errorMessage}</p>
+{/if}
 
 <CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} />

@@ -11,6 +11,9 @@
 
   import { CalForm } from ".";
 
+  let errorMessage = $state("");
+  let isErrorMessage = $derived(errorMessage !== "");
+
   const defaultValues: CalendarFormType = {
     externalId: null,
     source: "local",
@@ -29,12 +32,17 @@
 
       return data;
     },
+    onMutate: () => {
+      errorMessage = "";
+    },
     onSuccess: (data) => {
+      errorMessage = "";
+
       showToast(data.message);
       toggleModal(calendarCreateModalId);
     },
     onError: (message: Error["message"]) => {
-      showToast(message, true);
+      errorMessage = message;
     },
     queryKeys: ["cal-list", "event-list"]
   });
@@ -43,5 +51,9 @@
     await mutate(data);
   }
 </script>
+
+{#if isErrorMessage}
+  <p class="text-sm text-error my-1">{errorMessage}</p>
+{/if}
 
 <CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreate />

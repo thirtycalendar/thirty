@@ -54,13 +54,15 @@
     return `${startFormatted} - ${endFormatted}`;
   });
 
-  const calendarColor = $derived(getColorHexCodeFromId(event.colorId));
+  const eventColor = $derived(getColorHexCodeFromId(event.colorId));
 
   const { data: calendars } = getCalendars();
 
-  const calendarName = $derived.by(
-    () => $calendars?.find((cal) => cal.id === event.calendarId)?.name ?? "Unknown"
-  );
+  const calendar = $derived.by(() => $calendars?.find((cal) => cal.id === event.calendarId));
+  const calendarName = $derived(calendar?.name ?? "Unknown");
+  const calendarColor = $derived(getColorHexCodeFromId(calendar?.colorId || "-1"));
+
+  const isSameColor = $derived(eventColor === calendarColor);
 
   const updated = format(new Date(event.updatedAt), "PPp");
 </script>
@@ -91,6 +93,12 @@
     <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
     <div class="flex-1 flex items-center gap-2 capitalize">
+      {#if !isSameColor}
+        <div
+          class="w-5 h-5 aspect-square rounded-full"
+          style="background-color: {eventColor}"
+        ></div>
+      {/if}
       <div
         class="w-5 h-5 aspect-square rounded-full"
         style="background-color: {calendarColor}"

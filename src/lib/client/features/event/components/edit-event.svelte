@@ -12,6 +12,9 @@
     event: Event;
   }
 
+  let errorMessage = $state("");
+  let isErrorMessage = $derived(errorMessage !== "");
+
   let { event }: EditEventProps = $props();
 
   const defaultValues: EventFormType = {
@@ -43,14 +46,18 @@
 
       return data;
     },
+    onMutate: () => {
+      errorMessage = "";
+    },
     onSuccess: (data) => {
+      errorMessage = "";
       currentEventDetails.set(data.data);
 
       showToast(data.message);
       handleEventStopEditing();
     },
     onError: (message: Error["message"]) => {
-      showToast(message, true);
+      errorMessage = message;
     },
     queryKeys: ["event-list"]
   });
@@ -59,5 +66,9 @@
     await mutate(data);
   }
 </script>
+
+{#if isErrorMessage}
+  <p class="text-sm text-error my-1">{errorMessage}</p>
+{/if}
 
 <EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} />

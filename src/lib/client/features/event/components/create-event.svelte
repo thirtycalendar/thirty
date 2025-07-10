@@ -11,6 +11,9 @@
 
   import { EventForm } from ".";
 
+  let errorMessage = $state("");
+  let isErrorMessage = $derived(errorMessage !== "");
+
   const now = new Date();
 
   const defaultValues: EventFormType = {
@@ -39,12 +42,17 @@
 
       return data;
     },
+    onMutate: () => {
+      errorMessage = "";
+    },
     onSuccess: (data) => {
+      errorMessage = "";
+
       showToast(data.message);
       toggleModal(eventCreateModalId);
     },
     onError: (message: Error["message"]) => {
-      showToast(message, true);
+      errorMessage = message;
     },
     queryKeys: ["event-list"]
   });
@@ -53,5 +61,9 @@
     await mutate(data);
   }
 </script>
+
+{#if isErrorMessage}
+  <p class="text-sm text-error my-1">{errorMessage}</p>
+{/if}
 
 <EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreateEvent />
