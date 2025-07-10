@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "deploy": "vercel --prod",
+    "deploy": "vercel",
+    "prod": "vercel --prod",
     "build": "vite build",
     "prepare": "husky",
     "preview": "vite preview",

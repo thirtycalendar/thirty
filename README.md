@@ -36,6 +36,7 @@
   - (7.10.20) - Added dob fields and renamed description to note.
   - (7.10.21) - Showed dob in bd details.
   - (7.10.22) - Updated responsive event details dates.
+  - (7.10.23) - Updated detail action buttons.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

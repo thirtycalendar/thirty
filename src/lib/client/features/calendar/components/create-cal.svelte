@@ -37,6 +37,7 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
+      defaultValues.colorId = getRandomColorId();
 
       showToast(data.message);
       toggleModal(calendarCreateModalId);

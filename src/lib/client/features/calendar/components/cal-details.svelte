@@ -16,9 +16,15 @@
   let { calendar }: CalendarDetailsProps = $props();
 
   const updated = format(new Date(calendar.updatedAt), "PPp");
+
+  let errorMessage = $derived("");
 </script>
 
 <div class="space-y-3">
+  {#if errorMessage !== ""}
+    <p class="text-sm text-error mt-1">{errorMessage}</p>
+  {/if}
+
   <h2 class="text-xl font-semibold">{calendar.name}</h2>
 
   <div class="flex items-start gap-3">
@@ -68,5 +74,5 @@
     </div>
   </div>
 
-  <CalActionButtons id={calendar.id} />
+  <CalActionButtons id={calendar.id} bind:errorMessage />
 </div>

@@ -9,11 +9,12 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  interface DeleteCalButtonProps {
+  interface Props {
     id: string;
+    errorMessage: string;
   }
 
-  let { id }: DeleteCalButtonProps = $props();
+  let { id, errorMessage = $bindable() }: Props = $props();
 
   let confirmDelete = $state(false);
 
@@ -30,6 +31,9 @@
 
       return data;
     },
+    onMutate: () => {
+      errorMessage = "";
+    },
     onSuccess: async (data) => {
       confirmDelete = false;
 
@@ -37,7 +41,7 @@
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {
-      showToast(message, true);
+      errorMessage = message;
     },
     queryKeys: ["cal-list", "event-list"]
   });

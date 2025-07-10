@@ -21,9 +21,14 @@
   });
 
   const updated = format(new Date(birthday.updatedAt), "PPp");
+  let errorMessage = $derived("");
 </script>
 
 <div class="space-y-3">
+  {#if errorMessage !== ""}
+    <p class="text-sm text-error mt-1">{errorMessage}</p>
+  {/if}
+
   <h2 class="text-xl font-semibold">{birthday.name}</h2>
 
   <div class="flex items-start gap-3">
@@ -61,5 +66,5 @@
     </div>
   </div>
 
-  <BdActionButtons id={birthday.id} />
+  <BdActionButtons id={birthday.id} bind:errorMessage />
 </div>

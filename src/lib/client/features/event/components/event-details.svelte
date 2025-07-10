@@ -57,9 +57,14 @@
   const isSameColor = $derived(eventColor === calendarColor);
 
   const updated = format(new Date(event.updatedAt), "PPp");
+  let errorMessage = $derived("");
 </script>
 
 <div class="space-y-3">
+  {#if errorMessage !== ""}
+    <p class="text-sm text-error mt-1">{errorMessage}</p>
+  {/if}
+
   <h2 class="text-xl font-semibold">{event.name}</h2>
 
   <div class="flex items-start gap-3">
@@ -149,5 +154,6 @@
       </p>
     </div>
   </div>
-  <EventActionButtons id={event.id} />
+
+  <EventActionButtons id={event.id} bind:errorMessage />
 </div>
