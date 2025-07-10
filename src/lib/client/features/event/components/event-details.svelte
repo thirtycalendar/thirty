@@ -10,7 +10,7 @@
     RefreshCcw
   } from "@lucide/svelte";
 
-  import { format } from "date-fns";
+  import { format, isSameDay } from "date-fns";
   import { formatInTimeZone } from "date-fns-tz";
 
   import { getEventDateObjects } from "$lib/client/features/event/utils";
@@ -39,11 +39,21 @@
   const formattedEventTime = $derived.by(() => {
     const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
     const startFormatted = formatInTimeZone(start, event.timezone, formatString);
-    if (event.allDay) return startFormatted;
-    const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
+
+    if (event.allDay) {
+      if (isSameDay(start, end)) return startFormatted;
+      const endFormatted = formatInTimeZone(end, event.timezone, formatString);
+      return `${startFormatted} - ${endFormatted}`;
+    }
+
+    if (isSameDay(start, end)) {
+      const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
+      return `${startFormatted} - ${endFormatted}`;
+    }
+
+    const endFormatted = formatInTimeZone(end, event.timezone, formatString);
     return `${startFormatted} - ${endFormatted}`;
   });
-
   const formattedLocalTime = $derived.by(() => {
     if (sameTimezone) return "";
 
