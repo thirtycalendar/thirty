@@ -18,6 +18,7 @@
   - (7.10.02) - Used requireParam function only.
   - (7.10.03) - Reset form values on success. Updated createForm util function.
   - (7.10.04) - Bug fixed.
+  - (7.10.05) - Set the same day logic in event form.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

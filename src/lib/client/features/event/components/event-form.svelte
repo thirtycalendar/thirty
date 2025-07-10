@@ -71,11 +71,15 @@
 
   let isAllDay = $derived($formData.allDay === true);
   let isMultiDay = $derived($formData.startDate !== $formData.endDate);
+  let isNotSameDay = $derived(
+    $formData.startDate !== $formData.endDate && $formData.startTime < $formData.endTime
+  );
   let isTimeInverted = $derived(
     $formData.startDate === $formData.endDate && $formData.startTime > $formData.endTime
   );
 
   let errorMessage = $state("");
+  let isErrorMessage = $derived(errorMessage !== "");
 
   $effect(() => {
     if ($formData.startDate > $formData.endDate && $formData.startDate !== $formData.endDate) {
@@ -109,6 +113,8 @@
   $effect(() => {
     if (isTimeInverted) {
       $formData.endDate = format(addDays(new Date($formData.startDate), 1), "yyyy-MM-dd");
+    } else if (isNotSameDay) {
+      $formData.endDate = $formData.startDate;
     }
   });
 
@@ -127,7 +133,7 @@
 
 {#if $calendars}
   <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
-    {#if errorMessage !== ""}
+    {#if isErrorMessage}
       <p class="text-sm text-error mt-2">{errorMessage}</p>
     {/if}
 
@@ -281,7 +287,7 @@
           type="button"
           class="btn btn-ghost font-bold"
           onclick={handleEventStopEditing}
-          disabled={$isSubmitting || isMutationPending || errorMessage !== ""}
+          disabled={$isSubmitting || isMutationPending || isErrorMessage}
         >
           Cancel
         </button>
@@ -289,7 +295,7 @@
       <button
         type="submit"
         class="btn btn-base-300 font-bold"
-        disabled={$isSubmitting || isMutationPending || errorMessage !== ""}
+        disabled={$isSubmitting || isMutationPending || isErrorMessage}
       >
         Save
       </button>
