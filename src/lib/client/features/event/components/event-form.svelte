@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import {
     AlignLeft,
     CalendarCheck2,
@@ -59,11 +61,29 @@
   let isDescription = $state(defaultValues.description ? true : false);
   let isMoreOptions = $state(false);
 
+  onMount(() => {
+    return () => {
+      isLocation = false;
+      isDescription = false;
+      isMoreOptions = false;
+    };
+  });
+
   let isAllDay = $derived($formData.allDay === true);
   let isMultiDay = $derived($formData.startDate !== $formData.endDate);
   let isTimeInverted = $derived(
     $formData.startDate === $formData.endDate && $formData.startTime > $formData.endTime
   );
+
+  let errorMessage = $state("");
+
+  $effect(() => {
+    if ($formData.startDate > $formData.endDate && $formData.startDate !== $formData.endDate) {
+      errorMessage = "Start date must be before end date";
+    } else {
+      errorMessage = "";
+    }
+  });
 
   $effect(() => {
     if (isCreateEvent && $calendars) {
@@ -107,6 +127,10 @@
 
 {#if $calendars}
   <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
+    {#if errorMessage !== ""}
+      <p class="text-sm text-error mt-2">{errorMessage}</p>
+    {/if}
+
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
     <div class="flex items-start gap-3">
@@ -257,7 +281,7 @@
           type="button"
           class="btn btn-ghost font-bold"
           onclick={handleEventStopEditing}
-          disabled={$isSubmitting || isMutationPending}
+          disabled={$isSubmitting || isMutationPending || errorMessage !== ""}
         >
           Cancel
         </button>
@@ -265,7 +289,7 @@
       <button
         type="submit"
         class="btn btn-base-300 font-bold"
-        disabled={$isSubmitting || isMutationPending}
+        disabled={$isSubmitting || isMutationPending || errorMessage !== ""}
       >
         Save
       </button>
