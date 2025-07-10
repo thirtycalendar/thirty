@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import { AlignLeft, CalendarCheck2 } from "@lucide/svelte";
 
   import { ColorChoiceField, DateField, InputField, TextareaField } from "$lib/client/components";
@@ -26,21 +24,19 @@
     isCreate = false
   }: Props = $props();
 
-  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
-    schema: birthdaySchema,
-    defaultValues
-  });
-
   let isNote = $state(defaultValues.note ? true : false);
 
-  onMount(() => {
-    return () => {
+  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
+    schema: birthdaySchema,
+    defaultValues,
+    onSubmit,
+    onSuccess: () => {
       isNote = false;
-    };
+    }
   });
 </script>
 
-<form onsubmit={handleSubmit((data) => onSubmit(data as BirthdayForm))} class="space-y-2">
+<form onsubmit={handleSubmit()} class="space-y-2">
   {#if errorMessage !== ""}
     <p class="text-sm text-error mt-1">{errorMessage}</p>
   {/if}

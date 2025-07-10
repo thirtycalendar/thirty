@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import {
     AlignLeft,
     CalendarCheck2,
@@ -52,26 +50,26 @@
 
   let hasCalendars = $derived(!!$calendars?.length);
 
-  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
-    schema: eventSchema,
-    defaultValues,
-    disabledFields: ["timezone"],
-    resetDisabledFields: ["calendarId", "colorId", "timezone"]
-  });
-
-  let previousCalendarId = $state("");
-
   let isLocation = $state(defaultValues.location ? true : false);
   let isDescription = $state(defaultValues.description ? true : false);
   let isMoreOptions = $state(false);
 
-  onMount(() => {
-    return () => {
+  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
+    schema: eventSchema,
+    defaultValues,
+    disabledFields: ["timezone"],
+    resetDisabledFields: ["calendarId", "colorId", "timezone"],
+    onSubmit,
+    onSuccess: () => {
+      console.log("Success...");
+
       isLocation = false;
       isDescription = false;
       isMoreOptions = false;
-    };
+    }
   });
+
+  let previousCalendarId = $state("");
 
   let isAllDay = $derived($formData.allDay === true);
   let isMultiDay = $derived($formData.startDate !== $formData.endDate);
@@ -138,7 +136,7 @@
 </script>
 
 {#if $calendars}
-  <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
+  <form onsubmit={handleSubmit()} class="space-y-2">
     {#if !hasCalendars}
       <p class="text-sm text-error mt-1">You need to create a calendar before adding events.</p>
     {/if}

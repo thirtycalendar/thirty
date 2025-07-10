@@ -18,7 +18,7 @@
 
       throw new Error("Failed to sync with Google Calendar");
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       showToast(data.message);
     },
     onError: async () => {

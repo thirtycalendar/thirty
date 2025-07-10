@@ -6,11 +6,11 @@ import { refetchQueries } from "./query-client";
 type CreateMutationOptions<Fn extends (...args: any) => Promise<any>, ErrorType> = {
   mutationFn: Fn;
   queryKeys?: string[];
-  onPending?: () => void;
-  onMutate?: (...args: Parameters<Fn>) => (() => void) | void;
-  onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
-  onError?: (err: ErrorType) => void;
-  onRollback?: (...args: Parameters<Fn>) => void;
+  onPending?: () => void | Promise<void>;
+  onMutate?: (...args: Parameters<Fn>) => (() => void | Promise<void>) | void;
+  onSuccess?: (data: Awaited<ReturnType<Fn>>) => void | Promise<void>;
+  onError?: (err: ErrorType) => void | Promise<void>;
+  onRollback?: (...args: Parameters<Fn>) => void | Promise<void>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,33 +31,33 @@ export function createMutation<Fn extends (...args: any) => Promise<any>, ErrorT
     isPending.set(true);
     isSuccess.set(false);
     isError.set(false);
-    onPending?.();
-
-    // biome-ignore lint:
-    let rollbackFn: (() => void) | void = undefined;
 
     try {
-      rollbackFn = onMutate?.(...args);
+      await onPending?.();
 
       const result = await mutationFn(...args);
       data.set(result);
       error.set(null);
       isSuccess.set(true);
-      onSuccess?.(result);
+      await onSuccess?.(result);
       refetchQueries(queryKeys);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      error.set(err);
+    } catch (err: unknown) {
+      error.set(err as ErrorType);
       isError.set(true);
       isSuccess.set(false);
 
-      if (rollbackFn) {
-        rollbackFn();
-      } else {
-        onRollback?.(...args);
+      if (typeof err === "object" && err !== null) {
+        console.error("Mutation error:", err);
       }
 
-      onError?.(err);
+      if (onMutate) {
+        const rollbackFn = onMutate(...args);
+        if (rollbackFn) await rollbackFn();
+      } else {
+        await onRollback?.(...args);
+      }
+
+      await onError?.(err as ErrorType);
     } finally {
       isPending.set(false);
     }

@@ -34,7 +34,7 @@
     onMutate: () => {
       errorMessage = "";
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       confirmDelete = false;
 
       toggleModal(id);

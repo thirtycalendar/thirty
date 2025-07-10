@@ -40,6 +40,7 @@
   - (7.10.24) - Cleaned codes.
   - (7.10.25) - Changed all the component props type names into just props.
   - (7.10.26) - Moved cal view type into types file.
+  - (7.10.27) - Improved createForm util function. Better codes.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

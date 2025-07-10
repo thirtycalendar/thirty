@@ -27,11 +27,12 @@
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: calendarSchema,
-    defaultValues
+    defaultValues,
+    onSubmit
   });
 </script>
 
-<form onsubmit={handleSubmit((data) => onSubmit(data as CalendarForm))} class="space-y-2">
+<form onsubmit={handleSubmit()} class="space-y-2">
   {#if errorMessage !== ""}
     <p class="text-sm text-error mt-1">{errorMessage}</p>
   {/if}

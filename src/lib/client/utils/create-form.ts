@@ -8,6 +8,11 @@ type CreateFormParams<T> = {
   disabledFields?: (keyof T)[];
   resetOnSuccess?: boolean;
   resetDisabledFields?: (keyof T)[];
+  onPending?: () => void | Promise<void>;
+  onSubmit?: (data: T) => Promise<void> | void;
+  onSuccess?: (data: T) => void | Promise<void>;
+  onError?: (error: unknown) => void | Promise<void>;
+  onRollback?: () => void | Promise<void>;
 };
 
 type CreateFormReturn<T> = {
@@ -15,7 +20,7 @@ type CreateFormReturn<T> = {
   formErrors: Writable<Partial<Record<keyof T, string>>>;
   isSubmitting: Writable<boolean>;
   handleInput: (event: Event) => void;
-  handleSubmit: (callback: (data: T) => Promise<void> | void) => (event: Event) => void;
+  handleSubmit: () => (event: Event) => Promise<void>;
   setDisabledFields: (fields: (keyof T)[]) => void;
 };
 
@@ -24,7 +29,12 @@ export const createForm = <T>({
   defaultValues,
   disabledFields: initialDisabledFields = [],
   resetOnSuccess = true,
-  resetDisabledFields = []
+  resetDisabledFields = [],
+  onPending,
+  onSubmit,
+  onSuccess,
+  onError,
+  onRollback
 }: CreateFormParams<T>): CreateFormReturn<T> => {
   const formData = writable<T>({ ...defaultValues });
   const formErrors = writable<Partial<Record<keyof T, string>>>({});
@@ -111,7 +121,7 @@ export const createForm = <T>({
     });
   }
 
-  function handleSubmit(callback: (data: T) => Promise<void> | void) {
+  function handleSubmit() {
     return async (event: Event) => {
       event.preventDefault();
       submitted = true;
@@ -119,28 +129,37 @@ export const createForm = <T>({
       const data = get(formData);
       const isValid = validateForm(data);
 
-      if (isValid) {
-        isSubmitting.set(true);
-        try {
-          await callback(data);
-          if (resetOnSuccess) {
-            formData.update((current) => {
-              const updated = { ...current };
-              for (const key in defaultValues) {
-                if (!resetDisabledSet.has(key as keyof T)) {
-                  updated[key as keyof T] = defaultValues[key as keyof T];
-                }
-              }
-              return updated;
-            });
-          }
-        } catch (e) {
-          console.error("Error during form submission callback:", e);
-        } finally {
-          isSubmitting.set(false);
+      if (!isValid) {
+        console.log("Form validation failed.", get(formErrors));
+        return;
+      }
+
+      isSubmitting.set(true);
+      try {
+        await onPending?.();
+        if (onSubmit) {
+          await onSubmit(data);
         }
-      } else {
-        console.log("Form validation failed. Errors:", get(formErrors));
+
+        if (resetOnSuccess) {
+          formData.update((current) => {
+            const updated = { ...current };
+            for (const key in defaultValues) {
+              if (!resetDisabledSet.has(key as keyof T)) {
+                updated[key as keyof T] = defaultValues[key as keyof T];
+              }
+            }
+            return updated;
+          });
+        }
+
+        onSuccess?.(data);
+      } catch (error) {
+        console.error("Error during form submission:", error);
+        onError?.(error);
+        onRollback?.();
+      } finally {
+        isSubmitting.set(false);
       }
     };
   }
