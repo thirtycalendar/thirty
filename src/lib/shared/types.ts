@@ -15,6 +15,8 @@ import type { eventSchema } from "./schemas/event";
 import type { holidaySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
 
+export type CalView = "month" | "week" | "day" | "year";
+
 export interface Color {
   id: string;
   colorHexCode: string;

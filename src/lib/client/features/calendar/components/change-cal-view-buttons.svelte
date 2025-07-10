@@ -1,7 +1,9 @@
 <script lang="ts">
   import { ChevronDown } from "@lucide/svelte";
 
-  import { calView, handleCalViewChange, type CalView } from "$lib/client/stores/cal-view";
+  import { calView, handleCalViewChange } from "$lib/client/stores/cal-view";
+
+  import type { CalView } from "$lib/shared/types";
 
   let views: CalView[] = ["year", "month", "week", "day"];
 </script>

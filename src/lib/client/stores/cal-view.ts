@@ -1,7 +1,7 @@
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-export type CalView = "month" | "week" | "day" | "year";
+import type { CalView } from "$lib/shared/types";
 
 export const calView: Writable<CalView | null> = writable(null);
 
