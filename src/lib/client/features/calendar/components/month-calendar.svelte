@@ -15,7 +15,7 @@
   import { getEventDateObjects } from "$lib/client/features/event/utils";
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
+  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";
@@ -38,12 +38,14 @@
     return { days, viewStart, viewEnd, weekCount };
   });
 
+  const { store: unchecked } = uncheckedCalendars;
   const eventsByDay = $derived.by(() => {
     const { viewStart, viewEnd } = monthInfo;
     const map: Record<string, Event[]> = {};
 
     for (const event of events) {
-      if ($checkedCalendars[event.calendarId] === false) continue;
+      const isNotVisible = $unchecked.includes(event.calendarId);
+      if (isNotVisible) continue;
 
       const { start: eventStart, end: eventEnd } = getEventDateObjects(event);
       if (eventStart > viewEnd || eventEnd < viewStart) continue;

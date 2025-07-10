@@ -4,18 +4,13 @@ import type { AllDayLayoutInfo, Event } from "$lib/shared/types";
 
 import { getEventDateObjects } from "../event/utils";
 
-export function getVisibleEvents(
-  events: Event[],
-  start: Date,
-  end: Date,
-  calendars: Record<string, boolean>
-) {
+export function getVisibleEvents(events: Event[], start: Date, end: Date, unchecked: string[]) {
   const all: Event[] = [];
   const timed: Event[] = [];
 
   for (const event of events) {
-    const isVisible = calendars[event.calendarId] !== false;
-    if (!isVisible) continue;
+    const isNotVisible = unchecked.includes(event.calendarId);
+    if (isNotVisible) continue;
 
     const { start: eventStart, end: eventEnd } = getEventDateObjects(event);
     const isInRange =

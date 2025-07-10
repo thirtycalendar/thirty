@@ -5,7 +5,7 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
+  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
 
   import type { Event } from "$lib/shared/types";
 
@@ -25,9 +25,9 @@
   const dayStart = $derived(startOfDay($currentDate));
   const dayEnd = $derived(endOfDay($currentDate));
 
+  const { store: unchecked } = uncheckedCalendars;
   const { allDayEvents, timedEvents } = $derived.by(() => {
-    const calendars = $checkedCalendars;
-    return getVisibleEvents(events, dayStart, dayEnd, calendars);
+    return getVisibleEvents(events, dayStart, dayEnd, $unchecked);
   });
 
   const timedEventChunks = $derived.by(() => {

@@ -6,7 +6,7 @@
 
   import { toggleModal } from "$lib/client/components/utils";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
-  import { checkedCalendars } from "$lib/client/stores/checked-calendars";
+  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Calendar } from "$lib/shared/types";
@@ -33,18 +33,6 @@
     if (browser) {
       localStorage.setItem("toggle-calendar-list", JSON.stringify(collapsedCalendars));
     }
-  }
-
-  function isChecked(id: string) {
-    const storeVal = $checkedCalendars;
-    return storeVal[id] ?? true;
-  }
-
-  function toggleChecked(id: string) {
-    checkedCalendars.update((curr) => ({
-      ...curr,
-      [id]: !(curr[id] ?? true)
-    }));
   }
 </script>
 
@@ -94,8 +82,8 @@
               <input
                 type="checkbox"
                 class="checkbox checkbox-xs"
-                checked={isChecked(c.id)}
-                onchange={() => toggleChecked(c.id)}
+                checked={uncheckedCalendars.isChecked(c.id)}
+                onchange={() => uncheckedCalendars.toggle(c.id)}
               />
               <span
                 class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
