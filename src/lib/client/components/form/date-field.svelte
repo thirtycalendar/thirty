@@ -23,13 +23,15 @@
 
   interface DateFieldProps {
     name: string;
+    className?: string;
+    isDisablePast?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
-    isDisablePast?: boolean;
-    className?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
   }
 
-  let { name, formData, isDisablePast = false, className }: DateFieldProps = $props();
+  let { name, className, isDisablePast = false, formData, formErrors }: DateFieldProps = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let calendarDropdown = $state<HTMLDivElement | undefined>();
@@ -59,6 +61,8 @@
     }
     return days;
   });
+
+  let error = $derived($formErrors[name]);
 
   function selectDay(day: Date) {
     const today = new Date();
@@ -189,10 +193,18 @@
       open = true;
       triggerButton?.select();
     }}
-    class="w-full cursor-pointer rounded-md border border-base-300 bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200"
+    class={cn(
+      "w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none hover:bg-base-200",
+      error ? "border-error text-error" : "border-base-300 bg-base-100",
+      className
+    )}
     autocomplete="off"
     placeholder="yyyy-MM-dd"
   />
+
+  {#if error}
+    <p class="mt-1 text-xs text-error">{error || "This field is required"}</p>
+  {/if}
 
   {#if open}
     <div

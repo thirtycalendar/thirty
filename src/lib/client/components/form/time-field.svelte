@@ -18,21 +18,24 @@
 
   interface TimeFieldProps {
     name: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formData: Writable<any>;
     className?: string;
     isRightDiv?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formData: Writable<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
   }
 
-  let { name, formData, className, isRightDiv = false }: TimeFieldProps = $props();
+  let { name, className, isRightDiv = false, formData, formErrors }: TimeFieldProps = $props();
 
   const timeSlotInterval = 15;
 
   let open = $state(false);
-
   let triggerButtonElement: HTMLInputElement | undefined = $state();
   let timeSlotsDropdown: HTMLDivElement | undefined = $state();
   let filterText = $state("");
+
+  const error = $derived($formErrors[name]);
 
   const allTimeSlots = $derived.by(() => {
     const slots: Date[] = [];
@@ -52,7 +55,6 @@
 
   function parseTime(timeString: string): Date {
     if (!timeString) return new Date();
-    // Allow HH:mm format which is used for formData storage
     if (/^\d{1,2}:\d{2}$/.test(timeString)) timeString += ":00";
     const parsed = parse(timeString, "HH:mm:ss", new Date());
     return isValid(parsed) ? parsed : new Date();
@@ -60,8 +62,6 @@
 
   const currentDate = $derived.by(() => parseTime($formData[name]));
 
-  // FIX: Allow the input to be empty while focused (open).
-  // When closed, it reverts to the formatted `currentDate`.
   const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
 
   function selectTime(date: Date) {
@@ -81,7 +81,6 @@
 
     let parsed: Date | null = null;
 
-    // Handle "9" -> 9:00 AM
     if (/^\d+$/.test(input)) {
       const num = parseInt(input, 10);
       if (num >= 0 && num < 24) {
@@ -89,7 +88,6 @@
       }
     }
 
-    // Handle "9pm", "14:30", "2:30 pm", etc.
     if (!parsed && input) {
       const formats = ["h:mm aa", "HH:mm", "h a", "ha"];
       for (const fmt of formats) {
@@ -118,11 +116,9 @@
 
       if (isOutside) {
         if (!filterText.trim()) {
-          // Input is empty, revert to last value by closing.
           filterText = "";
           open = false;
         } else {
-          // Input has a value, try to commit it.
           commitInput();
         }
       }
@@ -193,6 +189,7 @@
   <input
     type="text"
     aria-label="Time input"
+    aria-invalid={error ? "true" : "false"}
     bind:this={triggerButtonElement}
     value={inputValue}
     onfocus={() => {
@@ -206,16 +203,20 @@
       open = true;
       triggerButtonElement?.select();
     }}
-    class="w-full cursor-pointer rounded-md border border-base-300 bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200"
+    class={cn(
+      "w-full cursor-pointer rounded-md border bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200",
+      error ? "border-error text-error" : "border-base-300"
+    )}
     autocomplete="off"
     placeholder="hh:mm aa"
   />
 
-  {#if open}
+  {#if open && filteredTimeSlots.length > 0}
     <div
       bind:this={timeSlotsDropdown}
       class={cn(
-        "absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-xl border border-base-300 bg-base-100 p-2 shadow-xl",
+        "absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-xl border bg-base-100 p-2 shadow-xl",
+        error ? "border-error" : "border-base-300",
         isRightDiv ? "right-0" : "left-0"
       )}
       role="listbox"
@@ -243,5 +244,9 @@
         {/each}
       </div>
     </div>
+  {/if}
+
+  {#if error}
+    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
   {/if}
 </div>

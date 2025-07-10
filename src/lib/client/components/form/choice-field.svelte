@@ -9,22 +9,24 @@
 
   interface ChoiceFieldProps {
     name: string;
+    choiceList: readonly string[];
+    className?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
-    choiceList: readonly string[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
     handleInput: (event: Event) => void;
-    className?: string;
   }
 
-  let { name, formData, choiceList, className, handleInput }: ChoiceFieldProps = $props();
+  let { name, choiceList, className, formData, formErrors, handleInput }: ChoiceFieldProps =
+    $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();
   let triggerButtonRef = $state<HTMLButtonElement>();
 
-  let selectedValue = $derived.by(() => {
-    return $formData[name] ?? choiceList[0];
-  });
+  let selectedValue = $derived.by(() => $formData[name] ?? choiceList[0]);
+  let error = $derived($formErrors[name]);
 
   function selectChoice(choice: string) {
     if ($formData[name] === choice) {
@@ -35,7 +37,6 @@
 
     $formData[name] = choice;
 
-    // Emit synthetic input event
     if (handleInput) {
       const event = new Event("input", { bubbles: true, cancelable: true });
       Object.defineProperty(event, "target", {
@@ -72,7 +73,10 @@
   <button
     type="button"
     bind:this={triggerButtonRef}
-    class="w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center border-base-300 outline-none"
+    class={cn(
+      "w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center outline-none",
+      error ? "border-error" : "border-base-300"
+    )}
     onclick={() => (open = !open)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
@@ -98,9 +102,11 @@
         {#each choiceList as choice (choice)}
           <button
             type="button"
-            class="flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors
-              {$formData[name] === choice ? 'bg-base-200 text-primary-content font-semibold' : ''}
-              hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
+            class={cn(
+              "flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors",
+              $formData[name] === choice ? "bg-base-200 text-primary-content font-semibold" : "",
+              "hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
+            )}
             onclick={() => selectChoice(choice)}
             role="option"
             aria-selected={$formData[name] === choice}
@@ -129,5 +135,9 @@
         {/if}
       </div>
     </div>
+  {/if}
+
+  {#if error}
+    <p class="mt-1 text-error text-sm">{error}</p>
   {/if}
 </div>

@@ -10,16 +10,19 @@
 
   interface ColorChoiceFieldProps {
     name: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    formData: Writable<any>;
     className?: string;
     isLeftDiv?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formData: Writable<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
   }
 
-  let { name, formData, className, isLeftDiv }: ColorChoiceFieldProps = $props();
+  let { name, className, isLeftDiv, formData, formErrors }: ColorChoiceFieldProps = $props();
 
   let colorId = $derived($formData[name]);
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
+  let error = $derived($formErrors[name]);
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
@@ -94,7 +97,7 @@
 
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       const nextButton = dropdownRef?.querySelector(
-        `[formData-color-id="${colors[nextIndex].id}"]`
+        `[data-color-id="${colors[nextIndex].id}"]`
       ) as HTMLButtonElement;
       nextButton?.focus();
     }
@@ -107,7 +110,10 @@
   <button
     type="button"
     bind:this={triggerButtonRef}
-    class="w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center border-base-300 outline-none"
+    class={cn(
+      "w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center outline-none",
+      error ? "border-error" : "border-base-300"
+    )}
     onclick={() => (open = !open)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
@@ -170,5 +176,9 @@
         {/if}
       </div>
     </div>
+  {/if}
+
+  {#if error}
+    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
   {/if}
 </div>

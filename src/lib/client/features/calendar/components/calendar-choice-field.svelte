@@ -1,4 +1,6 @@
 <script lang="ts">
+  import type { Writable } from "svelte/store";
+
   import { Check, ChevronDown } from "@lucide/svelte";
 
   import { cn } from "$lib/client/utils/cn";
@@ -7,29 +9,33 @@
 
   interface CalendarChoiceFieldProps {
     name: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    data: any;
     calendars: Calendar[];
     placeholder?: string;
     className?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formData: Writable<any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
   }
 
-  let { name, data, calendars, className }: CalendarChoiceFieldProps = $props();
+  let { name, calendars, className, formData, formErrors }: CalendarChoiceFieldProps = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();
   let triggerButtonRef = $state<HTMLButtonElement>();
 
-  let selectedCalendar = $derived.by(() => calendars.find((c) => c.id === $data[name]));
+  let selectedCalendar = $derived.by(() => calendars.find((c) => c.id === $formData[name]));
+
+  let error = $derived($formErrors[name]);
 
   function selectChoice(choice: Calendar) {
-    if ($data[name] === choice.id) {
+    if ($formData[name] === choice.id) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
 
-    $data[name] = choice.id;
+    $formData[name] = choice.id;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
@@ -58,7 +64,10 @@
   <button
     type="button"
     bind:this={triggerButtonRef}
-    class="w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center border-base-300 outline-none"
+    class={cn(
+      "w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center outline-none",
+      error ? "border-error text-error" : "border-base-300"
+    )}
     onclick={() => (open = !open)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
@@ -69,9 +78,13 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{$data[name] ? selectedCalendar?.name : "Select a calendar"}</span>
+    <span>{$formData[name] ? selectedCalendar?.name : "Select a calendar"}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
+
+  {#if error}
+    <p class="mt-1 text-xs text-error">{error || "This field is required"}</p>
+  {/if}
 
   {#if open}
     <div
@@ -84,12 +97,15 @@
         {#each calendars as choice (choice.id)}
           <button
             type="button"
-            class="flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors
-              {$data[name] === choice.id ? 'bg-base-200 text-primary-content font-semibold' : ''}
-              hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
+            class={cn(
+              "flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors focus:outline-none",
+              $formData[name] === choice.id
+                ? "bg-base-200 text-primary-content font-semibold"
+                : "hover:bg-base-300/60 focus:bg-base-300/60"
+            )}
             onclick={() => selectChoice(choice)}
             role="option"
-            aria-selected={$data[name] === choice.id}
+            aria-selected={$formData[name] === choice.id}
             tabindex="0"
             onkeydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -101,10 +117,10 @@
                 triggerButtonRef?.focus();
               }
             }}
-            disabled={$data[name] === choice.id}
+            disabled={$formData[name] === choice.id}
           >
             {choice.name}
-            {#if $data[name] === choice.id}
+            {#if $formData[name] === choice.id}
               <Check size="16" />
             {/if}
           </button>

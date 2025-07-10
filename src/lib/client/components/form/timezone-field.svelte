@@ -8,17 +8,21 @@
 
   interface TimezoneFieldProps {
     name: string;
+    className?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
-    className?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    formErrors: Writable<any>;
   }
 
-  let { name, formData, className }: TimezoneFieldProps = $props();
+  let { name, className, formData, formErrors }: TimezoneFieldProps = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let dropdown = $state<HTMLDivElement | undefined>();
   let open = $state(false);
   let filterText = $state("");
+
+  const error = $derived($formErrors[name]);
 
   function formatOffset(offsetMinutes: number) {
     const sign = offsetMinutes >= 0 ? "+" : "-";
@@ -121,7 +125,11 @@
       open = true;
       triggerButton?.select();
     }}
-    class="w-full cursor-pointer rounded-md border border-base-300 bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200"
+    class={cn(
+      "w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "hover:bg-base-200",
+      error ? "border-error bg-error/5 text-error" : "border-base-300 bg-base-100"
+    )}
     autocomplete="off"
     placeholder="e.g., Asia/Tokyo"
   />
@@ -147,5 +155,9 @@
         <div class="px-3 py-2 text-sm text-base-content/50">No results</div>
       {/if}
     </div>
+  {/if}
+
+  {#if error}
+    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
   {/if}
 </div>

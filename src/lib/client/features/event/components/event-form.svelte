@@ -151,24 +151,30 @@
           {#if isMultiDay}
             <div class="space-y-2">
               <div class="flex gap-2">
-                <DateField name="startDate" {formData} className="flex-[3]" />
-                <TimeField name="startTime" {formData} className="flex-[2]" />
+                <DateField name="startDate" className="flex-[3]" {formData} {formErrors} />
+                <TimeField name="startTime" className="flex-[2]" {formData} {formErrors} />
               </div>
               <div class="flex gap-2">
-                <DateField name="endDate" {formData} className="flex-[3]" isDisablePast />
-                <TimeField name="endTime" {formData} className="flex-[2]" />
+                <DateField
+                  name="endDate"
+                  {formData}
+                  {formErrors}
+                  className="flex-[3]"
+                  isDisablePast
+                />
+                <TimeField name="endTime" className="flex-[2]" {formData} {formErrors} />
               </div>
             </div>
           {:else}
             <div class="flex items-center gap-2">
-              <DateField name="startDate" {formData} className="flex-[2]" />
-              <TimeField name="startTime" {formData} className="flex-1" />
+              <DateField name="startDate" className="flex-[2]" {formData} {formErrors} />
+              <TimeField name="startTime" className="flex-1" {formData} {formErrors} />
               <span class="text-muted-foreground">-</span>
-              <TimeField name="endTime" {formData} className="flex-1" />
+              <TimeField name="endTime" className="flex-1" {formData} {formErrors} />
             </div>
           {/if}
         {:else}
-          <DateField name="startDate" {formData} className="flex-[3]" />
+          <DateField name="startDate" className="flex-[3]" {formData} {formErrors} />
         {/if}
       </div>
     </div>
@@ -180,12 +186,13 @@
       <div class="flex flex-1 gap-2">
         <CalendarChoiceField
           name="calendarId"
-          data={formData}
+          {formData}
+          {formErrors}
           calendars={$calendars}
           placeholder="Select Calendar"
           className="flex-[3]"
         />
-        <ColorChoiceField name="colorId" {formData} className="flex-1" />
+        <ColorChoiceField name="colorId" className="flex-1" {formData} {formErrors} />
       </div>
     </div>
 
@@ -193,7 +200,7 @@
       <div class="text-muted-foreground">
         <Globe size="20" strokeWidth="2.5" />
       </div>
-      <TimezoneField name="timezone" {formData} />
+      <TimezoneField name="timezone" {formData} {formErrors} />
     </div>
 
     <div class="flex items-center gap-3">
@@ -278,7 +285,13 @@
           <div class="text-muted-foreground">
             <CircleCheck size="20" strokeWidth="2.5" />
           </div>
-          <ChoiceField name="status" choiceList={EventStatus} {handleInput} {formData} />
+          <ChoiceField
+            name="status"
+            choiceList={EventStatus}
+            {handleInput}
+            {formData}
+            {formErrors}
+          />
         </div>
       </div>
     {/if}

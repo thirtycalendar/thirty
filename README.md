@@ -24,6 +24,7 @@
   - (7.10.08) - Clear the caches if creating or updating calendar is primary.
   - (7.10.09) - Fallback primary calendar on create event form.
   - (7.10.10) - Better scroll offset hour. Removed task create button for now.
+  - (7.10.11) - All the field components have formErrors logics.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

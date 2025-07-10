@@ -14,4 +14,5 @@
 - [x] - Sticky all day events at the top.
 - [ ] - Mark as unchecked calendars instead of checked calendars in local storage.
 - [ ] - Add error logic in choice fields
-- [ ] - Show error text on forms.
+- [x] - Show error text on forms.
+- [ ] - Show the total time in event details like 15 mins, 30 mins, 1 hr, 1 hr 15 mins, 1 Day 2 hrs 15 mins
