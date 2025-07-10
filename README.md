@@ -34,6 +34,7 @@
   - (7.10.18) - Birthday.
   - (7.10.19) - Fixed date-field component.
   - (7.10.20) - Added dob fields and renamed description to note.
+  - (7.10.21) - Showed dob in bd details.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

@@ -1,4 +1,4 @@
-import { differenceInMinutes, format, isSameDay } from "date-fns";
+import { differenceInMinutes, format, isSameDay, isSameYear } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 import { getValidTimeZone } from "$lib/shared/utils/timezone";
@@ -80,7 +80,16 @@ export function calculateEventOffsets(chunks: EventChunk[]) {
 }
 
 export function formatEventTimeDetails(event: Event, start: Date, end: Date) {
-  const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+  const now = new Date();
+  const showYear = !isSameYear(now, start) || !isSameYear(now, end);
+  const formatString = event.allDay
+    ? showYear
+      ? "EEE, MMM d, yyyy"
+      : "EEE, MMM d"
+    : showYear
+      ? "EEE, MMM d, yyyy · h:mm a"
+      : "EEE, MMM d · h:mm a";
+
   const startFormatted = formatInTimeZone(start, event.timezone, formatString);
 
   if (event.allDay) {
@@ -106,9 +115,19 @@ export function formatLocalTimeDetails(
 ) {
   if (sameTimezone) return "";
 
-  const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+  const now = new Date();
+  const showYear = !isSameYear(now, start) || !isSameYear(now, end);
+  const formatString = event.allDay
+    ? showYear
+      ? "EEE, MMM d, yyyy"
+      : "EEE, MMM d"
+    : showYear
+      ? "EEE, MMM d, yyyy · h:mm a"
+      : "EEE, MMM d · h:mm a";
+
   const startFormatted = format(start, formatString);
   if (event.allDay) return startFormatted;
+
   const endFormatted = format(end, "h:mm a");
   return `${startFormatted} - ${endFormatted}`;
 }

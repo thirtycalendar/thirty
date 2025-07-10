@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { AlignLeft, HistoryIcon, Palette } from "@lucide/svelte";
+  import { AlignLeft, CalendarCheck2, HistoryIcon, Palette } from "@lucide/svelte";
 
-  import { format } from "date-fns";
+  import { differenceInYears, format } from "date-fns";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday } from "$lib/shared/types";
@@ -14,11 +14,25 @@
 
   let { birthday }: BirthdayDetailsProps = $props();
 
+  const dob = $derived(format(birthday.dob, "EEE d, MMM yyyy"));
+  const age = $derived.by(() => {
+    const years = differenceInYears(new Date(), birthday.dob);
+    return years === 1 ? "1 yr" : `${years} yrs`;
+  });
+
   const updated = format(new Date(birthday.updatedAt), "PPp");
 </script>
 
 <div class="space-y-3">
   <h2 class="text-xl font-semibold">{birthday.name}</h2>
+
+  <div class="flex items-start gap-3">
+    <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
+    <div class="flex-1 flex items-center gap-2">
+      <p class="font-medium">{dob}</p>
+      <div class="badge badge-outline badge-xs">{age}</div>
+    </div>
+  </div>
 
   <div class="flex items-start gap-3">
     <Palette size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />

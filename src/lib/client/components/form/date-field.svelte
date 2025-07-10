@@ -60,9 +60,15 @@
 
   let error = $derived($formErrors[name]);
 
-  let inputValue = $derived.by(() =>
-    open ? filterText || formatDate(parsedDate, "EEE d, MMM") : formatDate(parsedDate, "EEE d, MMM")
-  );
+  let inputValue = $derived.by(() => {
+    const date = parsedDate;
+    const now = new Date();
+    const sameYear = date.getFullYear() === now.getFullYear();
+    const formatStr = sameYear ? "EEE d, MMM" : "EEE d, MMM yyyy";
+    const display = formatDate(date, formatStr);
+
+    return open ? filterText || display : display;
+  });
 
   function selectDay(day: Date) {
     const today = new Date();

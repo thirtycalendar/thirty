@@ -4,7 +4,7 @@
   import { AlignLeft, CalendarCheck2 } from "@lucide/svelte";
 
   import { ColorChoiceField, DateField, InputField, TextareaField } from "$lib/client/components";
-  import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
+  import { handleBirthdayStopEditing } from "$lib/client/stores/birthday";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { birthdaySchema } from "$lib/shared/schemas/birthday";
@@ -76,7 +76,7 @@
       <button
         type="submit"
         class="btn font-bold btn-ghost"
-        onclick={handleCalendarStopEditing}
+        onclick={handleBirthdayStopEditing}
         disabled={$isSubmitting || isMutationPending}
       >
         Cancel
