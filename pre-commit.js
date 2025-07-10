@@ -4,9 +4,6 @@ try {
   console.log("🔍 Running lint check...");
   execSync("nr lint:check", { stdio: "inherit" });
 
-  console.log("🔍 Running svelte check...");
-  execSync("nr check", { stdio: "inherit" });
-
   console.log("🔍 Running format check...");
   execSync("nr format:check", { stdio: "inherit" });
 

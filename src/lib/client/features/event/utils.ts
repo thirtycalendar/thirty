@@ -1,5 +1,5 @@
-import { format } from "date-fns";
-import { fromZonedTime } from "date-fns-tz";
+import { differenceInMinutes, format, isSameDay } from "date-fns";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 import { getValidTimeZone } from "$lib/shared/utils/timezone";
 import type { Event, EventChunk } from "$lib/shared/types";
@@ -77,4 +77,56 @@ export function calculateEventOffsets(chunks: EventChunk[]) {
   }
 
   return offsets;
+}
+
+export function formatEventTimeDetails(event: Event, start: Date, end: Date) {
+  const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+  const startFormatted = formatInTimeZone(start, event.timezone, formatString);
+
+  if (event.allDay) {
+    if (isSameDay(start, end)) return startFormatted;
+    const endFormatted = formatInTimeZone(end, event.timezone, formatString);
+    return `${startFormatted} - ${endFormatted}`;
+  }
+
+  if (isSameDay(start, end)) {
+    const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
+    return `${startFormatted} - ${endFormatted}`;
+  }
+
+  const endFormatted = formatInTimeZone(end, event.timezone, formatString);
+  return `${startFormatted} - ${endFormatted}`;
+}
+
+export function formatLocalTimeDetails(
+  event: Event,
+  start: Date,
+  end: Date,
+  sameTimezone: boolean
+) {
+  if (sameTimezone) return "";
+
+  const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
+  const startFormatted = format(start, formatString);
+  if (event.allDay) return startFormatted;
+  const endFormatted = format(end, "h:mm a");
+  return `${startFormatted} - ${endFormatted}`;
+}
+
+export function formatDuration(start: Date, end: Date) {
+  let minutes = differenceInMinutes(end, start);
+  if (minutes < 1) return "Less than a minute";
+
+  const days = Math.floor(minutes / (60 * 24));
+  minutes %= 60 * 24;
+
+  const hours = Math.floor(minutes / 60);
+  minutes %= 60;
+
+  const parts = [];
+  if (days) parts.push(`${days} day${days > 1 ? "s" : ""}`);
+  if (hours) parts.push(`${hours} hr${hours > 1 ? "s" : ""}`);
+  if (minutes) parts.push(`${minutes} min${minutes > 1 ? "s" : ""}`);
+
+  return parts.join(" ");
 }

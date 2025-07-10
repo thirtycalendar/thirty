@@ -10,10 +10,14 @@
     RefreshCcw
   } from "@lucide/svelte";
 
-  import { format, isSameDay } from "date-fns";
-  import { formatInTimeZone } from "date-fns-tz";
+  import { format } from "date-fns";
 
-  import { getEventDateObjects } from "$lib/client/features/event/utils";
+  import {
+    formatDuration,
+    formatEventTimeDetails,
+    formatLocalTimeDetails,
+    getEventDateObjects
+  } from "$lib/client/features/event/utils";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
@@ -36,42 +40,19 @@
   const normalizedEventTimezone = $derived.by(() => getValidTimeZone(event.timezone));
   const sameTimezone = $derived(normalizedEventTimezone === userTimezone);
 
-  const formattedEventTime = $derived.by(() => {
-    const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
-    const startFormatted = formatInTimeZone(start, event.timezone, formatString);
-
-    if (event.allDay) {
-      if (isSameDay(start, end)) return startFormatted;
-      const endFormatted = formatInTimeZone(end, event.timezone, formatString);
-      return `${startFormatted} - ${endFormatted}`;
-    }
-
-    if (isSameDay(start, end)) {
-      const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");
-      return `${startFormatted} - ${endFormatted}`;
-    }
-
-    const endFormatted = formatInTimeZone(end, event.timezone, formatString);
-    return `${startFormatted} - ${endFormatted}`;
-  });
-  const formattedLocalTime = $derived.by(() => {
-    if (sameTimezone) return "";
-
-    const formatString = event.allDay ? "EEE, MMM d" : "EEE, MMM d · h:mm a";
-    const startFormatted = format(start, formatString);
-    if (event.allDay) return startFormatted;
-    const endFormatted = format(end, "h:mm a");
-    return `${startFormatted} - ${endFormatted}`;
-  });
-
-  const eventColor = $derived(getColorHexCodeFromId(event.colorId));
+  const formattedEventTime = $derived.by(() => formatEventTimeDetails(event, start, end));
+  const formattedLocalTime = $derived.by(() =>
+    formatLocalTimeDetails(event, start, end, sameTimezone)
+  );
+  const totalDuration = $derived.by(() => formatDuration(start, end));
 
   const { data: calendars } = getCalendars();
 
   const calendar = $derived.by(() => $calendars?.find((cal) => cal.id === event.calendarId));
   const calendarName = $derived(calendar?.name ?? "Unknown");
-  const calendarColor = $derived(getColorHexCodeFromId(calendar?.colorId || "-1"));
 
+  const calendarColor = $derived(getColorHexCodeFromId(calendar?.colorId || "-1"));
+  const eventColor = $derived(getColorHexCodeFromId(event.colorId));
   const isSameColor = $derived(eventColor === calendarColor);
 
   const updated = format(new Date(event.updatedAt), "PPp");
@@ -85,8 +66,11 @@
     <div class="flex-1">
       <div class="flex gap-2 items-center">
         <p class="font-medium">{formattedEventTime}</p>
+
         {#if event.allDay}
           <div class="badge badge-outline badge-xs">All Day</div>
+        {:else}
+          <div class="badge badge-outline badge-xs">{totalDuration}</div>
         {/if}
       </div>
 
