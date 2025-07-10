@@ -92,10 +92,12 @@
   $effect(() => {
     if (isCreateEvent && $calendars) {
       const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
-      if (primaryCalendar) {
-        $formData.calendarId = primaryCalendar.id;
-        $formData.colorId = primaryCalendar.colorId;
-        $formData.timezone = primaryCalendar.timezone;
+      const fallbackCalendar = primaryCalendar ?? $calendars[0];
+
+      if (fallbackCalendar) {
+        $formData.calendarId = fallbackCalendar.id;
+        $formData.colorId = fallbackCalendar.colorId;
+        $formData.timezone = fallbackCalendar.timezone;
       }
     }
   });
