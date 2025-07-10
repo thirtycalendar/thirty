@@ -16,7 +16,7 @@ import {
 import { eventSchema } from "$lib/shared/schemas/event";
 import type { Event, SuccessResponse, User } from "$lib/shared/types";
 
-import { errorResponse, requireParamId } from "../utils";
+import { errorResponse, requireParam } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
@@ -38,7 +38,7 @@ const app = new Hono<Context>()
   .get("/get/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "event");
+      if (!id) return requireParam(c, "event id");
 
       const event = await getEvent(id);
 
@@ -70,7 +70,7 @@ const app = new Hono<Context>()
   .put("/update/:id", zValidator("json", eventSchema), async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "event");
+      if (!id) return requireParam(c, "event id");
 
       const data = c.req.valid("json");
 
@@ -88,7 +88,7 @@ const app = new Hono<Context>()
   .delete("/delete/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "event");
+      if (!id) return requireParam(c, "event id");
 
       const event = await deleteEvent(id);
 

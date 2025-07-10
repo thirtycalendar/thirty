@@ -16,7 +16,7 @@ import {
 import { taskSchema } from "$lib/shared/schemas/task";
 import type { SuccessResponse, Task, User } from "$lib/shared/types";
 
-import { errorResponse, requireParamId } from "../utils";
+import { errorResponse, requireParam } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
@@ -38,7 +38,7 @@ const app = new Hono<Context>()
   .get("/get/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "task");
+      if (!id) return requireParam(c, "task id");
 
       const task = await getTask(id);
 
@@ -70,7 +70,7 @@ const app = new Hono<Context>()
   .put("/update/:id", zValidator("json", taskSchema), async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "task");
+      if (!id) return requireParam(c, "task id");
 
       const data = c.req.valid("json");
 
@@ -88,7 +88,7 @@ const app = new Hono<Context>()
   .delete("/delete/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "task");
+      if (!id) return requireParam(c, "task id");
 
       const task = await deleteTask(id);
 

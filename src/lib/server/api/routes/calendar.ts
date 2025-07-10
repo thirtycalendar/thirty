@@ -16,7 +16,7 @@ import {
 import { calendarSchema } from "$lib/shared/schemas/calendar";
 import type { Calendar, SuccessResponse, User } from "$lib/shared/types";
 
-import { errorResponse, requireParamId } from "../utils";
+import { errorResponse, requireParam } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
@@ -38,7 +38,7 @@ const app = new Hono<Context>()
   .get("/get/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "calendar");
+      if (!id) return requireParam(c, "calendar id");
 
       const calendar = await getCalendar(id);
 
@@ -70,7 +70,7 @@ const app = new Hono<Context>()
   .put("/update/:id", zValidator("json", calendarSchema), async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "calendar");
+      if (!id) return requireParam(c, "calendar id");
 
       const data = c.req.valid("json");
 
@@ -88,7 +88,7 @@ const app = new Hono<Context>()
   .delete("/delete/:id", async (c) => {
     try {
       const id = c.req.param("id");
-      if (!id) return requireParamId(c, "calendar");
+      if (!id) return requireParam(c, "calendar id");
 
       const calendar = await deleteCalendar(id);
 

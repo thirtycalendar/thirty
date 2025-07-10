@@ -15,6 +15,7 @@
 
 - Thu Jul 10, 2025
   - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
+  - (7.10.02) - Used requireParam function only.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.
@@ -174,7 +175,7 @@
   - (6.16.01) - Updated db schemas and service files.
   - (6.16.02) - Create initial calendar on sign-up and color util functions.
   - (6.16.03) - Added all routes, schemas, and finished all the service files.
-  - (6.16.04) - Used `requireParamId` and `errorResponse` util functions for api routes.
+  - (6.16.04) - Used `requireParam` and `errorResponse` util functions for api routes.
   - (6.16.05) - Updated kv cache times, added get nearest color hex code util function. Updated source not null bug in event table.
 - Sun Jun 15, 2025
   - (6.15.01) - Updated google access token.
