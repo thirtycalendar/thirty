@@ -5,7 +5,7 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
+  import { uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import type { Event } from "$lib/shared/types";
 

@@ -6,7 +6,7 @@
 
   import { toggleModal } from "$lib/client/components/utils";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
-  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
+  import { uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Calendar } from "$lib/shared/types";

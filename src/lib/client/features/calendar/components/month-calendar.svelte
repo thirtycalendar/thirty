@@ -15,7 +15,7 @@
   import { getEventDateObjects } from "$lib/client/features/event/utils";
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedCalendars } from "$lib/client/stores/unchecked";
+  import { uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";

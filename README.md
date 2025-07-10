@@ -28,6 +28,7 @@
   - (7.10.12) - Showed total duration in event details.
   - (7.10.13) - Disable creating a new event if there is no calendar created.
   - (7.10.14) - Updated unchecked store for better usage.
+  - (7.10.15) - For better naming convention.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-function createUncheckedStore(key: string): {
+function createLocalStorageStore(key: string): {
   store: Writable<string[]>;
   toggle: (id: string) => void;
   setChecked: (id: string, checked: boolean) => void;
@@ -37,7 +37,9 @@ function createUncheckedStore(key: string): {
   return { store, toggle, setChecked, isChecked };
 }
 
-export const uncheckedCalendars = createUncheckedStore("unchecked-calendars");
-export const uncheckedBirthdays = createUncheckedStore("unchecked-birthdays");
-export const uncheckedHolidays = createUncheckedStore("unchecked-holidays");
-export const uncheckedOthers = createUncheckedStore("unchecked-others");
+export const uncheckedCalendars = createLocalStorageStore("unchecked-calendars");
+export const uncheckedBirthdays = createLocalStorageStore("unchecked-birthdays");
+export const uncheckedHolidays = createLocalStorageStore("unchecked-holidays");
+export const uncheckedOthers = createLocalStorageStore("unchecked-others");
+
+export const collapsedLists = createLocalStorageStore("collapsed-lists");
