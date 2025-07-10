@@ -36,15 +36,10 @@
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
     isMutationPending: boolean;
-    isCreateEvent?: boolean;
+    isCreate?: boolean;
   }
 
-  let {
-    defaultValues,
-    onSubmit,
-    isMutationPending,
-    isCreateEvent = false
-  }: EventFormProps = $props();
+  let { defaultValues, onSubmit, isMutationPending, isCreate = false }: EventFormProps = $props();
 
   const { data: calendars } = getCalendars();
 
@@ -92,7 +87,7 @@
   });
 
   $effect(() => {
-    if (isCreateEvent && $calendars) {
+    if (isCreate && $calendars) {
       const primaryCalendar = $calendars.find((cal) => cal.isPrimary);
       const fallbackCalendar = primaryCalendar ?? $calendars[0];
 
@@ -303,7 +298,7 @@
     {/if}
 
     <div class="flex justify-end gap-2 pt-4">
-      {#if !isCreateEvent}
+      {#if !isCreate}
         <button
           type="button"
           class="btn btn-ghost font-bold"

@@ -11,8 +11,8 @@
 
   interface EventBlockProps {
     event: Event;
-    start: Date; // Event's start time for this specific block
-    end: Date; // Event's end time for this specific block
+    start: Date;
+    end: Date;
     offset?: number;
   }
   let { event, start, end, offset = 0 }: EventBlockProps = $props();
@@ -42,7 +42,7 @@
     background-color: ${eventColor}33;
     left: calc(${offset * 12}% + 4px); /* Stagger overlapping events */
     right: 4px;
-    z-index: ${100 + offset};
+    z-index: ${10 + offset};
   `}
   title={event.name}
   onclick={() => handleEventModal(event)}

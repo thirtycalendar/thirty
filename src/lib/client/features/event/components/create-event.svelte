@@ -66,4 +66,4 @@
   <p class="text-sm text-error my-1">{errorMessage}</p>
 {/if}
 
-<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreateEvent />
+<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreate />

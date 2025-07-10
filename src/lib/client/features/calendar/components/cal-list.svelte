@@ -69,7 +69,7 @@
         </div>
 
         <button
-          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${$collapsed.includes(title) && "rotate-180"}`}
+          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${!$collapsed.includes(title) && "rotate-180"}`}
           onclick={() => collapsedLists.toggle(title)}
         >
           <ChevronDown size="16" />

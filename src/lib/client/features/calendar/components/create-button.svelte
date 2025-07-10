@@ -5,7 +5,7 @@
   import { eventCreateModalId } from "$lib/client/stores/event";
 </script>
 
-<div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">
+<div class="z-1000 hidden sm:block dropdown dropdown-bottom dropdown-end">
   <button tabindex="0" class="btn btn-md bg-primary shadow-none">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>

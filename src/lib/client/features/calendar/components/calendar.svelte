@@ -4,6 +4,7 @@
 
   import { calView } from "$lib/client/stores/cal-view";
 
+  import { BdModal } from "../../birthday/components";
   import { EventModal } from "../../event/components";
   import { getEvents } from "../../event/query";
 
@@ -24,6 +25,7 @@
 
 <CalModal />
 <EventModal />
+<BdModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}

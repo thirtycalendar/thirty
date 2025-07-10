@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CalendarCheck2, CircleCheck, Globe, HistoryIcon, RefreshCcw } from "@lucide/svelte";
+  import { CircleCheck, Globe, HistoryIcon, Palette, RefreshCcw } from "@lucide/svelte";
 
   import { format } from "date-fns";
 
@@ -23,7 +23,7 @@
 
   <div class="flex items-start gap-3">
     <div class="pt-0.5 text-muted-foreground">
-      <CalendarCheck2 size="20" strokeWidth="2.5" />
+      <Palette size="20" strokeWidth="2.5" />
     </div>
     <div class="flex-1 flex items-center gap-2">
       <span class="capitalize">Color:</span>
