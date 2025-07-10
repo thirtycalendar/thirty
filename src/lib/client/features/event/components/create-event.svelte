@@ -12,7 +12,6 @@
   import { EventForm } from ".";
 
   let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
 
   const now = new Date();
 
@@ -62,8 +61,4 @@
   }
 </script>
 
-{#if isErrorMessage}
-  <p class="text-sm text-error my-1">{errorMessage}</p>
-{/if}
-
-<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreate />
+<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} bind:errorMessage isCreate />

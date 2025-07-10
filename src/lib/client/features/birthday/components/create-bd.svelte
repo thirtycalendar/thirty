@@ -13,7 +13,6 @@
   import { BdForm } from ".";
 
   let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
 
   const defaultValues: BirthdayFormType = {
     name: "",
@@ -52,8 +51,4 @@
   }
 </script>
 
-{#if isErrorMessage}
-  <p class="text-sm text-error my-1">{errorMessage}</p>
-{/if}
-
-<BdForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreate />
+<BdForm {defaultValues} {onSubmit} isMutationPending={$isPending} bind:errorMessage isCreate />

@@ -10,10 +10,11 @@
   import { birthdaySchema } from "$lib/shared/schemas/birthday";
   import type { BirthdayForm } from "$lib/shared/types";
 
-  interface BirthdayFormProps {
+  interface Props {
     defaultValues: BirthdayForm;
     onSubmit: (data: BirthdayForm) => Promise<void>;
     isMutationPending: boolean;
+    errorMessage: string;
     isCreate?: boolean;
   }
 
@@ -21,8 +22,9 @@
     defaultValues,
     onSubmit,
     isMutationPending,
+    errorMessage = $bindable(),
     isCreate = false
-  }: BirthdayFormProps = $props();
+  }: Props = $props();
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: birthdaySchema,
@@ -39,6 +41,10 @@
 </script>
 
 <form onsubmit={handleSubmit((data) => onSubmit(data as BirthdayForm))} class="space-y-2">
+  {#if errorMessage !== ""}
+    <p class="text-sm text-error mt-1">{errorMessage}</p>
+  {/if}
+
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
   <div class="flex items-start gap-3">

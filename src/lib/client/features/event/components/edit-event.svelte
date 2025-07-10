@@ -13,7 +13,6 @@
   }
 
   let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
 
   let { event }: EditEventProps = $props();
 
@@ -67,8 +66,4 @@
   }
 </script>
 
-{#if isErrorMessage}
-  <p class="text-sm text-error my-1">{errorMessage}</p>
-{/if}
-
-<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} />
+<EventForm {defaultValues} {onSubmit} isMutationPending={$isPending} bind:errorMessage />

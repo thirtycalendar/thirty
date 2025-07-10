@@ -9,14 +9,21 @@
 
   import { calendarSchema } from "../../../../shared/schemas/calendar";
 
-  interface CalFormProps {
+  interface Props {
     defaultValues: CalendarForm;
     onSubmit: (data: CalendarForm) => Promise<void>;
     isMutationPending: boolean;
+    errorMessage: string;
     isCreate?: boolean;
   }
 
-  let { defaultValues, onSubmit, isMutationPending, isCreate }: CalFormProps = $props();
+  let {
+    defaultValues,
+    onSubmit,
+    isMutationPending,
+    errorMessage = $bindable(),
+    isCreate
+  }: Props = $props();
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: calendarSchema,
@@ -25,6 +32,10 @@
 </script>
 
 <form onsubmit={handleSubmit((data) => onSubmit(data as CalendarForm))} class="space-y-2">
+  {#if errorMessage !== ""}
+    <p class="text-sm text-error mt-1">{errorMessage}</p>
+  {/if}
+
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
   <div class="flex items-start gap-3">

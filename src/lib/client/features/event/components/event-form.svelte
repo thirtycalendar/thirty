@@ -32,14 +32,21 @@
   import { CalendarChoiceField } from "../../calendar/components";
   import { getCalendars } from "../../calendar/query";
 
-  interface EventFormProps {
+  interface Props {
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
     isMutationPending: boolean;
+    errorMessage: string;
     isCreate?: boolean;
   }
 
-  let { defaultValues, onSubmit, isMutationPending, isCreate = false }: EventFormProps = $props();
+  let {
+    defaultValues,
+    onSubmit,
+    isMutationPending,
+    errorMessage = $bindable(),
+    isCreate = false
+  }: Props = $props();
 
   const { data: calendars } = getCalendars();
 
@@ -75,14 +82,14 @@
     $formData.startDate === $formData.endDate && $formData.startTime > $formData.endTime
   );
 
-  let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
+  let formErrorMessage = $state("");
+  let isErrorMessage = $derived(formErrorMessage !== "");
 
   $effect(() => {
     if ($formData.startDate > $formData.endDate && $formData.startDate !== $formData.endDate) {
-      errorMessage = "Start date must be before end date";
+      formErrorMessage = "Start date must be before end date";
     } else {
-      errorMessage = "";
+      formErrorMessage = "";
     }
   });
 
@@ -133,11 +140,15 @@
 {#if $calendars}
   <form onsubmit={handleSubmit((data) => onSubmit(data as EventForm))} class="space-y-2">
     {#if !hasCalendars}
-      <p class="text-sm text-error mt-2">You need to create a calendar before adding events.</p>
+      <p class="text-sm text-error mt-1">You need to create a calendar before adding events.</p>
+    {/if}
+
+    {#if errorMessage !== ""}
+      <p class="text-sm text-error mt-1">{errorMessage}</p>
     {/if}
 
     {#if isErrorMessage}
-      <p class="text-sm text-error mt-2">{errorMessage}</p>
+      <p class="text-sm text-error mt-1">{formErrorMessage}</p>
     {/if}
 
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />

@@ -15,7 +15,6 @@
   let { calendar }: EditCalendarProps = $props();
 
   let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
 
   const defaultValues: CalendarFormType = {
     externalId: calendar.externalId,
@@ -59,8 +58,4 @@
   }
 </script>
 
-{#if isErrorMessage}
-  <p class="text-sm text-error my-1">{errorMessage}</p>
-{/if}
-
-<CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} />
+<CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} bind:errorMessage />

@@ -11,8 +11,7 @@
 
   import { CalForm } from ".";
 
-  let errorMessage = $state("");
-  let isErrorMessage = $derived(errorMessage !== "");
+  let errorMessage = $state("Error Message");
 
   const defaultValues: CalendarFormType = {
     externalId: null,
@@ -53,8 +52,4 @@
   }
 </script>
 
-{#if isErrorMessage}
-  <p class="text-sm text-error my-1">{errorMessage}</p>
-{/if}
-
-<CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} isCreate />
+<CalForm {defaultValues} {onSubmit} isMutationPending={$isPending} bind:errorMessage isCreate />
