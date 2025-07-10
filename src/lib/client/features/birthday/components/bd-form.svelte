@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { AlignLeft, Palette } from "@lucide/svelte";
+  import { AlignLeft, CalendarCheck2 } from "@lucide/svelte";
 
-  import { ColorChoiceField, InputField, TextareaField } from "$lib/client/components";
+  import { ColorChoiceField, DateField, InputField, TextareaField } from "$lib/client/components";
   import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -29,11 +29,11 @@
     defaultValues
   });
 
-  let isDescription = $state(defaultValues.description ? true : false);
+  let isNote = $state(defaultValues.note ? true : false);
 
   onMount(() => {
     return () => {
-      isDescription = false;
+      isNote = false;
     };
   });
 </script>
@@ -43,11 +43,12 @@
 
   <div class="flex items-start gap-3">
     <div class="pt-1.5 text-muted-foreground">
-      <Palette size="20" strokeWidth="2.5" />
+      <CalendarCheck2 size="20" strokeWidth="2.5" />
     </div>
+    <div class="flex flex-1 gap-2">
+      <DateField name="dob" className="flex-[3]" {formData} {formErrors} />
 
-    <div class="flex gap-2 flex-1">
-      <ColorChoiceField name="colorId" {formData} {formErrors} isLeftDiv />
+      <ColorChoiceField name="colorId" className="flex-1" {formData} {formErrors} />
     </div>
   </div>
 
@@ -56,21 +57,15 @@
       <AlignLeft size="20" strokeWidth="2.5" />
     </div>
     <div class="flex-1">
-      {#if isDescription}
-        <TextareaField
-          name="description"
-          placeholder="Description"
-          {handleInput}
-          {formData}
-          {formErrors}
-        />
+      {#if isNote}
+        <TextareaField name="note" placeholder="Note" {handleInput} {formData} {formErrors} />
       {:else}
         <button
           type="button"
           class="p-1.5 w-full text-left text-sm"
-          onclick={() => (isDescription = true)}
+          onclick={() => (isNote = true)}
         >
-          Add <span class="hover:underline">description</span>
+          Add <span class="hover:underline">note</span>
         </button>
       {/if}
     </div>

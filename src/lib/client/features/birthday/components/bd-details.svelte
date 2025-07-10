@@ -31,10 +31,10 @@
     </div>
   </div>
 
-  {#if birthday.description}
+  {#if birthday.note}
     <div class="flex items-start gap-3">
       <AlignLeft size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
-      <div class="flex-1 whitespace-pre-wrap">{birthday.description}</div>
+      <div class="flex-1 whitespace-pre-wrap">{birthday.note}</div>
     </div>
   {/if}
 

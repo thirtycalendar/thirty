@@ -19,7 +19,7 @@ export const eventTable = pgTable("events", {
     .references(() => calendarTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  colorId: text("colorId").notNull(),
+  colorId: text("color_id").notNull(),
   description: text("description"),
   location: text("location"),
 

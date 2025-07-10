@@ -1,7 +1,7 @@
 - [x] - Make the event blocks better like Google Calendar events if they have shared time.
 - [x] - Clean, faster, and reduce redundancy codes in `week-calendar`, `day-calendar`, and `month-calendar` components.
 - [x] - Bug fix to scroll to current time in `week-calendar` and `day-calendar`.
-- [ ] - Reset the default values after creating and updating the form.
+- [x] - Reset the default values after creating and updating the form.
 - [x] - (important!) Bug fix for showing actual time for event block.
 - [x] - Make to show the event block at the top if it is all day.
 - [ ] - Show holiday calendars.
@@ -12,7 +12,8 @@
 - [ ] - Cache also country code alongside with country name for holiday
 - [x] - Remove requireParam, and keep only requireParam for Hono api response.
 - [x] - Sticky all day events at the top.
-- [ ] - Mark as unchecked calendars instead of checked calendars in local storage.
-- [ ] - Add error logic in choice fields
+- [x] - Mark as unchecked calendars instead of checked calendars in local storage.
+- [x] - Add error logic in choice fields
 - [x] - Show error text on forms.
-- [ ] - Show the total time in event details like 15 mins, 30 mins, 1 hr, 1 hr 15 mins, 1 Day 2 hrs 15 mins
+- [x] - Show the total time in event details like 15 mins, 30 mins, 1 hr, 1 hr 15 mins, 1 Day 2 hrs 15 mins
+- [ ] - show error text on details if deleting failed in cal, event, and bd.

@@ -16,7 +16,7 @@ export const taskTable = pgTable("tasks", {
 
   name: text("name").notNull(),
   notes: text("notes"),
-  colorId: text("colorId").notNull(),
+  colorId: text("color_id").notNull(),
   due: timestamp("due", { withTimezone: true, mode: "string" }).notNull(),
   status: text("status").$type<TaskStatus>().default("pending").notNull(),
 

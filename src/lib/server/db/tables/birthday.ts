@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { userTable } from "./auth";
 import { birthdayNotification, timestamps } from "./utils";
@@ -11,8 +11,10 @@ export const birthdayTable = pgTable("birthdays", {
     .references(() => userTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  colorId: text("colorId").notNull(),
-  description: text("description"),
+  dob: date("dob").notNull(),
+
+  colorId: text("color_id").notNull(),
+  note: text("note"),
 
   ...birthdayNotification,
 

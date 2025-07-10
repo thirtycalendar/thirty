@@ -15,7 +15,7 @@ export const calendarTable = pgTable("calendars", {
     .references(() => userTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  colorId: text("colorId").notNull(),
+  colorId: text("color_id").notNull(),
   timezone: text("timezone").default("UTC").notNull(),
   isPrimary: boolean("is_primary").default(false).notNull(),
   isSynced: boolean("is_synced").default(true).notNull(),

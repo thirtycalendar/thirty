@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { format } from "date-fns";
+
   import { toggleModal } from "$lib/client/components/utils";
   import { birthdayCreateModalId } from "$lib/client/stores/birthday";
   import { showToast } from "$lib/client/stores/toast";
@@ -15,8 +17,9 @@
 
   const defaultValues: BirthdayFormType = {
     name: "",
+    dob: format(new Date(), "yyyy-MM-dd"),
     colorId: getRandomColorId(),
-    description: null
+    note: null
   };
 
   let { mutate, isPending } = createMutation({

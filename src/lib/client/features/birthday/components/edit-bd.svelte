@@ -19,8 +19,9 @@
 
   const defaultValues: BirthdayFormType = {
     name: birthday.name,
+    dob: birthday.dob,
     colorId: birthday.colorId,
-    description: null
+    note: birthday.note
   };
 
   let { mutate, isPending } = createMutation({

@@ -1,0 +1,1 @@
+ALTER TABLE "birthdays" RENAME COLUMN "description" TO "notes";
