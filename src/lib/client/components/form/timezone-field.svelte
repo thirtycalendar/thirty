@@ -6,7 +6,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  interface TimezoneFieldProps {
+  interface Props {
     name: string;
     className?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,7 +15,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, formData, formErrors }: TimezoneFieldProps = $props();
+  let { name, className, formData, formErrors }: Props = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let dropdown = $state<HTMLDivElement | undefined>();

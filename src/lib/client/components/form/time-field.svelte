@@ -16,7 +16,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  interface TimeFieldProps {
+  interface Props {
     name: string;
     className?: string;
     isRightDiv?: boolean;
@@ -26,7 +26,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isRightDiv = false, formData, formErrors }: TimeFieldProps = $props();
+  let { name, className, isRightDiv = false, formData, formErrors }: Props = $props();
 
   const timeSlotInterval = 15;
 

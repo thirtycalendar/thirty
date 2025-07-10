@@ -29,11 +29,11 @@
 
   import { EventActionButtons } from ".";
 
-  interface EventDetailsProps {
+  interface Props {
     event: Event;
   }
 
-  let { event }: EventDetailsProps = $props();
+  let { event }: Props = $props();
 
   const { start, end } = $derived.by(() => getEventDateObjects(event));
 

@@ -2,11 +2,11 @@
   import { LogoutButton } from "$lib/client/features/auth/components";
   import { ToggleSidebarIcon } from "$lib/client/components";
 
-  interface NavbarProps {
+  interface Props {
     title: string;
   }
 
-  let { title }: NavbarProps = $props();
+  let { title }: Props = $props();
 </script>
 
 <div class="flex items-center justify-between">

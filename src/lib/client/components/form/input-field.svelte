@@ -3,7 +3,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  interface InputFieldProps {
+  interface Props {
     name: string;
     type?: string;
     legendText?: string;
@@ -31,7 +31,7 @@
     formData,
     formErrors,
     handleInput
-  }: InputFieldProps = $props();
+  }: Props = $props();
 
   let error = $derived($formErrors[name]);
   let value = $derived($formData[name] === "9999-12-31" ? "" : $formData[name]);

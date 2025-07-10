@@ -7,7 +7,7 @@
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
 
-  interface ChoiceFieldProps {
+  interface Props {
     name: string;
     choiceList: readonly string[];
     className?: string;
@@ -18,8 +18,7 @@
     handleInput: (event: Event) => void;
   }
 
-  let { name, choiceList, className, formData, formErrors, handleInput }: ChoiceFieldProps =
-    $props();
+  let { name, choiceList, className, formData, formErrors, handleInput }: Props = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();

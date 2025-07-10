@@ -8,11 +8,11 @@
 
   import { CalForm } from ".";
 
-  interface EditCalendarProps {
+  interface Props {
     calendar: Calendar;
   }
 
-  let { calendar }: EditCalendarProps = $props();
+  let { calendar }: Props = $props();
 
   let errorMessage = $state("");
 

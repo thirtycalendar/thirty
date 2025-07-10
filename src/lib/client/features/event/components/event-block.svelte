@@ -9,13 +9,14 @@
 
   import { getCalendars } from "../../calendar/query";
 
-  interface EventBlockProps {
+  interface Props {
     event: Event;
     start: Date;
     end: Date;
     offset?: number;
   }
-  let { event, start, end, offset = 0 }: EventBlockProps = $props();
+
+  let { event, start, end, offset = 0 }: Props = $props();
 
   const eventColor = $derived(getColorHexCodeFromId(event.colorId));
   const { data: calendars } = getCalendars();

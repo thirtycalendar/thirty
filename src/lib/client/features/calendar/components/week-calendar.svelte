@@ -14,11 +14,11 @@
 
   import { CurrentTimeIndicator } from ".";
 
-  interface WeekCalendarProps {
+  interface Props {
     events: Event[];
   }
 
-  let { events }: WeekCalendarProps = $props();
+  let { events }: Props = $props();
 
   const weekStart = $derived(startOfWeek($currentDate));
   const weekEnd = $derived(endOfDay(addDays(weekStart, 6)));

@@ -3,10 +3,11 @@
 
   import { differenceInMinutes, isToday, startOfDay } from "date-fns";
 
-  interface CurrentTimeIndicatorProps {
+  interface Props {
     day: Date;
   }
-  let { day }: CurrentTimeIndicatorProps = $props();
+
+  let { day }: Props = $props();
 
   let now = $state(new Date());
   let timer: ReturnType<typeof setInterval>;

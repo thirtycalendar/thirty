@@ -8,11 +8,11 @@
 
   import { BdActionButtons } from ".";
 
-  interface BirthdayDetailsProps {
+  interface Props {
     birthday: Birthday;
   }
 
-  let { birthday }: BirthdayDetailsProps = $props();
+  let { birthday }: Props = $props();
 
   const dob = $derived(format(birthday.dob, "EEE d, MMM yyyy"));
   const age = $derived.by(() => {

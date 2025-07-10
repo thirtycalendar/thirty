@@ -9,11 +9,11 @@
 
   import { CalActionButtons } from ".";
 
-  interface CalendarDetailsProps {
+  interface Props {
     calendar: Calendar;
   }
 
-  let { calendar }: CalendarDetailsProps = $props();
+  let { calendar }: Props = $props();
 
   const updated = format(new Date(calendar.updatedAt), "PPp");
 

@@ -7,7 +7,7 @@
 
   import type { Calendar } from "$lib/shared/types";
 
-  interface CalendarChoiceFieldProps {
+  interface Props {
     name: string;
     calendars: Calendar[];
     placeholder?: string;
@@ -18,7 +18,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, calendars, className, formData, formErrors }: CalendarChoiceFieldProps = $props();
+  let { name, calendars, className, formData, formErrors }: Props = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();

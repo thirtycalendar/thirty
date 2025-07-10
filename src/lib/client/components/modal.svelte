@@ -3,14 +3,14 @@
 
   import { toggleModal } from "./utils";
 
-  interface ModalProps {
+  interface Props {
     modalId: string | number;
     children: Snippet;
     title?: string;
     onModalClose?: () => void;
   }
 
-  let { modalId, children, title, onModalClose }: ModalProps = $props();
+  let { modalId, children, title, onModalClose }: Props = $props();
 
   function handleModalClose() {
     toggleModal(modalId);

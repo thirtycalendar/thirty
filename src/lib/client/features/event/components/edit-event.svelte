@@ -8,13 +8,13 @@
 
   import { EventForm } from ".";
 
-  interface EditEventProps {
+  interface Props {
     event: Event;
   }
 
   let errorMessage = $state("");
 
-  let { event }: EditEventProps = $props();
+  let { event }: Props = $props();
 
   const defaultValues: EventFormType = {
     calendarId: event.calendarId,

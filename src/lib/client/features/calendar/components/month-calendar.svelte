@@ -20,10 +20,11 @@
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";
 
-  interface MonthCalendarProps {
+  interface Props {
     events: Event[];
   }
-  let { events }: MonthCalendarProps = $props();
+
+  let { events }: Props = $props();
 
   const MAX_EVENTS_PER_DAY = 3;
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

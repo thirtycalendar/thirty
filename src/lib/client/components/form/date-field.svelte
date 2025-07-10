@@ -21,7 +21,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  interface DateFieldProps {
+  interface Props {
     name: string;
     className?: string;
     isDisablePast?: boolean;
@@ -31,7 +31,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isDisablePast = false, formData, formErrors }: DateFieldProps = $props();
+  let { name, className, isDisablePast = false, formData, formErrors }: Props = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let calendarDropdown = $state<HTMLDivElement | undefined>();

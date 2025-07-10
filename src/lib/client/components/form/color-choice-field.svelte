@@ -8,7 +8,7 @@
   import { colors } from "$lib/shared/utils/colors";
   import type { Color } from "$lib/shared/types";
 
-  interface ColorChoiceFieldProps {
+  interface Props {
     name: string;
     className?: string;
     isLeftDiv?: boolean;
@@ -18,7 +18,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isLeftDiv, formData, formErrors }: ColorChoiceFieldProps = $props();
+  let { name, className, isLeftDiv, formData, formErrors }: Props = $props();
 
   let colorId = $derived($formData[name]);
   let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));

@@ -14,11 +14,11 @@
 
   import { CurrentTimeIndicator } from ".";
 
-  interface DayCalendarProps {
+  interface Props {
     events: Event[];
   }
 
-  let { events }: DayCalendarProps = $props();
+  let { events }: Props = $props();
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 

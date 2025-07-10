@@ -4,14 +4,14 @@
   import { sidebars } from "$lib/client/stores/sidebar";
   import { cn } from "$lib/client/utils/cn";
 
-  interface SidebarProps {
+  interface Props {
     sidebarId: string;
     mainSidebar: boolean;
     className?: string;
     children: Snippet;
   }
 
-  let { sidebarId, mainSidebar, className, children }: SidebarProps = $props();
+  let { sidebarId, mainSidebar, className, children }: Props = $props();
   let isOpen = $derived($sidebars[sidebarId]);
 </script>
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-  interface IconProps {
+  interface Props {
     size?: number;
   }
 
-  let { size = 20 }: IconProps = $props();
+  let { size = 20 }: Props = $props();
 </script>
 
 <svg

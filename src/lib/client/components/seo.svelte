@@ -1,5 +1,5 @@
 <script lang="ts">
-  interface SeoProps {
+  interface Props {
     seo: {
       title: string;
       description: string;
@@ -9,7 +9,7 @@
     };
   }
 
-  let { seo }: SeoProps = $props();
+  let { seo }: Props = $props();
   let { title, description, url, image, twitterHandle } = seo;
 
   // let structuredData = JSON.stringify({
