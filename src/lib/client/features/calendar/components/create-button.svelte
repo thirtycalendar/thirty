@@ -3,7 +3,6 @@
 
   import { toggleModal } from "$lib/client/components/utils";
   import { eventCreateModalId } from "$lib/client/stores/event";
-  import { taskCreateModalId } from "$lib/client/stores/task";
 </script>
 
 <div class="z-100 hidden sm:block dropdown dropdown-bottom dropdown-end">
@@ -23,7 +22,7 @@
         Event
       </button>
     </li>
-    <li>
+    <!-- <li>
       <button
         onclick={() => {
           toggleModal(taskCreateModalId);
@@ -32,7 +31,7 @@
       >
         Task
       </button>
-    </li>
+    </li> -->
   </ul>
 </div>
 
@@ -53,7 +52,7 @@
         Event
       </button>
     </li>
-    <li>
+    <!-- <li>
       <button
         onclick={() => {
           toggleModal(taskCreateModalId);
@@ -62,6 +61,6 @@
       >
         Task
       </button>
-    </li>
+    </li> -->
   </ul>
 </div>

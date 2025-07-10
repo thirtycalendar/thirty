@@ -61,7 +61,7 @@
   let now = new Date();
 
   function getLineOffset(date = now) {
-    const hourOffset = 1;
+    const hourOffset = 2;
     const minutes = (date.getHours() - hourOffset) * 60 + date.getMinutes();
     const clampedMinutes = Math.max(0, minutes);
     return (clampedMinutes / 60) * 60;
