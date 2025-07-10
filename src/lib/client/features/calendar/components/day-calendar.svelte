@@ -95,7 +95,7 @@
     <div class="grid grid-cols-[50px_1fr] relative">
       {#each hours as hour (hour)}
         <div
-          class="col-start-1 h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-b border-base-200"
+          class="col-start-1 h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
         >
           {format(setHours(new Date(), hour), "h a")}
         </div>

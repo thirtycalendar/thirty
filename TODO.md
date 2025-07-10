@@ -13,3 +13,5 @@
 - [x] - Remove requireParam, and keep only requireParam for Hono api response.
 - [x] - Sticky all day events at the top.
 - [ ] - Mark as unchecked calendars instead of checked calendars in local storage.
+- [ ] - Add error logic in choice fields
+- [ ] - Show error text on forms.

@@ -6,6 +6,8 @@ type CreateFormParams<T> = {
   schema: ZodSchema<T>;
   defaultValues: T;
   disabledFields?: (keyof T)[];
+  resetOnSuccess?: boolean;
+  resetDisabledFields?: (keyof T)[];
 };
 
 type CreateFormReturn<T> = {
@@ -20,7 +22,9 @@ type CreateFormReturn<T> = {
 export const createForm = <T>({
   schema,
   defaultValues,
-  disabledFields: initialDisabledFields = []
+  disabledFields: initialDisabledFields = [],
+  resetOnSuccess = true,
+  resetDisabledFields = []
 }: CreateFormParams<T>): CreateFormReturn<T> => {
   const formData = writable<T>({ ...defaultValues });
   const formErrors = writable<Partial<Record<keyof T, string>>>({});
@@ -28,6 +32,7 @@ export const createForm = <T>({
   let submitted = false;
 
   const disabledFields = writable<Set<keyof T>>(new Set(initialDisabledFields));
+  const resetDisabledSet = new Set<keyof T>(resetDisabledFields);
 
   function setDisabledFields(fields: (keyof T)[]) {
     disabledFields.set(new Set(fields));
@@ -118,6 +123,17 @@ export const createForm = <T>({
         isSubmitting.set(true);
         try {
           await callback(data);
+          if (resetOnSuccess) {
+            formData.update((current) => {
+              const updated = { ...current };
+              for (const key in defaultValues) {
+                if (!resetDisabledSet.has(key as keyof T)) {
+                  updated[key as keyof T] = defaultValues[key as keyof T];
+                }
+              }
+              return updated;
+            });
+          }
         } catch (e) {
           console.error("Error during form submission callback:", e);
         } finally {

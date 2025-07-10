@@ -49,7 +49,8 @@
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
     schema: eventSchema,
     defaultValues,
-    disabledFields: ["timezone"]
+    disabledFields: ["timezone"],
+    resetDisabledFields: ["calendarId", "colorId", "timezone"]
   });
 
   let previousCalendarId = $state("");
