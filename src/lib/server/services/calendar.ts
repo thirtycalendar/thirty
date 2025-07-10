@@ -43,6 +43,8 @@ export async function createCalendar(
   calendarForm: CalendarForm
 ): Promise<Calendar> {
   if (calendarForm.isPrimary) {
+    await clearCalendars(userId);
+
     await db
       .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })
@@ -82,6 +84,8 @@ export async function updateCalendar(
   if (!existing) throw new Error("Calendar not found");
 
   if (updates.isPrimary) {
+    await clearCalendars(existing.userId);
+
     await db
       .update(calendarTable)
       .set({ isPrimary: false, updatedAt: sql`now()` })

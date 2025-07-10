@@ -21,6 +21,7 @@
   - (7.10.05) - Set the same day logic in event form.
   - (7.10.06) - Event and cal error message on form submit.
   - (7.10.07) - Bug fixed for displaying the dates correct way in event details.
+  - (7.10.08) - Clear the caches if creating or updating calendar is primary.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.
