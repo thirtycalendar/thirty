@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
+  clearEvents,
   createEvent,
   deleteEvent,
   getAllEvents,
@@ -95,6 +96,21 @@ const app = new Hono<Context>()
         success: true,
         message: `${event.name} deleted`,
         data: event
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/clear", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      await clearEvents(user.id);
+
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Successfully cleared all the events from cache",
+        data: null
       });
     } catch (err: unknown) {
       return errorResponse(c, err);

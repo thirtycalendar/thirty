@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Thu Jul 10, 2025
+  - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
 - Wed Jul 9, 2025
   - (7.9.01) - Committed for safety.
   - (7.9.02) - Fixed timezone wrong displaying time.

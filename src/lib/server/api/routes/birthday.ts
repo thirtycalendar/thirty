@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
+  clearBirthdays,
   createBirthday,
   deleteBirthday,
   getAllBirthdays,
@@ -95,6 +96,21 @@ const app = new Hono<Context>()
         success: true,
         message: `${birthday.name} deleted`,
         data: birthday
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/clear", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      await clearBirthdays(user.id);
+
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Successfully cleared all the birthdays from cache",
+        data: null
       });
     } catch (err: unknown) {
       return errorResponse(c, err);

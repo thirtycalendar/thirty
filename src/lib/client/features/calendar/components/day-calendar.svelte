@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import { endOfDay, format, isToday, setHours, startOfDay } from "date-fns";
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
@@ -42,6 +44,22 @@
   });
 
   let scrollContainer: HTMLDivElement;
+  let now = new Date();
+
+  function getLineOffset(date = now) {
+    const hourOffset = 1;
+    const minutes = (date.getHours() - hourOffset) * 60 + date.getMinutes();
+    const clampedMinutes = Math.max(0, minutes);
+    return (clampedMinutes / 60) * 60;
+  }
+
+  onMount(() => {
+    requestAnimationFrame(() => {
+      if (scrollContainer) {
+        scrollContainer.scrollTop = getLineOffset();
+      }
+    });
+  });
 </script>
 
 <div class="flex flex-col h-full px-2">

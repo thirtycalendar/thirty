@@ -95,7 +95,7 @@ const app = new Hono<Context>()
 
       return c.json<SuccessResponse<null>>({
         success: true,
-        message: "Successfully cleared all the holidays",
+        message: "Successfully cleared all the holidays from cache",
         data: null
       });
     } catch (err: unknown) {

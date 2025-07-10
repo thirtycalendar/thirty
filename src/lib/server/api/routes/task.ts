@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
+  clearTasks,
   createTask,
   deleteTask,
   getAllTasks,
@@ -95,6 +96,21 @@ const app = new Hono<Context>()
         success: true,
         message: `${task.name} deleted`,
         data: task
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/clear", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      await clearTasks(user.id);
+
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Successfully cleared all the tasks from cache",
+        data: null
       });
     } catch (err: unknown) {
       return errorResponse(c, err);

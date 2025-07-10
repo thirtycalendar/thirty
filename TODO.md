@@ -1,13 +1,13 @@
 - [x] - Make the event blocks better like Google Calendar events if they have shared time.
 - [x] - Clean, faster, and reduce redundancy codes in `week-calendar`, `day-calendar`, and `month-calendar` components.
-- [ ] - Bug fix to scroll to current time in `week-calendar` and `day-calendar`.
+- [x] - Bug fix to scroll to current time in `week-calendar` and `day-calendar`.
 - [ ] - Reset the default values after creating and updating the form.
-- [ ] - (important!) Bug fix for showing actual time for event block.
-- [ ] - Make to show the event block at the top if it is all day.
+- [x] - (important!) Bug fix for showing actual time for event block.
+- [x] - Make to show the event block at the top if it is all day.
 - [ ] - Show holiday calendars.
 - [ ] - (test) Try to sync google calendars without giving access.
 - [x] - Fix init calendar on auth index file.
-- [ ] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
+- [x] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
 - [ ] - Sync birthdays from Google calendars to db.
 - [ ] - Cache also country code alongside with country name for holiday
 - [ ] - Remove requireParamId, and keep only requireParam for Hono api response.
