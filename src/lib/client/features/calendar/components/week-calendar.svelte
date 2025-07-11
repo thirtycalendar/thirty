@@ -7,7 +7,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { uncheckedCalendars } from "$lib/client/stores/local-storage";
 
-  import type { Event } from "$lib/shared/types";
+  import type { Birthday, Event } from "$lib/shared/types";
 
   import { AllDayEventBlock, EventBlock } from "../../event/components";
   import { calculateAllDayLayout, getVisibleEvents } from "../utils";
@@ -16,9 +16,10 @@
 
   interface Props {
     events: Event[];
+    birthdays: Birthday[];
   }
 
-  let { events }: Props = $props();
+  let { events, birthdays }: Props = $props();
 
   const weekStart = $derived(startOfWeek($currentDate));
   const weekEnd = $derived(endOfDay(addDays(weekStart, 6)));

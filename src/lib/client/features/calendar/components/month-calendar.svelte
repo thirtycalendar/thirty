@@ -18,13 +18,14 @@
   import { uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Event } from "$lib/shared/types";
+  import type { Birthday, Event } from "$lib/shared/types";
 
   interface Props {
     events: Event[];
+    birthdays: Birthday[];
   }
 
-  let { events }: Props = $props();
+  let { events, birthdays }: Props = $props();
 
   const MAX_EVENTS_PER_DAY = 3;
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
