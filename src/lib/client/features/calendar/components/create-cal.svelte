@@ -11,7 +11,7 @@
 
   import { CalForm } from ".";
 
-  let errorMessage = $state("Error Message");
+  let errorMessage = $state("");
 
   const defaultValues: CalendarFormType = {
     externalId: null,

@@ -21,6 +21,7 @@
   - (7.11.05) - Show only unchecked birthdays.
   - (7.11.06) - Improved code performance for rendering displays.
   - (7.11.07) - Updated color choice field color col grid to 6.
+  - (7.11.08) - Removed error message on cal create.
 - Thu Jul 10, 2025
   - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
   - (7.10.02) - Used requireParam function only.
