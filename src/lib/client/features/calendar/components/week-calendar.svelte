@@ -5,12 +5,12 @@
 
   import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedCalendars } from "$lib/client/stores/local-storage";
+  import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import type { Birthday, Event } from "$lib/shared/types";
 
   import { BdBlock } from "../../birthday/components";
-  import { getBirthdaysForDay } from "../../birthday/utils";
+  import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
   import { calculateAllDayLayout, getVisibleEvents } from "../utils";
 
@@ -46,6 +46,9 @@
     }
     return chunks;
   }
+
+  const { store: uncheckedBds } = uncheckedBirthdays;
+  const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
 
   const { store: unchecked } = uncheckedCalendars;
   const { allDayEvents, timedEvents } = $derived.by(() => {
@@ -97,12 +100,12 @@
     {/each}
   </div>
 
-  {#if allDayLayout.length > 0 || birthdays.length > 0}
+  {#if allDayLayout.length > 0 || visibleBirthdays.length > 0}
     <div class="mb-1 grid grid-cols-[50px_repeat(7,1fr)] bg-base-200 border-b border-base-200">
       <div></div>
       {#each days as day, i (i + day.toISOString())}
         <div class="relative border-r border-base-200 py-1 px-1 flex flex-col gap-1 min-w-0">
-          {#each getBirthdaysForDay(birthdays, day) as bd (bd.id)}
+          {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
             <BdBlock birthday={bd} />
           {/each}
 

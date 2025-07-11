@@ -6,7 +6,11 @@
   import { toggleModal } from "$lib/client/components/utils";
   import { birthdayCreateModalId, handleBirthdayModal } from "$lib/client/stores/birthday";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
-  import { collapsedLists, uncheckedCalendars } from "$lib/client/stores/local-storage";
+  import {
+    collapsedLists,
+    uncheckedBirthdays,
+    uncheckedCalendars
+  } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Calendar } from "$lib/shared/types";
@@ -30,6 +34,8 @@
   {@render ListSection<Calendar>({
     title: "My Calendars",
     items: $calendars,
+    onChecked: (item) => uncheckedCalendars.isChecked(item.id),
+    onChange: (item) => uncheckedCalendars.toggle(item.id),
     onAdd: () => toggleModal(calendarCreateModalId),
     onSettings: handleCalModal
   })}
@@ -39,6 +45,8 @@
   {@render ListSection<Birthday>({
     title: "Birthdays",
     items: $birthdays,
+    onChecked: (item) => uncheckedBirthdays.isChecked(item.id),
+    onChange: (item) => uncheckedBirthdays.toggle(item.id),
     onAdd: () => toggleModal(birthdayCreateModalId),
     onSettings: handleBirthdayModal
   })}
@@ -47,12 +55,16 @@
 {#snippet ListSection<T extends Calendar | Birthday>({
   title,
   items,
+  onChecked,
+  onChange,
   onAdd,
   onSettings
 }: {
   title: string;
   items: T[];
-  onAdd?: () => void;
+  onChecked: (item: T) => boolean;
+  onChange: (item: T) => void;
+  onAdd: () => void;
   onSettings?: (item: T) => void;
 })}
   <div class="my-2">
@@ -88,8 +100,8 @@
                 <input
                   type="checkbox"
                   class="checkbox checkbox-xs"
-                  checked={uncheckedCalendars.isChecked(item.id)}
-                  onchange={() => uncheckedCalendars.toggle(item.id)}
+                  checked={onChecked(item)}
+                  onchange={() => onChange(item)}
                 />
 
                 <span

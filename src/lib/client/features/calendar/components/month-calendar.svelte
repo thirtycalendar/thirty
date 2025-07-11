@@ -17,12 +17,12 @@
   import { getEventDateObjects } from "$lib/client/features/event/utils";
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedCalendars } from "$lib/client/stores/local-storage";
+  import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Event } from "$lib/shared/types";
 
-  import { getBirthdaysForDay } from "../../birthday/utils";
+  import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
 
   interface Props {
     events: Event[];
@@ -43,6 +43,9 @@
     const days = Array.from({ length: weekCount * 7 }, (_, i) => addDays(viewStart, i));
     return { days, viewStart, viewEnd, weekCount };
   });
+
+  const { store: uncheckedBds } = uncheckedBirthdays;
+  const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
 
   const { store: unchecked } = uncheckedCalendars;
   const eventsByDay = $derived.by(() => {
@@ -112,7 +115,7 @@
           </span>
         </div>
         <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
-          {#each getBirthdaysForDay(birthdays, day) as bd (bd.id)}
+          {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
             {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
             {@const name = hasBirthdaySuffix ? bd.name : `${bd.name}'s birthday`}
             {@const color = getColorHexCodeFromId(bd.colorId)}
