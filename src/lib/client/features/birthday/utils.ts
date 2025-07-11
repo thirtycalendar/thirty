@@ -2,19 +2,14 @@ import { format, parseISO } from "date-fns";
 
 import type { Birthday } from "$lib/shared/types";
 
-export function getBirthdaysForDay(birthdays: Birthday[], day: Date) {
+export function getBirthdaysForDay(birthdays: Birthday[] | null, day: Date) {
+  if (!birthdays) return [];
+
   return birthdays.filter((bd) => format(parseISO(bd.dob), "MM-dd") === format(day, "MM-dd"));
 }
 
-export function getVisibleBirthdays(birthdays: Birthday[], unchecked: string[]) {
-  const visibleBirthdays: Birthday[] = [];
+export function getVisibleBirthdays(birthdays: Birthday[] | null, unchecked: string[]) {
+  if (!birthdays) return [];
 
-  for (const birthday of birthdays) {
-    const isNotVisible = unchecked.includes(birthday.id);
-    if (isNotVisible) continue;
-
-    visibleBirthdays.push(birthday);
-  }
-
-  return visibleBirthdays;
+  return birthdays.filter((bd) => !unchecked.includes(bd.id));
 }

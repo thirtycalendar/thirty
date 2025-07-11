@@ -19,6 +19,7 @@
   - (7.11.03) - Showed birthday in week calendar and day calendar.
   - (7.11.04) - Showed birthday in month calendar.
   - (7.11.05) - Show only unchecked birthdays.
+  - (7.11.06) - Improved code performance for rendering displays.
 - Thu Jul 10, 2025
   - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
   - (7.10.02) - Used requireParam function only.

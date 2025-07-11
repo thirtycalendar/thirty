@@ -30,7 +30,7 @@
 <BdModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
-  {#if $events && $birthdays}
+  {#if $events}
     {#if $calView === "year"}
       <YearCalendar />
     {:else if $calView === "month"}

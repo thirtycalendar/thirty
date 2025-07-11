@@ -26,7 +26,7 @@
 
   interface Props {
     events: Event[];
-    birthdays: Birthday[];
+    birthdays: Birthday[] | null;
   }
 
   let { events, birthdays }: Props = $props();
