@@ -143,11 +143,11 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} mt-1 z-50 w-35 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3`}
+      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} mt-1 z-50 w-55 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3`}
       role="listbox"
       tabindex="-1"
     >
-      <div class="grid grid-cols-4 gap-2 auto-rows-fr">
+      <div class="grid grid-cols-6 gap-2 auto-rows-fr">
         {#each colors as choice, index (choice.id)}
           <button
             type="button"
