@@ -48,7 +48,7 @@
         <div class="grid grid-cols-7 text-center gap-1 items-center justify-center">
           {#each getDays(month) as day (day)}
             <button
-              class={`p-[2px] rounded-md ${
+              class={`cursor-pointer p-[2px] rounded-md ${
                 isToday(day) ? "bg-base-300 font-semibold" : ""
               } ${!isSameMonth(day, month) ? "text-base-content/30" : ""}`}
               onclick={() => {

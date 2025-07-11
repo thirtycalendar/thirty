@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Cake } from "@lucide/svelte";
+
   import {
     addDays,
     differenceInCalendarWeeks,
@@ -19,6 +21,8 @@
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Event } from "$lib/shared/types";
+
+  import { getBirthdaysForDay } from "../../birthday/utils";
 
   interface Props {
     events: Event[];
@@ -108,6 +112,23 @@
           </span>
         </div>
         <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
+          {#each getBirthdaysForDay(birthdays, day) as bd (bd.id)}
+            {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
+            {@const name = hasBirthdaySuffix ? bd.name : `${bd.name}'s birthday`}
+            {@const color = getColorHexCodeFromId(bd.colorId)}
+
+            <div
+              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              style={`background-color: ${color}22; color: ${color};`}
+              title={`${name}'s birthday`}
+            >
+              <div class="flex items-center gap-1">
+                <Cake size="12" strokeWidth="2.5" />
+                <p class="truncate">{name}</p>
+              </div>
+            </div>
+          {/each}
+
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
             {@const color = getColorHexCodeFromId(event.colorId)}
             <div
