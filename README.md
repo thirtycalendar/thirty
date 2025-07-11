@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Fri Jul 11, 2025
+  - (7.11.01) - Fixed some bugs.
 - Thu Jul 10, 2025
   - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
   - (7.10.02) - Used requireParam function only.

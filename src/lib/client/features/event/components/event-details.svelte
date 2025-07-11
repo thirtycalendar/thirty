@@ -57,7 +57,9 @@
   const isSameColor = $derived(eventColor === calendarColor);
 
   const updated = format(new Date(event.updatedAt), "PPp");
-  let errorMessage = $derived("");
+
+  let previousEventId = $derived(event.id);
+  let errorMessage = $derived(previousEventId !== event.id ? "" : "");
 </script>
 
 <div class="space-y-3">

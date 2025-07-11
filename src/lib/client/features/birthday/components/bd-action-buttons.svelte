@@ -43,7 +43,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["event-list"]
+    queryKeys: ["bd-list"]
   });
 
   function handleDelete() {

@@ -21,7 +21,9 @@
   });
 
   const updated = format(new Date(birthday.updatedAt), "PPp");
-  let errorMessage = $derived("");
+
+  let previousBirthdayId = $derived(birthday.id);
+  let errorMessage = $derived(previousBirthdayId !== birthday.id ? "" : "");
 </script>
 
 <div class="space-y-3">
