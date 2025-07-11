@@ -9,6 +9,8 @@
 
   import type { Birthday, Event } from "$lib/shared/types";
 
+  import { BdBlock } from "../../birthday/components";
+  import { getBirthdaysForDay } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
   import { calculateAllDayLayout, getVisibleEvents } from "../utils";
 
@@ -95,11 +97,15 @@
     {/each}
   </div>
 
-  {#if allDayLayout.length > 0}
+  {#if allDayLayout.length > 0 || birthdays.length > 0}
     <div class="mb-1 grid grid-cols-[50px_repeat(7,1fr)] bg-base-200 border-b border-base-200">
       <div></div>
       {#each days as day, i (i + day.toISOString())}
         <div class="relative border-r border-base-200 py-1 px-1 flex flex-col gap-1 min-w-0">
+          {#each getBirthdaysForDay(birthdays, day) as bd (bd.id)}
+            <BdBlock birthday={bd} />
+          {/each}
+
           {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
             <AllDayEventBlock {event} />
           {/each}
