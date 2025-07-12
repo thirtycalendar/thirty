@@ -4,13 +4,14 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
 import { getRandomColorId } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
-import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
+import type { CalendarForm, GoogleSessionKV, UserHolidayForm } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
-import { getTimezoneIdFromIP } from "../libs/ipwhois/utils";
+import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { createCalendar } from "../services/calendar";
+import { addUserHolidayCountry } from "../services/holiday";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -51,10 +52,9 @@ export const auth = betterAuth({
         after: async (user) => {
           const { id, name } = user;
 
-          const res = await fetch("https://ipwho.is/");
-          const data: unknown = await res.json();
+          await cacheIPLocation(id);
 
-          const timezone = getTimezoneIdFromIP(data);
+          const { timezone, country, countryCode } = await getIPLocation(id);
 
           const calendar: CalendarForm = {
             externalId: null,
@@ -66,6 +66,9 @@ export const auth = betterAuth({
           };
 
           await createCalendar(id, calendar);
+
+          const holiday: UserHolidayForm = { country, countryCode };
+          await addUserHolidayCountry(id, holiday);
         }
       }
     }
