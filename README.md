@@ -20,6 +20,7 @@
   - (7.12.04) - Better type naming.
   - (7.12.05) - Cached batch 0 holidays to KV.
   - (7.12.06) - Updated related holiday backend codes for better usages. Fixed a lot of bugs.
+  - (7.12.07) - Improved code redundancy. Created modal store.
 - Fri Jul 11, 2025
   - (7.11.01) - Fixed some bugs.
   - (7.11.02) - Added birthdays to the calendar props.
