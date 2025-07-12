@@ -5,15 +5,22 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
-  addHoliday,
-  clearHolidays,
-  getHolidays,
-  removeHoliday
+  addUserHolidayCountry,
+  clearUserHolidayCountries,
+  getUserHolidayCountries,
+  removeUserHolidayCountry
 } from "$lib/server/services/holiday";
+import { getHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { holidaySchema } from "$lib/shared/schemas/holiday";
-import type { Holiday, HolidayForm, SuccessResponse, User } from "$lib/shared/types";
+import type {
+  HolidayCountry,
+  SuccessResponse,
+  User,
+  UserHoliday,
+  UserHolidayForm
+} from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
@@ -25,16 +32,30 @@ const app = new Hono<Context>()
 
       const ipLocation = await getIPLocation(user.id);
 
-      const data: HolidayForm = {
-        country: ipLocation.country
+      const data: UserHolidayForm = {
+        country: ipLocation.country,
+        countryCode: ipLocation.countryCode
       };
 
-      const holiday = await addHoliday(user.id, data);
+      const holiday = await addUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<Holiday>>({
+      return c.json<SuccessResponse<UserHoliday>>({
         success: true,
         message: `${holiday.country} added`,
         data: holiday
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .get("/list", async (c) => {
+    try {
+      const holidays = await getHolidayCountries();
+
+      return c.json<SuccessResponse<HolidayCountry[]>>({
+        success: true,
+        message: "Success",
+        data: holidays
       });
     } catch (err: unknown) {
       return errorResponse(c, err);
@@ -44,9 +65,9 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const holidays = await getHolidays(user.id);
+      const holidays = await getUserHolidayCountries(user.id);
 
-      return c.json<SuccessResponse<Holiday[]>>({
+      return c.json<SuccessResponse<UserHoliday[]>>({
         success: true,
         message: "Success",
         data: holidays
@@ -60,9 +81,9 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const holiday = await addHoliday(user.id, data);
+      const holiday = await addUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<Holiday>>({
+      return c.json<SuccessResponse<UserHoliday>>({
         success: true,
         message: `${holiday.country} added`,
         data: holiday
@@ -76,9 +97,9 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const removed = await removeHoliday(user.id, data);
+      const removed = await removeUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<Holiday>>({
+      return c.json<SuccessResponse<UserHoliday>>({
         success: true,
         message: `${removed.country} removed`,
         data: removed
@@ -91,7 +112,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await clearHolidays(user.id);
+      await clearUserHolidayCountries(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

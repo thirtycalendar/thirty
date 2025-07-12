@@ -18,14 +18,22 @@ export function getCountryNameFromIP(data: unknown): string {
   return "Unknown";
 }
 
+export function getCountryCodeFromIP(data: unknown): string {
+  if (isObject(data) && typeof data.country_code === "string") {
+    return data.country_code;
+  }
+  return "Unknown";
+}
+
 export async function cacheIPLocation(userId: string): Promise<IP_LOCATION_KV> {
   const res = await fetch("https://ipwho.is/");
   const data: unknown = await res.json();
 
   const timezone = getTimezoneIdFromIP(data);
   const country = getCountryNameFromIP(data);
+  const countryCode = getCountryCodeFromIP(data);
 
-  const value = { timezone, country };
+  const value = { timezone, country, countryCode };
 
   await kv.set(KV_IP_LOCATION(userId), value, { ex: 43200 });
 

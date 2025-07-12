@@ -47,8 +47,21 @@ export type TaskForm = z.infer<typeof taskSchema>;
 export type Birthday = InferSelectModel<typeof birthdayTable>;
 export type BirthdayForm = z.infer<typeof birthdaySchema>;
 
-export type Holiday = z.infer<typeof holidaySchema>;
-export type HolidayForm = z.infer<typeof holidaySchema>;
+export type UserHoliday = z.infer<typeof holidaySchema>;
+export type UserHolidayForm = z.infer<typeof holidaySchema>;
+
+export type Holiday = {
+  name: string;
+  description: string;
+  country: string;
+  countryCode: string;
+  date: string;
+};
+
+export type HolidayCountry = {
+  code: string;
+  name: string;
+};
 
 export type Source = (typeof Const.Source)[number];
 
@@ -64,6 +77,7 @@ export type NotifyInDay = (typeof Const.NotifyInDay)[number];
 
 export type IP_LOCATION_KV = {
   country: string;
+  countryCode: string;
   timezone: string;
 };
 

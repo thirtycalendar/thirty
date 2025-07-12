@@ -6,7 +6,11 @@ export const KV_TASKS = (userId: string) => `tasks:${userId}`;
 
 export const KV_BIRTHDAYS = (userId: string) => `birthdays:${userId}`;
 
-export const KV_HOLIDAYS = (userId: string) => `holidays:${userId}`;
+export const KV_USER_HOLIDAY_COUNTRIES = (userId: string) => `holidays:countries:${userId}`;
+export const KV_USER_HOLIDAYS = (userId: string) => `holidays:${userId}`;
+
+export const KV_HOLIDAY_COUNTRIES = "holiday:countries";
+export const KV_COUNTRY_HOLIDAYS = (countryCode: string) => `${countryCode}:holidays`;
 
 export const KV_IP_LOCATION = (userId: string) => `ip:location:${userId}`;
 
