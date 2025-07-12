@@ -27,9 +27,9 @@ async function fetchHolidaysForCountryYear(countryCode: string, year: number): P
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return json.response.holidays.map((h: any) => ({
-    name: h.name,
+    name: h.countryName,
     description: h.description,
-    country: h.country?.name,
+    country: h.country?.countryName,
     countryCode: h.country?.id,
     date: h.date.iso
   }));
@@ -45,29 +45,31 @@ export async function cacheHolidaysToKV(batchIndex: number) {
   const cachedCountries = (await kv.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES)) ?? [];
 
   for (const country of batch) {
-    if (cachedCountries.some((c) => c.code === country.code)) {
-      console.log(`Skipped ${country.name} (${country.code}), already in cached countries list`);
+    if (cachedCountries.some((c) => c.countryCode === country.countryCode)) {
+      console.log(
+        `Skipped ${country.countryName} (${country.countryCode}), already in cached countries list`
+      );
       continue;
     }
 
-    console.log(`Fetching ${country.name} (${country.code})`);
+    console.log(`Fetching ${country.countryName} (${country.countryCode})`);
     const allHolidays: Holiday[] = [];
 
     for (const year of years) {
-      const holidays = await fetchHolidaysForCountryYear(country.code, year);
+      const holidays = await fetchHolidaysForCountryYear(country.countryCode, year);
 
       allHolidays.push(...holidays);
-      console.log(`Fetched ${holidays.length} holidays for ${country.code} in ${year}`);
+      console.log(`Fetched ${holidays.length} holidays for ${country.countryCode} in ${year}`);
 
       await new Promise((r) => setTimeout(r, 500));
     }
 
     // Cache holidays to KV
-    await kv.set(KV_COUNTRY_HOLIDAYS(country.code), allHolidays);
-    console.log(`Cached ${allHolidays.length} holidays for ${country.code}`);
+    await kv.set(KV_COUNTRY_HOLIDAYS(country.countryCode), allHolidays);
+    console.log(`Cached ${allHolidays.length} holidays for ${country.countryCode}`);
 
     // Add country to cachedCountries list & update KV
-    cachedCountries.push({ code: country.code, name: country.name });
+    cachedCountries.push({ countryCode: country.countryCode, countryName: country.countryName });
     await kv.set(KV_HOLIDAY_COUNTRIES, cachedCountries);
 
     await new Promise((r) => setTimeout(r, 1000));

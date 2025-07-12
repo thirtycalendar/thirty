@@ -30,10 +30,10 @@ export async function cacheIPLocation(userId: string): Promise<IP_LOCATION_KV> {
   const data: unknown = await res.json();
 
   const timezone = getTimezoneIdFromIP(data);
-  const country = getCountryNameFromIP(data);
+  const countryName = getCountryNameFromIP(data);
   const countryCode = getCountryCodeFromIP(data);
 
-  const value = { timezone, country, countryCode };
+  const value = { timezone, countryName, countryCode };
 
   await kv.set(KV_IP_LOCATION(userId), value, { ex: 43200 });
 

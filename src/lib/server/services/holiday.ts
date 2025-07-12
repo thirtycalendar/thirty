@@ -1,14 +1,14 @@
 import { KV_COUNTRY_HOLIDAYS, KV_USER_HOLIDAYS } from "$lib/shared/utils/kv-keys";
-import type { Holiday, UserHoliday, UserHolidayForm } from "$lib/shared/types";
+import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
 import { kv } from "../libs/upstash/kv";
 
-export async function cacheHolidayCountries(userId: string, list: UserHoliday[]) {
+export async function cacheHolidayCountries(userId: string, list: HolidayCountry[]) {
   await kv.set(KV_USER_HOLIDAYS(userId), list);
 }
 
 export async function getHolidays(userId: string): Promise<Holiday[]> {
-  const selectedCountries = (await kv.get<UserHoliday[]>(KV_USER_HOLIDAYS(userId))) || [];
+  const selectedCountries = (await kv.get<HolidayCountry[]>(KV_USER_HOLIDAYS(userId))) || [];
   const allHolidays: Holiday[] = [];
 
   for (const country of selectedCountries) {
@@ -21,16 +21,16 @@ export async function getHolidays(userId: string): Promise<Holiday[]> {
   return allHolidays;
 }
 
-export async function getUserHolidayCountries(userId: string): Promise<UserHoliday[]> {
-  const cached = await kv.get<UserHoliday[]>(KV_USER_HOLIDAYS(userId));
+export async function getUserHolidayCountries(userId: string): Promise<HolidayCountry[]> {
+  const cached = await kv.get<HolidayCountry[]>(KV_USER_HOLIDAYS(userId));
 
   return cached ?? [];
 }
 
 export async function addUserHolidayCountry(
   userId: string,
-  holiday: UserHolidayForm
-): Promise<UserHoliday> {
+  holiday: HolidayCountryForm
+): Promise<HolidayCountry> {
   const holidays = await getUserHolidayCountries(userId);
   const exists = holidays.some((h) => h.countryCode === holiday.countryCode);
 
@@ -46,13 +46,13 @@ export async function addUserHolidayCountry(
 
 export async function removeUserHolidayCountry(
   userId: string,
-  holiday: UserHolidayForm
-): Promise<UserHoliday> {
-  const holidays = await getHolidays(userId);
+  holiday: HolidayCountryForm
+): Promise<HolidayCountry> {
+  const holidays = await getUserHolidayCountries(userId);
   const index = holidays.findIndex((h) => h.countryCode === holiday.countryCode);
 
   if (index === -1) {
-    throw new Error("UserHoliday not found");
+    throw new Error("Holiday country not found");
   }
 
   const [removed] = holidays.splice(index, 1);

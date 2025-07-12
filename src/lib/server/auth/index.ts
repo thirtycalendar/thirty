@@ -4,7 +4,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
 import { getRandomColorId } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
-import type { CalendarForm, GoogleSessionKV, UserHolidayForm } from "$lib/shared/types";
+import type { CalendarForm, GoogleSessionKV, HolidayCountryForm } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
@@ -54,7 +54,7 @@ export const auth = betterAuth({
 
           await cacheIPLocation(id);
 
-          const { timezone, country, countryCode } = await getIPLocation(id);
+          const { timezone, countryName, countryCode } = await getIPLocation(id);
 
           const calendar: CalendarForm = {
             externalId: null,
@@ -67,7 +67,7 @@ export const auth = betterAuth({
 
           await createCalendar(id, calendar);
 
-          const holiday: UserHolidayForm = { country, countryCode };
+          const holiday: HolidayCountryForm = { countryName, countryCode };
           await addUserHolidayCountry(id, holiday);
         }
       }

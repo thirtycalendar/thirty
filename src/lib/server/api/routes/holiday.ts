@@ -14,13 +14,7 @@ import { getHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { holidaySchema } from "$lib/shared/schemas/holiday";
-import type {
-  HolidayCountry,
-  SuccessResponse,
-  User,
-  UserHoliday,
-  UserHolidayForm
-} from "$lib/shared/types";
+import type { HolidayCountry, HolidayCountryForm, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
@@ -32,16 +26,16 @@ const app = new Hono<Context>()
 
       const ipLocation = await getIPLocation(user.id);
 
-      const data: UserHolidayForm = {
-        country: ipLocation.country,
+      const data: HolidayCountryForm = {
+        countryName: ipLocation.countryName,
         countryCode: ipLocation.countryCode
       };
 
       const holiday = await addUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<UserHoliday>>({
+      return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
-        message: `${holiday.country} added`,
+        message: `${holiday.countryName} added`,
         data: holiday
       });
     } catch (err: unknown) {
@@ -67,7 +61,7 @@ const app = new Hono<Context>()
 
       const holidays = await getUserHolidayCountries(user.id);
 
-      return c.json<SuccessResponse<UserHoliday[]>>({
+      return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
         message: "Success",
         data: holidays
@@ -83,9 +77,9 @@ const app = new Hono<Context>()
 
       const holiday = await addUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<UserHoliday>>({
+      return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
-        message: `${holiday.country} added`,
+        message: `${holiday.countryName} added`,
         data: holiday
       });
     } catch (err: unknown) {
@@ -99,9 +93,9 @@ const app = new Hono<Context>()
 
       const removed = await removeUserHolidayCountry(user.id, data);
 
-      return c.json<SuccessResponse<UserHoliday>>({
+      return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
-        message: `${removed.country} removed`,
+        message: `${removed.countryName} removed`,
         data: removed
       });
     } catch (err: unknown) {
