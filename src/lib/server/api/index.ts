@@ -9,6 +9,7 @@ import type { Context } from "./context";
 import auth from "./routes/auth";
 import birthday from "./routes/birthday";
 import calendar from "./routes/calendar";
+import calendarific from "./routes/calendarific";
 import event from "./routes/event";
 import holiday from "./routes/holiday";
 import sync from "./routes/sync";
@@ -27,6 +28,9 @@ const routes = app
   .route("/birthday", birthday)
   .route("/holiday", holiday)
   .route("/sync", sync);
+
+// External routes
+app.route("/calendarific", calendarific);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

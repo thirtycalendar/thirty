@@ -18,6 +18,7 @@
   - (7.12.02) - Added completed holiday backend codes.
   - (7.12.03) - Add holiday on user create.
   - (7.12.04) - Better type naming.
+  - (7.12.05) - Cached batch 0 holidays to KV.
 - Fri Jul 11, 2025
   - (7.11.01) - Fixed some bugs.
   - (7.11.02) - Added birthdays to the calendar props.

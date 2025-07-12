@@ -3,11 +3,11 @@ import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/ty
 
 import { kv } from "../libs/upstash/kv";
 
-export async function cacheHolidayCountries(userId: string, list: HolidayCountry[]) {
+export async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]) {
   await kv.set(KV_USER_HOLIDAYS(userId), list);
 }
 
-export async function getHolidays(userId: string): Promise<Holiday[]> {
+export async function getUserHolidays(userId: string): Promise<Holiday[]> {
   const selectedCountries = (await kv.get<HolidayCountry[]>(KV_USER_HOLIDAYS(userId))) || [];
   const allHolidays: Holiday[] = [];
 
@@ -39,7 +39,7 @@ export async function addUserHolidayCountry(
   }
 
   holidays.push(holiday);
-  await cacheHolidayCountries(userId, holidays);
+  await cacheUserHolidayCountries(userId, holidays);
 
   return holiday;
 }
@@ -56,7 +56,7 @@ export async function removeUserHolidayCountry(
   }
 
   const [removed] = holidays.splice(index, 1);
-  await cacheHolidayCountries(userId, holidays);
+  await cacheUserHolidayCountries(userId, holidays);
   return removed;
 }
 

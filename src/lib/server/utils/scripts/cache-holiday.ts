@@ -3,8 +3,6 @@
 
 // npx tsx ./src/lib/server/utils/scripts/cache-holiday.ts
 
-import { cacheHolidaysToKV } from "$lib/server/libs/calendarific/cache";
-
 const index = 0;
 
-cacheHolidaysToKV(index);
+fetch(`http://localhost:5173/api/calendarific/cache/${index}`);

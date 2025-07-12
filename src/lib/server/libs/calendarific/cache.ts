@@ -45,7 +45,9 @@ export async function cacheHolidaysToKV(batchIndex: number) {
   const cachedCountries = (await kv.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES)) ?? [];
 
   for (const country of batch) {
-    if (cachedCountries.some((c) => c.countryCode === country.countryCode)) {
+    if (
+      cachedCountries.some((c) => c.countryCode.toUpperCase() === country.countryCode.toUpperCase())
+    ) {
       console.log(
         `Skipped ${country.countryName} (${country.countryCode}), already in cached countries list`
       );

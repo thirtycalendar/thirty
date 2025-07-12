@@ -8,13 +8,20 @@ import {
   addUserHolidayCountry,
   clearUserHolidayCountries,
   getUserHolidayCountries,
+  getUserHolidays,
   removeUserHolidayCountry
 } from "$lib/server/services/holiday";
 import { getHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { holidaySchema } from "$lib/shared/schemas/holiday";
-import type { HolidayCountry, HolidayCountryForm, SuccessResponse, User } from "$lib/shared/types";
+import type {
+  Holiday,
+  HolidayCountry,
+  HolidayCountryForm,
+  SuccessResponse,
+  User
+} from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
@@ -47,6 +54,21 @@ const app = new Hono<Context>()
       const holidays = await getHolidayCountries();
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
+        success: true,
+        message: "Success",
+        data: holidays
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .get("/getAllHolidays", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      const holidays = await getUserHolidays(user.id);
+
+      return c.json<SuccessResponse<Holiday[]>>({
         success: true,
         message: "Success",
         data: holidays
