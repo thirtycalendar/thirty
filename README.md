@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Sat Jul 12, 2025
+  - (7.12.01) - Updated week calendar and day calendar all day event block and birthday block padding grid.
 - Fri Jul 11, 2025
   - (7.11.01) - Fixed some bugs.
   - (7.11.02) - Added birthdays to the calendar props.

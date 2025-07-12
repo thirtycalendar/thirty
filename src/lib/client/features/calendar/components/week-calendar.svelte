@@ -82,11 +82,11 @@
   });
 </script>
 
-<div class="flex flex-col h-full py-3">
+<div class="flex flex-col h-full mt-2">
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-20">
     <div class="border-r border-base-200"></div>
     {#each days as day (day.toISOString())}
-      <div class="flex items-center justify-center p-1 border-b border-r border-base-200">
+      <div class="flex items-center justify-center border-b border-r border-base-200">
         <span
           class={`font-bold flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
         >
@@ -100,22 +100,20 @@
     {/each}
   </div>
 
-  {#if allDayLayout.length > 0 || visibleBirthdays.length > 0}
-    <div class="mb-1 grid grid-cols-[50px_repeat(7,1fr)] bg-base-200 border-b border-base-200">
-      <div></div>
-      {#each days as day, i (i + day.toISOString())}
-        <div class="relative border-r border-base-200 py-1 px-1 flex flex-col gap-1 min-w-0">
-          {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
-            <BdBlock birthday={bd} />
-          {/each}
+  <div class="grid grid-cols-[50px_repeat(7,1fr)] pb-1 bg-base-200 border-b border-base-200">
+    <div></div>
+    {#each days as day, i (i + day.toISOString())}
+      <div class="relative border-r border-base-200 px-1 flex flex-col gap-1">
+        {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
+          <BdBlock birthday={bd} />
+        {/each}
 
-          {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
-            <AllDayEventBlock {event} />
-          {/each}
-        </div>
-      {/each}
-    </div>
-  {/if}
+        {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
+          <AllDayEventBlock {event} />
+        {/each}
+      </div>
+    {/each}
+  </div>
 
   <div
     bind:this={scrollContainer}

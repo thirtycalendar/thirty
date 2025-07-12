@@ -83,20 +83,18 @@
     </div>
   </div>
 
-  {#if allDayEvents.length > 0 || visibleBirthdays.length > 0}
-    <div class="bg-base-200 border-b border-base-200 grid grid-cols-[50px_1fr]">
-      <div></div>
-      <div class="flex flex-col gap-1 py-1 min-w-0">
-        {#each getBirthdaysForDay(visibleBirthdays, $currentDate) as bd (bd.id)}
-          <BdBlock birthday={bd} />
-        {/each}
+  <div class="bg-base-200 border-b border-base-200 grid grid-cols-[50px_1fr]">
+    <div></div>
+    <div class="flex flex-col gap-1 pb-1">
+      {#each getBirthdaysForDay(visibleBirthdays, $currentDate) as bd (bd.id)}
+        <BdBlock birthday={bd} />
+      {/each}
 
-        {#each allDayEvents as event (event.id)}
-          <AllDayEventBlock {event} />
-        {/each}
-      </div>
+      {#each allDayEvents as event (event.id)}
+        <AllDayEventBlock {event} />
+      {/each}
     </div>
-  {/if}
+  </div>
 
   <div
     bind:this={scrollContainer}
