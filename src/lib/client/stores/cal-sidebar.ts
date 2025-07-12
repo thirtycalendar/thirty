@@ -4,6 +4,6 @@ type PageList = "chat" | "calendar";
 
 export const currentPage = writable<PageList>("calendar");
 
-export function setCurrnetPage(newPage: PageList) {
+export function setCurrentPage(newPage: PageList) {
   currentPage.set(newPage);
 }

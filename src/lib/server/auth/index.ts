@@ -4,14 +4,14 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
 import { getRandomColorId } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
-import type { CalendarForm, GoogleSessionKV, HolidayCountryForm } from "$lib/shared/types";
+import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { createCalendar } from "../services/calendar";
-import { addUserHolidayCountry } from "../services/holiday";
+import { addUserHolidayCountryByItsCode } from "../services/holiday";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -54,7 +54,7 @@ export const auth = betterAuth({
 
           await cacheIPLocation(id);
 
-          const { timezone, countryName, countryCode } = await getIPLocation(id);
+          const { timezone, countryCode } = await getIPLocation(id);
 
           const calendar: CalendarForm = {
             externalId: null,
@@ -67,8 +67,7 @@ export const auth = betterAuth({
 
           await createCalendar(id, calendar);
 
-          const holiday: HolidayCountryForm = { countryName, countryCode };
-          await addUserHolidayCountry(id, holiday);
+          await addUserHolidayCountryByItsCode(id, countryCode);
         }
       }
     }

@@ -45,9 +45,7 @@ export async function cacheHolidaysToKV(batchIndex: number) {
   const cachedCountries = (await kv.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES)) ?? [];
 
   for (const country of batch) {
-    if (
-      cachedCountries.some((c) => c.countryCode.toUpperCase() === country.countryCode.toUpperCase())
-    ) {
+    if (cachedCountries.some((c) => c.id === country.id)) {
       console.log(
         `Skipped ${country.countryName} (${country.countryCode}), already in cached countries list`
       );
@@ -67,11 +65,16 @@ export async function cacheHolidaysToKV(batchIndex: number) {
     }
 
     // Cache holidays to KV
-    await kv.set(KV_COUNTRY_HOLIDAYS(country.countryCode), allHolidays);
+    await kv.set(KV_COUNTRY_HOLIDAYS(country.id), allHolidays);
     console.log(`Cached ${allHolidays.length} holidays for ${country.countryCode}`);
 
     // Add country to cachedCountries list & update KV
-    cachedCountries.push({ countryCode: country.countryCode, countryName: country.countryName });
+    cachedCountries.push({
+      id: country.id,
+      colorId: country.colorId,
+      countryCode: country.countryCode,
+      countryName: country.countryName
+    });
     await kv.set(KV_HOLIDAY_COUNTRIES, cachedCountries);
 
     await new Promise((r) => setTimeout(r, 1000));

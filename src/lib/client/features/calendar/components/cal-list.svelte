@@ -6,20 +6,24 @@
   import { toggleModal } from "$lib/client/components/utils";
   import { birthdayCreateModalId, handleBirthdayModal } from "$lib/client/stores/birthday";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
+  import { handleHolidayCountryModal, holidayCountryAddModalId } from "$lib/client/stores/holiday";
   import {
     collapsedLists,
     uncheckedBirthdays,
-    uncheckedCalendars
+    uncheckedCalendars,
+    uncheckedHolidays
   } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Birthday, Calendar } from "$lib/shared/types";
+  import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
 
   import { getBirthdays } from "../../birthday/query";
+  import { getUserHolidayCountries } from "../../holiday/query";
   import { getCalendars } from "../query";
 
   const { data: calendars } = getCalendars();
   const { data: birthdays } = getBirthdays();
+  const { data: userHolidayCountries } = getUserHolidayCountries();
 
   const { store: collapsed } = collapsedLists;
 </script>
@@ -34,6 +38,7 @@
   {@render ListSection<Calendar>({
     title: "My Calendars",
     items: $calendars,
+    getItemName: (item) => item.name,
     onChecked: (item) => uncheckedCalendars.isChecked(item.id),
     onChange: (item) => uncheckedCalendars.toggle(item.id),
     onAdd: () => toggleModal(calendarCreateModalId),
@@ -45,6 +50,7 @@
   {@render ListSection<Birthday>({
     title: "Birthdays",
     items: $birthdays,
+    getItemName: (item) => item.name,
     onChecked: (item) => uncheckedBirthdays.isChecked(item.id),
     onChange: (item) => uncheckedBirthdays.toggle(item.id),
     onAdd: () => toggleModal(birthdayCreateModalId),
@@ -52,9 +58,22 @@
   })}
 {/if}
 
-{#snippet ListSection<T extends Calendar | Birthday>({
+{#if $userHolidayCountries}
+  {@render ListSection<HolidayCountry>({
+    title: "Holidays",
+    items: $userHolidayCountries,
+    getItemName: (item) => item.countryName,
+    onChecked: (item) => uncheckedHolidays.isChecked(item.id),
+    onChange: (item) => uncheckedHolidays.toggle(item.id),
+    onAdd: () => toggleModal(holidayCountryAddModalId),
+    onSettings: handleHolidayCountryModal
+  })}
+{/if}
+
+{#snippet ListSection<T extends { id: string; colorId: string } & object>({
   title,
   items,
+  getItemName,
   onChecked,
   onChange,
   onAdd,
@@ -62,6 +81,7 @@
 }: {
   title: string;
   items: T[];
+  getItemName: (item: T) => string;
   onChecked: (item: T) => boolean;
   onChange: (item: T) => void;
   onAdd: () => void;
@@ -108,7 +128,7 @@
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
                   style={`color: ${getColorHexCodeFromId(item.colorId)}`}
                 >
-                  {item.name}
+                  {getItemName(item)}
                 </span>
               </div>
 

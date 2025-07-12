@@ -47,14 +47,11 @@ export type TaskForm = z.infer<typeof taskSchema>;
 export type Birthday = InferSelectModel<typeof birthdayTable>;
 export type BirthdayForm = z.infer<typeof birthdaySchema>;
 
-export type HolidayCountry = {
-  countryName: string;
-  countryCode: string;
-};
-
+export type HolidayCountry = z.infer<typeof holidaySchema>;
 export type HolidayCountryForm = z.infer<typeof holidaySchema>;
 
 export type Holiday = {
+  id: string;
   name: string;
   description: string;
   country: string;
