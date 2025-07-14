@@ -5,7 +5,6 @@
 - [x] - (important!) Bug fix for showing actual time for event block.
 - [x] - Make to show the event block at the top if it is all day.
 - [ ] - Show holiday calendars.
-- [ ] - (test) Try to sync google calendars without giving access.
 - [x] - Fix init calendar on auth index file.
 - [x] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
 - [ ] - Sync birthdays from Google calendars to db.
@@ -16,4 +15,8 @@
 - [x] - Add error logic in choice fields
 - [x] - Show error text on forms.
 - [x] - Show the total time in event details like 15 mins, 30 mins, 1 hr, 1 hr 15 mins, 1 Day 2 hrs 15 mins
-- [ ] - show error text on details if deleting failed in cal, event, and bd.
+- [x] - show error text on details if deleting failed in cal, event, and bd.
+- [ ] - Add rate limit on api routes.
+    - [ ] - Make calendarific api route to only 1 request a month.
+- [ ] - (test) Try to sync google calendars without giving access.
+    - [ ] - Show error modal and ask to logout if syncing fail.
