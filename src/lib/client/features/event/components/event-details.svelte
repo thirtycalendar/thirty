@@ -97,15 +97,13 @@
     <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
     <div class="flex-1 flex items-center gap-2 capitalize">
-      {#if !isSameColor}
-        <div
-          class="w-5 h-5 aspect-square rounded-full"
-          style="background-color: {eventColor}"
-        ></div>
-      {/if}
       <div
-        class="w-5 h-5 aspect-square rounded-full"
-        style="background-color: {calendarColor}"
+        class="w-5 h-5 aspect-square rounded-full shrink-0"
+        style={`background: ${
+          isSameColor
+            ? eventColor
+            : `linear-gradient(to right, ${calendarColor} 50%, ${eventColor} 50%)`
+        };`}
       ></div>
       <span>{calendarName}</span>
     </div>
