@@ -8,30 +8,26 @@ import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/ty
 import { countries } from "../libs/calendarific/countries";
 import { kv, kvHoliday } from "../libs/upstash/kv";
 
+// Holiday returned years
+const YEAR = new Date().getFullYear();
+const FROM = new Date(YEAR - 1, 0, 1); // From past year
+const TO = new Date(YEAR + 3, 11, 31); // To next three years
+
 export async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]) {
   await kv.set(KV_USER_HOLIDAY_COUNTRIES(userId), list);
-}
-
-export async function getUserHolidays(userId: string): Promise<Holiday[]> {
-  const selectedCountries = await getUserHolidayCountries(userId);
-  const allHolidays: Holiday[] = [];
-
-  for (const country of selectedCountries) {
-    const countryHolidays = await kvHoliday.get<Holiday[]>(
-      KV_COUNTRY_HOLIDAYS(country.countryCode)
-    );
-    if (countryHolidays) {
-      allHolidays.push(...countryHolidays);
-    }
-  }
-
-  return allHolidays;
+  await updateUserHolidaysCache(userId, list);
 }
 
 export async function getUserHolidayCountries(userId: string): Promise<HolidayCountry[]> {
-  const cached = await kv.get<HolidayCountry[]>(KV_USER_HOLIDAY_COUNTRIES(userId));
+  return (await kv.get<HolidayCountry[]>(KV_USER_HOLIDAY_COUNTRIES(userId))) ?? [];
+}
 
-  return cached ?? [];
+export async function getUserHolidays(userId: string): Promise<Holiday[]> {
+  const cached = await kv.get<Holiday[]>(KV_USER_HOLIDAYS(userId));
+  if (cached) return cached;
+
+  const countries = await getUserHolidayCountries(userId);
+  return await updateUserHolidaysCache(userId, countries);
 }
 
 export async function addUserHolidayCountry(
@@ -40,10 +36,7 @@ export async function addUserHolidayCountry(
 ): Promise<HolidayCountry> {
   const holidays = await getUserHolidayCountries(userId);
   const exists = holidays.some((h) => h.countryCode === holiday.countryCode);
-
-  if (exists) {
-    return holiday;
-  }
+  if (exists) return holiday;
 
   holidays.push(holiday);
   await cacheUserHolidayCountries(userId, holidays);
@@ -58,9 +51,7 @@ export async function removeUserHolidayCountry(
   const holidays = await getUserHolidayCountries(userId);
   const index = holidays.findIndex((h) => h.id === holiday.id);
 
-  if (index === -1) {
-    throw new Error("Holiday country not found");
-  }
+  if (index === -1) throw new Error("Holiday country not found");
 
   const [removed] = holidays.splice(index, 1);
   await cacheUserHolidayCountries(userId, holidays);
@@ -68,6 +59,7 @@ export async function removeUserHolidayCountry(
 }
 
 export async function clearUserHolidayCountries(userId: string) {
+  await kv.del(KV_USER_HOLIDAY_COUNTRIES(userId));
   await kv.del(KV_USER_HOLIDAYS(userId));
 }
 
@@ -75,17 +67,39 @@ export async function addUserHolidayCountryByItsCode(userId: string, countryCode
   const flatCountries = countries.flat();
 
   const matched = flatCountries.find(
-    (c) => c.countryCode.toLocaleLowerCase() === countryCode.toLocaleLowerCase()
+    (c) => c.countryCode.toLowerCase() === countryCode.toLowerCase()
   );
 
-  if (matched) {
-    const data: HolidayCountryForm = {
-      id: matched.id,
-      colorId: matched.colorId,
-      countryName: matched.countryName,
-      countryCode: matched.countryCode
-    };
+  if (!matched) return;
 
-    await addUserHolidayCountry(userId, data);
+  const data: HolidayCountryForm = {
+    id: matched.id,
+    colorId: matched.colorId,
+    countryName: matched.countryName,
+    countryCode: matched.countryCode
+  };
+
+  await addUserHolidayCountry(userId, data);
+}
+
+async function updateUserHolidaysCache(
+  userId: string,
+  countries: HolidayCountry[]
+): Promise<Holiday[]> {
+  const allHolidays: Holiday[] = [];
+
+  for (const country of countries) {
+    const holidays = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.countryCode));
+    if (holidays?.length) {
+      allHolidays.push(
+        ...holidays.filter((h) => {
+          const date = new Date(h.date);
+          return date >= FROM && date <= TO;
+        })
+      );
+    }
   }
+
+  await kv.set(KV_USER_HOLIDAYS(userId), allHolidays, { ex: 60 * 60 * 24 });
+  return allHolidays;
 }

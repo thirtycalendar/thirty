@@ -16,6 +16,7 @@
 - Mon Jul 14, 2025
   - (7.14.01) - Added holiday kv instance. Updated Calendarific cache codes.
   - (7.14.02) - Cached only 5 holiday countries and its holidays for coding and testing purpose.
+  - (7.14.03) - Cache user holidays for one days. Holidays only from the past years and the next three years.
 - Sat Jul 12, 2025
   - (7.12.01) - Updated week calendar and day calendar all day event block and birthday block padding grid.
   - (7.12.02) - Added completed holiday backend codes.
