@@ -18,12 +18,12 @@
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
 
   import { getBirthdays } from "../../birthday/query";
-  import { getUserHolidayCountries } from "../../holiday/query";
+  import { getHolidayCountries } from "../../holiday/query";
   import { getCalendars } from "../query";
 
   const { data: calendars } = getCalendars();
   const { data: birthdays } = getBirthdays();
-  const { data: userHolidayCountries } = getUserHolidayCountries();
+  const { data: userHolidayCountries } = getHolidayCountries();
 
   const { store: collapsed } = collapsedLists;
 </script>

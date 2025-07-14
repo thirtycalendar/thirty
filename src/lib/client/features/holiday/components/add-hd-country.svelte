@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { InputField } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
   import { hdCountryAddModalId } from "$lib/client/stores/holiday";
   import { showToast } from "$lib/client/stores/toast";
@@ -10,7 +9,26 @@
   import { holidaySchema } from "$lib/shared/schemas/holiday";
   import type { HolidayCountryForm } from "$lib/shared/types";
 
+  import { getAllHolidayCountries } from "../query";
+
+  import { HdCountryField } from ".";
+
   let errorMessage = $state("");
+
+  const { data: holidayCountries } = getAllHolidayCountries();
+
+  const defaultValues: HolidayCountryForm = {
+    id: "",
+    colorId: "",
+    countryName: "",
+    countryCode: ""
+  };
+
+  const { formData, formErrors, isSubmitting, handleSubmit } = createForm({
+    schema: holidaySchema,
+    defaultValues,
+    onSubmit
+  });
 
   let { mutate, isPending } = createMutation({
     mutationFn: async (formData: HolidayCountryForm) => {
@@ -40,30 +58,44 @@
     await mutate(data);
   }
 
-  const defaultValues: HolidayCountryForm = {
-    id: "",
-    colorId: "",
-    countryName: "",
-    countryCode: ""
-  };
+  let prevId = $state($formData.id);
 
-  const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
-    schema: holidaySchema,
-    defaultValues,
-    onSubmit
+  $effect(() => {
+    if ($formData.id && $formData.id !== prevId && $holidayCountries) {
+      console.log("Got run..");
+      const match = $holidayCountries.find((c) => c.id === $formData.id);
+      if (match) {
+        console.log("match", match);
+
+        formData.set({
+          id: match.id,
+          colorId: match.colorId,
+          countryName: match.countryName,
+          countryCode: match.countryCode
+        });
+      }
+
+      prevId = $formData.id;
+    }
   });
 </script>
 
-<form onsubmit={handleSubmit()} class="space-y-2">
-  {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
-  {/if}
+{#if $holidayCountries}
+  <form onsubmit={handleSubmit()} class="space-y-2 my-2">
+    {#if errorMessage}
+      <p class="text-sm text-error mt-1">{errorMessage}</p>
+    {/if}
 
-  <InputField name="countryCode" placeholder="Add title" {handleInput} {formData} {formErrors} />
+    <HdCountryField name="id" {formData} {formErrors} holidayCountries={$holidayCountries} />
 
-  <div class="flex justify-end gap-2">
-    <button type="submit" class="btn btn-base-300 font-bold" disabled={$isSubmitting || $isPending}>
-      Save
-    </button>
-  </div>
-</form>
+    <div class="flex justify-end gap-2">
+      <button
+        type="submit"
+        class="btn btn-base-300 font-bold"
+        disabled={$isSubmitting || $isPending}
+      >
+        Save
+      </button>
+    </div>
+  </form>
+{/if}

@@ -1,8 +1,4 @@
-import {
-  KV_COUNTRY_HOLIDAYS,
-  KV_USER_HOLIDAY_COUNTRIES,
-  KV_USER_HOLIDAYS
-} from "$lib/shared/utils/kv-keys";
+import { KV_COUNTRY_HOLIDAYS, KV_HOLIDAY_COUNTRIES, KV_HOLIDAYS } from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
 import { countries } from "../libs/calendarific/countries";
@@ -14,27 +10,27 @@ const FROM = new Date(YEAR - 1, 0, 1); // From past year
 const TO = new Date(YEAR + 3, 11, 31); // To next three years
 
 export async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]) {
-  await kv.set(KV_USER_HOLIDAY_COUNTRIES(userId), list);
-  await updateUserHolidaysCache(userId, list);
+  await kv.set(KV_HOLIDAY_COUNTRIES(userId), list);
+  await updateHolidaysCache(userId, list);
 }
 
-export async function getUserHolidayCountries(userId: string): Promise<HolidayCountry[]> {
-  return (await kv.get<HolidayCountry[]>(KV_USER_HOLIDAY_COUNTRIES(userId))) ?? [];
+export async function getHolidayCountries(userId: string): Promise<HolidayCountry[]> {
+  return (await kv.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES(userId))) ?? [];
 }
 
-export async function getUserHolidays(userId: string): Promise<Holiday[]> {
-  const cached = await kv.get<Holiday[]>(KV_USER_HOLIDAYS(userId));
+export async function getHolidays(userId: string): Promise<Holiday[]> {
+  const cached = await kv.get<Holiday[]>(KV_HOLIDAYS(userId));
   if (cached) return cached;
 
-  const countries = await getUserHolidayCountries(userId);
-  return await updateUserHolidaysCache(userId, countries);
+  const countries = await getHolidayCountries(userId);
+  return await updateHolidaysCache(userId, countries);
 }
 
-export async function addUserHolidayCountry(
+export async function addHolidayCountry(
   userId: string,
   holiday: HolidayCountryForm
 ): Promise<HolidayCountry> {
-  const holidays = await getUserHolidayCountries(userId);
+  const holidays = await getHolidayCountries(userId);
   const exists = holidays.some((h) => h.countryCode === holiday.countryCode);
   if (exists) return holiday;
 
@@ -44,11 +40,11 @@ export async function addUserHolidayCountry(
   return holiday;
 }
 
-export async function removeUserHolidayCountry(
+export async function removeHolidayCountry(
   userId: string,
   holiday: HolidayCountryForm
 ): Promise<HolidayCountry> {
-  const holidays = await getUserHolidayCountries(userId);
+  const holidays = await getHolidayCountries(userId);
   const index = holidays.findIndex((h) => h.id === holiday.id);
 
   if (index === -1) throw new Error("Holiday country not found");
@@ -59,8 +55,8 @@ export async function removeUserHolidayCountry(
 }
 
 export async function clearUserHolidayCountries(userId: string) {
-  await kv.del(KV_USER_HOLIDAY_COUNTRIES(userId));
-  await kv.del(KV_USER_HOLIDAYS(userId));
+  await kv.del(KV_HOLIDAY_COUNTRIES(userId));
+  await kv.del(KV_HOLIDAYS(userId));
 }
 
 export async function addUserHolidayCountryByItsCode(userId: string, countryCode: string) {
@@ -79,10 +75,10 @@ export async function addUserHolidayCountryByItsCode(userId: string, countryCode
     countryCode: matched.countryCode
   };
 
-  await addUserHolidayCountry(userId, data);
+  await addHolidayCountry(userId, data);
 }
 
-async function updateUserHolidaysCache(
+async function updateHolidaysCache(
   userId: string,
   countries: HolidayCountry[]
 ): Promise<Holiday[]> {
@@ -100,6 +96,6 @@ async function updateUserHolidaysCache(
     }
   }
 
-  await kv.set(KV_USER_HOLIDAYS(userId), allHolidays, { ex: 60 * 60 * 24 });
+  await kv.set(KV_HOLIDAYS(userId), allHolidays, { ex: 60 * 60 * 24 });
   return allHolidays;
 }

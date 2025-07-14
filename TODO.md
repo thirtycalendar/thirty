@@ -20,3 +20,4 @@
     - [ ] - Make calendarific api route to only 1 request a month.
 - [ ] - (test) Try to sync google calendars without giving access.
     - [ ] - Show error modal and ask to logout if syncing fail.
+- [ ] - Handle input props in input fields.

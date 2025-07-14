@@ -2,7 +2,7 @@ import { CALENDARIFIC_API_KEY } from "$env/static/private";
 
 import { kvHoliday } from "$lib/server/libs/upstash/kv";
 
-import { KV_COUNTRY_HOLIDAYS, KV_HOLIDAY_COUNTRIES } from "$lib/shared/utils/kv-keys";
+import { KV_ALL_HOLIDAY_COUNTRIES, KV_COUNTRY_HOLIDAYS } from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry } from "$lib/shared/types";
 
 import { countries } from "./countries";
@@ -10,8 +10,8 @@ import { countries } from "./countries";
 const API_KEY = CALENDARIFIC_API_KEY;
 const years = Array.from({ length: 12 }, (_, i) => 2020 + i);
 
-export async function getHolidayCountries(): Promise<HolidayCountry[]> {
-  return (await kvHoliday.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES)) ?? [];
+export async function getAllHolidayCountries(): Promise<HolidayCountry[]> {
+  return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
 }
 
 export async function getCountryHolidays(countryCode: string): Promise<Holiday[]> {
@@ -71,7 +71,7 @@ export async function cacheHolidaysToKV(batchIndex: number) {
     return;
   }
 
-  const cachedCountries = (await kvHoliday.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES)) ?? [];
+  const cachedCountries = (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
 
   for (const country of batch) {
     const { countryCode, countryName } = country;
@@ -103,7 +103,7 @@ export async function cacheHolidaysToKV(batchIndex: number) {
       countryName,
       countryCode
     });
-    await kvHoliday.set(KV_HOLIDAY_COUNTRIES, cachedCountries);
+    await kvHoliday.set(KV_ALL_HOLIDAY_COUNTRIES, cachedCountries);
 
     await new Promise((r) => setTimeout(r, 1000));
   }

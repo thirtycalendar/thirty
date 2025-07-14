@@ -5,7 +5,7 @@ import type { Holiday, HolidayCountry } from "$lib/shared/types";
 
 let userHolidaysQuery: ReturnType<typeof createQuery<() => Promise<Holiday[]>>> | null = null;
 
-export function getUserHolidays() {
+export function getHolidays() {
   if (!userHolidaysQuery) {
     userHolidaysQuery = createQuery({
       queryFn: async () => {
@@ -27,7 +27,7 @@ let userHolidayCountriesQuery: ReturnType<
   typeof createQuery<() => Promise<HolidayCountry[]>>
 > | null = null;
 
-export function getUserHolidayCountries() {
+export function getHolidayCountries() {
   if (!userHolidayCountriesQuery) {
     userHolidayCountriesQuery = createQuery({
       queryFn: async () => {
@@ -49,7 +49,7 @@ let allHolidayCountriesQuery: ReturnType<
   typeof createQuery<() => Promise<HolidayCountry[]>>
 > | null = null;
 
-export function getHolidayCountries() {
+export function getAllHolidayCountries() {
   if (!allHolidayCountriesQuery) {
     allHolidayCountriesQuery = createQuery({
       queryFn: async () => {

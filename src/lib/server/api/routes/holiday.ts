@@ -5,14 +5,14 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import {
-  addUserHolidayCountry,
+  addHolidayCountry,
   addUserHolidayCountryByItsCode,
   clearUserHolidayCountries,
-  getUserHolidayCountries,
-  getUserHolidays,
-  removeUserHolidayCountry
+  getHolidayCountries,
+  getHolidays,
+  removeHolidayCountry
 } from "$lib/server/services/holiday";
-import { getHolidayCountries } from "$lib/server/libs/calendarific/cache";
+import { getAllHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { holidaySchema } from "$lib/shared/schemas/holiday";
@@ -26,7 +26,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const holidays = await getUserHolidays(user.id);
+      const holidays = await getHolidays(user.id);
 
       return c.json<SuccessResponse<Holiday[]>>({
         success: true,
@@ -57,7 +57,7 @@ const app = new Hono<Context>()
   })
   .get("/country/list", async (c) => {
     try {
-      const holidays = await getHolidayCountries();
+      const holidays = await getAllHolidayCountries();
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
@@ -72,7 +72,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const holidays = await getUserHolidayCountries(user.id);
+      const holidays = await getHolidayCountries(user.id);
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
@@ -88,7 +88,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const holiday = await addUserHolidayCountry(user.id, data);
+      const holiday = await addHolidayCountry(user.id, data);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
@@ -104,7 +104,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const removed = await removeUserHolidayCountry(user.id, data);
+      const removed = await removeHolidayCountry(user.id, data);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,

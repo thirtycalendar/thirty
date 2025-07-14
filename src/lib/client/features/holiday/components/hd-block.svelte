@@ -4,7 +4,7 @@
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Holiday } from "$lib/shared/types";
 
-  import { getUserHolidayCountries } from "../query";
+  import { getHolidayCountries } from "../query";
 
   interface Props {
     holiday: Holiday;
@@ -12,7 +12,7 @@
 
   let { holiday }: Props = $props();
 
-  const { data: hdCountries } = getUserHolidayCountries();
+  const { data: hdCountries } = getHolidayCountries();
   const hdColor = $derived.by(() => {
     const colorId = $hdCountries?.find((c) => c.id === holiday.countryId)?.colorId ?? "-1";
     return getColorHexCodeFromId(colorId);

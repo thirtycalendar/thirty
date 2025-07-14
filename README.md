@@ -20,6 +20,7 @@
   - (7.14.04) - All holiday backend codes are working now.
   - (7.14.05) - Made event details color circle div better.
   - (7.14.06) - Added hd country codes.
+  - (7.14.07) - User now can add and remove holiday countries.
 - Sat Jul 12, 2025
   - (7.12.01) - Updated week calendar and day calendar all day event block and birthday block padding grid.
   - (7.12.02) - Added completed holiday backend codes.
