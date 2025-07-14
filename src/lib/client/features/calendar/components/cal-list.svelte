@@ -6,7 +6,7 @@
   import { toggleModal } from "$lib/client/components/utils";
   import { birthdayCreateModalId, handleBirthdayModal } from "$lib/client/stores/birthday";
   import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
-  import { handleHolidayCountryModal, holidayCountryAddModalId } from "$lib/client/stores/holiday";
+  import { handleHdCountryModal, hdCountryAddModalId } from "$lib/client/stores/holiday";
   import {
     collapsedLists,
     uncheckedBirthdays,
@@ -65,8 +65,8 @@
     getItemName: (item) => item.countryName,
     onChecked: (item) => uncheckedHolidays.isChecked(item.id),
     onChange: (item) => uncheckedHolidays.toggle(item.id),
-    onAdd: () => toggleModal(holidayCountryAddModalId),
-    onSettings: handleHolidayCountryModal
+    onAdd: () => toggleModal(hdCountryAddModalId),
+    onSettings: handleHdCountryModal
   })}
 {/if}
 

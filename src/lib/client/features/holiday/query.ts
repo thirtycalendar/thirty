@@ -16,7 +16,7 @@ export function getUserHolidays() {
 
         return data.data;
       },
-      queryKeys: ["user-holidays"]
+      queryKeys: ["hd-list"]
     });
   }
 
@@ -38,7 +38,7 @@ export function getUserHolidayCountries() {
 
         return data.data;
       },
-      queryKeys: ["user-holiday-countries"]
+      queryKeys: ["hd-country-list"]
     });
   }
 
@@ -60,10 +60,9 @@ export function getHolidayCountries() {
 
         return data.data;
       },
-      // Note: Changed queryKey for clarity if it's truly "all" vs "user's"
-      queryKeys: ["all-holiday-countries"]
+      queryKeys: ["all-hd-country-list"]
     });
   }
 
-  return allHolidayCountriesQuery; // Ensure this returns the correct query
+  return allHolidayCountriesQuery;
 }

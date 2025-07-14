@@ -96,7 +96,7 @@
   <div class="flex items-start gap-3">
     <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
-    <div class="flex-1 flex items-center gap-2 capitalize">
+    <div class="flex-1 flex items-center gap-2">
       <div
         class="w-5 h-5 aspect-square rounded-full shrink-0"
         style={`background: ${

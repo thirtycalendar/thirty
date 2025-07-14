@@ -8,6 +8,7 @@
   import { getBirthdays } from "../../birthday/query";
   import { EventModal } from "../../event/components";
   import { getEvents } from "../../event/query";
+  import { HdCountryModal } from "../../holiday/components";
 
   import { CalModal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
@@ -28,6 +29,7 @@
 <CalModal />
 <EventModal />
 <BdModal />
+<HdCountryModal />
 
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}
