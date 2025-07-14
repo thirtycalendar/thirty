@@ -54,6 +54,7 @@ export type Holiday = {
   id: string;
   name: string;
   description: string;
+  countryId: string;
   country: string;
   countryCode: string;
   date: string;

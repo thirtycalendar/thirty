@@ -6,18 +6,20 @@ import {
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
 import { countries } from "../libs/calendarific/countries";
-import { kv } from "../libs/upstash/kv";
+import { kv, kvHoliday } from "../libs/upstash/kv";
 
 export async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]) {
   await kv.set(KV_USER_HOLIDAY_COUNTRIES(userId), list);
 }
 
 export async function getUserHolidays(userId: string): Promise<Holiday[]> {
-  const selectedCountries = (await kv.get<HolidayCountry[]>(KV_USER_HOLIDAYS(userId))) || [];
+  const selectedCountries = await getUserHolidayCountries(userId);
   const allHolidays: Holiday[] = [];
 
   for (const country of selectedCountries) {
-    const countryHolidays = await kv.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.countryCode));
+    const countryHolidays = await kvHoliday.get<Holiday[]>(
+      KV_COUNTRY_HOLIDAYS(country.countryCode)
+    );
     if (countryHolidays) {
       allHolidays.push(...countryHolidays);
     }
