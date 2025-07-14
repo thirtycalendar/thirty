@@ -22,7 +22,22 @@ import { errorResponse } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
-  .post("/detect", async (c) => {
+  .get("/getAll", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      const holidays = await getUserHolidays(user.id);
+
+      return c.json<SuccessResponse<Holiday[]>>({
+        success: true,
+        message: "Success",
+        data: holidays
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/country/detect", async (c) => {
     try {
       const user = c.get("user") as User;
 
@@ -35,21 +50,6 @@ const app = new Hono<Context>()
         success: true,
         message: "Success",
         data: null
-      });
-    } catch (err: unknown) {
-      return errorResponse(c, err);
-    }
-  })
-  .get("/getAll", async (c) => {
-    try {
-      const user = c.get("user") as User;
-
-      const holidays = await getUserHolidays(user.id);
-
-      return c.json<SuccessResponse<Holiday[]>>({
-        success: true,
-        message: "Success",
-        data: holidays
       });
     } catch (err: unknown) {
       return errorResponse(c, err);

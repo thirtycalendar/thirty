@@ -89,7 +89,7 @@ async function updateUserHolidaysCache(
   const allHolidays: Holiday[] = [];
 
   for (const country of countries) {
-    const holidays = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.countryCode));
+    const holidays = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.id));
     if (holidays?.length) {
       allHolidays.push(
         ...holidays.filter((h) => {
