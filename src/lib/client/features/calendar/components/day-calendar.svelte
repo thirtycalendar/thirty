@@ -16,6 +16,8 @@
   import { BdBlock } from "../../birthday/components";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
+  import { HdBlock } from "../../holiday/components"; // ADD THIS
+  import { getHolidaysForDay } from "../../holiday/utils"; // ADD THIS
 
   import { CurrentTimeIndicator } from ".";
 
@@ -92,6 +94,10 @@
     <div class="flex flex-col gap-1 pb-1">
       {#each getBirthdaysForDay(visibleBirthdays, $currentDate) as bd (bd.id)}
         <BdBlock birthday={bd} />
+      {/each}
+
+      {#each getHolidaysForDay(holidays, $currentDate) as holiday (holiday.id)}
+        <HdBlock {holiday} />
       {/each}
 
       {#each allDayEvents as event (event.id)}

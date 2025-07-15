@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Cake } from "@lucide/svelte";
+  import { Cake, Flag } from "@lucide/svelte"; // ADD Flag ICON
 
   import {
     addDays,
@@ -23,6 +23,7 @@
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
+  import { getHolidaysForDay } from "../../holiday/utils";
 
   interface Props {
     events: Event[];
@@ -74,7 +75,7 @@
       map[key].sort((a, b) => {
         const { start: startA } = getEventDateObjects(a);
         const { start: startB } = getEventDateObjects(b);
-        if (a.allDay && !b.allDay) return -1; // all-day events first
+        if (a.allDay && !b.allDay) return -1;
         if (!a.allDay && b.allDay) return 1;
         return startA.getTime() - startB.getTime();
       });
@@ -115,6 +116,7 @@
             {format(day, "d")}
           </span>
         </div>
+
         <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
             {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
@@ -133,6 +135,20 @@
             </div>
           {/each}
 
+          {#each getHolidaysForDay(holidays, day) as holiday (holiday.id)}
+            {@const color = "#a855f7"}
+            <div
+              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              style={`background-color: ${color}22; color: ${color};`}
+              title={holiday.name}
+            >
+              <div class="flex items-center gap-1">
+                <Flag size="12" strokeWidth="2.5" />
+                <p class="truncate">{holiday.name}</p>
+              </div>
+            </div>
+          {/each}
+
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
             {@const color = getColorHexCodeFromId(event.colorId)}
             <div
@@ -143,6 +159,7 @@
               {event.name}
             </div>
           {/each}
+
           {#if dayEvents.length > MAX_EVENTS_PER_DAY}
             <div class="font-bold text-base-content/80 pt-0.5">
               + {dayEvents.length - MAX_EVENTS_PER_DAY} more

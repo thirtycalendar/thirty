@@ -16,6 +16,9 @@
   import { BdBlock } from "../../birthday/components";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
+  import { HdBlock } from "../../holiday/components"; // ADD THIS
+  import { getHolidaysForDay } from "../../holiday/utils"; // ADD THIS
+
   import { calculateAllDayLayout } from "../utils";
 
   import { CurrentTimeIndicator } from ".";
@@ -112,7 +115,9 @@
         {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
           <BdBlock birthday={bd} />
         {/each}
-
+        {#each getHolidaysForDay(holidays, day) as holiday (holiday.id)}
+          <HdBlock {holiday} />
+        {/each}
         {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
           <AllDayEventBlock {event} />
         {/each}
