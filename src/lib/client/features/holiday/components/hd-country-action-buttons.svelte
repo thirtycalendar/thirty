@@ -8,14 +8,12 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import type { HolidayCountry } from "$lib/shared/types";
-
   interface Props {
-    holidayCountry: HolidayCountry;
+    id: string;
     errorMessage: string;
   }
 
-  let { holidayCountry, errorMessage = $bindable() }: Props = $props();
+  let { id, errorMessage = $bindable() }: Props = $props();
 
   let confirmDelete = $state(false);
 
@@ -25,7 +23,7 @@
 
   let { mutate, isPending } = createMutation({
     mutationFn: async () => {
-      const res = await client.api.holiday.country.remove.$delete({ json: holidayCountry });
+      const res = await client.api.holiday.country.remove[":id"].$delete({ param: { id } });
       const data = await res.json();
 
       if (!data.success) throw new Error(data.message);
@@ -38,7 +36,7 @@
     onSuccess: (data) => {
       confirmDelete = false;
 
-      toggleModal(holidayCountry.id);
+      toggleModal(id);
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {

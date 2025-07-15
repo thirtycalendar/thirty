@@ -54,7 +54,7 @@ async function fetchHolidaysForCountryYear(countryCode: string, year: number): P
       name: h.name,
       description: h.description,
       countryId: h.country.id.toLowerCase(),
-      country: h.country.countryName,
+      countryName: h.country.countryName,
       countryCode: h.country.id,
       date: h.date.iso
     }));

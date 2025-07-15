@@ -12,7 +12,7 @@ import type * as Const from "$lib/shared/constants";
 import type { birthdaySchema } from "./schemas/birthday";
 import type { calendarSchema } from "./schemas/calendar";
 import type { eventSchema } from "./schemas/event";
-import type { holidaySchema } from "./schemas/holiday";
+import type { hdCountrySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
 
 export type CalView = "month" | "week" | "day" | "year";
@@ -47,15 +47,20 @@ export type TaskForm = z.infer<typeof taskSchema>;
 export type Birthday = InferSelectModel<typeof birthdayTable>;
 export type BirthdayForm = z.infer<typeof birthdaySchema>;
 
-export type HolidayCountry = z.infer<typeof holidaySchema>;
-export type HolidayCountryForm = z.infer<typeof holidaySchema>;
+export type HolidayCountry = {
+  id: string;
+  countryName: string;
+  countryCode: string;
+  colorId: string;
+};
+export type HolidayCountryForm = z.infer<typeof hdCountrySchema>;
 
 export type Holiday = {
   id: string;
   name: string;
   description: string;
   countryId: string;
-  country: string;
+  countryName: string;
   countryCode: string;
   date: string;
 };

@@ -4,10 +4,9 @@ import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/ty
 import { countries } from "../libs/calendarific/countries";
 import { kv, kvHoliday } from "../libs/upstash/kv";
 
-// Holiday returned years
 const YEAR = new Date().getFullYear();
-const FROM = new Date(YEAR - 1, 0, 1); // From past year
-const TO = new Date(YEAR + 3, 11, 31); // To next three years
+const FROM = new Date(YEAR - 1, 0, 1);
+const TO = new Date(YEAR + 3, 11, 31);
 
 export async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]) {
   await kv.set(KV_HOLIDAY_COUNTRIES(userId), list);
@@ -28,29 +27,28 @@ export async function getHolidays(userId: string): Promise<Holiday[]> {
 
 export async function addHolidayCountry(
   userId: string,
-  holiday: HolidayCountryForm
+  input: HolidayCountryForm
 ): Promise<HolidayCountry> {
-  const holidays = await getHolidayCountries(userId);
-  const exists = holidays.some((h) => h.countryCode === holiday.countryCode);
-  if (exists) return holiday;
+  const allCountries = countries.flat();
+  const matched = allCountries.find((c) => c.id === input.id);
+  if (!matched) throw new Error("Invalid country id");
 
-  holidays.push(holiday);
-  await cacheUserHolidayCountries(userId, holidays);
+  const current = await getHolidayCountries(userId);
+  const exists = current.some((c) => c.id === matched.id);
+  if (exists) return matched;
 
-  return holiday;
+  current.push(matched);
+  await cacheUserHolidayCountries(userId, current);
+  return matched;
 }
 
-export async function removeHolidayCountry(
-  userId: string,
-  holiday: HolidayCountryForm
-): Promise<HolidayCountry> {
-  const holidays = await getHolidayCountries(userId);
-  const index = holidays.findIndex((h) => h.id === holiday.id);
-
+export async function removeHolidayCountry(userId: string, id: string): Promise<HolidayCountry> {
+  const current = await getHolidayCountries(userId);
+  const index = current.findIndex((c) => c.id === id);
   if (index === -1) throw new Error("Holiday country not found");
 
-  const [removed] = holidays.splice(index, 1);
-  await cacheUserHolidayCountries(userId, holidays);
+  const [removed] = current.splice(index, 1);
+  await cacheUserHolidayCountries(userId, current);
   return removed;
 }
 
@@ -59,43 +57,32 @@ export async function clearUserHolidayCountries(userId: string) {
   await kv.del(KV_HOLIDAYS(userId));
 }
 
-export async function addUserHolidayCountryByItsCode(userId: string, countryCode: string) {
+export async function addUserHolidayCountryByItsCode(userId: string, code: string) {
   const flatCountries = countries.flat();
-
-  const matched = flatCountries.find(
-    (c) => c.countryCode.toLowerCase() === countryCode.toLowerCase()
-  );
-
+  const matched = flatCountries.find((c) => c.countryCode.toLowerCase() === code.toLowerCase());
   if (!matched) return;
 
-  const data: HolidayCountryForm = {
-    id: matched.id,
-    colorId: matched.colorId,
-    countryName: matched.countryName,
-    countryCode: matched.countryCode
-  };
-
-  await addHolidayCountry(userId, data);
+  await addHolidayCountry(userId, { id: matched.id });
 }
 
 async function updateHolidaysCache(
   userId: string,
   countries: HolidayCountry[]
 ): Promise<Holiday[]> {
-  const allHolidays: Holiday[] = [];
+  const all: Holiday[] = [];
 
   for (const country of countries) {
-    const holidays = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.id));
-    if (holidays?.length) {
-      allHolidays.push(
-        ...holidays.filter((h) => {
-          const date = new Date(h.date);
-          return date >= FROM && date <= TO;
-        })
-      );
-    }
+    const list = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.id));
+    if (!list?.length) continue;
+
+    const filtered = list.filter((h) => {
+      const date = new Date(h.date);
+      return date >= FROM && date <= TO;
+    });
+
+    all.push(...filtered);
   }
 
-  await kv.set(KV_HOLIDAYS(userId), allHolidays, { ex: 60 * 60 * 24 });
-  return allHolidays;
+  await kv.set(KV_HOLIDAYS(userId), all, { ex: 60 * 60 * 24 });
+  return all;
 }

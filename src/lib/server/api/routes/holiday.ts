@@ -15,10 +15,10 @@ import {
 import { getAllHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
-import { holidaySchema } from "$lib/shared/schemas/holiday";
+import { hdCountrySchema } from "$lib/shared/schemas/holiday";
 import type { Holiday, HolidayCountry, SuccessResponse, User } from "$lib/shared/types";
 
-import { errorResponse } from "../utils";
+import { errorResponse, requireParam } from "../utils";
 
 const app = new Hono<Context>()
   .use(loggedIn)
@@ -83,7 +83,7 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .post("/country/add", zValidator("json", holidaySchema), async (c) => {
+  .post("/country/add", zValidator("json", hdCountrySchema), async (c) => {
     try {
       const user = c.get("user") as User;
       const data = c.req.valid("json");
@@ -99,12 +99,14 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .delete("/country/remove", zValidator("json", holidaySchema), async (c) => {
+  .delete("/country/remove/:id", async (c) => {
     try {
-      const user = c.get("user") as User;
-      const data = c.req.valid("json");
+      const id = c.req.param("id");
+      if (!id) return requireParam(c, "holiday country id");
 
-      const removed = await removeHolidayCountry(user.id, data);
+      const user = c.get("user") as User;
+
+      const removed = await removeHolidayCountry(user.id, id);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,

@@ -36,5 +36,5 @@
     </div>
   </div>
 
-  <HdCountryActionButtons {holidayCountry} bind:errorMessage />
+  <HdCountryActionButtons id={holidayCountry.id} bind:errorMessage />
 </div>

@@ -6,7 +6,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { holidaySchema } from "$lib/shared/schemas/holiday";
+  import { hdCountrySchema } from "$lib/shared/schemas/holiday";
   import type { HolidayCountryForm } from "$lib/shared/types";
 
   import { getAllHolidayCountries } from "../query";
@@ -18,14 +18,11 @@
   const { data: holidayCountries } = getAllHolidayCountries();
 
   const defaultValues: HolidayCountryForm = {
-    id: "",
-    colorId: "",
-    countryName: "",
-    countryCode: ""
+    id: ""
   };
 
   const { formData, formErrors, isSubmitting, handleSubmit } = createForm({
-    schema: holidaySchema,
+    schema: hdCountrySchema,
     defaultValues,
     onSubmit
   });
@@ -57,27 +54,6 @@
   async function onSubmit(data: HolidayCountryForm) {
     await mutate(data);
   }
-
-  let prevId = $state($formData.id);
-
-  $effect(() => {
-    if ($formData.id && $formData.id !== prevId && $holidayCountries) {
-      console.log("Got run..");
-      const match = $holidayCountries.find((c) => c.id === $formData.id);
-      if (match) {
-        console.log("match", match);
-
-        formData.set({
-          id: match.id,
-          colorId: match.colorId,
-          countryName: match.countryName,
-          countryCode: match.countryCode
-        });
-      }
-
-      prevId = $formData.id;
-    }
-  });
 </script>
 
 {#if $holidayCountries}
