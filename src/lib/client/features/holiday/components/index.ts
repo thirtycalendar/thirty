@@ -4,3 +4,5 @@ export { default as HdCountryActionButtons } from "./hd-country-action-buttons.s
 export { default as HdCountryDetails } from "./hd-country-details.svelte";
 export { default as HdCountryField } from "./hd-country-field.svelte";
 export { default as HdCountryModal } from "./hd-country-modal.svelte";
+export { default as HdDetails } from "./hd-details.svelte";
+export { default as HdModal } from "./hd-modal.svelte";

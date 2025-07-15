@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Tue Jul 15, 2025
+  - (7.15.01) - Add holiday related codes.
 - Mon Jul 14, 2025
   - (7.14.01) - Added holiday kv instance. Updated Calendarific cache codes.
   - (7.14.02) - Cached only 5 holiday countries and its holidays for coding and testing purpose.
