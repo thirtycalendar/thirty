@@ -7,7 +7,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
 
-  import type { Birthday, Event } from "$lib/shared/types";
+  import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { BdBlock } from "../../birthday/components";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
@@ -19,9 +19,10 @@
   interface Props {
     events: Event[];
     birthdays: Birthday[] | null;
+    holidays: Holiday[] | null;
   }
 
-  let { events, birthdays }: Props = $props();
+  let { events, birthdays, holidays }: Props = $props();
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 

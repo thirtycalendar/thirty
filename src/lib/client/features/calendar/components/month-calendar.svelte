@@ -20,16 +20,17 @@
   import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
-  import type { Birthday, Event } from "$lib/shared/types";
+  import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
 
   interface Props {
     events: Event[];
     birthdays: Birthday[] | null;
+    holidays: Holiday[] | null;
   }
 
-  let { events, birthdays }: Props = $props();
+  let { events, birthdays, holidays }: Props = $props();
 
   const MAX_EVENTS_PER_DAY = 3;
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

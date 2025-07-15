@@ -9,11 +9,13 @@
   import { EventModal } from "../../event/components";
   import { getEvents } from "../../event/query";
   import { HdCountryModal, HdModal } from "../../holiday/components";
+  import { getHolidays } from "../../holiday/query";
 
   import { CalModal, DayCalendar, MonthCalendar, WeekCalendar, YearCalendar } from ".";
 
   let { data: events } = getEvents();
   let { data: birthdays } = getBirthdays();
+  let { data: holidays } = getHolidays();
 
   let state = writable(false);
 
@@ -26,22 +28,16 @@
   });
 </script>
 
-<CalModal />
-<EventModal />
-<BdModal />
-<HdCountryModal />
-<HdModal />
-
 <div class="h-[calc(100vh-60px)] flex flex-col">
   {#if $events}
     {#if $calView === "year"}
       <YearCalendar />
     {:else if $calView === "month"}
-      <MonthCalendar events={$events} birthdays={$birthdays} />
+      <MonthCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
     {:else if $calView === "day"}
-      <DayCalendar events={$events} birthdays={$birthdays} />
+      <DayCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
     {:else}
-      <WeekCalendar events={$events} birthdays={$birthdays} />
+      <WeekCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
     {/if}
   {:else}
     <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
@@ -49,3 +45,9 @@
     </div>
   {/if}
 </div>
+
+<CalModal />
+<EventModal />
+<BdModal />
+<HdCountryModal />
+<HdModal />
