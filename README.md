@@ -20,6 +20,7 @@
   - (7.15.04) - Moved event related codes to event codes.
   - (7.15.05) - Kinda working.
   - (7.15.06) - Visible holidays.
+  - (7.15.07) - Holidays almost finished.
 - Mon Jul 14, 2025
   - (7.14.01) - Added holiday kv instance. Updated Calendarific cache codes.
   - (7.14.02) - Cached only 5 holiday countries and its holidays for coding and testing purpose.

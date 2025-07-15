@@ -119,12 +119,14 @@
     <div></div>
     {#each days as day, i (i + day.toISOString())}
       <div class="relative border-r border-base-200 px-1 flex flex-col gap-1">
-        {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
-          <BdBlock birthday={bd} />
-        {/each}
         {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
           <HdBlock {holiday} />
         {/each}
+
+        {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
+          <BdBlock birthday={bd} />
+        {/each}
+
         {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
           <AllDayEventBlock {event} />
         {/each}

@@ -2,7 +2,7 @@ import type { HolidayCountry } from "$lib/shared/types";
 
 export const countries: HolidayCountry[][] = [
   [
-    { id: "us", colorId: "21", countryCode: "US", countryName: "United States" },
+    { id: "us", colorId: "16", countryCode: "US", countryName: "United States" },
     { id: "in", colorId: "1", countryCode: "IN", countryName: "India" },
     { id: "cn", colorId: "24", countryCode: "CN", countryName: "China" },
     { id: "jp", colorId: "13", countryCode: "JP", countryName: "Japan" },
@@ -36,7 +36,7 @@ export const countries: HolidayCountry[][] = [
     { id: "at", colorId: "12", countryCode: "AT", countryName: "Austria" },
     { id: "no", colorId: "13", countryCode: "NO", countryName: "Norway" },
     { id: "dk", colorId: "14", countryCode: "DK", countryName: "Denmark" },
-    { id: "mm", colorId: "15", countryCode: "MM", countryName: "Myanmar" },
+    { id: "mm", colorId: "16", countryCode: "MM", countryName: "Myanmar" },
     { id: "ie", colorId: "16", countryCode: "IE", countryName: "Ireland" },
     { id: "fi", colorId: "17", countryCode: "FI", countryName: "Finland" },
     { id: "tw", colorId: "18", countryCode: "TW", countryName: "Taiwan, Province of China" },

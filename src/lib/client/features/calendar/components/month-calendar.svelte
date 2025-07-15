@@ -27,6 +27,7 @@
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
+  import { getHolidayCountries } from "../../holiday/query";
   import { getHolidaysForDay, getVisibleHolidays } from "../../holiday/utils";
 
   interface Props {
@@ -52,6 +53,7 @@
 
   const { store: uncheckedHds } = uncheckedHolidays;
   const visibleHolidays = $derived.by(() => getVisibleHolidays(holidays, $uncheckedHds));
+  const { data: hdCountries } = getHolidayCountries();
 
   const { store: uncheckedBds } = uncheckedBirthdays;
   const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
@@ -125,6 +127,21 @@
         </div>
 
         <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
+          {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
+            {@const match = $hdCountries?.filter((hdCountry) => hdCountry.id === holiday.countryId)}
+            {@const color = getColorHexCodeFromId(match ? match[0].colorId : "-1")}
+            <div
+              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              style={`background-color: ${color}22; color: ${color};`}
+              title={holiday.name}
+            >
+              <div class="flex items-center gap-1">
+                <Flag size="12" strokeWidth="2.5" />
+                <p class="truncate">{holiday.name}</p>
+              </div>
+            </div>
+          {/each}
+
           {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
             {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
             {@const name = hasBirthdaySuffix ? bd.name : `${bd.name}'s birthday`}
@@ -138,20 +155,6 @@
               <div class="flex items-center gap-1">
                 <Cake size="12" strokeWidth="2.5" />
                 <p class="truncate">{name}</p>
-              </div>
-            </div>
-          {/each}
-
-          {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
-            {@const color = "#a855f7"}
-            <div
-              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
-              style={`background-color: ${color}22; color: ${color};`}
-              title={holiday.name}
-            >
-              <div class="flex items-center gap-1">
-                <Flag size="12" strokeWidth="2.5" />
-                <p class="truncate">{holiday.name}</p>
               </div>
             </div>
           {/each}
