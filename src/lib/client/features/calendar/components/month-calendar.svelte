@@ -17,13 +17,17 @@
   import { getEventDateObjects } from "$lib/client/features/event/utils";
   import { changeToDayView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
+  import {
+    uncheckedBirthdays,
+    uncheckedCalendars,
+    uncheckedHolidays
+  } from "$lib/client/stores/local-storage";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
-  import { getHolidaysForDay } from "../../holiday/utils";
+  import { getHolidaysForDay, getVisibleHolidays } from "../../holiday/utils";
 
   interface Props {
     events: Event[];
@@ -45,6 +49,9 @@
     const days = Array.from({ length: weekCount * 7 }, (_, i) => addDays(viewStart, i));
     return { days, viewStart, viewEnd, weekCount };
   });
+
+  const { store: uncheckedHds } = uncheckedHolidays;
+  const visibleHolidays = $derived.by(() => getVisibleHolidays(holidays, $uncheckedHds));
 
   const { store: uncheckedBds } = uncheckedBirthdays;
   const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
@@ -135,7 +142,7 @@
             </div>
           {/each}
 
-          {#each getHolidaysForDay(holidays, day) as holiday (holiday.id)}
+          {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
             {@const color = "#a855f7"}
             <div
               class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"

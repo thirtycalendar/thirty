@@ -9,7 +9,11 @@
     getVisibleEvents
   } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
+  import {
+    uncheckedBirthdays,
+    uncheckedCalendars,
+    uncheckedHolidays
+  } from "$lib/client/stores/local-storage";
 
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
@@ -17,7 +21,7 @@
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
   import { HdBlock } from "../../holiday/components"; // ADD THIS
-  import { getHolidaysForDay } from "../../holiday/utils"; // ADD THIS
+  import { getHolidaysForDay, getVisibleHolidays } from "../../holiday/utils"; // ADD THIS
 
   import { CurrentTimeIndicator } from ".";
 
@@ -33,6 +37,9 @@
 
   const dayStart = $derived(startOfDay($currentDate));
   const dayEnd = $derived(endOfDay($currentDate));
+
+  const { store: uncheckedHds } = uncheckedHolidays;
+  const visibleHolidays = $derived.by(() => getVisibleHolidays(holidays, $uncheckedHds));
 
   const { store: uncheckedBds } = uncheckedBirthdays;
   const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
@@ -96,7 +103,7 @@
         <BdBlock birthday={bd} />
       {/each}
 
-      {#each getHolidaysForDay(holidays, $currentDate) as holiday (holiday.id)}
+      {#each getHolidaysForDay(visibleHolidays, $currentDate) as holiday (holiday.id)}
         <HdBlock {holiday} />
       {/each}
 
