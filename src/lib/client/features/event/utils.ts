@@ -1,8 +1,31 @@
-import { differenceInMinutes, format, isSameDay, isSameYear } from "date-fns";
+import { differenceInMinutes, format, isSameDay, isSameYear, isWithinInterval } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 import { getValidTimeZone } from "$lib/shared/utils/timezone";
 import type { Event, EventChunk } from "$lib/shared/types";
+
+export function getVisibleEvents(events: Event[], start: Date, end: Date, unchecked: string[]) {
+  const all: Event[] = [];
+  const timed: Event[] = [];
+
+  for (const event of events) {
+    const isNotVisible = unchecked.includes(event.calendarId);
+    if (isNotVisible) continue;
+
+    const { start: eventStart, end: eventEnd } = getEventDateObjects(event);
+    const isInRange =
+      isWithinInterval(eventStart, { start, end }) ||
+      isWithinInterval(eventEnd, { start, end }) ||
+      (eventStart < start && eventEnd > end);
+
+    if (!isInRange) continue;
+
+    if (event.allDay) all.push(event);
+    else timed.push(event);
+  }
+
+  return { allDayEvents: all, timedEvents: timed };
+}
 
 export function getEventDateObjects(event: Event): { start: Date; end: Date } {
   const eventTimezone = getValidTimeZone(event.timezone);

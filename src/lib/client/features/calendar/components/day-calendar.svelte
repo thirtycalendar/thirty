@@ -3,7 +3,11 @@
 
   import { endOfDay, format, isToday, setHours, startOfDay } from "date-fns";
 
-  import { calculateEventOffsets, getEventDateObjects } from "$lib/client/features/event/utils";
+  import {
+    calculateEventOffsets,
+    getEventDateObjects,
+    getVisibleEvents
+  } from "$lib/client/features/event/utils";
   import { currentDate } from "$lib/client/stores/change-date";
   import { uncheckedBirthdays, uncheckedCalendars } from "$lib/client/stores/local-storage";
 
@@ -12,7 +16,6 @@
   import { BdBlock } from "../../birthday/components";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
   import { AllDayEventBlock, EventBlock } from "../../event/components";
-  import { getVisibleEvents } from "../utils";
 
   import { CurrentTimeIndicator } from ".";
 

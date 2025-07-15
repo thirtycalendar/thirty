@@ -1,31 +1,8 @@
-import { differenceInDays, isWithinInterval, max, min, startOfDay } from "date-fns";
+import { differenceInDays, max, min, startOfDay } from "date-fns";
 
 import type { AllDayLayoutInfo, Event } from "$lib/shared/types";
 
 import { getEventDateObjects } from "../event/utils";
-
-export function getVisibleEvents(events: Event[], start: Date, end: Date, unchecked: string[]) {
-  const all: Event[] = [];
-  const timed: Event[] = [];
-
-  for (const event of events) {
-    const isNotVisible = unchecked.includes(event.calendarId);
-    if (isNotVisible) continue;
-
-    const { start: eventStart, end: eventEnd } = getEventDateObjects(event);
-    const isInRange =
-      isWithinInterval(eventStart, { start, end }) ||
-      isWithinInterval(eventEnd, { start, end }) ||
-      (eventStart < start && eventEnd > end);
-
-    if (!isInRange) continue;
-
-    if (event.allDay) all.push(event);
-    else timed.push(event);
-  }
-
-  return { allDayEvents: all, timedEvents: timed };
-}
 
 export function calculateAllDayLayout(
   allDayEvents: Event[],
