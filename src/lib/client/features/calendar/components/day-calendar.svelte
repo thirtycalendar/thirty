@@ -98,7 +98,7 @@
 
   <div class="bg-base-200 border-b border-base-200 grid grid-cols-[50px_1fr]">
     <div></div>
-    <div class="flex flex-col gap-1 pb-1">
+    <div class="flex flex-col gap-1 pb-1 min-w-0">
       {#each getHolidaysForDay(visibleHolidays, $currentDate) as holiday (holiday.id)}
         <HdBlock {holiday} />
       {/each}

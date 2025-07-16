@@ -13,6 +13,8 @@
 
 ## Logs
 
+- Wed Jul 16, 2025
+  - (7.16.01) - Fixed text truncating bug for hd block, bd block, and all day event blocks.
 - Tue Jul 15, 2025
   - (7.15.01) - Add holiday related codes.
   - (7.15.02) - Better codes.

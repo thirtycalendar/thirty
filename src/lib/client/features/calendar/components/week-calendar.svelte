@@ -118,7 +118,7 @@
   <div class="grid grid-cols-[50px_repeat(7,1fr)] pb-1 bg-base-200 border-b border-base-200">
     <div></div>
     {#each days as day, i (i + day.toISOString())}
-      <div class="relative border-r border-base-200 px-1 flex flex-col gap-1">
+      <div class="relative border-r border-base-200 px-1 flex flex-col gap-1 min-w-0">
         {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
           <HdBlock {holiday} />
         {/each}

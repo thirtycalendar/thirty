@@ -30,8 +30,8 @@
 >
   <div class="w-1 h-full shrink-0" style:background-color={color}></div>
   <div class="p-0.5 overflow-hidden min-w-0 w-full text-xs font-medium">
-    <div class="flex items-center gap-1">
-      <Flag size="13" strokeWidth="2.5" />
+    <div class="flex items-center gap-1 min-w-0">
+      <Flag size="13" strokeWidth="2.5" class="flex-shrink-0" />
       <p class="truncate">{holiday.name}</p>
     </div>
   </div>

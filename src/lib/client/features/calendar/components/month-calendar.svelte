@@ -136,7 +136,7 @@
               title={holiday.name}
             >
               <div class="flex items-center gap-1">
-                <Flag size="12" strokeWidth="2.5" />
+                <Flag size="12" strokeWidth="2.5" class="flex-shrink-0" />
                 <p class="truncate">{holiday.name}</p>
               </div>
             </div>
@@ -153,7 +153,7 @@
               title={`${name}'s birthday`}
             >
               <div class="flex items-center gap-1">
-                <Cake size="12" strokeWidth="2.5" />
+                <Cake size="12" strokeWidth="2.5" class="flex-shrink-0" />
                 <p class="truncate">{name}</p>
               </div>
             </div>
