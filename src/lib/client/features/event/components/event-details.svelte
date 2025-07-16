@@ -13,6 +13,7 @@
   import { format } from "date-fns";
 
   import {
+    calculateTimezoneDiffInTime,
     formatDuration,
     formatEventTimeDetails,
     formatLocalTimeDetails,
@@ -46,6 +47,9 @@
     formatLocalTimeDetails(event, start, end, sameTimezone)
   );
   const totalDuration = $derived.by(() => formatDuration(start, end));
+  const timezoneDiffInTime = $derived.by(() =>
+    calculateTimezoneDiffInTime(start, userTimezone, normalizedEventTimezone, sameTimezone)
+  );
 
   const { data: calendars } = getCalendars();
 
@@ -85,6 +89,10 @@
       </div>
 
       {#if formattedLocalTime}
+        <p class="badge badge-outline badge-xs my-1">
+          {timezoneDiffInTime}{timezoneDiffInTime && " "}{userTimezone}
+        </p>
+
         <div class={`${$isSm ? "flex" : "block my-1"} items-center gap-2`}>
           <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
           <div class="badge badge-outline badge-xs">{userTimezone}</div>

@@ -8,7 +8,7 @@
 - [x] - Fix init calendar on auth index file.
 - [x] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
 - [ ] - Sync birthdays from Google calendars to db.
-- [ ] - Cache also country code alongside with country name for holiday
+- [x] - Cache also country code alongside with country name for holiday
 - [x] - Remove requireParam, and keep only requireParam for Hono api response.
 - [x] - Sticky all day events at the top.
 - [x] - Mark as unchecked calendars instead of checked calendars in local storage.

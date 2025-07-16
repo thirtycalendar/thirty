@@ -172,3 +172,30 @@ export function formatDuration(start: Date, end: Date) {
 
   return parts.join(" ");
 }
+
+export function calculateTimezoneDiffInTime(
+  start: Date,
+  userTimezone: string,
+  normalizedEventTimezone: string,
+  sameTimezone: boolean
+) {
+  if (!start || !userTimezone || !normalizedEventTimezone || sameTimezone) return "";
+
+  const userZoned = fromZonedTime(start, userTimezone);
+  const eventZoned = fromZonedTime(start, normalizedEventTimezone);
+
+  const diff = differenceInMinutes(eventZoned, userZoned);
+
+  const absDiff = Math.abs(diff);
+  const hours = Math.floor(absDiff / 60);
+  const minutes = absDiff % 60;
+
+  const parts = [];
+  if (hours) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
+  if (minutes) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
+
+  const formattedDiff = parts.join(" ");
+  const direction = diff < 0 ? "ahead of" : "behind";
+
+  return `${formattedDiff} ${direction}`;
+}
