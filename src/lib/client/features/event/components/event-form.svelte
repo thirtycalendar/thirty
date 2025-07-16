@@ -69,7 +69,7 @@
     }
   });
 
-  let previousCalendarId = $state("");
+  let previousCalendarId = $state($formData.calendarId);
 
   let isAllDay = $derived($formData.allDay === true);
   let isMultiDay = $derived($formData.startDate !== $formData.endDate);

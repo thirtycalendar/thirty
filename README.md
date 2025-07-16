@@ -16,6 +16,7 @@
 - Wed Jul 16, 2025
   - (7.16.01) - Fixed text truncating bug for hd block, bd block, and all day event blocks.
   - (7.16.02) - Still show the selected date after deleted and loose focus in date field component.
+  - (7.16.03) - Bug fixed in event form.
 - Tue Jul 15, 2025
   - (7.15.01) - Add holiday related codes.
   - (7.15.02) - Better codes.
