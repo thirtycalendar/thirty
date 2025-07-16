@@ -41,6 +41,7 @@
   let parsedDate = $derived.by(() => {
     const raw = $formData[name];
     const parsed = parse(raw, "yyyy-MM-dd", new Date());
+
     return isValid(parsed) ? parsed : new Date();
   });
 
@@ -67,7 +68,7 @@
     const formatStr = sameYear ? "EEE d, MMM" : "EEE d, MMM yyyy";
     const display = formatDate(date, formatStr);
 
-    return open ? filterText || display : display;
+    return open ? filterText : display;
   });
 
   function selectDay(day: Date) {
@@ -75,7 +76,7 @@
     today.setHours(0, 0, 0, 0);
     if (isDisablePast && day < today) return;
     $formData[name] = formatDate(day, "yyyy-MM-dd");
-    visibleMonth = startOfMonth(day); // Sync visible month to picked day
+    visibleMonth = startOfMonth(day);
     filterText = "";
     open = false;
     triggerButton?.blur();
@@ -83,8 +84,25 @@
 
   function commitInput() {
     const trimmed = filterText.trim();
-    const parsed = parse(trimmed, "yyyy-MM-dd", new Date());
-    if (isValid(parsed)) {
+    let parsed: Date | null = null;
+
+    const formats = [
+      "yyyy-MM-dd",
+      "M/d/yyyy",
+      "d-MMM-yyyy",
+      "MMM d, yyyy",
+      "MM/dd/yyyy",
+      "M-d-yyyy"
+    ];
+    for (const fmt of formats) {
+      const p = parse(trimmed, fmt, new Date());
+      if (isValid(p)) {
+        parsed = p;
+        break;
+      }
+    }
+
+    if (parsed) {
       $formData[name] = formatDate(parsed, "yyyy-MM-dd");
       visibleMonth = startOfMonth(parsed);
     }
@@ -161,8 +179,15 @@
   function handleBlur(event: FocusEvent) {
     setTimeout(() => {
       const related = event.relatedTarget as Node;
-      if (!triggerButton?.contains(related) && !calendarDropdown?.contains(related)) {
-        commitInput();
+      const isOutside = !triggerButton?.contains(related) && !calendarDropdown?.contains(related);
+
+      if (isOutside) {
+        if (!filterText.trim()) {
+          filterText = "";
+          open = false;
+        } else {
+          commitInput();
+        }
       }
     }, 100);
   }
@@ -170,7 +195,12 @@
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as Node;
     if (!triggerButton?.contains(target) && !calendarDropdown?.contains(target)) {
-      commitInput();
+      if (!filterText.trim()) {
+        filterText = "";
+        open = false;
+      } else {
+        commitInput();
+      }
     }
   }
 
@@ -195,7 +225,11 @@
     aria-label="Date input"
     bind:this={triggerButton}
     value={inputValue}
-    onfocus={() => (open = true)}
+    onfocus={() => {
+      open = true;
+
+      filterText = $formData[name] ? formatDate(parsedDate, "yyyy-MM-dd") : "";
+    }}
     onblur={handleBlur}
     oninput={(e) => (filterText = (e.target as HTMLInputElement).value)}
     onkeydown={handleKeyDown}
