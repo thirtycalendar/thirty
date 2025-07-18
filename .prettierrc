@@ -35,7 +35,8 @@
     "^\\$lib/server/services",
     "^\\$lib/server/auth",
     "^\\$lib/server/db",
-    "^\\$lib/server/email",
+    "^\\$lib/server/libs",
+    "^\\$lib/server/utils",
     "^\\$lib/server",
 
     "",

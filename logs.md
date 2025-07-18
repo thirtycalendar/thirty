@@ -1,0 +1,488 @@
+# Logs
+
+- Fri Jul 18, 2025
+  - (7.18.01) - Added codebook toml config file. Separated into logs file. Renamed TODO into todo.
+- Wed Jul 16, 2025
+  - (7.16.01) - Fixed text truncating bug for hd block, bd block, and all day event blocks.
+  - (7.16.02) - Still show the selected date after deleted and loose focus in date field component.
+  - (7.16.03) - Bug fixed in event form.
+  - (7.16.04) - Showed timezone different in time in event details.
+- Tue Jul 15, 2025
+  - (7.15.01) - Add holiday related codes.
+  - (7.15.02) - Better codes.
+  - (7.15.03) - Added holidays as props in week, day, and month calendar.
+  - (7.15.04) - Moved event related codes to event codes.
+  - (7.15.05) - Kinda working.
+  - (7.15.06) - Visible holidays.
+  - (7.15.07) - Holidays almost finished.
+- Mon Jul 14, 2025
+  - (7.14.01) - Added holiday kv instance. Updated Calendarific cache codes.
+  - (7.14.02) - Cached only 5 holiday countries and its holidays for coding and testing purpose.
+  - (7.14.03) - Cache user holidays for one days. Holidays only from the past years and the next three years.
+  - (7.14.04) - All holiday backend codes are working now.
+  - (7.14.05) - Made event details color circle div better.
+  - (7.14.06) - Added hd country codes.
+  - (7.14.07) - User now can add and remove holiday countries.
+- Sat Jul 12, 2025
+  - (7.12.01) - Updated week calendar and day calendar all day event block and birthday block padding grid.
+  - (7.12.02) - Added completed holiday backend codes.
+  - (7.12.03) - Add holiday on user create.
+  - (7.12.04) - Better type naming.
+  - (7.12.05) - Cached batch 0 holidays to KV.
+  - (7.12.06) - Updated related holiday backend codes for better usages. Fixed a lot of bugs.
+  - (7.12.07) - Improved code redundancy. Created modal store.
+- Fri Jul 11, 2025
+  - (7.11.01) - Fixed some bugs.
+  - (7.11.02) - Added birthdays to the calendar props.
+  - (7.11.03) - Showed birthday in week calendar and day calendar.
+  - (7.11.04) - Showed birthday in month calendar.
+  - (7.11.05) - Show only unchecked birthdays.
+  - (7.11.06) - Improved code performance for rendering displays.
+  - (7.11.07) - Updated color choice field color col grid to 6.
+  - (7.11.08) - Removed error message on cal create.
+- Thu Jul 10, 2025
+  - (7.10.01) - Automatically scroll to the current time. Added clear cache routes.
+  - (7.10.02) - Used requireParam function only.
+  - (7.10.03) - Reset form values on success. Updated createForm util function.
+  - (7.10.04) - Bug fixed.
+  - (7.10.05) - Set the same day logic in event form.
+  - (7.10.06) - Event and cal error message on form submit.
+  - (7.10.07) - Bug fixed for displaying the dates correct way in event details.
+  - (7.10.08) - Clear the caches if creating or updating calendar is primary.
+  - (7.10.09) - Fallback primary calendar on create event form.
+  - (7.10.10) - Better scroll offset hour. Removed task create button for now.
+  - (7.10.11) - All the field components have formErrors logic.
+  - (7.10.12) - Showed total duration in event details.
+  - (7.10.13) - Disable creating a new event if there is no calendar created.
+  - (7.10.14) - Updated unchecked store for better usage.
+  - (7.10.15) - For better naming convention.
+  - (7.10.16) - Updated cal list.
+  - (7.10.17) - Finished to cal list codes.
+  - (7.10.18) - Birthday.
+  - (7.10.19) - Fixed date-field component.
+  - (7.10.20) - Added dob fields and renamed description to note.
+  - (7.10.21) - Showed dob in bd details.
+  - (7.10.22) - Updated responsive event details dates.
+  - (7.10.23) - Updated detail action buttons.
+  - (7.10.24) - Cleaned codes.
+  - (7.10.25) - Changed all the component props type names into just props.
+  - (7.10.26) - Moved cal view type into types file.
+  - (7.10.27) - Improved createForm util function. Better codes.
+- Wed Jul 9, 2025
+  - (7.9.01) - Committed for safety.
+  - (7.9.02) - Fixed timezone wrong displaying time.
+  - (7.9.03) - Fixed event details start and end derived problem.
+  - (7.9.04) - Improved codes.
+  - (7.9.05) - Overlapping event problem.
+  - (7.9.06) - Better event blocks overlapping.
+  - (7.9.07) - Disable startTime, endDate, and endTime fields if it is allDay.
+  - (7.9.08) - Fixed current day bg background in month calendar.
+  - (7.9.09) - All day events.
+  - (9.9.10) - Coding.
+  - (9.9.11) - Rounded border and spacing in week calendar.
+  - (9.9.12) - All day event block component codes.
+  - (9.9.13) - Extracted utils function.
+  - (9.9.14) - Automatically update checked calendar's events.
+  - (9.9.15) - Stack all days events in week calendar.
+  - (9.9.16) - Better styling.
+  - (9.9.17) - Finished all the all day event block things.
+- Tue Jul 8, 2025
+  - (7.8.01) - Fixed event ui errors mostly.
+  - (7.8.02) - Fixed day calendar time label bug.
+  - (7.8.03) - Fixed timezone rendering error.
+  - (7.8.04) - Better event utils.
+  - (7.8.05) - Committed for safety.
+  - (7.8.06) - Used old codes for fixing timezone different in event details.
+- Mon Jul 7, 2025
+  - (7.7.01) - Removed all the init calendar timezone update things.
+  - (7.7.02) - Get the timezone of a user via IP address. Fixed drizzle config schemas to tables.
+  - (7.7.03) - Added billing notes and used "UTC" for fallback timezone on user create.
+  - (7.7.04) - Added holiday routes and services.
+  - (7.7.05) - Better hono error response. Improved ipwhois util functions.
+  - (7.7.06) - Add detect holiday routes. Finished all holiday codes.
+  - (7.7.07) - Added clear caches function for calendar, event, and tasks.
+  - (7.7.08) - Added birthday db table and zod schema.
+  - (7.7.09) - Added birthday service codes.
+  - (7.7.10) - Added birthday hono routes
+  - (7.7.11) - Updated event table.
+  - (7.7.12) - Updated google sync codes.
+  - (7.7.13) - Fixed event types errors for curd.
+  - (7.7.14) - Updated event block, event details, and event form components.
+  - (7.7.15) - Fixed type errors mostly.
+  - (7.7.16) - Fixed week calendar component.
+  - (7.7.17) - Fixed all type errors, but not sure if it is fully working.
+  - (7.7.18) - Kinda working in tricky ways.
+- Sun Jul 6, 2025
+  - (7.6.01) - Added Table suffix for all tables.
+  - (7.6.02) - Added constants file.
+  - (7.6.03) - Moved types as file into shared folder. Removed types folder.
+  - (7.6.04) - Used zod and drizzle types instead of hard coded types.
+  - (7.6.05) - Removed biome linter to use eslint.
+  - (7.6.06) - Setup ESLint instead of Biome.
+  - (7.6.07) - Added unicorn filename case plugin.
+  - (7.6.08) - Fixed some ESLint linting errors.
+  - (7.6.09) - Fixed all ESLint linting errors and set up Husky and lint-staged.
+  - (7.6.10) - Init calendar store to kv.
+  - (7.6.11) - Added init calendar kv things.
+- Sat Jul 5, 2025
+  - (7.5.01) - Improved cal list ux.
+  - (7.5.02) - Added init calendar codes to store to KV.
+  - (7.5.03) - Changed schemas to tables name in db.
+  - (7.5.04) - Added shared folder and moved utils folder to shared folder for better folder structure.
+  - (7.5.05) - Moved schemas into shared schemas folder.
+  - (7.5.06) - Added Table suffix for auth tables.
+- Fri Jul 4, 2025
+  - (7.4.01) - Fixed getting valid timezone name.
+  - (7.4.02) - Revalidate the cal list and event list automatically after deleting a cal.
+  - (7.4.03) - Added more todos.
+  - (7.4.04) - Bug fixed for showing actual calendar name and color every time.
+  - (7.4.05) - Showed sync source text and improved function name.
+  - (7.4.06) - Fixed reactivity bug.
+  - (7.4.07) - Separated into event action buttons.
+  - (7.4.08) - Separated into cal action buttons.
+  - (7.4.09) - Bug fixed for updating event cache after a cal was deleted.
+- Thu Jul 3, 2025
+  - (7.3.01) - Separated cal modal for cal details.
+  - (7.3.02) - Show cal details instancing.
+  - (7.3.03) - Showed last updated time for cal and event.
+  - (7.3.04) - Better method for for showing cal and event details.
+  - (7.3.05) - Show description and location on event edit form.
+- Wed Jul 2, 2025
+  - (7.2.01) - Updated timezone field.
+  - (7.2.02) - Added cal details component.
+- Tue Jul 1, 2025
+  - (7.1.01) - Overflow x hidden in week-calendar.
+  - (7.1.02) - Typed bug fixed.
+  - (7.1.03) - Separated event form and create event form.
+  - (7.1.04) - Edit event form.
+  - (7.1.05) - Committed for safety.
+  - (7.1.06) - Show actual calendar and color id on edit.
+  - (7.1.07) - Added mutation codes for create and edit event, but not working.
+  - (7.1.08) - Started writing codes for calendar curd.
+  - (7.1.09) - Can create a new calendar now.
+- Sat Jun 28, 2025
+  - (6.28.01) - Glass ui style for event blocks.
+  - (6.28.02) - Updated minute line offset.
+  - (6.28.03) - Overlapping events.
+  - (6.28.04) - Improved query utils codes.
+  - (6.28.05) - More updates to query utils.
+  - (6.28.06) - Automatically the ui after events got updated.
+  - (6.28.07) - Separated current time indicator component.
+- Fri Jun 27, 2025
+  - (6.27.01) - Committed for safety.
+  - (6.27.02) - Fixed font size bug.
+  - (6.27.03) - Removed all separated modal components.
+  - (6.27.04) - Basic event details style.
+  - (6.27.05) - Styling event details component.
+  - (6.27.06) - Showed color of the calendar in event details.
+  - (6.27.07) - Event delete button.
+  - (6.27.08) - Event delete button logic.
+- Thu Jun 26, 2025
+  - (6.26.01) - Updated event and task stores.
+- Wed Jun 25, 2025
+  - (6.25.01) - Updated query utils for better improvement.
+  - (6.25.02) - Signout user if it is invalid google token.
+  - (6.25.03) - Refetch both calendar and events after syncing.
+  - (6.25.04) - End date bug fixed.
+  - (6.25.05) - Made location and description on click input showing.
+  - (6.25.06) - Added more options show toggle button.
+  - (6.25.07) - Added more day option checkbox.
+  - (6.25.08) - Bug fixed.
+  - (6.25.09) - Event form UI is kinda finished.
+- Sat Jun 21, 2025
+  - (6.21.01) - Time field input deleted value working.
+  - (6.21.02) - Calendar choice field updated.
+  - (6.21.03) - Showed selected color as checked.
+  - (6.21.04) - Update the colorId automatically after the updated calendar choice.
+  - (6.21.05) - Updated event form component.
+  - (6.21.06) - Updated query util functions.
+  - (6.21.07) - sync google calendars and sync google events.
+  - (6.21.08) - Improved sync google calendars and events codes.
+  - (6.21.09) - Sync api route. Only sync specific events and calendars.
+  - (6.21.10) - Added sync page.
+  - (6.21.11) - Synced all the calendar and events from Google. But not fully working.
+  - (6.21.12) - Synced all the events and calendars from Google.
+  - (6.21.13) - Show confirmation message before syncing is finished.
+  - (6.21.14) - Toast component.
+  - (6.21.15) - Improved google syncing time.
+  - (6.21.16) - Fixed month calendar component.
+  - (6.21.17) - Showed events based on timezone.
+  - (6.21.18) - Events event in start time order in month calendar.
+- Wed Jun 18, 2025
+  - (6.18.01) - Updated form components.
+  - (6.18.02) - Kinda working, just wired.
+  - (6.18.03) - For safety.
+  - (6.18.04) - All form fields kinda working.
+  - (6.18.05) - Time field updated.
+  - (6.18.06) - Both date and time fields are working.
+  - (6.18.07) - Added timezone field.
+  - (6.18.08) - Show original date and time on focus lose.
+- Tue Jun 17, 2025
+  - (6.17.01) - Added timezone field to event table.
+  - (6.17.02) - Moved components into each feature folders.
+  - (6.17.03) - Fixed/updated components.
+  - (6.17.04) - Fixed most of components.
+  - (6.17.05) - Kinda working.
+- Mon Jun 16, 2025
+  - (6.16.01) - Updated db schemas and service files.
+  - (6.16.02) - Create initial calendar on sign-up and color util functions.
+  - (6.16.03) - Added all routes, schemas, and finished all the service files.
+  - (6.16.04) - Used `requireParam` and `errorResponse` util functions for api routes.
+  - (6.16.05) - Updated kv cache times, added get nearest color hex code util function. Updated source not null bug in event table.
+- Sun Jun 15, 2025
+  - (6.15.01) - Updated google access token.
+  - (6.15.02) - Reset both db.
+  - (6.15.03) - Added calendar, event, and task db schemas.
+  - (6.15.04) - Better db schemas.
+  - (6.15.05) - Improved db schemas and updated types.
+  - (6.15.06) - Made a lot of improvement.
+  - (6.15.07) - Added calendar, event, and task services.
+- Sat Jun 14, 2025
+  - (6.14.01) - Extracted color route.
+  - (6.14.02) - Trying to update the colors.
+  - (6.14.03) - Showed colors of calendars.
+  - (6.14.04) - Showed colors of util events.
+  - (6.14.05) - Showed colors of week calendar and day calendar.
+  - (6.14.06) - Fixing month colors.
+  - (6.14.07) - Updated color fetching loading.
+  - (6.14.08) - Made event sorting in month calendar.
+  - (6.14.09) - Updated month calendar component.
+  - (6.14.10) - Committed for safety.
+  - (6.14.11) - Calendar id picker kinda working.
+  - (6.14.12) - Updated calendar input field.
+  - (6.14.13) - Improved codes.
+  - (6.14.14) - Added color choice field.
+  - (6.14.15) - Styled color picker.
+- Fri Jun 13, 2025
+  - (6.13.01) - Event form start time and end time comparison.
+  - (6.13.02) - Kinda working but got effect bug.
+  - (6.13.03) - Fixed re-render effect bug.
+  - (6.13.04) - Fixed time picker width.
+  - (6.13.05) - Disable past days in endDate.
+  - (6.13.06) - Updated time picker div position.
+- Thu Jun 12, 2025
+  - (6.12.01) - Updated codes to long live access token.
+  - (6.12.02) - Added textarea field.
+  - (6.12.03) - Calendar start date and end dates.
+  - (6.12.04) - Styling event form.
+  - (6.12.05) - Time comparing kinda working.
+- Wed Jun 11, 2025
+  - (6.11.01) - Updated event schema.
+  - (6.11.02) - Updated month calendar util event text color.
+  - (6.11.03) - Just decided to use the simple way.
+  - (6.11.04) - Event form validation working.
+  - (6.11.05) - Cleaned codes.
+  - (6.11.06) - Event form fields.
+  - (6.11.07) - Time input field.
+  - (6.11.08) - Time zone and time.
+  - (6.11.09) - Event form.
+- Tue Jun 10, 2025
+  - (6.10.01) - Removed unused imports.
+  - (6.10.02) - Trying to show events and utilEvents in day calendar.
+  - (6.10.03) - Showed events in day calendar.
+  - (6.10.04) - Improved codes.
+  - (6.10.05) - Tying to show events and utilEvents in month calendar.
+  - (6.10.06) - Kinda working.
+  - (6.10.07) - Month calendar view is working now.
+  - (6.10.08) - Updated cal list.
+  - (6.10.09) - Event schema.
+- Mon Jun 9, 2025
+  - (6.9.01) - color and bg color of an event.
+  - (6.9.02) - Separated events and util events.
+  - (6.9.03) - Updated event api routes.
+  - (6.9.04) - Remove duplicate util events.
+  - (6.9.05) - Styling event block.
+  - (6.9.06) - Better styling.
+  - (6.9.07) - Fixed color error. Still styling events.
+  - (6.9.08) - Better event style.
+  - (6.9.09) - Showed holidays.
+  - (6.9.10) - Bug.
+  - (6.9.11) - Almost finished fixing the bug.
+  - (6.9.12) - Kinda working.
+  - (6.9.13) - Fixed extra space.
+  - (6.9.14) - Toggle calendar check status.
+- Sun Jun 8, 2025
+  - (6.8.01) - Listed all the calendars from api.
+  - (6.8.02) - Loading state and toggle calendar list status in localStorage.
+  - (6.8.03) - Updated localStorage keys and styled cal list.
+  - (6.8.04) - Replaced email address with name.
+  - (6.8.05) - Show/hide setting button.
+  - (6.8.06) - Store checkbox status in localStorage.
+  - (6.8.07) - Trying to show all the events.
+  - (6.8.08) - Showing events.
+  - (6.8.09) - Event colors.
+  - (6.8.10) - Kinda working.
+  - (6.8.11) - Passed as prop instead of directly fetching.
+  - (6.8.12) - Better styling and better event rendering.
+- Fri Jun 6, 2025
+  - (6.6.01) - Updated query utils.
+  - (6.6.02) - Updated cache codes.
+  - (6.6.03) - Moved all the cache keys in one file. Added event type.
+  - (6.6.04) - Updated cache codes.
+  - (6.6.05) - Updated routes.
+- Thu Jun 5, 2025
+  - (6.5.01) - Added google task scope.
+  - (6.5.02) - Fixed better auth route bug.
+  - (6.5.03) - Cleaned codes and better routes.
+- Sun Jun 1, 2025
+  - (6.1.01) - Used env config file for better clean code.
+  - (6.1.02) - Used env config for all env usages.
+  - (6.1.03) - Listing all the calendar events.
+  - (6.1.04) - Added calendar, event, and task routes.
+- Sat May 31, 2025
+  - (5.31.01) - Found a method to get refresh token. But will try different method next.
+  - (5.31.02) - Got refresh token via generic oauth method.
+  - (5.31.03) - Used better method.
+  - (5.31.04) - Fixed type.
+  - (5.31.05) - Google calendar api successfully working...
+- Fri May 30, 2025
+  - (5.30.01) - Renamed lib/ui to lib/client for better naming convention.
+  - (5.30.02) - Added google cal client and ported to api routes. But getting errors.
+  - (5.30.03) - Committed for safety.
+  - (5.30.04) - Google calendar auth is working now.
+  - (5.30.05) - Formatted api.
+  - (5.30.06) - Calendar route.
+  - (5.30.07) - Committed for safety.
+  - (5.30.08) - Used separated db projects link and added kv.
+  - (5.30.09) - Fixed naming convention mistake. Removed token api call. Trying different method.
+  - (5.30.10) - Committed for safety.
+- Thu May 29, 2025
+  - (5.29.01) - **BREAK CHANGES**. Restructured all the folders and files.
+  - (5.29.02) - Fixed server folder.
+  - (5.29.03) - Fixed ui folder.
+  - (5.29.04) - Almost finished fixing.
+  - (5.29.05) - Deployed to Vercel.
+  - (5.29.06) - Protected all routes and fixed bugs.
+  - (5.29.07) - Updated query and mutation utils.
+  - (5.29.08) - Improved codes.
+- Wed May 28, 2025
+  - (5.28.01) - Added settings sidebar.
+  - (5.28.02) - Added settings pages.
+  - (5.28.03) - Highlight the active and redirect to general for settings.
+  - (5.28.04) - Added navbar.
+  - (5.28.05) - Added user profile.
+  - (5.28.06) - Used profile info from Google.
+  - (5.28.07) - Signout button.
+  - (5.28.08) - Stored user session in the local storage.
+  - (5.28.09) - Added custom authorize api route.
+  - (5.28.10) - Added auth helper linked with backend.
+- Tue May 27, 2025
+  - (5.27.01) - Removed package files from web and api.
+  - (5.27.02) - Updated.
+  - (5.27.03) - Coding settings page. But bored.
+  - (5.27.04) - Added prettier.
+  - (5.27.05) - Better prettier config file. Auto sort importing.
+  - (5.27.06) - Committed for safety.
+  - (5.27.07) - Removed eslint again.
+  - (5.27.08) - Added biome js and linted some files.
+  - (5.27.09) - Linted files.
+- Mon May 26, 2025
+  - (5.26.01) - Fixed button inline.
+  - (5.26.02) - Added input field. Added event title.
+  - (5.26.03) - Testing form.
+  - (5.26.04) - Added auth page.
+  - (5.26.05) - Designed auth page.
+  - (5.26.06) - Created my own custom query utils.
+  - (5.26.07) - Updated query functions. Trying to link with backend.
+  - (5.26.08) - Auth is working now.
+  - (5.25.09) - Used mini workspace project style for better dev.
+- Sun May 25, 2025
+  - (5.25.01) - Updated time input component.
+  - (5.25.02) - Added create form validation util.
+  - (5.25.03) - Created required component files.
+  - (5.25.04) - Linked event and task modals with create buttons.
+  - (5.25.05) - Added borders for dropdown for better ui.
+- Sat May 24, 2025
+  - (5.24.01) - Changed fixed icon.
+  - (5.24.02) - Separated create button.
+  - (5.24.03) - Fixed safari bug.
+  - (5.24.04) - Added calendar input.
+  - (5.24.05) - Updated style.
+  - (5.24.07) - Finished calendar input component.
+  - (5.24.08) - Coding time input component.
+  - (5.24.09) - Kinda working.
+  - (5.24.10) - Improvement 2.
+  - (5.24.11) - Improvement 3.
+  - (5.24.12) - Close the calendar on click outside.
+  - (5.24.13) - Both date picker and time picker are working now.
+- Fri May 23, 2025
+  - (5.23.01) - Fixed window store bug and added white theme.
+  - (5.23.02) - Fixed theme.
+  - (5.23.03) - Moved up problem solved.
+  - (5.23.04) - Created toggle sidebar icon component for better use.
+  - (5.23.05) - Change the sidebar contents based on url.
+  - (5.23.06) - Added mini calendar component.
+  - (5.23.07) - Added mini calendar date change buttons.
+  - (5.23.08) - Cal view buttons named to change cal view button.
+  - (5.23.09) - Moved create calendar button to bottom.
+  - (5.23.10) - Better styling.
+  - (5.23.11) - Change to day view after month grid click.
+  - (5.23.12) - Change to day view after year grid click.
+  - (5.23.13) - Updated responsive view. Fixed bug for change cal view component.
+  - (5.23.14) - Added cal list component. Fixed create dropdown bug.
+  - (5.23.15) - Styled cal list component.
+  - (5.23.16) - Show and hide calendars.
+  - (5.23.17) - Added animation on cal list hide. Added modal component.
+  - (5.23.18) - Added favicon.
+- Thu May 22, 2025
+  - (5.22.01) - Added change month buttons.
+  - (5.22.02) - Automatically change the navbar date based on date button change.
+  - (5.22.03) - Faded the days that doesn't belong to the current month.
+  - (5.22.04) - Added loading spinner for calendar loading.
+  - (5.22.05) - Added year calendar.
+  - (5.22.06) - Made it responsive and change year functions.
+  - (5.22.07) - Better grid for year calendar.
+  - (5.22.08) - Added create button.
+  - (5.22.09) - Responsive cal view buttons.
+  - (5.22.10) - Hide dropdown automatically after click.
+  - (5.22.11) - Added cal sidebar component.
+  - (5.22.12) - Sidebar styling.
+  - (5.22.13) - Added new page: settings.
+  - (5.22.14) - Cleaned codes.
+  - (5.22.15) - Added responsive store to get screen sizes.
+  - (5.22.16) - Updated responsive store.
+  - (5.22.17) - Updated.
+  - (5.22.18) - Automatically close the chat sidebar when chat icon hidden.
+  - (5.22.19) - Almost finished.
+  - (4.22.20) - Responsive working now.
+  - (4.22.21) - Fixed bug.
+- Wed May 21, 2025
+  - (5.21.01) - Sidebar toggle is now working.
+  - (5.21.02) - Used sidebar store method again.
+  - (5.21.03) - Both sidebar working.
+  - (5.21.04) - Stared studying cal navbar.
+  - (5.21.05) - Finished styling change cal view tabs.
+  - (5.21.06) - Sidebar functionality working via calendar navbar.
+  - (5.21.07) - Better navbar style for mobile responsive.
+  - (5.21.08) - Added week calendar component.
+  - (5.21.09) - Added week date store.
+  - (5.21.10) - Designing week calendar.
+  - (5.21.11) - Committed for safety.
+  - (5.21.12) - Safety.
+  - (5.21.13) - Styling.
+  - (5.21.14) - Margin bug is now fixed.
+  - (5.21.15) - Added border to make better UI.
+  - (5.21.16) - Show the current time with a red line.
+  - (5.21.17) - Start the week from Sunday and automatically scroll the the current time on page load.
+  - (5.21.18) - Store the calendar view state in localStorage.
+  - (5.21.20) - Remove calendar view blink on refresh.
+  - (5.21.21) - Added Day calendar component.
+  - (5.21.22) - Added change day stores.
+  - (5.21.23) - Extracted change date buttons as component.
+  - (5.21.24) - Added month calendar.
+  - (5.21.25) - Trying to do responsive.
+- Tue May 20, 2025
+  - (5.20.01) - Added custom dark theme for daisy ui.
+  - (5.20.02) - Trying to create custom sidebar.
+  - (5.20.03) - Committed for safety.
+- Mon May 19, 2025
+  - (5.19.01) - Added `api` and `web` folders. Deployed both to Vercel.
+  - (5.19.02) - Added daisy ui and tailwind css.
+  - (5.19.03) - Added drizzle orm and connected to NeonDB.
+  - (5.19.04) - Better way for db index file.
+  - (5.19.05) - Added better-auth config and migrated to db.
+  - (5.19.06) - Added context file and cors.
+  - (5.19.07) - Added auth routes to the main route.
+  - (5.19.08) - Testing grids.
+- Sun May 18, 2025
+  - (first-commit) - **Ko & Thae, 1.6 years anniversary**.
