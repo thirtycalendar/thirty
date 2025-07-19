@@ -2,6 +2,7 @@
 
 - Sat Jul 19, 2025
   - (7.19.01) - Added form action buttons component file.
+  - (7.19.02) - Create db service kinda working, but hooks still doesn't work.
 - Fri Jul 18, 2025
   - (7.18.01) - Added codebook toml config file. Separated into logs file. Renamed TODO into todo.
 - Wed Jul 16, 2025

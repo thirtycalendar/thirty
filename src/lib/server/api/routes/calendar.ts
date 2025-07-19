@@ -4,14 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import {
-  clearCalendars,
-  createCalendar,
-  deleteCalendar,
-  getAllCalendars,
-  getCalendar,
-  updateCalendar
-} from "$lib/server/services/calendar";
+import { calendarService } from "$lib/server/services/calendar";
 
 import { calendarSchema } from "$lib/shared/schemas/calendar";
 import type { Calendar, SuccessResponse, User } from "$lib/shared/types";
@@ -24,7 +17,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const calendars = await getAllCalendars(user.id);
+      const calendars = await calendarService.getAll(user.id);
 
       return c.json<SuccessResponse<Calendar[]>>({
         success: true,
@@ -40,7 +33,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "calendar id");
 
-      const calendar = await getCalendar(id);
+      const calendar = await calendarService.get(id);
 
       return c.json<SuccessResponse<Calendar>>({
         success: true,
@@ -56,7 +49,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const calendar = await createCalendar(user.id, data);
+      const calendar = await calendarService.create(user.id, data);
 
       return c.json<SuccessResponse<Calendar>>({
         success: true,
@@ -74,7 +67,7 @@ const app = new Hono<Context>()
 
       const data = c.req.valid("json");
 
-      const calendar = await updateCalendar(id, data);
+      const calendar = await calendarService.update(id, data);
 
       return c.json<SuccessResponse<Calendar>>({
         success: true,
@@ -90,7 +83,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "calendar id");
 
-      const calendar = await deleteCalendar(id);
+      const calendar = await calendarService.delete(id);
 
       return c.json<SuccessResponse<Calendar>>({
         success: true,
@@ -105,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await clearCalendars(user.id);
+      await calendarService.clear(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

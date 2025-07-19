@@ -3,10 +3,22 @@ import type { Redis } from "@upstash/redis";
 import { eq } from "drizzle-orm";
 import type { PgTable } from "drizzle-orm/pg-core";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Hook<T> = (args: { input: any; result?: T }) => Promise<void> | void;
+type Hook<Input, Result = void, Context = unknown> = (args: {
+  input: Input;
+  result?: Result;
+  context: Context;
+}) => Promise<void> | void;
 
-type CreateDbServiceParams<T extends { id: string; userId: string }> = {
+type HookSet<Input, Result = void, Context = unknown> = {
+  before?: Hook<Input, Result, Context>;
+  after?: Hook<Input, Result, Context>;
+};
+
+type MethodOptions<Input, Result = void, Context = unknown> = {
+  hooks?: HookSet<Input, Result, Context>;
+};
+
+type CreateDbServiceParams<T extends { id: string; userId: string }, FormType> = {
   table: PgTable;
   kv?: {
     kv: Redis;
@@ -14,53 +26,90 @@ type CreateDbServiceParams<T extends { id: string; userId: string }> = {
     cacheTime: number;
   };
   hooks?: {
-    getAll?: { before?: Hook<T[]>; after?: Hook<T[]> };
-    get?: { before?: Hook<T>; after?: Hook<T> };
-    create?: { before?: Hook<T>; after?: Hook<T> };
-    update?: { before?: Hook<T>; after?: Hook<T> };
-    delete?: { before?: Hook<T>; after?: Hook<T> };
-    clear?: { before?: Hook<void>; after?: Hook<void> };
+    getAll?: HookSet<string, T[], { userId: string }>;
+    get?: HookSet<string, T, { userId: string }>;
+    create?: HookSet<FormType, T, { userId: string }>;
+    update?: HookSet<Partial<FormType>, T, { userId: string; id: string }>;
+    delete?: HookSet<string, T, { userId: string; id: string }>;
+    deleteAll?: HookSet<string, void, { userId: string }>;
+    clear?: HookSet<string, void, { userId: string }>;
   };
 };
+
+function mergeHooks<Input, Result, Context>(
+  global?: HookSet<Input, Result, Context>,
+  local?: HookSet<Input, Result, Context>
+): HookSet<Input, Result, Context> {
+  return {
+    before: async (args) => {
+      if (global?.before) await global.before(args);
+      if (local?.before) await local.before(args);
+    },
+    after: async (args) => {
+      if (global?.after) await global.after(args);
+      if (local?.after) await local.after(args);
+    }
+  };
+}
 
 export function createDbService<T extends { id: string; userId: string }, FormType>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   db: any,
-  params: CreateDbServiceParams<T>
+  params: CreateDbServiceParams<T, FormType>
 ) {
   const { table, kv, hooks = {} } = params;
 
   const getKvKey = (userId: string) => kv?.kvKeyFn(userId) ?? "";
 
-  async function getAll(userId: string): Promise<T[]> {
-    await hooks.getAll?.before?.({ input: userId });
+  async function getAll(
+    userId: string,
+    options?: MethodOptions<string, T[], { userId: string }>
+  ): Promise<T[]> {
+    const context = { userId };
+    const hookSet = mergeHooks(hooks.getAll, options?.hooks);
+    await hookSet.before?.({ input: userId, context });
 
     if (kv) {
       const cached = await kv.kv.get<T[]>(getKvKey(userId));
-      if (cached) return cached;
+      if (cached) {
+        await hookSet.after?.({ input: userId, result: cached, context });
+        return cached;
+      }
     }
 
     // @ts-expect-error — Drizzle doesn't expose column keys generically
     const result = await db.select().from(table).where(eq(table.userId, userId));
+
     if (kv) await kv.kv.set(getKvKey(userId), result, { ex: kv.cacheTime });
 
-    await hooks.getAll?.after?.({ input: userId, result });
+    await hookSet.after?.({ input: userId, result, context });
     return result;
   }
 
-  async function get(id: string): Promise<T> {
-    await hooks.get?.before?.({ input: id });
-
+  async function get(
+    id: string,
+    options?: MethodOptions<string, T, { userId: string }>
+  ): Promise<T> {
     // @ts-expect-error — Drizzle doesn't expose column keys generically
     const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
     if (!row) throw new Error("Not found");
 
-    await hooks.get?.after?.({ input: id, result: row });
+    const context = { userId: row.userId };
+    const hookSet = mergeHooks(hooks.get, options?.hooks);
+    await hookSet.before?.({ input: id, context });
+
+    await hookSet.after?.({ input: id, result: row, context });
     return row;
   }
 
-  async function create(userId: string, data: FormType): Promise<T> {
-    await hooks.create?.before?.({ input: data });
+  async function create(
+    userId: string,
+    data: FormType,
+    options?: MethodOptions<FormType, T, { userId: string }>
+  ): Promise<T> {
+    const context = { userId };
+    const hookSet = mergeHooks(hooks.create, options?.hooks);
+    await hookSet.before?.({ input: data, context });
 
     const [inserted] = await db
       .insert(table)
@@ -78,16 +127,22 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
-    await hooks.create?.after?.({ input: data, result: inserted });
+    await hookSet.after?.({ input: data, result: inserted, context });
     return inserted;
   }
 
-  async function update(id: string, updates: Partial<FormType>): Promise<T> {
+  async function update(
+    id: string,
+    updates: Partial<FormType>,
+    options?: MethodOptions<Partial<FormType>, T, { userId: string; id: string }>
+  ): Promise<T> {
     // @ts-expect-error — Drizzle doesn't expose column keys generically
     const [existing] = await db.select().from(table).where(eq(table.id, id)).limit(1);
     if (!existing) throw new Error("Not found");
 
-    await hooks.update?.before?.({ input: updates });
+    const context = { userId: existing.userId, id };
+    const hookSet = mergeHooks(hooks.update, options?.hooks);
+    await hookSet.before?.({ input: updates, context });
 
     const [updated] = await db
       .update(table)
@@ -108,16 +163,25 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
-    await hooks.update?.after?.({ input: updates, result: updated });
+    await hookSet.after?.({ input: updates, result: updated, context });
     return updated;
   }
 
-  async function remove(id: string): Promise<T> {
+  async function remove(
+    id: string,
+    options?: MethodOptions<string, T, { userId: string; id: string }>
+  ): Promise<T> {
+    // @ts-expect-error — Drizzle doesn't expose column keys generically
+    const [itemToDelete] = await db.select().from(table).where(eq(table.id, id)).limit(1);
+    if (!itemToDelete) throw new Error("Not found");
+
+    const context = { userId: itemToDelete.userId, id };
+    const hookSet = mergeHooks(hooks.delete, options?.hooks);
+    await hookSet.before?.({ input: id, context });
+
     // @ts-expect-error — Drizzle doesn't expose column keys generically
     const [deleted] = await db.delete(table).where(eq(table.id, id)).returning();
     if (!deleted) throw new Error("Delete failed");
-
-    await hooks.delete?.before?.({ input: id });
 
     if (kv) {
       const cached = await kv.kv.get<T[]>(getKvKey(deleted.userId));
@@ -127,14 +191,34 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
-    await hooks.delete?.after?.({ input: id, result: deleted });
+    await hookSet.after?.({ input: id, result: deleted, context });
     return deleted;
   }
 
-  async function clear(userId: string) {
-    await hooks.clear?.before?.({ input: userId });
+  async function deleteAll(
+    userId: string,
+    options?: MethodOptions<string, void, { userId: string }>
+  ) {
+    const context = { userId };
+    const hookSet = mergeHooks(hooks.deleteAll, options?.hooks); // Use the new deleteAll hook
+    await hookSet.before?.({ input: userId, context });
+
+    // @ts-expect-error — Drizzle doesn't expose column keys generically
+    await db.delete(table).where(eq(table.userId, userId));
+
+    await clear(userId);
+
+    await hookSet.after?.({ input: userId, context });
+  }
+
+  async function clear(userId: string, options?: MethodOptions<string, void, { userId: string }>) {
+    const context = { userId };
+    const hookSet = mergeHooks(hooks.clear, options?.hooks);
+    await hookSet.before?.({ input: userId, context });
+
     if (kv) await kv.kv.del(getKvKey(userId));
-    await hooks.clear?.after?.({ input: userId });
+
+    await hookSet.after?.({ input: userId, context });
   }
 
   return {
@@ -143,6 +227,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     create,
     update,
     delete: remove,
+    deleteAll,
     clear
   };
 }
