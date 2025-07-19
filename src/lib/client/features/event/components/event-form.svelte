@@ -15,6 +15,7 @@
     ChoiceField,
     ColorChoiceField,
     DateField,
+    FormActionButtons,
     InputField,
     TextareaField,
     TimeField,
@@ -306,24 +307,11 @@
       </div>
     {/if}
 
-    <div class="flex justify-end gap-2 pt-4">
-      {#if !isCreate}
-        <button
-          type="button"
-          class="btn btn-ghost font-bold"
-          onclick={handleEventStopEditing}
-          disabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
-        >
-          Cancel
-        </button>
-      {/if}
-      <button
-        type="submit"
-        class="btn btn-base-300 font-bold"
-        disabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
-      >
-        Save
-      </button>
-    </div>
+    <FormActionButtons
+      {isCreate}
+      isSaving={$isSubmitting || isMutationPending}
+      isDisabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
+      onCancel={handleEventStopEditing}
+    />
   </form>
 {/if}

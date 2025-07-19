@@ -1,7 +1,12 @@
 <script lang="ts">
   import { Globe, Palette } from "@lucide/svelte";
 
-  import { ColorChoiceField, InputField, TimezoneField } from "$lib/client/components";
+  import {
+    ColorChoiceField,
+    FormActionButtons,
+    InputField,
+    TimezoneField
+  } from "$lib/client/components";
   import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -22,7 +27,7 @@
     onSubmit,
     isMutationPending,
     errorMessage = $bindable(),
-    isCreate
+    isCreate = false
   }: Props = $props();
 
   const { formData, formErrors, isSubmitting, handleInput, handleSubmit } = createForm({
@@ -73,24 +78,10 @@
     </label>
   </div>
 
-  <div class="flex justify-end gap-2">
-    {#if !isCreate}
-      <button
-        type="submit"
-        class="btn font-bold btn-ghost"
-        onclick={handleCalendarStopEditing}
-        disabled={$isSubmitting || isMutationPending}
-      >
-        Cancel
-      </button>
-    {/if}
-
-    <button
-      type="submit"
-      class="btn btn-base-300 font-bold"
-      disabled={$isSubmitting || isMutationPending}
-    >
-      Save
-    </button>
-  </div>
+  <FormActionButtons
+    {isCreate}
+    isSaving={$isSubmitting || isMutationPending}
+    isDisabled={$isSubmitting || isMutationPending}
+    onCancel={handleCalendarStopEditing}
+  />
 </form>

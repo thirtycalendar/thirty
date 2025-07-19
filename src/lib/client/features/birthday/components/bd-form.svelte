@@ -1,7 +1,13 @@
 <script lang="ts">
   import { AlignLeft, CalendarCheck2 } from "@lucide/svelte";
 
-  import { ColorChoiceField, DateField, InputField, TextareaField } from "$lib/client/components";
+  import {
+    ColorChoiceField,
+    DateField,
+    FormActionButtons,
+    InputField,
+    TextareaField
+  } from "$lib/client/components";
   import { handleBirthdayStopEditing } from "$lib/client/stores/birthday";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -73,24 +79,10 @@
     </div>
   </div>
 
-  <div class="flex justify-end gap-2">
-    {#if !isCreate}
-      <button
-        type="submit"
-        class="btn font-bold btn-ghost"
-        onclick={handleBirthdayStopEditing}
-        disabled={$isSubmitting || isMutationPending}
-      >
-        Cancel
-      </button>
-    {/if}
-
-    <button
-      type="submit"
-      class="btn btn-base-300 font-bold"
-      disabled={$isSubmitting || isMutationPending}
-    >
-      Save
-    </button>
-  </div>
+  <FormActionButtons
+    {isCreate}
+    isSaving={$isSubmitting || isMutationPending}
+    isDisabled={$isSubmitting || isMutationPending}
+    onCancel={handleBirthdayStopEditing}
+  />
 </form>
