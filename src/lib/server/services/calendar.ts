@@ -19,17 +19,21 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   hooks: {
     create: {
       before: async ({ input, context }) => {
-        if (input.isPrimary) {
-          await kv.del(KV_CALENDARS(context.userId));
-
-          await db
-            .update(calendarTable)
-            .set({ isPrimary: false, updatedAt: sql`now()` })
-            .where(
-              and(eq(calendarTable.userId, context.userId), eq(calendarTable.isPrimary, true))
-            );
-        }
+        if (input.isPrimary) await resetPrimaryCalendar(context.userId);
+      }
+    },
+    update: {
+      before: async ({ input, context }) => {
+        if (input.isPrimary) await resetPrimaryCalendar(context.userId);
       }
     }
   }
 });
+
+async function resetPrimaryCalendar(userId: string) {
+  await kv.del(KV_CALENDARS(userId));
+  await db
+    .update(calendarTable)
+    .set({ isPrimary: false, updatedAt: sql`now()` })
+    .where(and(eq(calendarTable.userId, userId), eq(calendarTable.isPrimary, true)));
+}

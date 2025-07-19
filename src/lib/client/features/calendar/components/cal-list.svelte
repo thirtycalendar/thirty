@@ -70,7 +70,7 @@
   })}
 {/if}
 
-{#snippet ListSection<T extends { id: string; colorId: string } & object>({
+{#snippet ListSection<T extends { id: string; colorId: string; createdAt?: string } & object>({
   title,
   items,
   getItemName,
@@ -87,6 +87,10 @@
   onAdd: () => void;
   onSettings?: (item: T) => void;
 })}
+  {@const sortedItems = [...items].sort(
+    (a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()
+  )}
+
   <div class="my-2">
     <div
       class="flex items-center justify-between gap-1 px-1 text-sm font-semibold w-full rounded-md"
@@ -110,9 +114,9 @@
     </div>
 
     {#if !$collapsed.includes(title)}
-      {#if items.length > 0}
+      {#if sortedItems.length > 0}
         <div class="my-1" transition:slide>
-          {#each items as item (item.id)}
+          {#each sortedItems as item (item.id)}
             <label
               class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
             >
