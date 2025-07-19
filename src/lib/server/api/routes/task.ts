@@ -4,14 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import {
-  clearTasks,
-  createTask,
-  deleteTask,
-  getAllTasks,
-  getTask,
-  updateTask
-} from "$lib/server/services/task";
+import { taskServices } from "$lib/server/services/task";
 
 import { taskSchema } from "$lib/shared/schemas/task";
 import type { SuccessResponse, Task, User } from "$lib/shared/types";
@@ -24,7 +17,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const tasks = await getAllTasks(user.id);
+      const tasks = await taskServices.getAll(user.id);
 
       return c.json<SuccessResponse<Task[]>>({
         success: true,
@@ -40,7 +33,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "task id");
 
-      const task = await getTask(id);
+      const task = await taskServices.get(id);
 
       return c.json<SuccessResponse<Task>>({
         success: true,
@@ -56,7 +49,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const task = await createTask(user.id, data);
+      const task = await taskServices.create(user.id, data);
 
       return c.json<SuccessResponse<Task>>({
         success: true,
@@ -74,7 +67,7 @@ const app = new Hono<Context>()
 
       const data = c.req.valid("json");
 
-      const task = await updateTask(id, data);
+      const task = await taskServices.update(id, data);
 
       return c.json<SuccessResponse<Task>>({
         success: true,
@@ -90,7 +83,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "task id");
 
-      const task = await deleteTask(id);
+      const task = await taskServices.delete(id);
 
       return c.json<SuccessResponse<Task>>({
         success: true,
@@ -105,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await clearTasks(user.id);
+      await taskServices.clear(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

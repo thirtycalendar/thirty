@@ -4,14 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import {
-  clearBirthdays,
-  createBirthday,
-  deleteBirthday,
-  getAllBirthdays,
-  getBirthday,
-  updateBirthday
-} from "$lib/server/services/birthday";
+import { birthdayServices } from "$lib/server/services/birthday";
 
 import { birthdaySchema } from "$lib/shared/schemas/birthday";
 import type { Birthday, SuccessResponse, User } from "$lib/shared/types";
@@ -24,7 +17,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const birthdays = await getAllBirthdays(user.id);
+      const birthdays = await birthdayServices.getAll(user.id);
 
       return c.json<SuccessResponse<Birthday[]>>({
         success: true,
@@ -40,7 +33,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "birthday id");
 
-      const birthday = await getBirthday(id);
+      const birthday = await birthdayServices.get(id);
 
       return c.json<SuccessResponse<Birthday>>({
         success: true,
@@ -56,7 +49,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const birthday = await createBirthday(user.id, data);
+      const birthday = await birthdayServices.create(user.id, data);
 
       return c.json<SuccessResponse<Birthday>>({
         success: true,
@@ -74,7 +67,7 @@ const app = new Hono<Context>()
 
       const data = c.req.valid("json");
 
-      const birthday = await updateBirthday(id, data);
+      const birthday = await birthdayServices.update(id, data);
 
       return c.json<SuccessResponse<Birthday>>({
         success: true,
@@ -90,7 +83,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "birthday id");
 
-      const birthday = await deleteBirthday(id);
+      const birthday = await birthdayServices.delete(id);
 
       return c.json<SuccessResponse<Birthday>>({
         success: true,
@@ -105,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await clearBirthdays(user.id);
+      await birthdayServices.clear(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

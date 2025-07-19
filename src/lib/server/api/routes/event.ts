@@ -4,14 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import {
-  clearEvents,
-  createEvent,
-  deleteEvent,
-  getAllEvents,
-  getEvent,
-  updateEvent
-} from "$lib/server/services/event";
+import { eventServices } from "$lib/server/services/event";
 
 import { eventSchema } from "$lib/shared/schemas/event";
 import type { Event, SuccessResponse, User } from "$lib/shared/types";
@@ -24,7 +17,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const events = await getAllEvents(user.id);
+      const events = await eventServices.getAll(user.id);
 
       return c.json<SuccessResponse<Event[]>>({
         success: true,
@@ -40,7 +33,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "event id");
 
-      const event = await getEvent(id);
+      const event = await eventServices.get(id);
 
       return c.json<SuccessResponse<Event>>({
         success: true,
@@ -56,7 +49,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const event = await createEvent(user.id, data);
+      const event = await eventServices.create(user.id, data);
 
       return c.json<SuccessResponse<Event>>({
         success: true,
@@ -74,7 +67,7 @@ const app = new Hono<Context>()
 
       const data = c.req.valid("json");
 
-      const event = await updateEvent(id, data);
+      const event = await eventServices.update(id, data);
 
       return c.json<SuccessResponse<Event>>({
         success: true,
@@ -90,7 +83,7 @@ const app = new Hono<Context>()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "event id");
 
-      const event = await deleteEvent(id);
+      const event = await eventServices.delete(id);
 
       return c.json<SuccessResponse<Event>>({
         success: true,
@@ -105,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await clearEvents(user.id);
+      await eventServices.clear(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

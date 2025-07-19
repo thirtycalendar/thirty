@@ -10,7 +10,7 @@ import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
-import { createCalendar } from "../services/calendar";
+import { calendarService } from "../services/calendar";
 import { addUserHolidayCountryByItsCode } from "../services/holiday";
 
 export const auth = betterAuth({
@@ -65,7 +65,7 @@ export const auth = betterAuth({
             isPrimary: true
           };
 
-          await createCalendar(id, calendar);
+          await calendarService.create(id, calendar);
 
           await addUserHolidayCountryByItsCode(id, countryCode);
         }

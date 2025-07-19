@@ -1,109 +1,17 @@
-import { eq, sql } from "drizzle-orm";
-
+import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import { KV_TASKS } from "$lib/shared/utils/kv-keys";
 import type { Task, TaskForm } from "$lib/shared/types";
 
 import { db } from "../db";
 import { taskTable } from "../db/tables/task";
 import { kv } from "../libs/upstash/kv";
+import { createDbService } from "../utils/create-db-service";
 
-async function cacheTasks(userId: string, list: Task[]) {
-  await kv.set(KV_TASKS(userId), list, { ex: 1800 });
-}
-
-async function refreshTasksFromDb(userId: string) {
-  const list = await db.select().from(taskTable).where(eq(taskTable.userId, userId));
-
-  await cacheTasks(userId, list);
-  return list;
-}
-
-export async function getAllTasks(userId: string): Promise<Task[]> {
-  const cached = await kv.get<Task[]>(KV_TASKS(userId));
-  if (cached) return cached;
-
-  return await refreshTasksFromDb(userId);
-}
-
-export async function getTask(taskId: string): Promise<Task> {
-  const [task] = await db.select().from(taskTable).where(eq(taskTable.id, taskId)).limit(1);
-
-  if (!task) throw new Error("No task with id found");
-
-  return task;
-}
-
-export async function createTask(userId: string, taskForm: TaskForm): Promise<Task> {
-  const [inserted] = await db
-    .insert(taskTable)
-    .values({ userId, ...taskForm })
-    .returning();
-
-  if (!inserted) throw new Error("Failed to create task");
-
-  const cached = await kv.get<Task[]>(KV_TASKS(userId));
-
-  if (cached) {
-    cached.push(inserted);
-
-    await cacheTasks(userId, cached);
-  } else {
-    await refreshTasksFromDb(userId);
+export const taskServices = createDbService<Task, TaskForm>(db, {
+  table: taskTable,
+  kv: {
+    kv: kv,
+    kvKeyFn: (userId) => KV_TASKS(userId),
+    cacheTime: kvCacheTimes.task
   }
-
-  return inserted;
-}
-
-export async function updateTask(taskId: string, updates: TaskForm): Promise<Task> {
-  const [updated] = await db
-    .update(taskTable)
-    .set({ ...updates, updatedAt: sql`now()` })
-    .where(eq(taskTable.id, taskId))
-    .returning();
-
-  if (!updated) throw new Error("Failed to update task");
-
-  const userId = updated.userId;
-  const cached = await kv.get<Task[]>(KV_TASKS(userId));
-
-  if (cached) {
-    const index = cached.findIndex((c) => c.id === taskId);
-    if (index !== -1) {
-      cached[index] = updated;
-
-      await cacheTasks(userId, cached);
-    }
-  } else {
-    await refreshTasksFromDb(userId);
-  }
-
-  return updated;
-}
-
-export async function deleteTask(taskId: string): Promise<Task> {
-  const [deleted] = await db.delete(taskTable).where(eq(taskTable.id, taskId)).returning();
-
-  if (!deleted) throw new Error("Failed to delete task");
-
-  const userId = deleted.userId;
-  const cached = await kv.get<Task[]>(KV_TASKS(userId));
-
-  if (cached) {
-    const updated = cached.filter((c) => c.id !== taskId);
-
-    await cacheTasks(userId, updated);
-  } else {
-    await refreshTasksFromDb(userId);
-  }
-
-  return deleted;
-}
-
-export async function createTasksBulk(userId: string, data: TaskForm[]) {
-  if (data.length === 0) return;
-  await db.insert(taskTable).values(data.map((b) => ({ ...b, userId })));
-}
-
-export async function clearTasks(userId: string) {
-  await kv.del(KV_TASKS(userId));
-}
+});
