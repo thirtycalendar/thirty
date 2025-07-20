@@ -93,10 +93,18 @@
   });
 </script>
 
-<div class="flex flex-col h-full py-3">
+<div class="flex flex-col h-full py-1">
   <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
-    {#each dayLabels as label (label)}
-      <div class="h-8 flex items-center justify-center font-semibold">{label}</div>
+    {#each dayLabels as label, i (label)}
+      {@const today = i === new Date().getDay()}
+      <div
+        class={`h-8 flex items-center justify-center font-semibold relative ${today ? "text-primary-content" : "text-primary-content/70"}`}
+      >
+        {#if today}
+          <span class="w-2 h-2 rounded-full bg-primary-content mr-1"></span>
+        {/if}
+        {label}
+      </div>
     {/each}
   </div>
 

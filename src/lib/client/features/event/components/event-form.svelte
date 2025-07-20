@@ -62,8 +62,6 @@
     resetDisabledFields: ["calendarId", "colorId", "timezone"],
     onSubmit,
     onSuccess: () => {
-      console.log("Success...");
-
       isLocation = false;
       isDescription = false;
       isMoreOptions = false;

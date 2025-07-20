@@ -81,7 +81,7 @@
   });
 </script>
 
-<div class="flex flex-col h-full px-2">
+<div class="flex flex-col h-full">
   <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200">
     <div
       class={`font-semibold text-center ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}

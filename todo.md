@@ -4,7 +4,7 @@
 - [x] - Reset the default values after creating and updating the form.
 - [x] - (important!) Bug fix for showing actual time for event block.
 - [x] - Make to show the event block at the top if it is all day.
-- [ ] - Show holiday calendars.
+- [x] - Show holiday calendars.
 - [x] - Fix init calendar on auth index file.
 - [x] - Add clear routes for clearing caches of calendars, events, and tasks. Holidays is already done.
 - [ ] - Sync birthdays from Google calendars to db.
