@@ -8,6 +8,7 @@
   - (7.20.05) - Show edit button or not in detail action buttons.
   - (7.20.06) - Improved modal stores.
   - (7.20.07) - Detail action button confirm delete reset.
+  - (7.20.08) - Holiday service.
 - Sat Jul 19, 2025
   - (7.19.01) - Added form action buttons component file.
   - (7.19.02) - Create db service kinda working, but hooks still doesn't work.

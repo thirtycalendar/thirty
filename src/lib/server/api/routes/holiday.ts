@@ -4,14 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import {
-  addHolidayCountry,
-  addUserHolidayCountryByItsCode,
-  clearUserHolidayCountries,
-  getHolidayCountries,
-  getHolidays,
-  removeHolidayCountry
-} from "$lib/server/services/holiday";
+import { holidayService } from "$lib/server/services/holiday";
 import { getAllHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
@@ -26,7 +19,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const holidays = await getHolidays(user.id);
+      const holidays = await holidayService.getHolidays(user.id);
 
       return c.json<SuccessResponse<Holiday[]>>({
         success: true,
@@ -44,7 +37,7 @@ const app = new Hono<Context>()
       const ipLocation = await getIPLocation(user.id);
       const countryCode = ipLocation.countryCode;
 
-      await addUserHolidayCountryByItsCode(user.id, countryCode);
+      await holidayService.addCountryByCode(user.id, countryCode);
 
       return c.json<SuccessResponse<null>>({
         success: true,
@@ -72,12 +65,12 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const holidays = await getHolidayCountries(user.id);
+      const countries = await holidayService.getCountries(user.id);
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
         message: "Success",
-        data: holidays
+        data: countries
       });
     } catch (err: unknown) {
       return errorResponse(c, err);
@@ -88,12 +81,12 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const holiday = await addHolidayCountry(user.id, data);
+      const country = await holidayService.addCountry(user.id, data);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
-        message: `${holiday.countryName} added`,
-        data: holiday
+        message: `${country.countryName} added`,
+        data: country
       });
     } catch (err: unknown) {
       return errorResponse(c, err);
@@ -106,7 +99,7 @@ const app = new Hono<Context>()
 
       const user = c.get("user") as User;
 
-      const removed = await removeHolidayCountry(user.id, id);
+      const removed = await holidayService.removeCountry(user.id, id);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
@@ -117,15 +110,15 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .post("/country/clear", async (c) => {
+  .post("/clearCache", async (c) => {
     try {
       const user = c.get("user") as User;
 
-      await clearUserHolidayCountries(user.id);
+      await holidayService.clearCache(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,
-        message: "Successfully cleared all the holidays from cache",
+        message: "Successfully cleared all the cached holiday countries and holidays",
         data: null
       });
     } catch (err: unknown) {

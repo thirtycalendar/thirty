@@ -94,7 +94,7 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .post("/clear", async (c) => {
+  .post("/clearCache", async (c) => {
     try {
       const user = c.get("user") as User;
 
