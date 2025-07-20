@@ -7,7 +7,7 @@ import { eventTable } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
 import { createDbService } from "../utils/create-db-service";
 
-export const eventServices = createDbService<Event, EventForm>(db, {
+export const eventService = createDbService<Event, EventForm>(db, {
   table: eventTable,
   kv: {
     kv: kv,

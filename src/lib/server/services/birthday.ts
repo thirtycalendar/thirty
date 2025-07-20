@@ -7,7 +7,7 @@ import { birthdayTable } from "../db/tables/birthday";
 import { kv } from "../libs/upstash/kv";
 import { createDbService } from "../utils/create-db-service";
 
-export const birthdayServices = createDbService<Birthday, BirthdayForm>(db, {
+export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
   table: birthdayTable,
   kv: {
     kv: kv,

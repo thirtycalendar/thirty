@@ -7,7 +7,7 @@ import { taskTable } from "../db/tables/task";
 import { kv } from "../libs/upstash/kv";
 import { createDbService } from "../utils/create-db-service";
 
-export const taskServices = createDbService<Task, TaskForm>(db, {
+export const taskService = createDbService<Task, TaskForm>(db, {
   table: taskTable,
   kv: {
     kv: kv,
