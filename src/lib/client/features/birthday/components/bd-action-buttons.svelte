@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
-
   import { DetailActionButtons } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
   import { birthdayModal } from "$lib/client/stores/modal";
@@ -36,6 +34,7 @@
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {
+      confirmDelete = false;
       errorMessage = message;
     },
     queryKeys: ["bd-list"]
@@ -44,13 +43,10 @@
   function handleDelete() {
     mutate(id);
   }
-
-  onDestroy(() => {
-    confirmDelete = false;
-  });
 </script>
 
 <DetailActionButtons
+  {id}
   bind:confirmDelete
   isPending={$isPending}
   onDelete={handleDelete}

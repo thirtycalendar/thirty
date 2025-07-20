@@ -11,10 +11,10 @@
 
   let { holiday }: Props = $props();
 
+  const date = format(holiday.date, "EEE, MMM d, yyyy");
+
   let prevId = $derived(holiday.id);
   let errorMessage = $derived(prevId !== holiday.id ? "" : "");
-
-  const date = format(holiday.date, "EEE, MMM d, yyyy");
 </script>
 
 <div class="space-y-3">

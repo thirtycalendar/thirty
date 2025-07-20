@@ -62,8 +62,8 @@
 
   const updated = format(new Date(event.updatedAt), "PPp");
 
-  let previousEventId = $derived(event.id);
-  let errorMessage = $derived(previousEventId !== event.id ? "" : "");
+  let prevId = $derived(event.id);
+  let errorMessage = $derived(prevId !== event.id ? "" : "");
 </script>
 
 <div class="space-y-3">

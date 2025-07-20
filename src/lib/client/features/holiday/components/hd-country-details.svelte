@@ -10,8 +10,8 @@
 
   let { holidayCountry }: Props = $props();
 
-  let previousHdCountryId = $derived(holidayCountry.id);
-  let errorMessage = $derived(previousHdCountryId !== holidayCountry.id ? "" : "");
+  let prevId = $derived(holidayCountry.id);
+  let errorMessage = $derived(prevId !== holidayCountry.id ? "" : "");
 </script>
 
 <div class="space-y-3">

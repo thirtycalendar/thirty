@@ -17,8 +17,8 @@
 
   const updated = format(new Date(calendar.updatedAt), "PPp");
 
-  let previousCalId = $derived(calendar.id);
-  let errorMessage = $derived(previousCalId !== calendar.id ? "" : "");
+  let prevId = $derived(calendar.id);
+  let errorMessage = $derived(prevId !== calendar.id ? "" : "");
 </script>
 
 <div class="space-y-3">

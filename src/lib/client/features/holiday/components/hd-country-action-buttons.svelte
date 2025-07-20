@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
-
   import { DetailActionButtons } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
   import { showToast } from "$lib/client/stores/toast";
@@ -35,6 +33,7 @@
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {
+      confirmDelete = false;
       errorMessage = message;
     },
     queryKeys: ["hd-list", "hd-country-list", "all-hd-country-list"]
@@ -43,13 +42,10 @@
   function handleDelete() {
     mutate();
   }
-
-  onDestroy(() => {
-    confirmDelete = false;
-  });
 </script>
 
 <DetailActionButtons
+  {id}
   bind:confirmDelete
   isPending={$isPending}
   onDelete={handleDelete}

@@ -2,6 +2,7 @@
   import { Pen, Trash } from "@lucide/svelte";
 
   interface Props {
+    id: string;
     confirmDelete: boolean;
     isPending: boolean;
     message?: string;
@@ -11,6 +12,7 @@
   }
 
   let {
+    id,
     confirmDelete = $bindable(false),
     isPending,
     onDelete,
@@ -22,6 +24,15 @@
   function toggleConfirm() {
     confirmDelete = !confirmDelete;
   }
+
+  let prevId = $state(id);
+  $effect(() => {
+    if (prevId !== id) {
+      confirmDelete = false;
+
+      prevId = id;
+    }
+  });
 </script>
 
 {#if confirmDelete}
