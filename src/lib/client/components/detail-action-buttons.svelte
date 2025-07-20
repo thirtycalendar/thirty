@@ -6,7 +6,8 @@
     isPending: boolean;
     message?: string;
     onDelete: () => void;
-    onEdit: () => void;
+    onEdit?: () => void;
+    showEdit?: boolean;
   }
 
   let {
@@ -14,7 +15,8 @@
     isPending,
     onDelete,
     onEdit,
-    message = "Are you sure?"
+    message = "Are you sure?",
+    showEdit = true
   }: Props = $props();
 
   function toggleConfirm() {
@@ -23,7 +25,7 @@
 </script>
 
 {#if confirmDelete}
-  <p class="text-xs text-error text-right mr-10">{message}</p>
+  <p class={`text-xs text-error text-right ${showEdit ? "mr-10" : "mr-2"}`}>{message}</p>
 {/if}
 
 <div class="flex justify-end">
@@ -53,11 +55,13 @@
     </button>
   {/if}
 
-  <button
-    class="btn btn-sm btn-square btn-ghost"
-    onclick={onEdit}
-    disabled={isPending || confirmDelete}
-  >
-    <Pen size="17" />
-  </button>
+  {#if showEdit}
+    <button
+      class="btn btn-sm btn-square btn-ghost"
+      onclick={onEdit}
+      disabled={isPending || confirmDelete}
+    >
+      <Pen size="17" />
+    </button>
+  {/if}
 </div>
