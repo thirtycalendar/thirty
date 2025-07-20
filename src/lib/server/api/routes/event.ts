@@ -98,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await eventServices.clear(user.id);
+      await eventServices.clearCache(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

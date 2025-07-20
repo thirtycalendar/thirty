@@ -98,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await calendarService.clear(user.id);
+      await calendarService.clearCache(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

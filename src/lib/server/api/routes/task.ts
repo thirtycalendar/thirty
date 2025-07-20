@@ -98,7 +98,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await taskServices.clear(user.id);
+      await taskServices.clearCache(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,
