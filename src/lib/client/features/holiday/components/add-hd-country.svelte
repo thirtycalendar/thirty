@@ -70,6 +70,10 @@
         class="btn btn-base-300 font-bold"
         disabled={$isSubmitting || $isPending}
       >
+        {#if $isSubmitting || $isPending}
+          <span class="loading loading-spinner loading-xs"></span>
+        {/if}
+
         Save
       </button>
     </div>

@@ -4,6 +4,7 @@
   - (7.20.01) - Added addHooks methods in create db service util function.
   - (7.20.02) - Reusable detail action buttons component.
   - (7.20.03) - Updated instance variable name.
+  - (7.20.04) - Cleaned codes.
 - Sat Jul 19, 2025
   - (7.19.01) - Added form action buttons component file.
   - (7.19.02) - Create db service kinda working, but hooks still doesn't work.
