@@ -1,27 +1,20 @@
 <script lang="ts">
   import { Modal } from "$lib/client/components";
-  import {
-    currentEventDetails,
-    eventCreateModalId,
-    handleEventStopEditing,
-    isEventEditing
-  } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
 
   import { CreateEvent, EditEvent, EventDetails } from ".";
 
-  function onDetailsModalClose() {
-    handleEventStopEditing();
-  }
+  const { modalId, currentDetails, isEditing, stopEditing } = eventModal;
 </script>
 
-<Modal modalId={eventCreateModalId} title="Event"><CreateEvent /></Modal>
+<Modal {modalId} title="Event"><CreateEvent /></Modal>
 
-{#if $currentEventDetails}
-  <Modal modalId={$currentEventDetails.id} title="Event" onModalClose={onDetailsModalClose}>
-    {#if $isEventEditing}
-      <EditEvent event={$currentEventDetails} />
+{#if $currentDetails}
+  <Modal modalId={$currentDetails.id} title="Event" onModalClose={stopEditing}>
+    {#if $isEditing}
+      <EditEvent event={$currentDetails} />
     {:else}
-      <EventDetails event={$currentEventDetails} />
+      <EventDetails event={$currentDetails} />
     {/if}
   </Modal>
 {/if}

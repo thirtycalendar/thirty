@@ -21,7 +21,7 @@
     TimeField,
     TimezoneField
   } from "$lib/client/components";
-  import { handleEventStopEditing } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { EventStatus } from "$lib/shared/constants";
@@ -311,7 +311,7 @@
       {isCreate}
       isSaving={$isSubmitting || isMutationPending}
       isDisabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
-      onCancel={handleEventStopEditing}
+      onCancel={eventModal.stopEditing}
     />
   </form>
 {/if}

@@ -1,12 +1,14 @@
 <script lang="ts">
   import { Modal } from "$lib/client/components";
-  import { currentHdDetails } from "$lib/client/stores/holiday";
+  import { holidayModal } from "$lib/client/stores/modal";
 
   import { HdDetails } from ".";
+
+  const { currentDetails } = holidayModal;
 </script>
 
-{#if $currentHdDetails}
-  <Modal modalId={$currentHdDetails.id} title="Holiday">
-    <HdDetails holiday={$currentHdDetails} />
+{#if $currentDetails}
+  <Modal modalId={$currentDetails.id} title="Holiday">
+    <HdDetails holiday={$currentDetails} />
   </Modal>
 {/if}

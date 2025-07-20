@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentBirthdayDetails, handleBirthdayStopEditing } from "$lib/client/stores/birthday";
+  import { birthdayModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -40,10 +40,10 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      currentBirthdayDetails.set(data.data);
+      birthdayModal.currentDetails.set(data.data);
 
       showToast(data.message);
-      handleBirthdayStopEditing();
+      birthdayModal.stopEditing();
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

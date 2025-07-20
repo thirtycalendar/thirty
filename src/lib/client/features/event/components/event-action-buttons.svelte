@@ -3,7 +3,7 @@
 
   import { DetailActionButtons } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
-  import { handleEventStartEditing } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -54,5 +54,5 @@
   bind:confirmDelete
   isPending={$isPending}
   onDelete={handleDelete}
-  onEdit={handleEventStartEditing}
+  onEdit={eventModal.startEditing}
 />

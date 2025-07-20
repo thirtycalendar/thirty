@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentEventDetails, handleEventStopEditing } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -50,10 +50,10 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      currentEventDetails.set(data.data);
+      eventModal.currentDetails.set(data.data);
 
       showToast(data.message);
-      handleEventStopEditing();
+      eventModal.stopEditing();
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

@@ -2,7 +2,7 @@
   import { differenceInMinutes, startOfDay } from "date-fns";
 
   import { formatEventTime, formatTimeRange } from "$lib/client/features/event/utils";
-  import { handleEventModal } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";
@@ -46,7 +46,7 @@
     z-index: ${10 + offset};
   `}
   title={event.name}
-  onclick={() => handleEventModal(event)}
+  onclick={() => eventModal.handleModal(event)}
 >
   <div class="w-1 h-full rounded-l-md shrink-0" style="background-color: {calendarColor};"></div>
   <div class="w-full text-left p-1 overflow-hidden">

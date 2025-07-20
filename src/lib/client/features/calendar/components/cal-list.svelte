@@ -4,15 +4,13 @@
   import { ChevronDown, Plus, Settings } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { birthdayCreateModalId, handleBirthdayModal } from "$lib/client/stores/birthday";
-  import { calendarCreateModalId, handleCalModal } from "$lib/client/stores/calendar";
-  import { handleHdCountryModal, hdCountryAddModalId } from "$lib/client/stores/holiday";
   import {
     collapsedLists,
     uncheckedBirthdays,
     uncheckedCalendars,
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
+  import { birthdayModal, calendarModal, holidayCountryModal } from "$lib/client/stores/modal";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
@@ -41,8 +39,8 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedCalendars.isChecked(item.id),
     onChange: (item) => uncheckedCalendars.toggle(item.id),
-    onAdd: () => toggleModal(calendarCreateModalId),
-    onSettings: handleCalModal
+    onAdd: () => toggleModal(calendarModal.modalId),
+    onSettings: calendarModal.handleModal
   })}
 {/if}
 
@@ -53,8 +51,8 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedBirthdays.isChecked(item.id),
     onChange: (item) => uncheckedBirthdays.toggle(item.id),
-    onAdd: () => toggleModal(birthdayCreateModalId),
-    onSettings: handleBirthdayModal
+    onAdd: () => toggleModal(birthdayModal.modalId),
+    onSettings: birthdayModal.handleModal
   })}
 {/if}
 
@@ -65,8 +63,8 @@
     getItemName: (item) => item.countryName,
     onChecked: (item) => uncheckedHolidays.isChecked(item.id),
     onChange: (item) => uncheckedHolidays.toggle(item.id),
-    onAdd: () => toggleModal(hdCountryAddModalId),
-    onSettings: handleHdCountryModal
+    onAdd: () => toggleModal(holidayCountryModal.modalId),
+    onSettings: holidayCountryModal.handleModal
   })}
 {/if}
 

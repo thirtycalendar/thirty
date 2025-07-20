@@ -7,7 +7,7 @@
     InputField,
     TimezoneField
   } from "$lib/client/components";
-  import { handleCalendarStopEditing } from "$lib/client/stores/calendar";
+  import { calendarModal } from "$lib/client/stores/modal";
   import { createForm } from "$lib/client/utils/create-form";
 
   import type { CalendarForm } from "$lib/shared/types";
@@ -82,6 +82,6 @@
     {isCreate}
     isSaving={$isSubmitting || isMutationPending}
     isDisabled={$isSubmitting || isMutationPending}
-    onCancel={handleCalendarStopEditing}
+    onCancel={calendarModal.stopEditing}
   />
 </form>

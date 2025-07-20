@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentCalendarDetails, handleCalendarStopEditing } from "$lib/client/stores/calendar";
+  import { calendarModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -42,10 +42,10 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      currentCalendarDetails.set(data.data);
+      calendarModal.currentDetails.set(data.data);
 
       showToast(data.message);
-      handleCalendarStopEditing();
+      calendarModal.stopEditing();
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

@@ -1,27 +1,20 @@
 <script lang="ts">
   import { Modal } from "$lib/client/components";
-  import {
-    calendarCreateModalId,
-    currentCalendarDetails,
-    handleCalendarStopEditing,
-    isCalendarEditing
-  } from "$lib/client/stores/calendar";
+  import { calendarModal } from "$lib/client/stores/modal";
 
   import { CalDetails, CreateCal, EditCal } from ".";
 
-  function onDetailsModalClose() {
-    handleCalendarStopEditing();
-  }
+  const { modalId, currentDetails, isEditing, stopEditing } = calendarModal;
 </script>
 
-<Modal modalId={calendarCreateModalId} title="Calendar"><CreateCal /></Modal>
+<Modal {modalId} title="Calendar"><CreateCal /></Modal>
 
-{#if $currentCalendarDetails}
-  <Modal modalId={$currentCalendarDetails.id} title="Calendar" onModalClose={onDetailsModalClose}>
-    {#if $isCalendarEditing}
-      <EditCal calendar={$currentCalendarDetails} />
+{#if $currentDetails}
+  <Modal modalId={$currentDetails.id} title="Calendar" onModalClose={stopEditing}>
+    {#if $isEditing}
+      <EditCal calendar={$currentDetails} />
     {:else}
-      <CalDetails calendar={$currentCalendarDetails} />
+      <CalDetails calendar={$currentDetails} />
     {/if}
   </Modal>
 {/if}

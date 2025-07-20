@@ -8,7 +8,7 @@
     InputField,
     TextareaField
   } from "$lib/client/components";
-  import { handleBirthdayStopEditing } from "$lib/client/stores/birthday";
+  import { birthdayModal } from "$lib/client/stores/modal";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { birthdaySchema } from "$lib/shared/schemas/birthday";
@@ -83,6 +83,6 @@
     {isCreate}
     isSaving={$isSubmitting || isMutationPending}
     isDisabled={$isSubmitting || isMutationPending}
-    onCancel={handleBirthdayStopEditing}
+    onCancel={birthdayModal.stopEditing}
   />
 </form>

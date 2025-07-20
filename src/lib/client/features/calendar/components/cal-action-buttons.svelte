@@ -3,7 +3,7 @@
 
   import { DetailActionButtons } from "$lib/client/components";
   import { toggleModal } from "$lib/client/components/utils";
-  import { handleCalendarStartEditing } from "$lib/client/stores/calendar";
+  import { calendarModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -54,6 +54,6 @@
   bind:confirmDelete
   isPending={$isPending}
   onDelete={handleDelete}
-  onEdit={handleCalendarStartEditing}
+  onEdit={calendarModal.startEditing}
   message="Deleting this calendar will also delete its events. Sure?"
 />

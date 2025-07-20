@@ -2,7 +2,7 @@
   import { Plus } from "@lucide/svelte";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { eventCreateModalId } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
 </script>
 
 <div class="z-1000 hidden sm:block dropdown dropdown-bottom dropdown-end">
@@ -15,7 +15,7 @@
     <li>
       <button
         onclick={() => {
-          toggleModal(eventCreateModalId);
+          toggleModal(eventModal.modalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >
@@ -45,7 +45,7 @@
     <li>
       <button
         onclick={() => {
-          toggleModal(eventCreateModalId);
+          toggleModal(eventModal.modalId);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >

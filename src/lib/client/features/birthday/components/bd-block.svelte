@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Cake } from "@lucide/svelte";
 
-  import { handleBirthdayModal } from "$lib/client/stores/birthday";
+  import { birthdayModal } from "$lib/client/stores/modal";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday } from "$lib/shared/types";
@@ -22,7 +22,7 @@
   class="text-primary-content w-full cursor-pointer select-none overflow-hidden rounded-xl flex items-center gap-1.5 backdrop-blur-md border border-primary-content/10 shadow-sm p-0 text-left"
   style:background-color="{color}33"
   title={name}
-  onclick={() => handleBirthdayModal(birthday)}
+  onclick={() => birthdayModal.handleModal(birthday)}
 >
   <div class="w-1 h-full shrink-0" style:background-color={color}></div>
   <div class="p-0.5 overflow-hidden min-w-0 w-full text-xs font-medium">

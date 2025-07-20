@@ -2,7 +2,7 @@
   import { addMinutes, format } from "date-fns";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { eventCreateModalId } from "$lib/client/stores/event";
+  import { eventModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -48,7 +48,7 @@
       errorMessage = "";
 
       showToast(data.message);
-      toggleModal(eventCreateModalId);
+      toggleModal(eventModal.modalId);
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

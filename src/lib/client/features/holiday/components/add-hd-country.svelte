@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toggleModal } from "$lib/client/components/utils";
-  import { hdCountryAddModalId } from "$lib/client/stores/holiday";
+  import { holidayCountryModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createForm } from "$lib/client/utils/create-form";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
@@ -43,7 +43,7 @@
       errorMessage = "";
 
       showToast(data.message);
-      toggleModal(hdCountryAddModalId);
+      toggleModal(holidayCountryModal.modalId);
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

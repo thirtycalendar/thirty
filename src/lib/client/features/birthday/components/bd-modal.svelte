@@ -1,27 +1,20 @@
 <script lang="ts">
   import { Modal } from "$lib/client/components";
-  import {
-    birthdayCreateModalId,
-    currentBirthdayDetails,
-    handleBirthdayStopEditing,
-    isBirthdayEditing
-  } from "$lib/client/stores/birthday";
+  import { birthdayModal } from "$lib/client/stores/modal";
 
   import { BdDetails, CreateBd, EditBd } from ".";
 
-  function onDetailsModalClose() {
-    handleBirthdayStopEditing();
-  }
+  const { modalId, currentDetails, isEditing, stopEditing } = birthdayModal;
 </script>
 
-<Modal modalId={birthdayCreateModalId} title="Birthday"><CreateBd /></Modal>
+<Modal {modalId} title="Birthday"><CreateBd /></Modal>
 
-{#if $currentBirthdayDetails}
-  <Modal modalId={$currentBirthdayDetails.id} title="Birthday" onModalClose={onDetailsModalClose}>
-    {#if $isBirthdayEditing}
-      <EditBd birthday={$currentBirthdayDetails} />
+{#if $currentDetails}
+  <Modal modalId={$currentDetails.id} title="Birthday" onModalClose={stopEditing}>
+    {#if $isEditing}
+      <EditBd birthday={$currentDetails} />
     {:else}
-      <BdDetails birthday={$currentBirthdayDetails} />
+      <BdDetails birthday={$currentDetails} />
     {/if}
   </Modal>
 {/if}

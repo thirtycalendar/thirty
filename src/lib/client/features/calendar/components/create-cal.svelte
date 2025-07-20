@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toggleModal } from "$lib/client/components/utils";
-  import { calendarCreateModalId } from "$lib/client/stores/calendar";
+  import { calendarModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
@@ -39,7 +39,7 @@
       defaultValues.colorId = getRandomColorId();
 
       showToast(data.message);
-      toggleModal(calendarCreateModalId);
+      toggleModal(calendarModal.modalId);
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;

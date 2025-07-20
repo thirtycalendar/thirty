@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Flag } from "@lucide/svelte";
 
-  import { handleHdModal } from "$lib/client/stores/holiday";
+  import { holidayModal } from "$lib/client/stores/modal";
 
   import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Holiday } from "$lib/shared/types";
@@ -26,7 +26,7 @@
   class="text-primary-content w-full cursor-pointer select-none overflow-hidden rounded-xl flex items-center gap-1.5 backdrop-blur-md border border-primary-content/10 shadow-sm p-0 text-left"
   style:background-color="{color}33"
   title={holiday.name}
-  onclick={() => handleHdModal(holiday)}
+  onclick={() => holidayModal.handleModal(holiday)}
 >
   <div class="w-1 h-full shrink-0" style:background-color={color}></div>
   <div class="p-0.5 overflow-hidden min-w-0 w-full text-xs font-medium">
