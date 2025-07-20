@@ -10,6 +10,7 @@
   - (7.20.07) - Detail action button confirm delete reset.
   - (7.20.08) - Holiday service.
   - (7.20.09) - Improved good ux for week, day, and month calendars.
+  - (7.20.10) - More better styles.
 - Sat Jul 19, 2025
   - (7.19.01) - Added form action buttons component file.
   - (7.19.02) - Create db service kinda working, but hooks still doesn't work.

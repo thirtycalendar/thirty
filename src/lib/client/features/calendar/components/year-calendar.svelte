@@ -33,7 +33,7 @@
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 </script>
 
-<div class="bg-base-100/70 my-3 rounded-2xl h-full overflow-y-auto">
+<div class="bg-base-100/70 mt-3 mb-1 rounded-2xl h-full overflow-y-auto">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4">
     {#each $months as month (month)}
       <div class="flex flex-col">

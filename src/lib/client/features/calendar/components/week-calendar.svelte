@@ -97,7 +97,7 @@
   });
 </script>
 
-<div class="flex flex-col h-full mt-2">
+<div class="flex flex-col h-full pt-2 pb-1">
   <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-20">
     <div class="border-r border-base-200"></div>
     {#each days as day (day.toISOString())}
