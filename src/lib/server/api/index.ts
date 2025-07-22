@@ -10,6 +10,7 @@ import auth from "./routes/auth";
 import birthday from "./routes/birthday";
 import calendar from "./routes/calendar";
 import calendarific from "./routes/calendarific";
+import chat from "./routes/chat";
 import event from "./routes/event";
 import holiday from "./routes/holiday";
 import sync from "./routes/sync";
@@ -22,6 +23,7 @@ app.use("*", cors());
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
   .route("/auth", auth)
+  .route("/chat", chat)
   .route("/calendar", calendar)
   .route("/event", event)
   .route("/task", task)

@@ -23,6 +23,7 @@
     "vercel",
     "upstash",
     "codebook",
-    "neondatabase"
+    "neondatabase",
+    "vite"
   ]
 }

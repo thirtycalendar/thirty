@@ -5,6 +5,7 @@ import {
   GOOGLE_CLIENT_ID_PROD,
   GOOGLE_CLIENT_SECRET_DEV,
   GOOGLE_CLIENT_SECRET_PROD,
+  OPENAI_API_KEY,
   UPSTASH_REDIS_REST_TOKEN_DEV,
   UPSTASH_REDIS_REST_TOKEN_HOLIDAY,
   UPSTASH_REDIS_REST_TOKEN_PROD,
@@ -16,6 +17,10 @@ import {
 import { googleScopes } from "$lib/server/auth/scopes";
 
 import { isProd } from "./is-prod";
+
+export const openAiEnvConfig = {
+  apiKey: OPENAI_API_KEY
+};
 
 export const dbEnvConfig = {
   dbUrl: isProd ? DB_URL_PROD : DB_URL_DEV
