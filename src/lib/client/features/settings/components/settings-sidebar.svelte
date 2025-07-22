@@ -28,9 +28,10 @@
   {#each links as { href, icon: Icon, label } (href)}
     <a
       href={`/settings/${href}`}
-      class="flex items-center gap-3 text-sm p-2 w-full rounded-lg
-          hover:bg-base-200/80
-          {activePath === `/settings/${href}` ? 'bg-base-200' : ''}"
+      class="flex items-center gap-3 text-sm p-2 w-full rounded-lg hover:bg-base-200/80 {activePath ===
+      `/settings/${href}`
+        ? 'bg-base-200'
+        : ''}"
     >
       <Icon size="17" strokeWidth="2.5" />
       {label}

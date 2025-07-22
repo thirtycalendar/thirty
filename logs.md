@@ -1,5 +1,7 @@
 # Logs
 
+- Tue Jul 22, 2025
+  - (7.22.01) - Chat list.
 - Sun Jul 20, 2025
   - (7.20.01) - Added addHooks methods in create db service util function.
   - (7.20.02) - Reusable detail action buttons component.

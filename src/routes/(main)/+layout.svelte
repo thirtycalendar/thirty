@@ -3,6 +3,7 @@
   import { page } from "$app/state";
 
   import { CalSidebar } from "$lib/client/features/calendar/components";
+  import { ChatSidebar } from "$lib/client/features/chat/components";
   import { SettingsSidebar } from "$lib/client/features/settings/components";
   import { Sidebar, SidebarMenu, Toast } from "$lib/client/components";
   import { mainSidebarId, sidebars } from "$lib/client/stores/sidebar";
@@ -32,7 +33,7 @@
       {#if pathSegment === "calendar"}
         <CalSidebar />
       {:else if pathSegment === "chat"}
-        <p>Chat sidebar</p>
+        <ChatSidebar />
       {:else if pathSegment === "settings"}
         <SettingsSidebar />
       {/if}
