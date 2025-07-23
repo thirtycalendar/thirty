@@ -11,7 +11,9 @@ import {
   UPSTASH_REDIS_REST_TOKEN_PROD,
   UPSTASH_REDIS_REST_URL_DEV,
   UPSTASH_REDIS_REST_URL_HOLIDAY,
-  UPSTASH_REDIS_REST_URL_PROD
+  UPSTASH_REDIS_REST_URL_PROD,
+  UPSTASH_VECTOR_REST_TOKEN,
+  UPSTASH_VECTOR_REST_URL
 } from "$env/static/private";
 
 import { googleScopes } from "$lib/server/auth/scopes";
@@ -40,4 +42,9 @@ export const kvEnvConfig = {
 export const kvHolidayEnvConfig = {
   url: UPSTASH_REDIS_REST_URL_HOLIDAY,
   token: UPSTASH_REDIS_REST_TOKEN_HOLIDAY
+};
+
+export const vectorEnvConfig = {
+  url: UPSTASH_VECTOR_REST_URL,
+  token: UPSTASH_VECTOR_REST_TOKEN
 };

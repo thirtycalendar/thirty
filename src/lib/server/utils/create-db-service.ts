@@ -1,14 +1,12 @@
 import type { Redis } from "@upstash/redis";
+import type { Index } from "@upstash/vector";
 
 import { eq } from "drizzle-orm";
 import type { PgTable } from "drizzle-orm/pg-core";
+import OpenAI from "openai";
 
 /**
  * A hook function that can run before or after a database operation.
- *
- * @template Input - The type of the input argument for the method.
- * @template Result - The result type of the method.
- * @template Context - Additional context passed to hooks.
  */
 type Hook<Input, Result = void, Context = unknown> = (args: {
   input: Input;
@@ -16,27 +14,15 @@ type Hook<Input, Result = void, Context = unknown> = (args: {
   context: Context;
 }) => Promise<void> | void;
 
-/**
- * Represents a set of hooks (`before` and `after`) for a given method.
- */
 type HookSet<Input, Result = void, Context = unknown> = {
   before?: Hook<Input, Result, Context>;
   after?: Hook<Input, Result, Context>;
 };
 
-/**
- * Method-level options to override hooks during a single call.
- */
 type MethodOptions<Input, Result = void, Context = unknown> = {
   hooks?: HookSet<Input, Result, Context>;
 };
 
-/**
- * Global hooks for all CRUD operations of the service.
- *
- * @template T - Entity type (must have `id` and `userId`).
- * @template FormType - Input form type for create/update.
- */
 type CreateDbServiceHooks<T extends { id: string; userId: string }, FormType> = {
   getAll?: HookSet<string, T[], { userId: string }>;
   get?: HookSet<string, T, { userId: string }>;
@@ -47,12 +33,13 @@ type CreateDbServiceHooks<T extends { id: string; userId: string }, FormType> = 
   clearCache?: HookSet<string, void, { userId: string }>;
 };
 
-/**
- * Parameters for creating a database service.
- *
- * @template T - Entity type (must have `id` and `userId`).
- * @template FormType - Input form type for create/update.
- */
+type VectorConfig<T> = {
+  vector: Index;
+  embeddingFn?: (entity: T) => Promise<number[]>; // Custom embedding generator
+  textFn?: (entity: T) => string; // If embeddingFn is not given, textFn + OpenAI is used
+  model?: string; // OpenAI model for embeddings (default: "text-embedding-3-small")
+};
+
 type CreateDbServiceParams<T extends { id: string; userId: string }, FormType> = {
   table: PgTable;
   kv?: {
@@ -60,108 +47,38 @@ type CreateDbServiceParams<T extends { id: string; userId: string }, FormType> =
     kvKeyFn: (userId: string) => string;
     cacheTime: number;
   };
+  vector?: VectorConfig<T>;
   hooks?: CreateDbServiceHooks<T, FormType>;
 };
 
-/**
- * Database service interface with CRUD operations, cache control, and hooks.
- */
 export type DbService<T extends { id: string; userId: string }, FormType> = {
-  /**
-   * Fetch all rows for a given user.
-   *
-   * @param userId - The user ID to fetch records for.
-   * @param options - Optional hooks for this call.
-   * @returns A promise resolving to an array of entities.
-   */
   getAll(userId: string, options?: MethodOptions<string, T[], { userId: string }>): Promise<T[]>;
-
-  /**
-   * Fetch a single row by ID.
-   *
-   * @param id - The entity ID.
-   * @param options - Optional hooks for this call.
-   * @throws If the entity is not found.
-   * @returns A promise resolving to the entity.
-   */
   get(id: string, options?: MethodOptions<string, T, { userId: string }>): Promise<T>;
-
-  /**
-   * Insert a new entity for the given user.
-   *
-   * @param userId - The user ID to associate with the new record.
-   * @param data - The data to insert.
-   * @param options - Optional hooks for this call.
-   * @throws If insertion fails.
-   * @returns A promise resolving to the inserted entity.
-   */
   create(
     userId: string,
     data: FormType,
     options?: MethodOptions<FormType, T, { userId: string }>
   ): Promise<T>;
-
-  /**
-   * Update an existing entity by ID.
-   *
-   * @param id - The entity ID.
-   * @param updates - Partial data to update.
-   * @param options - Optional hooks for this call.
-   * @throws If the entity is not found or update fails.
-   * @returns A promise resolving to the updated entity.
-   */
   update(
     id: string,
     updates: Partial<FormType>,
     options?: MethodOptions<Partial<FormType>, T, { userId: string; id: string }>
   ): Promise<T>;
-
-  /**
-   * Delete a single entity by ID.
-   *
-   * @param id - The entity ID.
-   * @param options - Optional hooks for this call.
-   * @throws If the entity is not found or deletion fails.
-   * @returns A promise resolving to the deleted entity.
-   */
   delete(
     id: string,
     options?: MethodOptions<string, T, { userId: string; id: string }>
   ): Promise<T>;
-
-  /**
-   * Delete all entities for a given user.
-   *
-   * @param userId - The user ID.
-   * @param options - Optional hooks for this call.
-   */
   deleteAll(
     userId: string,
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void>;
-
-  /**
-   * Clear the cache for a given user.
-   *
-   * @param userId - The user ID.
-   * @param options - Optional hooks for this call.
-   */
   clearCache(
     userId: string,
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void>;
-
-  /**
-   * Dynamically add more hooks to the service.
-   *
-   * @param hooks - The hooks to add.
-   */
   addHooks(hooks: CreateDbServiceHooks<T, FormType>): void;
 };
 
-/**
- * Merges global, added, and method-level hooks into a single `HookSet`.
- */
 function mergeHooks<Input, Result, Context>(
   global?: HookSet<Input, Result, Context>,
   local?: HookSet<Input, Result, Context>
@@ -178,32 +95,16 @@ function mergeHooks<Input, Result, Context>(
   };
 }
 
-/**
- * Create a fully-featured database service for a given table, with support for:
- * - CRUD operations (`getAll`, `get`, `create`, `update`, `delete`, `deleteAll`).
- * - Redis caching (via Upstash).
- * - Global and per-method hooks (`before` and `after`).
- *
- * @template T - Entity type. **Must have `id: string` and `userId: string`.**
- * @template FormType - Type of the data used for create/update operations.
- *
- * @param db - A Drizzle PostgreSQL database instance.
- * @param params - Configuration including table, optional Redis KV, and hooks.
- *
- * @warning
- * - `T` must include `id` and `userId` properties.
- * - `db` must be a valid **Drizzle PostgreSQL instance**.
- *
- * @returns A `DbService` instance with typed CRUD methods.
- */
 export function createDbService<T extends { id: string; userId: string }, FormType>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   db: any,
   params: CreateDbServiceParams<T, FormType>
 ): DbService<T, FormType> {
-  const { table, kv } = params;
+  const { table, kv, vector } = params;
   const globalHooks = params.hooks ?? {};
   const addedHooks: CreateDbServiceHooks<T, FormType> = {};
+
+  const openai = vector ? new OpenAI() : undefined;
 
   const getKvKey = (userId: string) => kv?.kvKeyFn(userId) ?? "";
 
@@ -215,6 +116,36 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       // @ts-expect-error — Drizzle doesn't expose column keys generic call
       addedHooks[hookKey] = mergeHooks(existingSet, newSet);
     }
+  }
+
+  async function generateEmbedding(entity: T): Promise<number[]> {
+    if (!vector) return [];
+    if (vector.embeddingFn) return vector.embeddingFn(entity);
+    if (!openai) throw new Error("OpenAI client not initialized for embeddings");
+
+    const text = vector.textFn ? vector.textFn(entity) : JSON.stringify(entity);
+    const emb = await openai.embeddings.create({
+      model: vector.model ?? "text-embedding-3-small",
+      input: text
+    });
+    return emb.data[0].embedding;
+  }
+
+  async function upsertVector(entity: T) {
+    if (!vector) return;
+    const embedding = await generateEmbedding(entity);
+    await vector.vector.upsert([
+      {
+        id: entity.id,
+        vector: embedding,
+        metadata: { userId: entity.userId }
+      }
+    ]);
+  }
+
+  async function deleteVector(id: string) {
+    if (!vector) return;
+    await vector.vector.delete([id]);
   }
 
   async function getAll(
@@ -285,6 +216,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
+    await upsertVector(inserted);
     await hookSet.after?.({ input: data, result: inserted, context });
     return inserted;
   }
@@ -322,6 +254,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
+    await upsertVector(updated);
     await hookSet.after?.({ input: updates, result: updated, context });
     return updated;
   }
@@ -351,6 +284,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       }
     }
 
+    await deleteVector(id);
     await hookSet.after?.({ input: id, result: deleted, context });
     return deleted;
   }
@@ -368,6 +302,9 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     await db.delete(table).where(eq(table.userId, userId));
     await clearCache(userId);
 
+    // Optionally clear all user vectors (Upstash Vector does not support "bulk delete by metadata" yet)
+    // Instead, you can track user IDs separately.
+
     await hookSet.after?.({ input: userId, context });
   }
 
@@ -381,7 +318,6 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     await hookSet.before?.({ input: userId, context });
 
     if (kv) await kv.kv.del(getKvKey(userId));
-
     await hookSet.after?.({ input: userId, context });
   }
 
