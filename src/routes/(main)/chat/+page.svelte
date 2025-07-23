@@ -29,33 +29,32 @@
     const decoder = new TextDecoder();
     let buffer = "";
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      buffer += decoder.decode(value, { stream: true });
-      const parts = buffer.split("\n");
-      buffer = parts.pop() || ""; // save incomplete chunk
+        buffer += decoder.decode(value, { stream: true });
 
-      for (const part of parts) {
-        if (part.startsWith("0:")) {
-          try {
-            const token = JSON.parse(part.slice(2)); // parse JSON string
-            aiMsg.content += token;
+        const parts = buffer.split("\n");
+        buffer = parts.pop() || "";
+
+        for (const part of parts) {
+          if (part.startsWith("0:")) {
+            const token = part.slice(2);
+            aiMsg.content += token ? JSON.parse(token) : "";
             messages = [...messages.slice(0, -1), aiMsg];
-          } catch {
-            console.warn("Invalid token:", part);
           }
         }
       }
+    } finally {
+      isStreaming = false;
     }
-
-    isStreaming = false;
   }
 </script>
 
 <div class="chat flex flex-col gap-2 p-4">
-  {#each messages as m (m.content)}
+  {#each messages as m (m.role + m.content)}
     <div class={m.role === "user" ? "text-blue-500" : "text-green-500"}>
       {m.content}
     </div>
@@ -68,6 +67,6 @@
       placeholder="Type your message..."
       onkeydown={(e) => e.key === "Enter" && sendMessage()}
     />
-    <button class="bg-blue-500 text-white px-3" onclick={sendMessage}> Send </button>
+    <button class="bg-blue-500 text-white px-3" onclick={sendMessage}>Send</button>
   </div>
 </div>

@@ -1,5 +1,7 @@
 # Logs
 
+- Wed Jul 23, 2025
+  - (7.23.01) - Better chat streaming text.
 - Tue Jul 22, 2025
   - (7.22.01) - Chat list.
   - (7.22.02) - Better google auth button.
