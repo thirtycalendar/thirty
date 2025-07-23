@@ -4,6 +4,7 @@ import type { z } from "zod";
 import type { auth } from "$lib/server/auth";
 import type { birthdayTable } from "$lib/server/db/tables/birthday";
 import type { calendarTable } from "$lib/server/db/tables/calendar";
+import type { chatTable } from "$lib/server/db/tables/chat";
 import type { eventTable } from "$lib/server/db/tables/event";
 import type { taskTable } from "$lib/server/db/tables/task";
 
@@ -64,6 +65,8 @@ export type Holiday = {
   countryCode: string;
   date: string;
 };
+
+export type Chat = InferSelectModel<typeof chatTable>;
 
 export type Source = (typeof Const.Source)[number];
 

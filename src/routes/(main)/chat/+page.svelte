@@ -13,8 +13,8 @@
           {#each message.parts as part, partIndex (partIndex)}
             {#if part.type === "text"}
               <div>{part.text}</div>
-            {:else if part.type === "tool-invocation"}
-              <pre>{JSON.stringify(part.toolInvocation, null, 2)}</pre>
+              <!-- {:else if part.type === "tool-invocation"}
+              <pre>{JSON.stringify(part.toolInvocation, null, 2)}</pre> -->
             {/if}
           {/each}
         </div>
