@@ -29,27 +29,29 @@
     const decoder = new TextDecoder();
     let buffer = "";
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-        buffer += decoder.decode(value, { stream: true });
+      buffer += decoder.decode(value, { stream: true });
+      const parts = buffer.split("\n");
+      buffer = parts.pop() || "";
 
-        const parts = buffer.split("\n");
-        buffer = parts.pop() || "";
-
-        for (const part of parts) {
-          if (part.startsWith("0:")) {
-            const token = part.slice(2);
-            aiMsg.content += token ? JSON.parse(token) : "";
+      for (const part of parts) {
+        if (part.startsWith("0:")) {
+          try {
+            const token = JSON.parse(part.slice(2));
+            aiMsg.content += token;
             messages = [...messages.slice(0, -1), aiMsg];
+          } catch (err) {
+            console.log("Error:", err);
+            console.warn("Invalid token:", part);
           }
         }
       }
-    } finally {
-      isStreaming = false;
     }
+
+    isStreaming = false;
   }
 </script>
 
@@ -59,6 +61,10 @@
       {m.content}
     </div>
   {/each}
+
+  {#if isStreaming}
+    <p class="animate-pulse">Generating...</p>
+  {/if}
 
   <div class="flex gap-2 mt-2">
     <input
