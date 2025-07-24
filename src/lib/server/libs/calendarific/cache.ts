@@ -8,7 +8,11 @@ import type { Holiday, HolidayCountry } from "$lib/shared/types";
 import { countries } from "./countries";
 
 const API_KEY = CALENDARIFIC_API_KEY;
-const years = Array.from({ length: 12 }, (_, i) => 2020 + i);
+
+// Get the current year
+const currentYear = new Date().getFullYear();
+// Generate years: past 3 (inclusive) and next 5 (inclusive)
+const years = Array.from({ length: 9 }, (_, i) => currentYear - 3 + i);
 
 export async function getAllHolidayCountries(): Promise<HolidayCountry[]> {
   return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
@@ -64,16 +68,10 @@ async function fetchHolidaysForCountryYear(countryCode: string, year: number): P
   }
 }
 
-export async function cacheHolidaysToKV(batchIndex: number) {
-  const batch = countries[batchIndex];
-  if (!batch) {
-    console.error("Invalid batch index");
-    return;
-  }
-
+export async function cacheHolidaysToKV() {
   const cachedCountries = (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
 
-  for (const country of batch) {
+  for (const country of countries) {
     const { countryCode, countryName } = country;
 
     if (cachedCountries.some((c) => c.countryCode === countryCode)) {
@@ -99,7 +97,7 @@ export async function cacheHolidaysToKV(batchIndex: number) {
     // Update cached countries list
     cachedCountries.push({
       id: country.id,
-      colorId: country.colorId,
+      color: country.color,
       countryName,
       countryCode
     });
@@ -108,5 +106,5 @@ export async function cacheHolidaysToKV(batchIndex: number) {
     await new Promise((r) => setTimeout(r, 1000));
   }
 
-  console.log(`Batch ${batchIndex} completed.`);
+  console.log("✅ Caching all the holidays completed.");
 }

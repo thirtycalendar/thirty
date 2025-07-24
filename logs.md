@@ -6,6 +6,7 @@
   - (7.24.03) - Vector embedding is kinda working.
   - (7.24.04) - I think ai chat is working but need improvements.
   - (7.24.05) - Used color hex codes only instead of color id.
+  - (7.24.06) - Fixing color bugs.
 - Wed Jul 23, 2025
   - (7.23.01) - Better chat streaming text.
   - (7.23.02) - Tools kinda working...

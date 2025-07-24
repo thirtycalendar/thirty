@@ -3,7 +3,6 @@
 
   import { holidayModal } from "$lib/client/stores/modal";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Holiday } from "$lib/shared/types";
 
   import { getHolidayCountries } from "../query";
@@ -17,8 +16,8 @@
   const { data: hdCountries } = getHolidayCountries();
 
   const color = $derived.by(() => {
-    const colorId = $hdCountries?.find((c) => c.id === holiday.countryId)?.colorId ?? "-1";
-    return getColorHexCodeFromId(colorId);
+    const color = $hdCountries?.find((c) => c.id === holiday.countryId)?.color ?? "transparent";
+    return color;
   });
 </script>
 

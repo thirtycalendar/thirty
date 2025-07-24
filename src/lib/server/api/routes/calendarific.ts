@@ -7,11 +7,9 @@ import type { SuccessResponse } from "$lib/shared/types";
 import type { Context } from "../context";
 import { errorResponse } from "../utils";
 
-const app = new Hono<Context>().get("/cache/:indexId", async (c) => {
+const app = new Hono<Context>().get("/cache", async (c) => {
   try {
-    const index = c.req.param("indexId");
-
-    cacheHolidaysToKV(Number(index));
+    cacheHolidaysToKV();
 
     return c.json<SuccessResponse<null>>({
       success: true,

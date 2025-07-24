@@ -5,8 +5,8 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { colors } from "$lib/shared/utils/colors";
-  import type { Color } from "$lib/shared/types";
+  import { Color } from "$lib/shared/constants";
+  import type { Color as ColorType } from "$lib/shared/types";
 
   interface Props {
     name: string;
@@ -20,22 +20,21 @@
 
   let { name, className, isLeftDiv, formData, formErrors }: Props = $props();
 
-  let colorId = $derived($formData[name]);
-  let selectedColor: Color | undefined = $derived(colors.find((c) => c.id === colorId));
+  let selectedColorHex = $derived($formData[name]);
   let error = $derived($formErrors[name]);
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
   let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
 
-  function selectChoice(choice: Color) {
-    if (colorId === choice.id) {
+  function selectChoice(choiceHex: ColorType) {
+    if (selectedColorHex === choiceHex) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
 
-    $formData[name] = choice.id;
+    $formData[name] = choiceHex;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
@@ -60,7 +59,7 @@
 
   function handleGridKeydown(event: KeyboardEvent, index: number) {
     const numCols = 6;
-    const totalChoices = colors.length;
+    const totalChoices = Color.length; // Use the new constant
 
     let nextIndex: number | null = null;
 
@@ -68,7 +67,7 @@
       case "Enter":
       case " ":
         event.preventDefault();
-        selectChoice(colors[index]);
+        selectChoice(Color[index]); // Use the new constant
         break;
       case "ArrowRight":
         event.preventDefault();
@@ -97,7 +96,7 @@
 
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       const nextButton = dropdownRef?.querySelector(
-        `[data-color-id="${colors[nextIndex].id}"]`
+        `[data-color-id="${Color[nextIndex]}"]` // Use the new constant
       ) as HTMLButtonElement;
       nextButton?.focus();
     }
@@ -129,10 +128,10 @@
     aria-expanded={open}
   >
     <div class="flex items-center gap-2">
-      {#if selectedColor}
+      {#if selectedColorHex}
         <span
           class="inline-block w-5 h-5 rounded-full"
-          style="background-color: {selectedColor.colorHexCode};"
+          style="background-color: {selectedColorHex};"
           aria-label="Selected color preview"
         ></span>
       {/if}
@@ -148,32 +147,27 @@
       tabindex="-1"
     >
       <div class="grid grid-cols-6 gap-2 auto-rows-fr">
-        {#each colors as choice, index (choice.id)}
+        {#each Color as choice, index (choice)}
           <button
             type="button"
             class="relative w-full aspect-square rounded-full flex items-center justify-center p-0.5
               hover:ring-2 hover:ring-offset-2 hover:ring-base-300
               focus:ring-2 focus:ring-offset-2 focus:ring-base-300 outline-none
               transition-all duration-100 ease-in-out"
-            style="background-color: {choice.colorHexCode}; border: 1px solid {choice.colorHexCode};"
+            style="background-color: {choice}; border: 1px solid {choice};"
             onclick={() => selectChoice(choice)}
             onkeydown={(e) => handleGridKeydown(e, index)}
             role="option"
-            aria-selected={colorId === choice.id}
-            aria-label={`Color ${choice.id}`}
-            data-color-id={choice.id}
-            disabled={colorId === choice.id}
+            aria-selected={selectedColorHex === choice}
+            aria-label={`Color ${choice}`}
+            data-color-id={choice}
+            disabled={selectedColorHex === choice}
           >
-            {#if colorId === choice.id}
-              <Check size="16" strokeWidth="4" class="text-base-200 drop-shadow-sm" />
+            {#if selectedColorHex === choice}
+              <Check size="16" strokeWidth="4" class="text-white drop-shadow-sm" />
             {/if}
           </button>
         {/each}
-        {#if colors.length === 0}
-          <div class="col-span-full px-3 py-2 text-sm text-base-content/60 text-center">
-            No colors available.
-          </div>
-        {/if}
       </div>
     </div>
   {/if}

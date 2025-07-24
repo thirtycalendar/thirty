@@ -1,5 +1,5 @@
 {
-  "id": "4a3fa71a-09d3-4aa2-a80e-dbd15f952286",
+  "id": "0fa284c0-89a9-43cd-ba93-0752c23d6546",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -333,11 +333,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "color_id": {
-          "name": "color_id",
+        "color": {
+          "name": "color",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'#4986e7'"
         },
         "note": {
           "name": "note",

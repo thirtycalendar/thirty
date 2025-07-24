@@ -47,7 +47,7 @@ export type HolidayCountry = {
   id: string;
   countryName: string;
   countryCode: string;
-  colorId: string;
+  color: Color;
 };
 export type HolidayCountryForm = z.infer<typeof hdCountrySchema>;
 
@@ -63,19 +63,13 @@ export type Holiday = {
 
 export type Chat = InferSelectModel<typeof chatTable>;
 
-export type Source = (typeof Const.Source)[number];
-
-export type EventStatus = (typeof Const.EventStatus)[number];
-
-export type EventAttendeeStatus = (typeof Const.EventAttendeeStatus)[number];
-
-export type TaskStatus = (typeof Const.TaskStatus)[number];
-
-export type NotifyInMin = (typeof Const.NotifyInMin)[number];
-
-export type NotifyInDay = (typeof Const.NotifyInDay)[number];
-
 export type Color = (typeof Const.Color)[number];
+export type Source = (typeof Const.Source)[number];
+export type EventStatus = (typeof Const.EventStatus)[number];
+export type EventAttendeeStatus = (typeof Const.EventAttendeeStatus)[number];
+export type TaskStatus = (typeof Const.TaskStatus)[number];
+export type NotifyInMin = (typeof Const.NotifyInMin)[number];
+export type NotifyInDay = (typeof Const.NotifyInDay)[number];
 
 export type IP_LOCATION_KV = {
   countryName: string;

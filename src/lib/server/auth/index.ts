@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
-import { getRandomColorId } from "$lib/shared/utils/colors";
+import { getRandomColor } from "$lib/shared/utils/colors";
 import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 
@@ -60,7 +60,7 @@ export const auth = betterAuth({
             externalId: null,
             source: "local",
             name,
-            colorId: getRandomColorId(),
+            color: getRandomColor(),
             timezone,
             isPrimary: true
           };

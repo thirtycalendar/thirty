@@ -52,7 +52,7 @@ CREATE TABLE "birthdays" (
 	"user_id" text NOT NULL,
 	"name" text NOT NULL,
 	"dob" date NOT NULL,
-	"color_id" text NOT NULL,
+	"color" text DEFAULT '#4986e7' NOT NULL,
 	"note" text,
 	"notifyInDay" integer DEFAULT 1 NOT NULL,
 	"notificationSent" boolean DEFAULT false NOT NULL,

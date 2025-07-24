@@ -3,7 +3,6 @@
 
   import { birthdayModal } from "$lib/client/stores/modal";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday } from "$lib/shared/types";
 
   interface Props {
@@ -14,8 +13,7 @@
 
   const hasBirthdaySuffix = /birthday$/i.test(birthday.name.trim());
   const name = hasBirthdaySuffix ? birthday.name : `${birthday.name}'s birthday`;
-
-  const color = $derived(getColorHexCodeFromId(birthday.colorId));
+  const color = birthday.color;
 </script>
 
 <button

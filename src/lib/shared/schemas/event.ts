@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { EventStatus, Source } from "../constants";
+import { Color, EventStatus, Source } from "../constants";
 import { dateYYYYMMDD, timeHHMMSS } from "./utils";
 
 export const eventSchema = z.object({
@@ -9,7 +9,7 @@ export const eventSchema = z.object({
   source: z.enum(Source),
 
   name: z.string().min(1, { message: "Name is required" }),
-  colorId: z.string().min(1, { message: "Color Id is required" }),
+  color: z.enum(Color),
   description: z.string().nullable(),
   location: z.string().nullable(),
 

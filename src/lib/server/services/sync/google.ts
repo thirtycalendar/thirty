@@ -7,7 +7,7 @@ import { eventTable } from "$lib/server/db/tables/event";
 import { getLock, releaseLock, setLock } from "$lib/server/utils/lock";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 
-import { getNearestColorIdFromHexCode } from "$lib/shared/utils/colors";
+import { getNearestColor } from "$lib/shared/utils/colors";
 import { KV_SYNC_LOCK_CALENDARS, KV_SYNC_LOCK_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { CalendarForm, EventForm } from "$lib/shared/types";
 
@@ -46,7 +46,7 @@ export async function syncGoogleCalendars(userId: string) {
         externalId: gCal.id,
         source: "google",
         name: gCal.summary ?? "(Untitled Calendar)",
-        colorId: getNearestColorIdFromHexCode(colorHex),
+        color: getNearestColor(colorHex),
         timezone: gCal.timeZone ?? "UTC",
         isPrimary: false
       });
@@ -74,7 +74,7 @@ export async function syncGoogleEvents(userId: string) {
       .select({
         id: calendarTable.id,
         externalId: calendarTable.externalId,
-        colorId: calendarTable.colorId
+        color: calendarTable.color
       })
       .from(calendarTable)
       .where(and(eq(calendarTable.userId, userId), eq(calendarTable.source, "google")));
@@ -140,7 +140,7 @@ export async function syncGoogleEvents(userId: string) {
           externalId: gEvent.id,
           source: "google",
           name: gEvent.summary ?? "(No title)",
-          colorId: gEvent.colorId ? getNearestColorIdFromHexCode(colorHex) : cal.colorId,
+          color: gEvent.colorId ? getNearestColor(colorHex) : cal.color,
           description: gEvent.description ?? null,
           location: gEvent.location ?? null,
           startDate,
