@@ -1,6 +1,6 @@
 import { boolean, date, jsonb, pgTable, text, time, uuid } from "drizzle-orm/pg-core";
 
-import type { EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
+import type { Color, EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
 
 import { userTable } from "./auth";
 import { calendarTable } from "./calendar";
@@ -19,7 +19,7 @@ export const eventTable = pgTable("events", {
     .references(() => calendarTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  colorId: text("color_id").notNull(),
+  color: text("color").$type<Color>().default("#4986e7").notNull(),
   description: text("description"),
   location: text("location"),
 

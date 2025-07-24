@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import type { Source } from "$lib/shared/types";
+import type { Color, Source } from "$lib/shared/types";
 
 import { userTable } from "./auth";
 import { timestamps } from "./utils";
@@ -15,7 +15,7 @@ export const calendarTable = pgTable("calendars", {
     .references(() => userTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  colorId: text("color_id").notNull(),
+  color: text("color").$type<Color>().default("#4986e7").notNull(),
   timezone: text("timezone").default("UTC").notNull(),
   isPrimary: boolean("is_primary").default(false).notNull(),
   isSynced: boolean("is_synced").default(true).notNull(),

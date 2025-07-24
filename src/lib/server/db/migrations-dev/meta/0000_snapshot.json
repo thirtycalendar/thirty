@@ -1,5 +1,5 @@
 {
-  "id": "58b09f6a-f7a2-4308-a694-d1c0b1b432c7",
+  "id": "4a3fa71a-09d3-4aa2-a80e-dbd15f952286",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -438,11 +438,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "color_id": {
-          "name": "color_id",
+        "color": {
+          "name": "color",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'#4986e7'"
         },
         "timezone": {
           "name": "timezone",
@@ -520,6 +521,12 @@
         },
         "user_id": {
           "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -774,11 +781,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "color_id": {
-          "name": "color_id",
+        "color": {
+          "name": "color",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'#4986e7'"
         },
         "description": {
           "name": "description",

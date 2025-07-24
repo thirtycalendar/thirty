@@ -67,7 +67,7 @@ CREATE TABLE "calendars" (
 	"source" text DEFAULT 'local' NOT NULL,
 	"user_id" text NOT NULL,
 	"name" text NOT NULL,
-	"color_id" text NOT NULL,
+	"color" text DEFAULT '#4986e7' NOT NULL,
 	"timezone" text DEFAULT 'UTC' NOT NULL,
 	"is_primary" boolean DEFAULT false NOT NULL,
 	"is_synced" boolean DEFAULT true NOT NULL,
@@ -79,6 +79,7 @@ CREATE TABLE "calendars" (
 CREATE TABLE "chats" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
+	"name" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone
@@ -114,7 +115,7 @@ CREATE TABLE "events" (
 	"user_id" text NOT NULL,
 	"calendar_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"color_id" text NOT NULL,
+	"color" text DEFAULT '#4986e7' NOT NULL,
 	"description" text,
 	"location" text,
 	"start_date" date NOT NULL,

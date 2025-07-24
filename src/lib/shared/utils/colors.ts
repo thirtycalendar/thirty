@@ -1,37 +1,8 @@
-export const colors = [
-  { id: "1", colorHexCode: "#ac725e" },
-  { id: "2", colorHexCode: "#d06b64" },
-  { id: "3", colorHexCode: "#f83a22" },
-  { id: "4", colorHexCode: "#fa573c" },
-  { id: "5", colorHexCode: "#ff7537" },
-  { id: "6", colorHexCode: "#ffad46" },
-  { id: "7", colorHexCode: "#42d692" },
-  { id: "8", colorHexCode: "#16a765" },
-  { id: "9", colorHexCode: "#7bd148" },
-  { id: "10", colorHexCode: "#b3dc6c" },
-  { id: "11", colorHexCode: "#fbe983" },
-  { id: "12", colorHexCode: "#fad165" },
-  { id: "13", colorHexCode: "#92e1c0" },
-  { id: "14", colorHexCode: "#9fe1e7" },
-  { id: "15", colorHexCode: "#9fc6e7" },
-  { id: "16", colorHexCode: "#4986e7" },
-  { id: "17", colorHexCode: "#9a9cff" },
-  { id: "18", colorHexCode: "#b99aff" },
-  { id: "19", colorHexCode: "#c2c2c2" },
-  { id: "20", colorHexCode: "#cabdbf" },
-  { id: "21", colorHexCode: "#cca6ac" },
-  { id: "22", colorHexCode: "#f691b2" },
-  { id: "23", colorHexCode: "#cd74e6" },
-  { id: "24", colorHexCode: "#a47ae2" }
-];
+import { Color } from "../constants";
 
-export function getRandomColorId(): string {
-  const random = Math.floor(Math.random() * colors.length);
-  return colors[random].id;
-}
-
-export function getColorHexCodeFromId(id: string): string {
-  return colors.find((c) => c.id === id)?.colorHexCode ?? "transparent";
+export function getRandomColor(): string {
+  const random = Math.floor(Math.random() * Color.length);
+  return Color[random];
 }
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -44,26 +15,18 @@ function hexToRgb(hex: string): [number, number, number] {
   ];
 }
 
-function getNearestColor(hexCode: string) {
+export function getNearestColor(hexCode: string): string {
   const targetRgb = hexToRgb(hexCode);
 
-  return colors.reduce(
-    (closest, color) => {
+  return Color.reduce(
+    (closest, currentColor) => {
       const [r1, g1, b1] = targetRgb;
-      const [r2, g2, b2] = hexToRgb(color.colorHexCode);
+      const [r2, g2, b2] = hexToRgb(currentColor);
 
       const distance = Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
 
-      return distance < closest.distance ? { color, distance } : closest;
+      return distance < closest.distance ? { color: currentColor, distance } : closest;
     },
-    { color: colors[0], distance: Number.POSITIVE_INFINITY }
+    { color: Color[0] as (typeof Color)[number], distance: Number.POSITIVE_INFINITY }
   ).color;
-}
-
-export function getNearestColorHexCode(hexCode: string): string {
-  return getNearestColor(hexCode).colorHexCode;
-}
-
-export function getNearestColorIdFromHexCode(hexCode: string): string {
-  return getNearestColor(hexCode).id;
 }

@@ -18,11 +18,6 @@ import type { taskSchema } from "./schemas/task";
 
 export type CalView = "month" | "week" | "day" | "year";
 
-export interface Color {
-  id: string;
-  colorHexCode: string;
-}
-
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;
 
@@ -79,6 +74,8 @@ export type TaskStatus = (typeof Const.TaskStatus)[number];
 export type NotifyInMin = (typeof Const.NotifyInMin)[number];
 
 export type NotifyInDay = (typeof Const.NotifyInDay)[number];
+
+export type Color = (typeof Const.Color)[number];
 
 export type IP_LOCATION_KV = {
   countryName: string;
