@@ -2,53 +2,26 @@ import type { Redis } from "@upstash/redis";
 import type { Index } from "@upstash/vector";
 
 import { eq } from "drizzle-orm";
-import type { PgTable } from "drizzle-orm/pg-core";
-import OpenAI from "openai";
+import type { OpenAI } from "openai";
 
-/**
- * A hook function that can run before or after a database operation.
- */
-type Hook<Input, Result = void, Context = unknown> = (args: {
-  input: Input;
-  result?: Result;
-  context: Context;
-}) => Promise<void> | void;
-
-type HookSet<Input, Result = void, Context = unknown> = {
-  before?: Hook<Input, Result, Context>;
-  after?: Hook<Input, Result, Context>;
+type MethodOptions<Input, Result, Ctx> = {
+  hooks?: Hooks<Input, Result, Ctx>;
 };
 
-type MethodOptions<Input, Result = void, Context = unknown> = {
-  hooks?: HookSet<Input, Result, Context>;
+type Hooks<Input, Result, Ctx> = {
+  before?: (args: { input: Input; context: Ctx }) => Promise<void> | void;
+  after?: (args: { input: Input; result: Result; context: Ctx }) => Promise<void> | void;
 };
 
-type CreateDbServiceHooks<T extends { id: string; userId: string }, FormType> = {
-  getAll?: HookSet<string, T[], { userId: string }>;
-  get?: HookSet<string, T, { userId: string }>;
-  create?: HookSet<FormType, T, { userId: string }>;
-  update?: HookSet<Partial<FormType>, T, { userId: string; id: string }>;
-  delete?: HookSet<string, T, { userId: string; id: string }>;
-  deleteAll?: HookSet<string, void, { userId: string }>;
-  clearCache?: HookSet<string, void, { userId: string }>;
-};
-
-type VectorConfig<T> = {
-  vector: Index;
-  embeddingFn?: (entity: T) => Promise<number[]>; // Custom embedding generator
-  textFn?: (entity: T) => string; // If embeddingFn is not given, textFn + OpenAI is used
-  model?: string; // OpenAI model for embeddings (default: "text-embedding-3-small")
-};
-
-type CreateDbServiceParams<T extends { id: string; userId: string }, FormType> = {
-  table: PgTable;
-  kv?: {
-    kv: Redis;
-    kvKeyFn: (userId: string) => string;
-    cacheTime: number;
-  };
-  vector?: VectorConfig<T>;
-  hooks?: CreateDbServiceHooks<T, FormType>;
+type CreateDbServiceHooks<T, FormType> = {
+  getAll?: Hooks<string, T[], { userId: string }>;
+  get?: Hooks<string, T, { userId: string }>;
+  create?: Hooks<FormType, T, { userId: string }>;
+  update?: Hooks<Partial<FormType>, T, { userId: string; id: string }>;
+  delete?: Hooks<string, T, { userId: string; id: string }>;
+  deleteAll?: Hooks<string, void, { userId: string }>;
+  clearCache?: Hooks<string, void, { userId: string }>;
+  search?: Hooks<string, T[], { userId: string }>;
 };
 
 export type DbService<T extends { id: string; userId: string }, FormType> = {
@@ -76,76 +49,61 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
     userId: string,
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void>;
+  search(
+    userId: string,
+    query: string,
+    limit?: number,
+    options?: MethodOptions<string, T[], { userId: string }>
+  ): Promise<T[]>;
+  searchVector(query: string, userId: string, limit?: number): Promise<string[]>;
+  upsertVector(row: T): Promise<void>;
+  deleteVector(id: string): Promise<void>;
+
   addHooks(hooks: CreateDbServiceHooks<T, FormType>): void;
 };
 
-function mergeHooks<Input, Result, Context>(
-  global?: HookSet<Input, Result, Context>,
-  local?: HookSet<Input, Result, Context>
-): HookSet<Input, Result, Context> {
-  return {
-    before: async (args) => {
-      if (global?.before) await global.before(args);
-      if (local?.before) await local.before(args);
-    },
-    after: async (args) => {
-      if (global?.after) await global.after(args);
-      if (local?.after) await local.after(args);
-    }
-  };
-}
+type VectorConfig<T> = {
+  vector: Index;
+  model?: string;
+  textFn: (row: T) => string;
+};
 
 export function createDbService<T extends { id: string; userId: string }, FormType>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   db: any,
-  params: CreateDbServiceParams<T, FormType>
+  config: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    table: any;
+    kv?: { kv: Redis; kvKeyFn: (userId: string) => string; cacheTime?: number };
+    vector?: VectorConfig<T>;
+    openai?: OpenAI;
+  }
 ): DbService<T, FormType> {
-  const { table, kv, vector } = params;
-  const globalHooks = params.hooks ?? {};
+  const { table, kv, vector, openai } = config;
+  const globalHooks: CreateDbServiceHooks<T, FormType> = {};
   const addedHooks: CreateDbServiceHooks<T, FormType> = {};
 
-  const openai = vector ? new OpenAI() : undefined;
-
-  const getKvKey = (userId: string) => kv?.kvKeyFn(userId) ?? "";
-
-  function addHooks(newHooks: CreateDbServiceHooks<T, FormType>) {
-    for (const key in newHooks) {
-      const hookKey = key as keyof CreateDbServiceHooks<T, FormType>;
-      const existingSet = addedHooks[hookKey];
-      const newSet = newHooks[hookKey];
-      // @ts-expect-error — Drizzle doesn't expose column keys generic call
-      addedHooks[hookKey] = mergeHooks(existingSet, newSet);
-    }
-  }
-
-  async function generateEmbedding(entity: T): Promise<number[]> {
-    if (!vector) return [];
-    if (vector.embeddingFn) return vector.embeddingFn(entity);
-    if (!openai) throw new Error("OpenAI client not initialized for embeddings");
-
-    const text = vector.textFn ? vector.textFn(entity) : JSON.stringify(entity);
-    const emb = await openai.embeddings.create({
-      model: vector.model ?? "text-embedding-3-small",
-      input: text
-    });
-    return emb.data[0].embedding;
-  }
-
-  async function upsertVector(entity: T) {
-    if (!vector) return;
-    const embedding = await generateEmbedding(entity);
-    await vector.vector.upsert([
-      {
-        id: entity.id,
-        vector: embedding,
-        metadata: { userId: entity.userId }
+  function mergeHooks<A, B, C>(...hooks: (Hooks<A, B, C> | undefined)[]): Hooks<A, B, C> {
+    return {
+      before: async (args) => {
+        for (const hook of hooks) await hook?.before?.(args);
+      },
+      after: async (args) => {
+        for (const hook of hooks) await hook?.after?.(args);
       }
-    ]);
+    };
   }
 
-  async function deleteVector(id: string) {
-    if (!vector) return;
-    await vector.vector.delete([id]);
+  async function clearCache(
+    userId: string,
+    options?: MethodOptions<string, void, { userId: string }>
+  ) {
+    if (!kv) return;
+    const context = { userId };
+    const hooks = mergeHooks(globalHooks.clearCache, addedHooks.clearCache, options?.hooks);
+    await hooks.before?.({ input: userId, context });
+    await kv.kv.del(kv.kvKeyFn(userId));
+    await hooks.after?.({ input: userId, result: undefined, context });
   }
 
   async function getAll(
@@ -153,41 +111,36 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]> {
     const context = { userId };
-    const serviceLevelHooks = mergeHooks(globalHooks.getAll, addedHooks.getAll);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: userId, context });
+    const hooks = mergeHooks(globalHooks.getAll, addedHooks.getAll, options?.hooks);
+    await hooks.before?.({ input: userId, context });
 
+    let data: T[] = [];
     if (kv) {
-      const cached = await kv.kv.get<T[]>(getKvKey(userId));
-      if (cached) {
-        await hookSet.after?.({ input: userId, result: cached, context });
-        return cached;
-      }
+      const cached = await kv.kv.get<T[]>(kv.kvKeyFn(userId));
+      if (cached) data = cached;
+    }
+    if (!data.length) {
+      data = await db.select().from(table).where(eq(table.userId, userId));
+      if (kv) await kv.kv.set(kv.kvKeyFn(userId), data, { ex: kv.cacheTime ?? 300 });
     }
 
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
-    const result = await db.select().from(table).where(eq(table.userId, userId));
-    if (kv) await kv.kv.set(getKvKey(userId), result, { ex: kv.cacheTime });
-
-    await hookSet.after?.({ input: userId, result, context });
-    return result;
+    await hooks.after?.({ input: userId, result: data, context });
+    return data;
   }
 
   async function get(
     id: string,
     options?: MethodOptions<string, T, { userId: string }>
   ): Promise<T> {
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
-    const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
-    if (!row) throw new Error("Not found");
+    const context = { userId: options?.hooks?.before ? "unknown" : "" };
+    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+    await hooks.before?.({ input: id, context });
 
-    const context = { userId: row.userId };
-    const serviceLevelHooks = mergeHooks(globalHooks.get, addedHooks.get);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: id, context });
-    await hookSet.after?.({ input: id, result: row, context });
+    const row = await db.select().from(table).where(eq(table.id, id)).limit(1);
+    const result = row[0] as T;
 
-    return row;
+    await hooks.after?.({ input: id, result, context });
+    return result;
   }
 
   async function create(
@@ -196,29 +149,18 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<FormType, T, { userId: string }>
   ): Promise<T> {
     const context = { userId };
-    const serviceLevelHooks = mergeHooks(globalHooks.create, addedHooks.create);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: data, context });
+    const hooks = mergeHooks(globalHooks.create, addedHooks.create, options?.hooks);
+    await hooks.before?.({ input: data, context });
 
-    const [inserted] = await db
+    const [row] = await db
       .insert(table)
-      .values({ userId, ...data })
+      .values({ ...data, userId })
       .returning();
-    if (!inserted) throw new Error("Insert failed");
+    if (kv) await clearCache(userId);
+    if (vector) await upsertVector(row);
 
-    if (kv) {
-      const cached = await kv.kv.get<T[]>(getKvKey(userId));
-      if (cached) {
-        cached.push(inserted);
-        await kv.kv.set(getKvKey(userId), cached, { ex: kv.cacheTime });
-      } else {
-        await kv.kv.set(getKvKey(userId), [inserted], { ex: kv.cacheTime });
-      }
-    }
-
-    await upsertVector(inserted);
-    await hookSet.after?.({ input: data, result: inserted, context });
-    return inserted;
+    await hooks.after?.({ input: data, result: row, context });
+    return row;
   }
 
   async function update(
@@ -226,67 +168,32 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     updates: Partial<FormType>,
     options?: MethodOptions<Partial<FormType>, T, { userId: string; id: string }>
   ): Promise<T> {
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
-    const [existing] = await db.select().from(table).where(eq(table.id, id)).limit(1);
-    if (!existing) throw new Error("Not found");
+    const context = { userId: options?.hooks?.before ? "unknown" : "", id };
+    const hooks = mergeHooks(globalHooks.update, addedHooks.update, options?.hooks);
+    await hooks.before?.({ input: updates, context });
 
-    const context = { userId: existing.userId, id };
-    const serviceLevelHooks = mergeHooks(globalHooks.update, addedHooks.update);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: updates, context });
+    const [row] = await db.update(table).set(updates).where(eq(table.id, id)).returning();
+    if (kv) await clearCache(row.userId);
+    if (vector) await upsertVector(row);
 
-    const [updated] = await db
-      .update(table)
-      .set({ ...updates, updatedAt: new Date() })
-      // @ts-expect-error — Drizzle doesn't expose column keys generically
-      .where(eq(table.id, id))
-      .returning();
-    if (!updated) throw new Error("Update failed");
-
-    if (kv) {
-      const cached = await kv.kv.get<T[]>(getKvKey(updated.userId));
-      if (cached) {
-        const index = cached.findIndex((i) => i.id === id);
-        if (index !== -1) {
-          cached[index] = updated;
-          await kv.kv.set(getKvKey(updated.userId), cached, { ex: kv.cacheTime });
-        }
-      }
-    }
-
-    await upsertVector(updated);
-    await hookSet.after?.({ input: updates, result: updated, context });
-    return updated;
+    await hooks.after?.({ input: updates, result: row, context });
+    return row;
   }
 
   async function remove(
     id: string,
     options?: MethodOptions<string, T, { userId: string; id: string }>
   ): Promise<T> {
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
-    const [itemToDelete] = await db.select().from(table).where(eq(table.id, id)).limit(1);
-    if (!itemToDelete) throw new Error("Not found");
+    const context = { userId: options?.hooks?.before ? "unknown" : "", id };
+    const hooks = mergeHooks(globalHooks.delete, addedHooks.delete, options?.hooks);
+    await hooks.before?.({ input: id, context });
 
-    const context = { userId: itemToDelete.userId, id };
-    const serviceLevelHooks = mergeHooks(globalHooks.delete, addedHooks.delete);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: id, context });
+    const [row] = await db.delete(table).where(eq(table.id, id)).returning();
+    if (kv) await clearCache(row.userId);
+    if (vector) await deleteVector(row.id);
 
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
-    const [deleted] = await db.delete(table).where(eq(table.id, id)).returning();
-    if (!deleted) throw new Error("Delete failed");
-
-    if (kv) {
-      const cached = await kv.kv.get<T[]>(getKvKey(deleted.userId));
-      if (cached) {
-        const filtered = cached.filter((i) => i.id !== id);
-        await kv.kv.set(getKvKey(deleted.userId), filtered, { ex: kv.cacheTime });
-      }
-    }
-
-    await deleteVector(id);
-    await hookSet.after?.({ input: id, result: deleted, context });
-    return deleted;
+    await hooks.after?.({ input: id, result: row, context });
+    return row;
   }
 
   async function deleteAll(
@@ -294,31 +201,79 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void> {
     const context = { userId };
-    const serviceLevelHooks = mergeHooks(globalHooks.deleteAll, addedHooks.deleteAll);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: userId, context });
+    const hooks = mergeHooks(globalHooks.deleteAll, addedHooks.deleteAll, options?.hooks);
+    await hooks.before?.({ input: userId, context });
 
-    // @ts-expect-error — Drizzle doesn't expose column keys generically
     await db.delete(table).where(eq(table.userId, userId));
-    await clearCache(userId);
+    if (kv) await clearCache(userId);
 
-    // Optionally clear all user vectors (Upstash Vector does not support "bulk delete by metadata" yet)
-    // Instead, you can track user IDs separately.
-
-    await hookSet.after?.({ input: userId, context });
+    await hooks.after?.({ input: userId, result: undefined, context });
   }
 
-  async function clearCache(
-    userId: string,
-    options?: MethodOptions<string, void, { userId: string }>
-  ): Promise<void> {
-    const context = { userId };
-    const serviceLevelHooks = mergeHooks(globalHooks.clearCache, addedHooks.clearCache);
-    const hookSet = mergeHooks(serviceLevelHooks, options?.hooks);
-    await hookSet.before?.({ input: userId, context });
+  async function searchVector(query: string, userId: string, limit = 10): Promise<string[]> {
+    if (!vector || !openai) throw new Error("Vector search not configured");
 
-    if (kv) await kv.kv.del(getKvKey(userId));
-    await hookSet.after?.({ input: userId, context });
+    const queryEmb = await openai.embeddings.create({
+      model: vector.model ?? "text-embedding-3-small",
+      input: query
+    });
+
+    const results = await vector.vector.query({
+      vector: queryEmb.data[0].embedding,
+      topK: limit,
+      filter: `userId='${userId}'`
+    });
+
+    return results.map((r) => String(r.id));
+  }
+
+  async function search(
+    userId: string,
+    query: string,
+    limit = 10,
+    options?: MethodOptions<string, T[], { userId: string }>
+  ): Promise<T[]> {
+    if (!vector || !openai) throw new Error("Vector search not configured");
+
+    const context = { userId };
+    const hooks = mergeHooks(globalHooks.search, addedHooks.search, options?.hooks);
+    await hooks.before?.({ input: query, context });
+
+    const ids = await searchVector(query, userId, limit);
+    if (!ids.length) return [];
+
+    const rows = await db
+      .select()
+      .from(table)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .where((tbl: any) => tbl.id.in(ids));
+    const ordered = ids.map((id) => rows.find((r: T) => r.id === id)).filter(Boolean) as T[];
+
+    await hooks.after?.({ input: query, result: ordered, context });
+    return ordered;
+  }
+
+  async function upsertVector(row: T) {
+    if (!vector || !openai) return;
+    const text = vector.textFn(row);
+    const emb = await openai.embeddings.create({
+      model: vector.model ?? "text-embedding-3-small",
+      input: text
+    });
+    await vector.vector.upsert({
+      id: row.id,
+      vector: emb.data[0].embedding,
+      metadata: { userId: row.userId }
+    });
+  }
+
+  async function deleteVector(id: string) {
+    if (!vector) return;
+    await vector.vector.delete({ ids: [id] });
+  }
+
+  function addHooks(hooks: CreateDbServiceHooks<T, FormType>) {
+    Object.assign(addedHooks, hooks);
   }
 
   return {
@@ -329,6 +284,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     delete: remove,
     deleteAll,
     clearCache,
+    search,
+    searchVector,
+    upsertVector,
+    deleteVector,
     addHooks
   };
 }

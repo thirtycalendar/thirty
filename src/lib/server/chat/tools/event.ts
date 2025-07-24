@@ -8,11 +8,14 @@ import { eventService } from "../../services/event";
 
 export function createEventTools(userId: string) {
   return {
-    getAllEvents: tool({
+    searchEvents: tool({
       description:
-        "Retrieve all events owned by the user. Use this to list or pick from the user's events.",
-      parameters: z.object({}).strict(),
-      execute: async () => eventService.getAll(userId)
+        "Perform semantic search on user's events using a natural language query (e.g., 'meeting next week').",
+      parameters: z.object({
+        query: z.string().min(1),
+        limit: z.number().min(1).max(50).default(10)
+      }),
+      execute: async ({ query, limit }) => eventService.search(userId, query, limit)
     }),
 
     getEvent: tool({

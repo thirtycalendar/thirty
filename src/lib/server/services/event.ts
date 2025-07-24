@@ -5,6 +5,7 @@ import type { Event, EventForm } from "$lib/shared/types";
 import { db } from "../db";
 import { eventTable } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
+import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
 
 export const eventService = createDbService<Event, EventForm>(db, {
@@ -13,6 +14,15 @@ export const eventService = createDbService<Event, EventForm>(db, {
     kv: kv,
     kvKeyFn: (userId) => KV_EVENTS(userId),
     cacheTime: kvCacheTimes.event
+  },
+  vector: {
+    vector: vector,
+    textFn: (e) => {
+      return Object.values(e)
+        .filter((value) => value !== null && typeof value !== "undefined")
+        .map((value) => String(value))
+        .join(" ");
+    }
   }
 });
 
