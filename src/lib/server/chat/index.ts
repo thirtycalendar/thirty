@@ -13,9 +13,9 @@ export async function streamChat(userId: string, messages: Message[]) {
 
   const result = streamText({
     model: openAiModel("gpt-4.1"),
-    messages: [...messages.filter((message: Message) => message.role === "user")],
+    messages,
     tools: createTools(userId),
-    maxSteps: 30,
+    maxSteps: 100,
     system: `You are a helpful AI assistant for a smart calendar app. 
                  Your job is to help the user manage events, tasks, and schedules. 
                  If the user asks for something calendar-related, respond naturally and clearly.`

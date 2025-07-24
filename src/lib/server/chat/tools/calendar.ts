@@ -15,7 +15,10 @@ export function createCalendarTools(userId: string) {
         query: z.string().min(1),
         limit: z.number().min(1).max(50).default(10)
       }),
-      execute: async ({ query, limit }) => calendarService.search(userId, query, limit)
+      execute: async ({ query, limit }) => {
+        const calendars = await calendarService.search(userId, query, limit);
+        return { calendars };
+      }
     }),
 
     getCalendar: tool({
