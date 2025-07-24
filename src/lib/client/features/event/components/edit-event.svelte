@@ -23,7 +23,7 @@
     name: event.name,
     description: event.description,
     location: event.location,
-    colorId: event.colorId,
+    color: event.color,
     startDate: event.startDate,
     startTime: event.startTime,
     endDate: event.endDate,

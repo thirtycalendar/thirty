@@ -13,7 +13,7 @@
 
   const hasBirthdaySuffix = /birthday$/i.test(birthday.name.trim());
   const name = hasBirthdaySuffix ? birthday.name : `${birthday.name}'s birthday`;
-  const color = birthday.color;
+  const color = $derived(birthday.color);
 </script>
 
 <button

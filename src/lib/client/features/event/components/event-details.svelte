@@ -21,7 +21,6 @@
   } from "$lib/client/features/event/utils";
   import { isSm } from "$lib/client/stores/responsive";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { Event } from "$lib/shared/types";
@@ -56,8 +55,8 @@
   const calendar = $derived.by(() => $calendars?.find((cal) => cal.id === event.calendarId));
   const calendarName = $derived(calendar?.name ?? "Unknown");
 
-  const calendarColor = $derived(getColorHexCodeFromId(calendar?.colorId || "-1"));
-  const eventColor = $derived(getColorHexCodeFromId(event.colorId));
+  const calendarColor = $derived(calendar?.color || "transparent");
+  const eventColor = $derived(event.color);
   const isSameColor = $derived(eventColor === calendarColor);
 
   const updated = format(new Date(event.updatedAt), "PPp");

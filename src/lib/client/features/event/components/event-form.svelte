@@ -59,7 +59,7 @@
     schema: eventSchema,
     defaultValues,
     disabledFields: ["timezone"],
-    resetDisabledFields: ["calendarId", "colorId", "timezone"],
+    resetDisabledFields: ["calendarId", "timezone"],
     onSubmit,
     onSuccess: () => {
       isLocation = false;
@@ -97,7 +97,7 @@
 
       if (fallbackCalendar) {
         $formData.calendarId = fallbackCalendar.id;
-        $formData.colorId = fallbackCalendar.colorId;
+        $formData.color = fallbackCalendar.color;
         $formData.timezone = fallbackCalendar.timezone;
       }
     }
@@ -127,7 +127,7 @@
       const selectedCalendar = $calendars.find((c) => c.id === $formData.calendarId);
       if (selectedCalendar && previousCalendarId !== $formData.calendarId) {
         previousCalendarId = selectedCalendar.id;
-        $formData.colorId = selectedCalendar.colorId;
+        $formData.color = selectedCalendar.color;
         $formData.timezone = selectedCalendar.timezone;
       }
     }

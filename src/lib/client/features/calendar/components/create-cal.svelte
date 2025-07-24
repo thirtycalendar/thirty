@@ -5,7 +5,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { getRandomColorId } from "$lib/shared/utils/colors";
+  import { getRandomColor } from "$lib/shared/utils/colors";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { CalendarForm as CalendarFormType } from "$lib/shared/types";
 
@@ -17,7 +17,7 @@
     externalId: null,
     source: "local",
     name: "",
-    colorId: getRandomColorId(),
+    color: getRandomColor(),
     isPrimary: false,
     timezone: getValidTimeZone()
   };
@@ -36,7 +36,7 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      defaultValues.colorId = getRandomColorId();
+      defaultValues.color = getRandomColor();
 
       showToast(data.message);
       toggleModal(calendarModal.modalId);

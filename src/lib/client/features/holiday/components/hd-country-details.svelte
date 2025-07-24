@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { HolidayCountry } from "$lib/shared/types";
 
   import { HdCountryActionButtons } from ".";
@@ -22,7 +21,7 @@
   <h2 class="text-xl font-semibold flex items-center gap-2">
     <div
       class="w-5 aspect-square rounded-full"
-      style="background-color: {getColorHexCodeFromId(holidayCountry.colorId)}"
+      style="background-color: {holidayCountry.color}"
     ></div>
     {holidayCountry.countryName} ({holidayCountry.countryCode})
   </h2>

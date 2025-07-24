@@ -3,7 +3,6 @@
 
   import { differenceInYears, format } from "date-fns";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday } from "$lib/shared/types";
 
   import { BdActionButtons } from ".";
@@ -45,10 +44,7 @@
     <Palette size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
     <div class="flex-1 flex items-center gap-2">
       <span class="capitalize">Color:</span>
-      <div
-        class="w-5 aspect-square rounded-full"
-        style="background-color: {getColorHexCodeFromId(birthday.colorId)}"
-      ></div>
+      <div class="w-5 aspect-square rounded-full" style="background-color: {birthday.color}"></div>
     </div>
   </div>
 

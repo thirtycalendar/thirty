@@ -3,7 +3,6 @@
 
   import { format } from "date-fns";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import type { Calendar } from "$lib/shared/types";
 
@@ -34,10 +33,7 @@
     </div>
     <div class="flex-1 flex items-center gap-2">
       <span class="capitalize">Color:</span>
-      <div
-        class="w-5 aspect-square rounded-full"
-        style="background-color: {getColorHexCodeFromId(calendar.colorId)}"
-      ></div>
+      <div class="w-5 aspect-square rounded-full" style="background-color: {calendar.color}"></div>
     </div>
   </div>
 

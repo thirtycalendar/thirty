@@ -19,7 +19,7 @@
   const defaultValues: BirthdayFormType = {
     name: birthday.name,
     dob: birthday.dob,
-    colorId: birthday.colorId,
+    color: birthday.color,
     note: birthday.note
   };
 

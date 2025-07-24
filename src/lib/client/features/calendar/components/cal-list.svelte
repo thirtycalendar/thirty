@@ -12,7 +12,6 @@
   } from "$lib/client/stores/local-storage";
   import { birthdayModal, calendarModal, holidayCountryModal } from "$lib/client/stores/modal";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
 
   import { getBirthdays } from "../../birthday/query";
@@ -21,7 +20,7 @@
 
   const { data: calendars } = getCalendars();
   const { data: birthdays } = getBirthdays();
-  const { data: userHolidayCountries } = getHolidayCountries();
+  const { data: holidayCountries } = getHolidayCountries();
 
   const { store: collapsed } = collapsedLists;
 </script>
@@ -56,10 +55,10 @@
   })}
 {/if}
 
-{#if $userHolidayCountries}
+{#if $holidayCountries}
   {@render ListSection<HolidayCountry>({
     title: "Holidays",
-    items: $userHolidayCountries,
+    items: $holidayCountries,
     getItemName: (item) => item.countryName,
     onChecked: (item) => uncheckedHolidays.isChecked(item.id),
     onChange: (item) => uncheckedHolidays.toggle(item.id),
@@ -68,7 +67,7 @@
   })}
 {/if}
 
-{#snippet ListSection<T extends { id: string; colorId: string; createdAt?: string } & object>({
+{#snippet ListSection<T extends { id: string; color: string; createdAt?: string } & object>({
   title,
   items,
   getItemName,
@@ -128,7 +127,7 @@
 
                 <span
                   class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
-                  style={`color: ${getColorHexCodeFromId(item.colorId)}`}
+                  style={`color: ${item.color}`}
                 >
                   {getItemName(item)}
                 </span>

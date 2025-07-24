@@ -7,7 +7,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { getRandomColorId } from "$lib/shared/utils/colors";
+  import { getRandomColor } from "$lib/shared/utils/colors";
   import type { BirthdayForm as BirthdayFormType } from "$lib/shared/types";
 
   import { BdForm } from ".";
@@ -17,7 +17,7 @@
   const defaultValues: BirthdayFormType = {
     name: "",
     dob: format(new Date(), "yyyy-MM-dd"),
-    colorId: getRandomColorId(),
+    color: getRandomColor(),
     note: null
   };
 
@@ -35,7 +35,7 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      defaultValues.colorId = getRandomColorId();
+      defaultValues.color = getRandomColor();
 
       showToast(data.message);
       toggleModal(birthdayModal.modalId);

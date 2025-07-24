@@ -1,7 +1,6 @@
 <script lang="ts">
   import { eventModal } from "$lib/client/stores/modal";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Event } from "$lib/shared/types";
 
   import { getCalendars } from "../../calendar/query";
@@ -12,12 +11,12 @@
 
   let { event }: Props = $props();
 
-  const eventColor = $derived(getColorHexCodeFromId(event.colorId));
+  const eventColor = $derived(event.color);
 
   const { data: calendars } = getCalendars();
   const calendarColor = $derived.by(() => {
-    const colorId = $calendars?.find((cal) => cal.id === event.calendarId)?.colorId ?? "-1";
-    return getColorHexCodeFromId(colorId);
+    const color = $calendars?.find((cal) => cal.id === event.calendarId)?.color ?? "transparent";
+    return color;
   });
 </script>
 

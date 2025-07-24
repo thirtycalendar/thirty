@@ -7,6 +7,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
+  import { getRandomColor } from "$lib/shared/utils/colors";
   import type { EventForm as EventFormType } from "$lib/shared/types";
 
   import { EventForm } from ".";
@@ -22,7 +23,7 @@
     name: "",
     description: null,
     location: null,
-    colorId: "",
+    color: getRandomColor(),
     startDate: format(now, "yyyy-MM-dd"),
     startTime: format(now, "HH:mm:ss"),
     endDate: format(now, "yyyy-MM-dd"),
@@ -46,6 +47,7 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
+      defaultValues.color = getRandomColor();
 
       showToast(data.message);
       toggleModal(eventModal.modalId);

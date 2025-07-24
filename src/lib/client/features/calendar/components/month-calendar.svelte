@@ -23,7 +23,6 @@
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
 
-  import { getColorHexCodeFromId } from "$lib/shared/utils/colors";
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../../birthday/utils";
@@ -137,7 +136,7 @@
         <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
           {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
             {@const match = $hdCountries?.filter((hdCountry) => hdCountry.id === holiday.countryId)}
-            {@const color = getColorHexCodeFromId(match ? match[0].colorId : "-1")}
+            {@const color = match ? match[0].color : "transparent"}
             <div
               class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
               style={`background-color: ${color}22; color: ${color};`}
@@ -153,7 +152,7 @@
           {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
             {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
             {@const name = hasBirthdaySuffix ? bd.name : `${bd.name}'s birthday`}
-            {@const color = getColorHexCodeFromId(bd.colorId)}
+            {@const color = bd.color}
 
             <div
               class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
@@ -168,7 +167,7 @@
           {/each}
 
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
-            {@const color = getColorHexCodeFromId(event.colorId)}
+            {@const color = event.color}
             <div
               class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
               style={`background-color: ${color}22; color: ${color};`}

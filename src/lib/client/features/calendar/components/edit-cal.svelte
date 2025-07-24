@@ -20,7 +20,7 @@
     externalId: calendar.externalId,
     source: calendar.source,
     name: calendar.name,
-    colorId: calendar.colorId,
+    color: calendar.color,
     isPrimary: calendar.isPrimary,
     timezone: calendar.timezone
   };
