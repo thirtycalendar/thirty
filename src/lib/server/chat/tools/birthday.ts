@@ -16,8 +16,23 @@ export function createBirthdayTools(userId: string) {
         limit: z.number().min(1).max(50).default(10)
       }),
       execute: async ({ query, limit }) => {
-        const birthdays = await birthdayService.search(userId, query, limit);
-        return { birthdays };
+        try {
+          const birthdays = await birthdayService.search(userId, query, limit);
+
+          if (!birthdays) {
+            console.warn(`[searchBirthdays Tool] birthdayService.search returned null/undefined.`);
+            return { birthdays: [] };
+          }
+
+          const result = { birthdays };
+
+          return result;
+        } catch (error) {
+          console.error(`[searchBirthdays Tool] Error during execution:`, error);
+          return {
+            error: `Failed to search birthdays: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -30,8 +45,16 @@ export function createBirthdayTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        const birthday = await birthdayService.get(id);
-        return { birthday };
+        try {
+          const birthday = await birthdayService.get(id);
+
+          return { birthday };
+        } catch (error) {
+          console.error(`[getBirthday Tool] Error during execution:`, error);
+          return {
+            error: `Failed to get birthday: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -42,8 +65,15 @@ export function createBirthdayTools(userId: string) {
         "Complete data needed to create a new birthday record (e.g., name, dob)."
       ),
       execute: async (data: BirthdayForm) => {
-        const birthday = await birthdayService.create(userId, data);
-        return { birthday };
+        try {
+          const birthday = await birthdayService.create(userId, data);
+          return { birthday };
+        } catch (error) {
+          console.error(`[createBirthday Tool] Error during execution:`, error);
+          return {
+            error: `Failed to create birthday: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -56,8 +86,15 @@ export function createBirthdayTools(userId: string) {
         })
         .describe("Birthday update data, including the birthday ID."),
       execute: async ({ id, ...data }: BirthdayForm & { id: string }) => {
-        const birthday = await birthdayService.update(id, data);
-        return { birthday };
+        try {
+          const birthday = await birthdayService.update(id, data);
+          return { birthday };
+        } catch (error) {
+          console.error(`[updateBirthday Tool] Error during execution:`, error);
+          return {
+            error: `Failed to update birthday: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -70,8 +107,15 @@ export function createBirthdayTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        await birthdayService.delete(id);
-        return { success: true, message: `Birthday ${id} deleted successfully.` };
+        try {
+          await birthdayService.delete(id);
+          return { success: true, message: `Birthday ${id} deleted successfully.` };
+        } catch (error) {
+          console.error(`[deleteBirthday Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete birthday: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     })
   };

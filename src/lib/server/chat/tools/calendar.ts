@@ -16,8 +16,23 @@ export function createCalendarTools(userId: string) {
         limit: z.number().min(1).max(50).default(10)
       }),
       execute: async ({ query, limit }) => {
-        const calendars = await calendarService.search(userId, query, limit);
-        return { calendars };
+        try {
+          const calendars = await calendarService.search(userId, query, limit);
+
+          if (!calendars) {
+            console.warn(`[searchCalendars Tool] calendarService.search returned null/undefined.`);
+            return { calendars: [] };
+          }
+
+          const result = { calendars };
+
+          return result;
+        } catch (error) {
+          console.error(`[searchCalendars Tool] Error during execution:`, error);
+          return {
+            error: `Failed to search calendars: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -30,8 +45,15 @@ export function createCalendarTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        const calendar = await calendarService.get(id);
-        return { calendar };
+        try {
+          const calendar = await calendarService.get(id);
+          return { calendar };
+        } catch (error) {
+          console.error(`[getCalendar Tool] Error during execution:`, error);
+          return {
+            error: `Failed to get calendar: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -42,8 +64,15 @@ export function createCalendarTools(userId: string) {
         "The full data needed to create a new calendar (e.g., name, description, color)."
       ),
       execute: async (data: CalendarForm) => {
-        const calendar = await calendarService.create(userId, data);
-        return { calendar };
+        try {
+          const calendar = await calendarService.create(userId, data);
+          return { calendar };
+        } catch (error) {
+          console.error(`[createCalendar Tool] Error during execution:`, error);
+          return {
+            error: `Failed to create calendar: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -56,8 +85,15 @@ export function createCalendarTools(userId: string) {
         })
         .describe("Calendar update data, including the calendar ID."),
       execute: async ({ id, ...data }: CalendarForm & { id: string }) => {
-        const calendar = await calendarService.update(id, data);
-        return { calendar };
+        try {
+          const calendar = await calendarService.update(id, data);
+          return { calendar };
+        } catch (error) {
+          console.error(`[updateCalendar Tool] Error during execution:`, error);
+          return {
+            error: `Failed to update calendar: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -70,8 +106,15 @@ export function createCalendarTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        await calendarService.delete(id);
-        return { success: true, message: `Calendar ${id} deleted successfully.` };
+        try {
+          await calendarService.delete(id);
+          return { success: true, message: `Calendar ${id} deleted successfully.` };
+        } catch (error) {
+          console.error(`[deleteCalendar Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete calendar: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     })
   };

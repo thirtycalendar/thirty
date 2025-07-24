@@ -16,8 +16,23 @@ export function createEventTools(userId: string) {
         limit: z.number().min(1).max(50).default(10)
       }),
       execute: async ({ query, limit }) => {
-        const events = await eventService.search(userId, query, limit);
-        return { events };
+        try {
+          const events = await eventService.search(userId, query, limit);
+
+          if (!events) {
+            console.warn(`[searchEvents Tool] eventService.search returned null/undefined.`);
+            return { events: [] };
+          }
+
+          const result = { events };
+
+          return result;
+        } catch (error) {
+          console.error(`[searchEvents Tool] Error during execution:`, error);
+          return {
+            error: `Failed to search events: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -30,8 +45,15 @@ export function createEventTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        const event = await eventService.get(id);
-        return { event };
+        try {
+          const event = await eventService.get(id);
+          return { event };
+        } catch (error) {
+          console.error(`[getEvent Tool] Error during execution:`, error);
+          return {
+            error: `Failed to get event: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -42,8 +64,15 @@ export function createEventTools(userId: string) {
         "The complete data needed to create a new event (e.g., title, start/end time, location)."
       ),
       execute: async (data: EventForm) => {
-        const event = await eventService.create(userId, data);
-        return { event };
+        try {
+          const event = await eventService.create(userId, data);
+          return { event };
+        } catch (error) {
+          console.error(`[createEvent Tool] Error during execution:`, error);
+          return {
+            error: `Failed to create event: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -56,8 +85,15 @@ export function createEventTools(userId: string) {
         })
         .describe("Event update data, including the event ID."),
       execute: async ({ id, ...data }: EventForm & { id: string }) => {
-        const event = await eventService.update(id, data);
-        return { event };
+        try {
+          const event = await eventService.update(id, data);
+          return { event };
+        } catch (error) {
+          console.error(`[updateEvent Tool] Error during execution:`, error);
+          return {
+            error: `Failed to update event: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     }),
 
@@ -70,8 +106,15 @@ export function createEventTools(userId: string) {
         })
         .strict(),
       execute: async ({ id }) => {
-        await eventService.delete(id);
-        return { success: true, message: `Event ${id} deleted successfully.` };
+        try {
+          await eventService.delete(id);
+          return { success: true, message: `Event ${id} deleted successfully.` };
+        } catch (error) {
+          console.error(`[deleteEvent Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete event: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
       }
     })
   };

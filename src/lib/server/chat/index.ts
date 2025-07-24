@@ -18,7 +18,8 @@ export async function streamChat(userId: string, messages: Message[]) {
     maxSteps: 100,
     system: `You are a helpful AI assistant for a smart calendar app. 
                  Your job is to help the user manage events, tasks, and schedules. 
-                 If the user asks for something calendar-related, respond naturally and clearly.`
+                 If the user asks for something calendar-related, respond naturally and clearly.
+                 The current date is: ${new Date()}.`
   });
 
   return result.toDataStreamResponse();
