@@ -121,7 +121,6 @@ async function retryWithBackoff<F extends (...args: any[]) => Promise<any>>(
   }
 }
 
-// -------------------- Main Factory --------------------
 export function createDbService<T extends { id: string; userId: string }, FormType>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   db: any,
@@ -241,7 +240,11 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     updates: Partial<FormType>,
     options?: MethodOptions<Partial<FormType>, T, { userId: string; id: string }>
   ): Promise<T> {
-    const [row] = await db.update(table).set(updates).where(eq(table.id, id)).returning();
+    const [row] = await db
+      .update(table)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(table.id, id))
+      .returning();
     if (!row) throw new NotFoundError("Row", id);
 
     const context = { userId: row.userId, id };

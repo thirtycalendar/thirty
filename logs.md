@@ -8,6 +8,7 @@
   - (7.24.05) - Used color hex codes only instead of color id.
   - (7.24.06) - Fixing color bugs.
   - (7.24.07) - Fixed all the color bugs.
+  - (7.24.08) - Highlight the current active menu. Updated create db service utils. And bug fixed for cal and event forms.
 - Wed Jul 23, 2025
   - (7.23.01) - Better chat streaming text.
   - (7.23.02) - Tools kinda working...

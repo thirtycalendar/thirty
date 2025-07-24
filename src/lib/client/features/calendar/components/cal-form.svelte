@@ -50,7 +50,7 @@
     </div>
 
     <div class="flex gap-2 flex-1">
-      <ColorChoiceField name="colorId" {formData} {formErrors} isLeftDiv />
+      <ColorChoiceField name="color" {formData} {formErrors} isLeftDiv />
     </div>
   </div>
 

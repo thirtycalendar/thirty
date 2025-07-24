@@ -201,7 +201,7 @@
           placeholder="Select Calendar"
           className="flex-[3]"
         />
-        <ColorChoiceField name="colorId" className="flex-1" {formData} {formErrors} />
+        <ColorChoiceField name="color" className="flex-1" {formData} {formErrors} />
       </div>
     </div>
 

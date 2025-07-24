@@ -19,7 +19,7 @@
     { href: "delete-account", icon: TriangleAlert, label: "Delete Account" }
   ];
 
-  let activePath = $derived(page.url.pathname);
+  const activePath = $derived(page.url.pathname);
 </script>
 
 <div class="flex flex-col mt-5">
