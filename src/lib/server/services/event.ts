@@ -1,3 +1,6 @@
+import OpenAI from "openai";
+
+import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { Event, EventForm } from "$lib/shared/types";
@@ -17,6 +20,7 @@ export const eventService = createDbService<Event, EventForm>(db, {
   },
   vector: {
     vector: vector,
+    openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
     textFn: (e) => {
       return Object.values(e)
         .filter((value) => value !== null && typeof value !== "undefined")

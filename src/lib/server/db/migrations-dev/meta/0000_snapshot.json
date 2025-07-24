@@ -1,5 +1,5 @@
 {
-  "id": "1b38c036-7012-405c-894c-e9c76ef94412",
+  "id": "58b09f6a-f7a2-4308-a694-d1c0b1b432c7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -327,14 +327,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "colorId": {
-          "name": "colorId",
+        "dob": {
+          "name": "dob",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "color_id": {
+          "name": "color_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "note": {
+          "name": "note",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -432,8 +438,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "colorId": {
-          "name": "colorId",
+        "color_id": {
+          "name": "color_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -768,8 +774,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "colorId": {
-          "name": "colorId",
+        "color_id": {
+          "name": "color_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -1021,8 +1027,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "colorId": {
-          "name": "colorId",
+        "color_id": {
+          "name": "color_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true

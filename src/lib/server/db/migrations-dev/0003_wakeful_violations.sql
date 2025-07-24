@@ -1,1 +1,0 @@
-ALTER TABLE "birthdays" RENAME COLUMN "notes" TO "note";

@@ -70,6 +70,7 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
 
 type VectorConfig<T> = {
   vector: Index;
+  openai: OpenAI;
   model?: string;
   textFn: (row: T) => string;
 };
@@ -81,12 +82,12 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     table: any;
     kv?: { kv: Redis; kvKeyFn: (userId: string) => string; cacheTime?: number };
-    vector?: VectorConfig<T>;
-    openai?: OpenAI;
+    vector?: VectorConfig<T>; // VectorConfig now contains OpenAI
     hooks?: CreateDbServiceHooks<T, FormType>;
   }
 ): DbService<T, FormType> {
-  const { table, kv, vector, openai } = config;
+  const { table, kv, vector } = config;
+
   const globalHooks: CreateDbServiceHooks<T, FormType> = config.hooks || {};
   const addedHooks: CreateDbServiceHooks<T, FormType> = {};
 
@@ -244,9 +245,12 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   }
 
   async function searchVector(query: string, userId: string, limit = 10): Promise<string[]> {
-    if (!vector || !openai) throw new Error("Vector search not configured");
+    // Now check for vector and vector.openai
+    if (!vector || !vector.openai)
+      throw new Error("Vector search not configured: Missing vector or OpenAI instance.");
 
-    const queryEmb = await openai.embeddings.create({
+    const queryEmb = await vector.openai.embeddings.create({
+      // Use vector.openai
       model: vector.model ?? "text-embedding-3-small",
       input: query
     });
@@ -266,7 +270,9 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     limit = 10,
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]> {
-    if (!vector || !openai) throw new Error("Vector search not configured");
+    // Now check for vector and vector.openai
+    if (!vector || !vector.openai)
+      throw new Error("Vector search not configured: Missing vector or OpenAI instance.");
 
     const context = { userId };
     const hooks = mergeHooks(globalHooks.search, addedHooks.search, options?.hooks);
@@ -287,11 +293,12 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   }
 
   async function upsertVector(row: T) {
-    if (!vector || !openai) return;
+    if (!vector || !vector.openai) return;
+
     const text = vector.textFn(row);
     if (!text) return;
 
-    const embedding = await openai.embeddings.create({
+    const embedding = await vector.openai.embeddings.create({
       model: vector.model ?? "text-embedding-3-small",
       input: text
     });

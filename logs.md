@@ -3,6 +3,7 @@
 - Thu Jul 24, 2025
   - (7.24.01) - Vector things in create db service. Committed for safety.
   - (7.24.02) - Committed for safety.
+  - (7.24.03) - Vector embedding is kinda working.
 - Wed Jul 23, 2025
   - (7.23.01) - Better chat streaming text.
   - (7.23.02) - Tools kinda working...

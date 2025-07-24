@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751897237534,
-      "tag": "0000_amused_cerebro",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1752158266223,
-      "tag": "0001_previous_red_wolf",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1752159375395,
-      "tag": "0002_orange_the_initiative",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1752159538887,
-      "tag": "0003_wakeful_violations",
+      "when": 1753327011950,
+      "tag": "0000_wealthy_jean_grey",
       "breakpoints": true
     }
   ]

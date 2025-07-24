@@ -1,5 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
+import OpenAI from "openai";
 
+import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, CalendarForm } from "$lib/shared/types";
@@ -7,6 +9,7 @@ import type { Calendar, CalendarForm } from "$lib/shared/types";
 import { db } from "../db";
 import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
+import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
 
 export const calendarService = createDbService<Calendar, CalendarForm>(db, {
@@ -15,6 +18,16 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
     kv: kv,
     kvKeyFn: (userId) => KV_CALENDARS(userId),
     cacheTime: kvCacheTimes.calendar
+  },
+  vector: {
+    vector: vector,
+    openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
+    textFn: (e) => {
+      return Object.values(e)
+        .filter((value) => value !== null && typeof value !== "undefined")
+        .map((value) => String(value))
+        .join(" ");
+    }
   },
   hooks: {
     create: {
