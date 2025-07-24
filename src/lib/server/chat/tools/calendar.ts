@@ -29,7 +29,10 @@ export function createCalendarTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the calendar to retrieve.")
         })
         .strict(),
-      execute: async ({ id }) => calendarService.get(id)
+      execute: async ({ id }) => {
+        const calendar = await calendarService.get(id);
+        return { calendar };
+      }
     }),
 
     createCalendar: tool({
@@ -38,7 +41,10 @@ export function createCalendarTools(userId: string) {
       parameters: calendarSchema.describe(
         "The full data needed to create a new calendar (e.g., name, description, color)."
       ),
-      execute: async (data: CalendarForm) => calendarService.create(userId, data)
+      execute: async (data: CalendarForm) => {
+        const calendar = await calendarService.create(userId, data);
+        return { calendar };
+      }
     }),
 
     updateCalendar: tool({
@@ -49,8 +55,10 @@ export function createCalendarTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the calendar to update.")
         })
         .describe("Calendar update data, including the calendar ID."),
-      execute: async ({ id, ...data }: CalendarForm & { id: string }) =>
-        calendarService.update(id, data)
+      execute: async ({ id, ...data }: CalendarForm & { id: string }) => {
+        const calendar = await calendarService.update(id, data);
+        return { calendar };
+      }
     }),
 
     deleteCalendar: tool({
@@ -61,7 +69,10 @@ export function createCalendarTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the calendar to delete.")
         })
         .strict(),
-      execute: async ({ id }) => calendarService.delete(id)
+      execute: async ({ id }) => {
+        await calendarService.delete(id);
+        return { success: true, message: `Calendar ${id} deleted successfully.` };
+      }
     })
   };
 }

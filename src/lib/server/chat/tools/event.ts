@@ -15,7 +15,10 @@ export function createEventTools(userId: string) {
         query: z.string().min(1),
         limit: z.number().min(1).max(50).default(10)
       }),
-      execute: async ({ query, limit }) => eventService.search(userId, query, limit)
+      execute: async ({ query, limit }) => {
+        const events = await eventService.search(userId, query, limit);
+        return { events };
+      }
     }),
 
     getEvent: tool({
@@ -26,7 +29,10 @@ export function createEventTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the event to retrieve.")
         })
         .strict(),
-      execute: async ({ id }) => eventService.get(id)
+      execute: async ({ id }) => {
+        const event = await eventService.get(id);
+        return { event };
+      }
     }),
 
     createEvent: tool({
@@ -35,7 +41,10 @@ export function createEventTools(userId: string) {
       parameters: eventSchema.describe(
         "The complete data needed to create a new event (e.g., title, start/end time, location)."
       ),
-      execute: async (data: EventForm) => eventService.create(userId, data)
+      execute: async (data: EventForm) => {
+        const event = await eventService.create(userId, data);
+        return { event };
+      }
     }),
 
     updateEvent: tool({
@@ -46,7 +55,10 @@ export function createEventTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the event to update.")
         })
         .describe("Event update data, including the event ID."),
-      execute: async ({ id, ...data }: EventForm & { id: string }) => eventService.update(id, data)
+      execute: async ({ id, ...data }: EventForm & { id: string }) => {
+        const event = await eventService.update(id, data);
+        return { event };
+      }
     }),
 
     deleteEvent: tool({
@@ -57,7 +69,10 @@ export function createEventTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the event to delete.")
         })
         .strict(),
-      execute: async ({ id }) => eventService.delete(id)
+      execute: async ({ id }) => {
+        await eventService.delete(id);
+        return { success: true, message: `Event ${id} deleted successfully.` };
+      }
     })
   };
 }

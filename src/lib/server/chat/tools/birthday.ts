@@ -15,7 +15,10 @@ export function createBirthdayTools(userId: string) {
         query: z.string().min(1),
         limit: z.number().min(1).max(50).default(10)
       }),
-      execute: async ({ query, limit }) => birthdayService.search(userId, query, limit)
+      execute: async ({ query, limit }) => {
+        const birthdays = await birthdayService.search(userId, query, limit);
+        return { birthdays };
+      }
     }),
 
     getBirthday: tool({
@@ -26,7 +29,10 @@ export function createBirthdayTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the birthday to retrieve.")
         })
         .strict(),
-      execute: async ({ id }) => birthdayService.get(id)
+      execute: async ({ id }) => {
+        const birthday = await birthdayService.get(id);
+        return { birthday };
+      }
     }),
 
     createBirthday: tool({
@@ -35,7 +41,10 @@ export function createBirthdayTools(userId: string) {
       parameters: birthdaySchema.describe(
         "Complete data needed to create a new birthday record (e.g., name, dob)."
       ),
-      execute: async (data: BirthdayForm) => birthdayService.create(userId, data)
+      execute: async (data: BirthdayForm) => {
+        const birthday = await birthdayService.create(userId, data);
+        return { birthday };
+      }
     }),
 
     updateBirthday: tool({
@@ -46,8 +55,10 @@ export function createBirthdayTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the birthday to update.")
         })
         .describe("Birthday update data, including the birthday ID."),
-      execute: async ({ id, ...data }: BirthdayForm & { id: string }) =>
-        birthdayService.update(id, data)
+      execute: async ({ id, ...data }: BirthdayForm & { id: string }) => {
+        const birthday = await birthdayService.update(id, data);
+        return { birthday };
+      }
     }),
 
     deleteBirthday: tool({
@@ -58,7 +69,10 @@ export function createBirthdayTools(userId: string) {
           id: z.string().min(1).describe("The unique ID of the birthday to delete.")
         })
         .strict(),
-      execute: async ({ id }) => birthdayService.delete(id)
+      execute: async ({ id }) => {
+        await birthdayService.delete(id);
+        return { success: true, message: `Birthday ${id} deleted successfully.` };
+      }
     })
   };
 }
