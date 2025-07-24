@@ -17,6 +17,7 @@ type CreateDbServiceHooks<T, FormType> = {
   getAll?: Hooks<string, T[], { userId: string }>;
   get?: Hooks<string, T, { userId: string }>;
   create?: Hooks<FormType, T, { userId: string }>;
+  createBulk?: Hooks<FormType[], T[], { userId: string }>;
   update?: Hooks<Partial<FormType>, T, { userId: string; id: string }>;
   delete?: Hooks<string, T, { userId: string; id: string }>;
   deleteAll?: Hooks<string, void, { userId: string }>;
@@ -32,6 +33,11 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
     data: FormType,
     options?: MethodOptions<FormType, T, { userId: string }>
   ): Promise<T>;
+  createBulk(
+    userId: string,
+    data: FormType[],
+    options?: MethodOptions<FormType[], T[], { userId: string }>
+  ): Promise<T[]>;
   update(
     id: string,
     updates: Partial<FormType>,
@@ -77,10 +83,11 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     kv?: { kv: Redis; kvKeyFn: (userId: string) => string; cacheTime?: number };
     vector?: VectorConfig<T>;
     openai?: OpenAI;
+    hooks?: CreateDbServiceHooks<T, FormType>;
   }
 ): DbService<T, FormType> {
   const { table, kv, vector, openai } = config;
-  const globalHooks: CreateDbServiceHooks<T, FormType> = {};
+  const globalHooks: CreateDbServiceHooks<T, FormType> = config.hooks || {};
   const addedHooks: CreateDbServiceHooks<T, FormType> = {};
 
   function mergeHooks<A, B, C>(...hooks: (Hooks<A, B, C> | undefined)[]): Hooks<A, B, C> {
@@ -163,6 +170,31 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     return row;
   }
 
+  async function createBulk(
+    userId: string,
+    data: FormType[],
+    options?: MethodOptions<FormType[], T[], { userId: string }>
+  ): Promise<T[]> {
+    if (data.length === 0) return [];
+
+    const context = { userId };
+    const hooks = mergeHooks(globalHooks.createBulk, addedHooks.createBulk, options?.hooks);
+    await hooks.before?.({ input: data, context });
+
+    const rows = data.map((item) => ({ ...item, userId }));
+    const insertedRows: T[] = await db.insert(table).values(rows).returning();
+
+    if (kv) await clearCache(userId);
+
+    if (vector) {
+      await Promise.all(insertedRows.map((row) => upsertVector(row)));
+    }
+
+    await hooks.after?.({ input: data, result: insertedRows, context });
+
+    return insertedRows;
+  }
+
   async function update(
     id: string,
     updates: Partial<FormType>,
@@ -185,6 +217,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, T, { userId: string; id: string }>
   ): Promise<T> {
     const context = { userId: options?.hooks?.before ? "unknown" : "", id };
+
     const hooks = mergeHooks(globalHooks.delete, addedHooks.delete, options?.hooks);
     await hooks.before?.({ input: id, context });
 
@@ -256,20 +289,23 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   async function upsertVector(row: T) {
     if (!vector || !openai) return;
     const text = vector.textFn(row);
-    const emb = await openai.embeddings.create({
+    if (!text) return;
+
+    const embedding = await openai.embeddings.create({
       model: vector.model ?? "text-embedding-3-small",
       input: text
     });
+
     await vector.vector.upsert({
       id: row.id,
-      vector: emb.data[0].embedding,
+      vector: embedding.data[0].embedding,
       metadata: { userId: row.userId }
     });
   }
 
   async function deleteVector(id: string) {
     if (!vector) return;
-    await vector.vector.delete({ ids: [id] });
+    await vector.vector.delete(id);
   }
 
   function addHooks(hooks: CreateDbServiceHooks<T, FormType>) {
@@ -280,6 +316,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     getAll,
     get,
     create,
+    createBulk,
     update,
     delete: remove,
     deleteAll,

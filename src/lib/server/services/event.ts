@@ -25,8 +25,3 @@ export const eventService = createDbService<Event, EventForm>(db, {
     }
   }
 });
-
-export async function createEventsBulk(userId: string, data: EventForm[]) {
-  if (data.length === 0) return;
-  await db.insert(eventTable).values(data.map((e) => ({ ...e, userId })));
-}

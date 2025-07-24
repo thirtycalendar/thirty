@@ -37,8 +37,3 @@ async function resetPrimaryCalendar(userId: string) {
     .set({ isPrimary: false, updatedAt: sql`now()` })
     .where(and(eq(calendarTable.userId, userId), eq(calendarTable.isPrimary, true)));
 }
-
-export async function createCalendarsBulk(userId: string, data: CalendarForm[]) {
-  if (data.length === 0) return;
-  await db.insert(calendarTable).values(data.map((c) => ({ ...c, userId })));
-}

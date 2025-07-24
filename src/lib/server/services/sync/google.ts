@@ -11,8 +11,8 @@ import { getNearestColorIdFromHexCode } from "$lib/shared/utils/colors";
 import { KV_SYNC_LOCK_CALENDARS, KV_SYNC_LOCK_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { CalendarForm, EventForm } from "$lib/shared/types";
 
-import { createCalendarsBulk } from "../calendar";
-import { createEventsBulk } from "../event";
+import { calendarService } from "../calendar";
+import { eventService } from "../event";
 
 export async function syncGoogleCalendars(userId: string) {
   const lockKey = KV_SYNC_LOCK_CALENDARS(userId);
@@ -53,7 +53,7 @@ export async function syncGoogleCalendars(userId: string) {
     }
 
     if (toCreate.length > 0) {
-      await createCalendarsBulk(userId, toCreate);
+      await calendarService.createBulk(userId, toCreate);
     }
   } finally {
     await releaseLock(lockKey);
@@ -154,7 +154,7 @@ export async function syncGoogleEvents(userId: string) {
       }
 
       if (toCreate.length > 0) {
-        await createEventsBulk(userId, toCreate);
+        await eventService.createBulk(userId, toCreate);
       }
     });
 

@@ -8,11 +8,14 @@ import { calendarService } from "../../services/calendar";
 
 export function createCalendarTools(userId: string) {
   return {
-    getAllCalendars: tool({
+    searchCalendars: tool({
       description:
-        "Retrieve all calendars owned by the user. Use this when you need to show or pick from the user's calendars.",
-      parameters: z.object({}),
-      execute: async () => calendarService.getAll(userId)
+        "Perform semantic search on user's calendars using a natural language query (e.g., 'list of calendars').",
+      parameters: z.object({
+        query: z.string().min(1),
+        limit: z.number().min(1).max(50).default(10)
+      }),
+      execute: async ({ query, limit }) => calendarService.search(userId, query, limit)
     }),
 
     getCalendar: tool({

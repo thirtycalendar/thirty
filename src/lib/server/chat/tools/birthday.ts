@@ -8,11 +8,14 @@ import { birthdayService } from "../../services/birthday";
 
 export function createBirthdayTools(userId: string) {
   return {
-    getAllBirthdays: tool({
+    searchBirthdays: tool({
       description:
-        "Retrieve all birthdays associated with the user. Use this to list or pick from known birthdays.",
-      parameters: z.object({}).strict(),
-      execute: async () => birthdayService.getAll(userId)
+        "Perform semantic search on user's birthdays using a natural language query (e.g., 'date of a specific birthday').",
+      parameters: z.object({
+        query: z.string().min(1),
+        limit: z.number().min(1).max(50).default(10)
+      }),
+      execute: async ({ query, limit }) => birthdayService.search(userId, query, limit)
     }),
 
     getBirthday: tool({
