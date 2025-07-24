@@ -59,7 +59,7 @@
   const eventColor = $derived(event.color);
   const isSameColor = $derived(eventColor === calendarColor);
 
-  const updated = format(new Date(event.updatedAt), "PPp");
+  const updated = $derived(format(new Date(event.updatedAt), "PPp"));
 
   let prevId = $derived(event.id);
   let errorMessage = $derived(prevId !== event.id ? "" : "");

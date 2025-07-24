@@ -14,7 +14,7 @@
 
   let { calendar }: Props = $props();
 
-  const updated = format(new Date(calendar.updatedAt), "PPp");
+  const updated = $derived(format(new Date(calendar.updatedAt), "PPp"));
 
   let prevId = $derived(calendar.id);
   let errorMessage = $derived(prevId !== calendar.id ? "" : "");

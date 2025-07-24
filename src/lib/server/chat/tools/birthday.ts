@@ -10,7 +10,7 @@ export function createBirthdayTools(userId: string) {
   return {
     searchBirthdays: tool({
       description:
-        "Perform semantic search on user's birthdays using a natural language query (e.g., 'date of a specific birthday').",
+        "Perform semantic search on user's birthdays using a natural language query (e.g., 'date of the user's birthday').",
       parameters: z.object({
         query: z.string().min(1),
         limit: z.number().min(1).max(50).default(10)
@@ -31,9 +31,9 @@ export function createBirthdayTools(userId: string) {
 
     createBirthday: tool({
       description:
-        "Create a new birthday entry for the user. Provide all necessary details like name and birthdate.",
+        "Create a new birthday entry for the user. Provide all necessary details like name and bod.",
       parameters: birthdaySchema.describe(
-        "Complete data needed to create a new birthday record (e.g., name, birthdate)."
+        "Complete data needed to create a new birthday record (e.g., name, dob)."
       ),
       execute: async (data: BirthdayForm) => birthdayService.create(userId, data)
     }),

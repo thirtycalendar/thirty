@@ -19,7 +19,7 @@
     return years === 1 ? "1 yr" : `${years} yrs`;
   });
 
-  const updated = format(new Date(birthday.updatedAt), "PPp");
+  const updated = $derived(format(new Date(birthday.updatedAt), "PPp"));
 
   let prevId = $derived(birthday.id);
   let errorMessage = $derived(prevId !== birthday.id ? "" : "");
