@@ -1,21 +1,14 @@
 // src/lib/server/services/holiday.ts
-import OpenAI, { APIError } from "openai";
+import OpenAI from "openai";
 
 import { countries } from "$lib/server/libs/calendarific/countries";
 import { kv, kvHoliday } from "$lib/server/libs/upstash/kv";
-import { vector } from "$lib/server/libs/upstash/vector";
+import { createVectorClient, vector } from "$lib/server/libs/upstash/vector";
 
 import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import { KV_COUNTRY_HOLIDAYS, KV_HOLIDAY_COUNTRIES, KV_HOLIDAYS } from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
-
-export class VectorNotConfiguredError extends Error {
-  constructor() {
-    super("Vector search not configured: Missing vector or OpenAI instance.");
-    this.name = "VectorNotConfiguredError";
-  }
-}
 
 const allCountries = countries.flat();
 const YEAR = new Date().getFullYear();
@@ -24,29 +17,6 @@ const TO = new Date(YEAR + 3, 11, 31); // Next 3 years
 
 function isWithinRange(date: Date): boolean {
   return date >= FROM && date <= TO;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function retryWithBackoff<F extends (...args: any[]) => Promise<any>>(
-  fn: F,
-  args: Parameters<F>,
-  retries = 5,
-  delay = 1000
-): Promise<Awaited<ReturnType<F>>> {
-  try {
-    return await fn(...args);
-  } catch (error) {
-    if (
-      retries > 0 &&
-      error instanceof APIError &&
-      (error.status === 429 || error.status === 503)
-    ) {
-      console.warn(`Rate limit hit, retrying in ${delay}ms...`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      return retryWithBackoff(fn, args, retries - 1, delay * 2);
-    }
-    throw error;
-  }
 }
 
 const openai = new OpenAI({ apiKey: openAiEnvConfig.apiKey });
@@ -59,6 +29,14 @@ const getHolidayTextForEmbedding = (holiday: Holiday): string => {
 const getHolidayMetadata = (holiday: Holiday): Record<string, unknown> => ({
   countryCode: holiday.countryCode,
   date: holiday.date
+});
+
+const holidayVectorClient = createVectorClient<Holiday>({
+  openai,
+  vector,
+  model: OPENAI_EMBEDDING_MODEL,
+  textFn: getHolidayTextForEmbedding,
+  metadataFn: getHolidayMetadata
 });
 
 async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]): Promise<void> {
@@ -108,8 +86,9 @@ export const holidayService = {
 
     const holidaysForNewCountry =
       (await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(matchedCountry.id))) || [];
+
     if (holidaysForNewCountry.length > 0) {
-      await this.upsertCountryVectorBulk(holidaysForNewCountry);
+      await holidayVectorClient.upsertBulk(holidaysForNewCountry);
     }
 
     return matchedCountry;
@@ -132,8 +111,9 @@ export const holidayService = {
 
     const holidaysToRemove =
       (await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(removed.id))) || [];
+
     if (holidaysToRemove.length > 0) {
-      await Promise.all(holidaysToRemove.map((h) => this.deleteCountryVector(h.id)));
+      await holidayVectorClient.delete(holidaysToRemove.map((h) => h.id));
     }
 
     return removed;
@@ -149,27 +129,14 @@ export const holidayService = {
     countryCode?: string,
     limit = 10
   ): Promise<Holiday[]> {
-    if (!vector || !openai) throw new VectorNotConfiguredError();
-
-    const queryEmbResponse = await retryWithBackoff(
-      openai.embeddings.create.bind(openai.embeddings),
-      [{ model: OPENAI_EMBEDDING_MODEL, input: query }]
-    );
-
     const filter: Record<string, string> = {};
     if (countryCode) {
       filter.countryCode = countryCode;
     }
 
-    const results = await vector.query({
-      vector: queryEmbResponse.data[0].embedding,
+    const results = await holidayVectorClient.query(query, {
       topK: limit,
-      filter:
-        Object.keys(filter).length > 0
-          ? Object.entries(filter)
-              .map(([key, value]) => `${key}='${value}'`)
-              .join(" and ")
-          : undefined
+      filter
     });
 
     const holidayIds = results.map((r) => r.id);
@@ -200,75 +167,26 @@ export const holidayService = {
     countryCode?: string,
     limit = 10
   ): Promise<{ id: string; score: number }[]> {
-    if (!vector || !openai) throw new VectorNotConfiguredError();
-
-    const queryEmbResponse = await retryWithBackoff(
-      openai.embeddings.create.bind(openai.embeddings),
-      [{ model: OPENAI_EMBEDDING_MODEL, input: query }]
-    );
-
     const filter: Record<string, string> = {};
     if (countryCode) {
       filter.countryCode = countryCode;
     }
 
-    const results = await vector.query({
-      vector: queryEmbResponse.data[0].embedding,
+    return await holidayVectorClient.query(query, {
       topK: limit,
-      filter:
-        Object.keys(filter).length > 0
-          ? Object.entries(filter)
-              .map(([key, value]) => `${key}='${value}'`)
-              .join(" and ")
-          : undefined
+      filter
     });
-    return results.map((r) => ({ id: String(r.id), score: r.score ?? 0 }));
   },
 
   async upsertCountryVector(holiday: Holiday): Promise<void> {
-    if (!vector || !openai) return;
-
-    const text = getHolidayTextForEmbedding(holiday);
-    if (!text) return;
-
-    const embeddingResponse = await retryWithBackoff(
-      openai.embeddings.create.bind(openai.embeddings),
-      [{ model: OPENAI_EMBEDDING_MODEL, input: text }]
-    );
-
-    await vector.upsert({
-      id: holiday.id,
-      vector: embeddingResponse.data[0].embedding,
-      metadata: getHolidayMetadata(holiday)
-    });
+    await holidayVectorClient.upsert(holiday);
   },
 
   async upsertCountryVectorBulk(holidays: Holiday[]): Promise<void> {
-    if (!vector || !openai || holidays.length === 0) return;
-
-    const BATCH_SIZE = 50;
-    for (let i = 0; i < holidays.length; i += BATCH_SIZE) {
-      const batch = holidays.slice(i, i + BATCH_SIZE);
-      const texts = batch.map(getHolidayTextForEmbedding).filter(Boolean) as string[];
-
-      if (!texts.length) continue;
-
-      const embeddingResponse = await retryWithBackoff(
-        openai.embeddings.create.bind(openai.embeddings),
-        [{ model: OPENAI_EMBEDDING_MODEL, input: texts }]
-      );
-
-      const vectorsToUpsert = embeddingResponse.data.map((item, index) => ({
-        id: batch[index].id,
-        vector: item.embedding,
-        metadata: getHolidayMetadata(batch[index])
-      }));
-      await vector.upsert(vectorsToUpsert);
-    }
+    await holidayVectorClient.upsertBulk(holidays);
   },
 
   async deleteCountryVector(id: string): Promise<void> {
-    if (!vector) return;
-    await vector.delete(id);
+    await holidayVectorClient.delete(id);
   }
 };

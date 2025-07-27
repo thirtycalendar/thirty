@@ -1,21 +1,17 @@
 import type { Redis } from "@upstash/redis";
-import type { Index } from "@upstash/vector";
 
 import { eq, inArray } from "drizzle-orm";
-import type { OpenAI } from "openai";
-import { APIError } from "openai";
+
+import {
+  createVectorClient,
+  VectorNotConfiguredError,
+  type VectorClientConfig
+} from "../libs/upstash/vector";
 
 export class NotFoundError extends Error {
   constructor(entity: string, id: string) {
     super(`${entity} with id '${id}' not found`);
     this.name = "NotFoundError";
-  }
-}
-
-export class VectorNotConfiguredError extends Error {
-  constructor() {
-    super("Vector search not configured: Missing vector or OpenAI instance.");
-    this.name = "VectorNotConfiguredError";
   }
 }
 
@@ -87,37 +83,6 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
   addHooks(hooks: CreateDbServiceHooks<T, FormType>): void;
 };
 
-type VectorConfig<T> = {
-  vector: Index;
-  openai: OpenAI;
-  model?: string;
-  textFn: (row: T) => string;
-  metadataFn?: (row: T) => Record<string, unknown>;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function retryWithBackoff<F extends (...args: any[]) => Promise<any>>(
-  fn: F,
-  args: Parameters<F>,
-  retries = 5,
-  delay = 1000
-): Promise<Awaited<ReturnType<F>>> {
-  try {
-    return await fn(...args);
-  } catch (error) {
-    if (
-      retries > 0 &&
-      error instanceof APIError &&
-      (error.status === 429 || error.status === 503)
-    ) {
-      console.warn(`Rate limit hit, retrying in ${delay}ms...`);
-      await new Promise((res) => setTimeout(res, delay));
-      return retryWithBackoff(fn, args, retries - 1, delay * 2);
-    }
-    throw error;
-  }
-}
-
 export function createDbService<T extends { id: string; userId: string }, FormType>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   db: any,
@@ -125,11 +90,13 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     table: any;
     kv?: { kv: Redis; kvKeyFn: (userId: string) => string; cacheTime?: number };
-    vector?: VectorConfig<T>;
+    vector?: VectorClientConfig<T>;
     hooks?: CreateDbServiceHooks<T, FormType>;
   }
 ): DbService<T, FormType> {
   const { table, kv, vector } = config;
+
+  const vectorClient = vector ? createVectorClient(vector) : null;
 
   const globalHooks: CreateDbServiceHooks<T, FormType> = config.hooks || {};
   const addedHooks: CreateDbServiceHooks<T, FormType> = {};
@@ -148,10 +115,15 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, void, { userId: string }>
   ) {
     if (!kv) return;
+
     const context = { userId };
+
     const hooks = mergeHooks(globalHooks.clearCache, addedHooks.clearCache, options?.hooks);
+
     await hooks.before?.({ input: userId, context });
+
     await kv.kv.del(kv.kvKeyFn(userId));
+
     await hooks.after?.({ input: userId, result: undefined, context });
   }
 
@@ -205,7 +177,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       .insert(table)
       .values({ ...data, userId })
       .returning();
-    await Promise.all([kv && clearCache(userId), vector && upsertVector(row)]);
+
+    await Promise.all([kv && clearCache(userId), vectorClient && vectorClient.upsert(row)]);
 
     await hooks.after?.({ input: data, result: row, context });
     return row;
@@ -223,7 +196,12 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     const rows = data.map((d) => ({ ...d, userId }));
     const inserted: T[] = await db.insert(table).values(rows).returning();
-    await Promise.all([kv && clearCache(userId), vector && upsertVectorBulk(inserted)]);
+
+    await Promise.all([
+      kv && clearCache(userId),
+      vectorClient && vectorClient.upsertBulk(inserted)
+    ]);
+
     await hooks.after?.({ input: data, result: inserted, context });
     return inserted;
   }
@@ -252,7 +230,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
       .returning();
     if (!row) throw new NotFoundError("Row", id);
 
-    await Promise.all([kv && clearCache(row.userId), vector && upsertVector(row)]);
+    await Promise.all([kv && clearCache(row.userId), vectorClient && vectorClient.upsert(row)]);
 
     await hooks.after?.({ input: updates, result: row, context });
     return row;
@@ -272,7 +250,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     await db.delete(table).where(eq(table.id, id));
 
-    await Promise.all([kv && clearCache(row.userId), vector && deleteVector(row.id)]);
+    await Promise.all([kv && clearCache(row.userId), vectorClient && vectorClient.delete(id)]);
 
     await hooks.after?.({ input: id, result: row, context });
     return row;
@@ -287,12 +265,13 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     await hooks.before?.({ input: userId, context });
 
-    if (vector) {
+    if (vectorClient) {
       const userRows = await db
         .select({ id: table.id })
         .from(table)
         .where(eq(table.userId, userId));
-      await Promise.all(userRows.map((r: { id: string }) => deleteVector(r.id)));
+
+      await vectorClient.delete(userRows.map((r: { id: string }) => r.id));
     }
 
     await db.delete(table).where(eq(table.userId, userId));
@@ -306,20 +285,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     userId: string,
     limit = 10
   ): Promise<{ id: string; score: number }[]> {
-    if (!vector?.openai) throw new VectorNotConfiguredError();
-
-    const emb = await retryWithBackoff(
-      vector.openai.embeddings.create.bind(vector.openai.embeddings),
-      [{ model: vector.model ?? "text-embedding-3-small", input: query }]
-    );
-
-    const results = await vector.vector.query({
-      vector: emb.data[0].embedding,
-      topK: limit,
-      filter: `userId='${userId}'`
-    });
-
-    return results.map((r) => ({ id: String(r.id), score: r.score ?? 0 }));
+    if (!vectorClient) throw new VectorNotConfiguredError();
+    return vectorClient.query(query, { topK: limit, filter: { userId } });
   }
 
   async function search(
@@ -332,9 +299,11 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     const context = { userId };
     const hooks = mergeHooks(globalHooks.search, addedHooks.search, options?.hooks);
+
     await hooks.before?.({ input: query, context });
 
     const ids = await searchVector(query, userId, limit);
+
     if (!ids.length) return [];
 
     const rows = await db
@@ -349,54 +318,23 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     const ordered = ids.map(({ id }) => rows.find((r: T) => r.id === id)).filter(Boolean) as T[];
 
     await hooks.after?.({ input: query, result: ordered, context });
+
     return ordered;
   }
 
   async function upsertVector(row: T) {
-    if (!vector?.openai) return;
-    const text = vector.textFn(row);
-    if (!text) return;
-
-    const emb = await retryWithBackoff(
-      vector.openai.embeddings.create.bind(vector.openai.embeddings),
-      [{ model: vector.model ?? "text-embedding-3-small", input: text }]
-    );
-
-    await vector.vector.upsert({
-      id: row.id,
-      vector: emb.data[0].embedding,
-      metadata: { userId: row.userId, ...(vector.metadataFn?.(row) || {}) }
-    });
+    if (!vectorClient) throw new VectorNotConfiguredError();
+    await vectorClient.upsert(row);
   }
 
   async function upsertVectorBulk(rows: T[]) {
-    if (!vector?.openai || !rows.length) return;
-
-    const BATCH = 50;
-    for (let i = 0; i < rows.length; i += BATCH) {
-      const batch = rows.slice(i, i + BATCH);
-      const texts = batch.map((r) => vector.textFn(r)).filter(Boolean) as string[];
-
-      if (!texts.length) continue;
-
-      const emb = await retryWithBackoff(
-        vector.openai.embeddings.create.bind(vector.openai.embeddings),
-        [{ model: vector.model ?? "text-embedding-3-small", input: texts }]
-      );
-
-      await vector.vector.upsert(
-        emb.data.map((item, idx) => ({
-          id: batch[idx].id,
-          vector: item.embedding,
-          metadata: { userId: batch[idx].userId, ...(vector.metadataFn?.(batch[idx]) || {}) }
-        }))
-      );
-    }
+    if (!vectorClient) throw new VectorNotConfiguredError();
+    await vectorClient.upsertBulk(rows);
   }
 
   async function deleteVector(id: string) {
-    if (!vector) return;
-    await vector.vector.delete(id);
+    if (!vectorClient) throw new VectorNotConfiguredError();
+    await vectorClient.delete(id);
   }
 
   function addHooks(hooks: CreateDbServiceHooks<T, FormType>) {
