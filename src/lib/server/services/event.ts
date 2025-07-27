@@ -14,12 +14,12 @@ import { createDbService } from "../utils/create-db-service";
 export const eventService = createDbService<Event, EventForm>(db, {
   table: eventTable,
   kv: {
-    kv: kv,
+    kv,
     kvKeyFn: (userId) => KV_EVENTS(userId),
     cacheTime: kvCacheTimes.event
   },
   vector: {
-    vector: vector,
+    vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
     textFn: (e) => {
       return Object.values(e)

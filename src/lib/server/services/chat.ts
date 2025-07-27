@@ -10,7 +10,7 @@ import { createDbService } from "../utils/create-db-service";
 export const chatService = createDbService<Chat, ChatForm>(db, {
   table: chatTable,
   kv: {
-    kv: kv,
+    kv,
     kvKeyFn: (userId) => KV_CHATS(userId),
     cacheTime: kvCacheTimes.chat
   }

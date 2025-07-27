@@ -14,12 +14,12 @@ import { createDbService } from "../utils/create-db-service";
 export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
   table: birthdayTable,
   kv: {
-    kv: kv,
+    kv,
     kvKeyFn: (userId) => KV_BIRTHDAYS(userId),
     cacheTime: kvCacheTimes.birthday
   },
   vector: {
-    vector: vector,
+    vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
     textFn: (e) => {
       return Object.values(e)

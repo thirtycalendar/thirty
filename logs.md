@@ -6,6 +6,7 @@
   - (7.27.03) - Better chat system prompts.
   - (7.27.04) - Catch all chat route page.
   - (7.27.05) - Chat curd db routes, updated chat and message db tables.
+  - (7.27.06) - Updated create db service hook execution order.
 - Thu Jul 24, 2025
   - (7.24.01) - Vector things in create db service. Committed for safety.
   - (7.24.02) - Committed for safety.

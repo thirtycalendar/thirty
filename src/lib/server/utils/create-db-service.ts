@@ -70,14 +70,12 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
     userId: string,
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void>;
-
   search(
     userId: string,
     query: string,
     limit?: number,
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]>;
-
   searchVector(
     query: string,
     userId: string,
@@ -86,7 +84,6 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
   upsertVector(row: T): Promise<void>;
   upsertVectorBulk(rows: T[]): Promise<void>;
   deleteVector(id: string): Promise<void>;
-
   addHooks(hooks: CreateDbServiceHooks<T, FormType>): void;
 };
 
@@ -114,7 +111,7 @@ async function retryWithBackoff<F extends (...args: any[]) => Promise<any>>(
       (error.status === 429 || error.status === 503)
     ) {
       console.warn(`Rate limit hit, retrying in ${delay}ms...`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await new Promise((res) => setTimeout(res, delay));
       return retryWithBackoff(fn, args, retries - 1, delay * 2);
     }
     throw error;
@@ -139,10 +136,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
   const mergeHooks = <A, B, C>(...hooks: (Hooks<A, B, C> | undefined)[]): Hooks<A, B, C> => ({
     before: async (args) => {
-      for (const hook of hooks) await hook?.before?.(args);
+      for (const h of hooks) await h?.before?.(args);
     },
     after: async (args) => {
-      for (const hook of hooks) await hook?.after?.(args);
+      for (const h of hooks) await h?.after?.(args);
     }
   });
 
@@ -168,10 +165,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     let data: T[] = [];
     if (kv) {
-      const cachedData = await kv.kv.get<T[]>(kv.kvKeyFn(userId));
-      if (cachedData) {
-        data = cachedData;
-      }
+      const cached = await kv.kv.get<T[]>(kv.kvKeyFn(userId));
+      if (cached) data = cached;
     }
 
     if (data.length === 0) {
@@ -226,13 +221,11 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     const hooks = mergeHooks(globalHooks.createBulk, addedHooks.createBulk, options?.hooks);
     await hooks.before?.({ input: data, context });
 
-    const rows = data.map((item) => ({ ...item, userId }));
-    const insertedRows: T[] = await db.insert(table).values(rows).returning();
-
-    await Promise.all([kv && clearCache(userId), vector && upsertVectorBulk(insertedRows)]);
-
-    await hooks.after?.({ input: data, result: insertedRows, context });
-    return insertedRows;
+    const rows = data.map((d) => ({ ...d, userId }));
+    const inserted: T[] = await db.insert(table).values(rows).returning();
+    await Promise.all([kv && clearCache(userId), vector && upsertVectorBulk(inserted)]);
+    await hooks.after?.({ input: data, result: inserted, context });
+    return inserted;
   }
 
   async function update(
@@ -240,16 +233,24 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     updates: Partial<FormType>,
     options?: MethodOptions<Partial<FormType>, T, { userId: string; id: string }>
   ): Promise<T> {
+    const [preRow] = await db
+      .select({ userId: table.userId })
+      .from(table)
+      .where(eq(table.id, id))
+      .limit(1);
+    if (!preRow) throw new NotFoundError("Row", id);
+
+    const context = { userId: preRow.userId, id };
+    const hooks = mergeHooks(globalHooks.update, addedHooks.update, options?.hooks);
+
+    await hooks.before?.({ input: updates, context });
+
     const [row] = await db
       .update(table)
       .set({ ...updates, updatedAt: new Date() })
       .where(eq(table.id, id))
       .returning();
     if (!row) throw new NotFoundError("Row", id);
-
-    const context = { userId: row.userId, id };
-    const hooks = mergeHooks(globalHooks.update, addedHooks.update, options?.hooks);
-    await hooks.before?.({ input: updates, context });
 
     await Promise.all([kv && clearCache(row.userId), vector && upsertVector(row)]);
 
@@ -261,12 +262,15 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     id: string,
     options?: MethodOptions<string, T, { userId: string; id: string }>
   ): Promise<T> {
-    const [row] = await db.delete(table).where(eq(table.id, id)).returning();
+    const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
     if (!row) throw new NotFoundError("Row", id);
 
     const context = { userId: row.userId, id };
     const hooks = mergeHooks(globalHooks.delete, addedHooks.delete, options?.hooks);
+
     await hooks.before?.({ input: id, context });
+
+    await db.delete(table).where(eq(table.id, id));
 
     await Promise.all([kv && clearCache(row.userId), vector && deleteVector(row.id)]);
 
@@ -280,11 +284,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   ): Promise<void> {
     const context = { userId };
     const hooks = mergeHooks(globalHooks.deleteAll, addedHooks.deleteAll, options?.hooks);
+
     await hooks.before?.({ input: userId, context });
-
-    await db.delete(table).where(eq(table.userId, userId));
-
-    if (kv) await kv.kv.del(kv.kvKeyFn(userId));
 
     if (vector) {
       const userRows = await db
@@ -293,6 +294,9 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
         .where(eq(table.userId, userId));
       await Promise.all(userRows.map((r: { id: string }) => deleteVector(r.id)));
     }
+
+    await db.delete(table).where(eq(table.userId, userId));
+    if (kv) await kv.kv.del(kv.kvKeyFn(userId));
 
     await hooks.after?.({ input: userId, result: undefined, context });
   }
@@ -304,13 +308,13 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   ): Promise<{ id: string; score: number }[]> {
     if (!vector?.openai) throw new VectorNotConfiguredError();
 
-    const queryEmbResponse = await retryWithBackoff(
+    const emb = await retryWithBackoff(
       vector.openai.embeddings.create.bind(vector.openai.embeddings),
       [{ model: vector.model ?? "text-embedding-3-small", input: query }]
     );
 
     const results = await vector.vector.query({
-      vector: queryEmbResponse.data[0].embedding,
+      vector: emb.data[0].embedding,
       topK: limit,
       filter: `userId='${userId}'`
     });
@@ -353,39 +357,40 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     const text = vector.textFn(row);
     if (!text) return;
 
-    const embeddingResponse = await retryWithBackoff(
+    const emb = await retryWithBackoff(
       vector.openai.embeddings.create.bind(vector.openai.embeddings),
       [{ model: vector.model ?? "text-embedding-3-small", input: text }]
     );
 
     await vector.vector.upsert({
       id: row.id,
-      vector: embeddingResponse.data[0].embedding,
+      vector: emb.data[0].embedding,
       metadata: { userId: row.userId, ...(vector.metadataFn?.(row) || {}) }
     });
   }
 
   async function upsertVectorBulk(rows: T[]) {
-    if (!vector?.openai || rows.length === 0) return;
+    if (!vector?.openai || !rows.length) return;
 
-    const BATCH_SIZE = 50;
-    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-      const batch = rows.slice(i, i + BATCH_SIZE);
-      const texts = batch.map((row) => vector.textFn(row)).filter(Boolean) as string[];
+    const BATCH = 50;
+    for (let i = 0; i < rows.length; i += BATCH) {
+      const batch = rows.slice(i, i + BATCH);
+      const texts = batch.map((r) => vector.textFn(r)).filter(Boolean) as string[];
+
       if (!texts.length) continue;
 
-      const embeddingResponse = await retryWithBackoff(
+      const emb = await retryWithBackoff(
         vector.openai.embeddings.create.bind(vector.openai.embeddings),
         [{ model: vector.model ?? "text-embedding-3-small", input: texts }]
       );
 
-      const vectorsToUpsert = embeddingResponse.data.map((item, index) => ({
-        id: batch[index].id,
-        vector: item.embedding,
-        metadata: { userId: batch[index].userId, ...(vector.metadataFn?.(batch[index]) || {}) }
-      }));
-
-      await vector.vector.upsert(vectorsToUpsert);
+      await vector.vector.upsert(
+        emb.data.map((item, idx) => ({
+          id: batch[idx].id,
+          vector: item.embedding,
+          metadata: { userId: batch[idx].userId, ...(vector.metadataFn?.(batch[idx]) || {}) }
+        }))
+      );
     }
   }
 

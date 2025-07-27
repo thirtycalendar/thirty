@@ -15,12 +15,12 @@ import { createDbService } from "../utils/create-db-service";
 export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   table: calendarTable,
   kv: {
-    kv: kv,
+    kv,
     kvKeyFn: (userId) => KV_CALENDARS(userId),
     cacheTime: kvCacheTimes.calendar
   },
   vector: {
-    vector: vector,
+    vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
     textFn: (e) => {
       return Object.values(e)
