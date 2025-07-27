@@ -1,4 +1,3 @@
-CREATE TYPE "public"."user_system_enum" AS ENUM('system', 'user');--> statement-breakpoint
 CREATE TABLE "account" (
 	"id" text PRIMARY KEY NOT NULL,
 	"account_id" text NOT NULL,
@@ -77,7 +76,7 @@ CREATE TABLE "calendars" (
 );
 --> statement-breakpoint
 CREATE TABLE "chats" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text NOT NULL,
 	"name" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -134,10 +133,10 @@ CREATE TABLE "events" (
 );
 --> statement-breakpoint
 CREATE TABLE "messages" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"chat_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"chat_id" uuid NOT NULL,
 	"content" text NOT NULL,
-	"role" "user_system_enum" NOT NULL,
+	"role" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"deleted_at" timestamp with time zone

@@ -1,21 +1,123 @@
+import { zValidator } from "@hono/zod-validator";
+
 import { Hono } from "hono";
 
+import { chatService } from "$lib/server/services/chat";
 import { streamChat } from "$lib/server/chat";
 
-import type { User } from "$lib/shared/types";
+import { chatSchema } from "$lib/shared/schemas/chat";
+import type { Chat, SuccessResponse, User } from "$lib/shared/types";
 
 import { loggedIn } from "../middlewares/logged-in";
-import { errorResponse } from "../utils";
+import { errorResponse, requireParam } from "../utils";
 
-const app = new Hono().use(loggedIn).post("/", async (c) => {
-  try {
-    const user = c.get("user") as User;
-    const { messages } = await c.req.json();
+const app = new Hono()
+  .use(loggedIn)
+  .post("/", async (c) => {
+    try {
+      const user = c.get("user") as User;
+      const { messages } = await c.req.json();
 
-    return streamChat(user.id, messages);
-  } catch (err: unknown) {
-    return errorResponse(c, err);
-  }
-});
+      return streamChat(user.id, messages);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .get("/getAll", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      const chats = await chatService.getAll(user.id);
+
+      return c.json<SuccessResponse<Chat[]>>({
+        success: true,
+        message: "Success",
+        data: chats
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .get("/get/:id", async (c) => {
+    try {
+      const id = c.req.param("id");
+      if (!id) return requireParam(c, "chat id");
+
+      const chat = await chatService.get(id);
+
+      return c.json<SuccessResponse<Chat>>({
+        success: true,
+        message: "Success",
+        data: chat
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/create", zValidator("json", chatSchema), async (c) => {
+    try {
+      const user = c.get("user") as User;
+      const data = c.req.valid("json");
+
+      const chat = await chatService.create(user.id, data);
+
+      return c.json<SuccessResponse<Chat>>({
+        success: true,
+        message: `${chat.name} created`,
+        data: chat
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .put("/update/:id", zValidator("json", chatSchema), async (c) => {
+    try {
+      const id = c.req.param("id");
+      if (!id) return requireParam(c, "chat id");
+
+      const data = c.req.valid("json");
+
+      const chat = await chatService.update(id, data);
+
+      return c.json<SuccessResponse<Chat>>({
+        success: true,
+        message: `${chat.name} updated`,
+        data: chat
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .delete("/delete/:id", async (c) => {
+    try {
+      const id = c.req.param("id");
+      if (!id) return requireParam(c, "chat id");
+
+      const chat = await chatService.delete(id);
+
+      return c.json<SuccessResponse<Chat>>({
+        success: true,
+        message: `${chat.name} deleted`,
+        data: chat
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .post("/clearCache", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      await chatService.clearCache(user.id);
+
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Successfully cleared all the chats from cache",
+        data: null
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  });
 
 export default app;

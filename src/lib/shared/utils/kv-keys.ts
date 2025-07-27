@@ -9,6 +9,8 @@ export const KV_BIRTHDAYS = (userId: string) => `birthdays:${userId}`;
 export const KV_HOLIDAY_COUNTRIES = (userId: string) => `holidays:countries:${userId}`;
 export const KV_HOLIDAYS = (userId: string) => `holidays:${userId}`;
 
+export const KV_CHATS = (userId: string) => `chats:${userId}`;
+
 export const KV_ALL_HOLIDAY_COUNTRIES = "all:holiday:countries";
 export const KV_COUNTRY_HOLIDAYS = (countryId: string) => `${countryId}:holidays`;
 

@@ -1,5 +1,5 @@
 {
-  "id": "0fa284c0-89a9-43cd-ba93-0752c23d6546",
+  "id": "1901a143-7955-448b-9f26-ef2707d212bd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -516,9 +516,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "user_id": {
           "name": "user_id",
@@ -928,13 +929,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "chat_id": {
           "name": "chat_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -946,8 +948,7 @@
         },
         "role": {
           "name": "role",
-          "type": "user_system_enum",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -1113,16 +1114,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.user_system_enum": {
-      "name": "user_system_enum",
-      "schema": "public",
-      "values": [
-        "system",
-        "user"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

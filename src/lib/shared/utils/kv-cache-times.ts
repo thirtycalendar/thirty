@@ -3,5 +3,6 @@ export const kvCacheTimes = {
   event: 15 * 60,
   birthday: 24 * 60 * 60,
   task: 30 * 60,
-  holiday: 24 * 60 * 60
+  holiday: 24 * 60 * 60,
+  chat: 15 * 60
 } as const;

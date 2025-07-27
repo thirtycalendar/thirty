@@ -1,3 +1,4 @@
+import type { Message } from "ai";
 import type { InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
@@ -12,6 +13,7 @@ import type * as Const from "$lib/shared/constants";
 
 import type { birthdaySchema } from "./schemas/birthday";
 import type { calendarSchema } from "./schemas/calendar";
+import type { chatSchema } from "./schemas/chat";
 import type { eventSchema } from "./schemas/event";
 import type { hdCountrySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
@@ -62,6 +64,9 @@ export type Holiday = {
 };
 
 export type Chat = InferSelectModel<typeof chatTable>;
+export type ChatForm = z.infer<typeof chatSchema>;
+
+export type MessageRole = Exclude<Message["role"], "data">;
 
 export type Color = (typeof Const.Color)[number];
 export type Source = (typeof Const.Source)[number];

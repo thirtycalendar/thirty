@@ -1,8 +1,6 @@
-import { boolean, integer, pgEnum, timestamp } from "drizzle-orm/pg-core";
+import { boolean, integer, timestamp } from "drizzle-orm/pg-core";
 
 import type { NotifyInDay, NotifyInMin } from "$lib/shared/types";
-
-export const userSystemEnum = pgEnum("user_system_enum", ["system", "user"]);
 
 export const notification = {
   notifyInMin: integer("notifyInMin").$type<NotifyInMin>().default(0).notNull(),

@@ -1,17 +1,19 @@
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+
+import type { MessageRole } from "$lib/shared/types";
 
 import { chatTable } from "./chat";
-import { timestamps, userSystemEnum } from "./utils";
+import { timestamps } from "./utils";
 
 export const messageTable = pgTable("messages", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
 
-  chatId: integer("chat_id")
-    .references(() => chatTable.id, { onDelete: "cascade" })
-    .notNull(),
+  chatId: uuid("chat_id")
+    .notNull()
+    .references(() => chatTable.id, { onDelete: "cascade" }),
 
   content: text("content").notNull(),
-  role: userSystemEnum("role").notNull(),
+  role: text("role").$type<MessageRole>().notNull(),
 
   ...timestamps
 });
