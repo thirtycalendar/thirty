@@ -12,7 +12,7 @@ export async function streamChat(userId: string, messages: Message[]) {
   // const lastMessage = messages[messages.length - 1];
 
   const result = streamText({
-    model: openAiModel("gpt-4.1"),
+    model: openAiModel("gpt-4o-mini"),
     messages,
     tools: createTools(userId),
     maxSteps: 100,

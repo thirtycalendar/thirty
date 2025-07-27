@@ -1,3 +1,4 @@
+// src/lib/server/ai/tools/event.ts
 import { tool } from "ai";
 import z from "zod";
 
@@ -113,6 +114,23 @@ export function createEventTools(userId: string) {
           console.error(`[deleteEvent Tool] Error during execution:`, error);
           return {
             error: `Failed to delete event: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
+      }
+    }),
+
+    deleteAllEvents: tool({
+      description:
+        "Permanently delete all events associated with the current user. Use this to remove all event data for a user.",
+      parameters: z.object({}).strict(),
+      execute: async () => {
+        try {
+          await eventService.deleteAll(userId);
+          return { success: true, message: `All events for user ${userId} deleted successfully.` };
+        } catch (error) {
+          console.error(`[deleteAllEvents Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete all events: ${error instanceof Error ? error.message : String(error)}`
           };
         }
       }

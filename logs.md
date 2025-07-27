@@ -1,5 +1,7 @@
 # Logs
 
+- Sun Jul 27, 2025
+  - (7.27.01) - Added holiday tools. Added vector things in holiday service.
 - Thu Jul 24, 2025
   - (7.24.01) - Vector things in create db service. Committed for safety.
   - (7.24.02) - Committed for safety.

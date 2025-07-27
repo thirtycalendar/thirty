@@ -116,6 +116,26 @@ export function createCalendarTools(userId: string) {
           };
         }
       }
+    }),
+
+    deleteAllCalendars: tool({
+      description:
+        "Permanently delete all calendars associated with the current user. Use this when the user wants to remove all their calendar data.",
+      parameters: z.object({}).strict(),
+      execute: async () => {
+        try {
+          await calendarService.deleteAll(userId);
+          return {
+            success: true,
+            message: `All calendars for user ${userId} deleted successfully.`
+          };
+        } catch (error) {
+          console.error(`[deleteAllCalendars Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete all calendars: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
+      }
     })
   };
 }

@@ -1,3 +1,4 @@
+// src/lib/server/ai/tools/birthday.ts
 import { tool } from "ai";
 import z from "zod";
 
@@ -114,6 +115,26 @@ export function createBirthdayTools(userId: string) {
           console.error(`[deleteBirthday Tool] Error during execution:`, error);
           return {
             error: `Failed to delete birthday: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
+      }
+    }),
+
+    deleteAllBirthdays: tool({
+      description:
+        "Permanently delete all birthday entries associated with the current user. Use this to remove all birthday data for a user.",
+      parameters: z.object({}).strict(),
+      execute: async () => {
+        try {
+          await birthdayService.deleteAll(userId);
+          return {
+            success: true,
+            message: `All birthdays for user ${userId} deleted successfully.`
+          };
+        } catch (error) {
+          console.error(`[deleteAllBirthdays Tool] Error during execution:`, error);
+          return {
+            error: `Failed to delete all birthdays: ${error instanceof Error ? error.message : String(error)}`
           };
         }
       }
