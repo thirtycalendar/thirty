@@ -3,6 +3,7 @@
 - Sun Jul 27, 2025
   - (7.27.01) - Added holiday tools. Added vector things in holiday service.
   - (7.27.02) - Better ai tool descriptions.
+  - (7.27.03) - Better chat system prompts.
 - Thu Jul 24, 2025
   - (7.24.01) - Vector things in create db service. Committed for safety.
   - (7.24.02) - Committed for safety.
