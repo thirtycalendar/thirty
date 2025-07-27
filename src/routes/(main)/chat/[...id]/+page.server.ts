@@ -1,6 +1,6 @@
 import { requireAuth } from "$lib/server/auth/auth-helpers";
 
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from "../$types";
 
 export const load: PageServerLoad = async ({ request }) => {
   await requireAuth(request);
