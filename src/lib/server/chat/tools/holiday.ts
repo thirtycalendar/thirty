@@ -1,4 +1,3 @@
-// src/lib/server/ai/tools/holiday.ts
 import { tool } from "ai";
 import z from "zod";
 
@@ -16,20 +15,20 @@ export function createHolidayTools(userId: string) {
   return {
     searchHolidayCountries: tool({
       description:
-        "Perform a search over the user's subscribed holiday countries to find specific countries relevant to a query. This can help identify which of the user's subscribed countries might be relevant for a given context.",
+        "Search for the user's subscribed holiday countries using a natural language query. This helps identify which countries the user is interested in for holiday information. Returns an array of subscribed holiday country objects.",
       parameters: z.object({
         query: z
           .string()
           .min(1)
           .describe(
-            "A natural language query to find relevant subscribed countries (e.g., 'countries in Europe', 'countries with major holidays soon')."
+            "A natural language query to find relevant subscribed holiday countries (e.g., 'European countries', 'countries I get holidays from')."
           ),
         limit: z
           .number()
           .min(1)
           .max(50)
           .default(10)
-          .describe("The maximum number of country results to return.")
+          .describe("The maximum number of holiday country results to return.")
       }),
       execute: async ({ query, limit }) => {
         try {
@@ -40,16 +39,7 @@ export function createHolidayTools(userId: string) {
             limit
           );
 
-          if (!holidayCountries) {
-            console.warn(
-              `[searchHolidayCountries Tool] holidayService.searchCountries returned null/undefined.`
-            );
-            return { holidayCountries: [] };
-          }
-
-          const result = { holidayCountries };
-
-          return result;
+          return { holidayCountries: holidayCountries || [] };
         } catch (error) {
           console.error(`[searchHolidayCountries Tool] Error during execution:`, error);
           return {
@@ -61,8 +51,10 @@ export function createHolidayTools(userId: string) {
 
     addHolidayCountry: tool({
       description:
-        "Add a new holiday country subscription for the user by its unique ID (e.g., 'US' for United States).",
-      parameters: holidayCountryFormSchema.describe("The ID of the country to subscribe to."),
+        "Add a new holiday country subscription for the user by its unique country ID (e.g., 'US' for United States, 'GB' for Great Britain). Use this when the user wants to 'add holidays for a specific country'.",
+      parameters: holidayCountryFormSchema.describe(
+        "An object containing the unique ID of the country to subscribe to (e.g., 'US', 'DE', 'FR')."
+      ),
       execute: async (data: HolidayCountryForm) => {
         try {
           const country = await holidayService.addCountry(userId, data);
@@ -77,10 +69,14 @@ export function createHolidayTools(userId: string) {
     }),
 
     removeHolidayCountry: tool({
-      description: "Remove an existing holiday country subscription for the user by its unique ID.",
+      description:
+        "Remove an existing holiday country subscription for the user by its unique country ID. Use this when the user wants to 'stop receiving holidays for a country' or 'remove a country from my holiday list'.",
       parameters: z
         .object({
-          countryId: z.string().min(1).describe("The unique ID of the country to unsubscribe from.")
+          countryId: z
+            .string()
+            .min(1)
+            .describe("The unique ID of the country to unsubscribe from (e.g., 'US', 'DE', 'FR').")
         })
         .strict(),
       execute: async ({ countryId }) => {
@@ -102,7 +98,7 @@ export function createHolidayTools(userId: string) {
 
     clearHolidays: tool({
       description:
-        "Clear all cached holiday data and subscribed countries for the user. This will force a re-fetch of holiday data on next request.",
+        "Clear all cached holiday data and all subscribed countries for the current user. This action will effectively reset all holiday preferences and cached data. Only use if the user explicitly confirms they want to 'clear all holiday settings' or 'reset my holiday data'. Always seek explicit confirmation before executing.",
       parameters: z.object({}).strict(),
       execute: async () => {
         try {

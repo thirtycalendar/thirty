@@ -1,4 +1,3 @@
-// src/lib/server/ai/tools/event.ts
 import { tool } from "ai";
 import z from "zod";
 
@@ -11,23 +10,26 @@ export function createEventTools(userId: string) {
   return {
     searchEvents: tool({
       description:
-        "Perform semantic search on user's events using a natural language query (e.g., 'meeting next week').",
+        "Retrieve a list of the user's events based on a natural language search query. Use this to find events matching criteria like 'meetings next week', 'my personal events', or 'events in July'. Returns an array of event objects.",
       parameters: z.object({
-        query: z.string().min(1),
-        limit: z.number().min(1).max(50).default(10)
+        query: z
+          .string()
+          .min(1)
+          .describe(
+            "The natural language search query for events (e.g., 'upcoming appointments', 'past meetings', 'events with John')."
+          ),
+        limit: z
+          .number()
+          .min(1)
+          .max(50)
+          .default(10)
+          .describe("The maximum number of events to return in the search result.")
       }),
       execute: async ({ query, limit }) => {
         try {
           const events = await eventService.search(userId, query, limit);
 
-          if (!events) {
-            console.warn(`[searchEvents Tool] eventService.search returned null/undefined.`);
-            return { events: [] };
-          }
-
-          const result = { events };
-
-          return result;
+          return { events: events || [] };
         } catch (error) {
           console.error(`[searchEvents Tool] Error during execution:`, error);
           return {
@@ -39,10 +41,10 @@ export function createEventTools(userId: string) {
 
     getEvent: tool({
       description:
-        "Retrieve detailed information about a specific event using its ID. Use this when you have an event ID and need full details such as title, time, and location.",
+        "Get detailed information about a single event using its unique ID. This is useful when you have an event ID and need to fetch its specific properties like title, start/end times, location, or description. Only use if the event ID is known.",
       parameters: z
         .object({
-          id: z.string().min(1).describe("The unique ID of the event to retrieve.")
+          id: z.string().min(1).describe("The unique identifier of the event to retrieve.")
         })
         .strict(),
       execute: async ({ id }) => {
@@ -60,9 +62,9 @@ export function createEventTools(userId: string) {
 
     createEvent: tool({
       description:
-        "Create a new event for the user. Provide all necessary event details such as title, start and end times, location, and description.",
+        "Create a new event. This tool requires all necessary event details such as title, start and end times, and optionally a location and description. Use this when the user explicitly asks to 'create a new event' and provides sufficient details.",
       parameters: eventSchema.describe(
-        "The complete data needed to create a new event (e.g., title, start/end time, location)."
+        "An object containing the complete data needed to create a new event, including its title, start time, end time, and optional location and description."
       ),
       execute: async (data: EventForm) => {
         try {
@@ -79,12 +81,14 @@ export function createEventTools(userId: string) {
 
     updateEvent: tool({
       description:
-        "Update an existing event by providing its ID and the new details. Use this to modify event information like time, title, or location.",
+        "Modify an existing event's details. This tool takes the event's unique ID and the fields to update (e.g., change its title, time, or location). Use this when the user wants to 'reschedule a meeting' or 'change an event's location'.",
       parameters: eventSchema
         .extend({
           id: z.string().min(1).describe("The unique ID of the event to update.")
         })
-        .describe("Event update data, including the event ID."),
+        .describe(
+          "An object containing the event ID and the specific fields to update (e.g., 'title', 'startTime', 'location')."
+        ),
       execute: async ({ id, ...data }: EventForm & { id: string }) => {
         try {
           const event = await eventService.update(id, data);
@@ -100,10 +104,10 @@ export function createEventTools(userId: string) {
 
     deleteEvent: tool({
       description:
-        "Permanently delete an event by its unique ID. Use this to remove an event completely.",
+        "Permanently delete a single event using its unique ID. Only use this when the user clearly states they want to 'delete an event' and provides the specific event ID or enough context to infer it.",
       parameters: z
         .object({
-          id: z.string().min(1).describe("The unique ID of the event to delete.")
+          id: z.string().min(1).describe("The unique ID of the event to be deleted.")
         })
         .strict(),
       execute: async ({ id }) => {
@@ -121,7 +125,7 @@ export function createEventTools(userId: string) {
 
     deleteAllEvents: tool({
       description:
-        "Permanently delete all events associated with the current user. Use this to remove all event data for a user.",
+        "Permanently delete ALL events associated with the current user. This action is irreversible. Only use this tool if the user explicitly confirms they want to 'delete all my events' or 'clear all event data'. Always seek explicit confirmation before executing.",
       parameters: z.object({}).strict(),
       execute: async () => {
         try {

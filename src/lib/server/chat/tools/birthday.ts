@@ -1,4 +1,3 @@
-// src/lib/server/ai/tools/birthday.ts
 import { tool } from "ai";
 import z from "zod";
 
@@ -11,23 +10,26 @@ export function createBirthdayTools(userId: string) {
   return {
     searchBirthdays: tool({
       description:
-        "Perform semantic search on user's birthdays using a natural language query (e.g., 'date of the user's birthday').",
+        "Retrieve a list of the user's birthday entries based on a natural language search query. Use this to find birthdays matching criteria like 'birthdays in August', 'friends' birthdays', or 'upcoming birthdays'. Returns an array of birthday objects.",
       parameters: z.object({
-        query: z.string().min(1),
-        limit: z.number().min(1).max(50).default(10)
+        query: z
+          .string()
+          .min(1)
+          .describe(
+            "The natural language search query for birthdays (e.g., 'family birthdays', 'birthdays next month')."
+          ),
+        limit: z
+          .number()
+          .min(1)
+          .max(50)
+          .default(10)
+          .describe("The maximum number of birthday entries to return in the search result.")
       }),
       execute: async ({ query, limit }) => {
         try {
           const birthdays = await birthdayService.search(userId, query, limit);
 
-          if (!birthdays) {
-            console.warn(`[searchBirthdays Tool] birthdayService.search returned null/undefined.`);
-            return { birthdays: [] };
-          }
-
-          const result = { birthdays };
-
-          return result;
+          return { birthdays: birthdays || [] };
         } catch (error) {
           console.error(`[searchBirthdays Tool] Error during execution:`, error);
           return {
@@ -39,16 +41,15 @@ export function createBirthdayTools(userId: string) {
 
     getBirthday: tool({
       description:
-        "Get detailed information about a specific birthday by its unique ID. Use this when you know the birthday ID and need details such as name and birthdate.",
+        "Get detailed information about a single birthday entry using its unique ID. This is useful when you have a birthday ID and need to fetch its specific properties like name or birthdate. Only use if the birthday ID is known.",
       parameters: z
         .object({
-          id: z.string().min(1).describe("The unique ID of the birthday to retrieve.")
+          id: z.string().min(1).describe("The unique identifier of the birthday entry to retrieve.")
         })
         .strict(),
       execute: async ({ id }) => {
         try {
           const birthday = await birthdayService.get(id);
-
           return { birthday };
         } catch (error) {
           console.error(`[getBirthday Tool] Error during execution:`, error);
@@ -61,9 +62,9 @@ export function createBirthdayTools(userId: string) {
 
     createBirthday: tool({
       description:
-        "Create a new birthday entry for the user. Provide all necessary details like name and bod.",
+        "Create a new birthday entry. This tool requires the person's name and their date of birth (DOB). Use this when the user explicitly asks to 'add a new birthday' and provides the necessary details.",
       parameters: birthdaySchema.describe(
-        "Complete data needed to create a new birthday record (e.g., name, dob)."
+        "An object containing the complete data needed to create a new birthday record, including the person's name and date of birth."
       ),
       execute: async (data: BirthdayForm) => {
         try {
@@ -80,12 +81,14 @@ export function createBirthdayTools(userId: string) {
 
     updateBirthday: tool({
       description:
-        "Update an existing birthday by its ID with new data. Use this to modify birthday details like name or date.",
+        "Modify an existing birthday entry's details. This tool takes the birthday's unique ID and the fields to update (e.g., change the name or date of birth). Use this when the user wants to 'update someone's birthday' or 'correct a birthdate'.",
       parameters: birthdaySchema
         .extend({
-          id: z.string().min(1).describe("The unique ID of the birthday to update.")
+          id: z.string().min(1).describe("The unique ID of the birthday entry to update.")
         })
-        .describe("Birthday update data, including the birthday ID."),
+        .describe(
+          "An object containing the birthday ID and the specific fields to update (e.g., 'name', 'dob')."
+        ),
       execute: async ({ id, ...data }: BirthdayForm & { id: string }) => {
         try {
           const birthday = await birthdayService.update(id, data);
@@ -101,10 +104,10 @@ export function createBirthdayTools(userId: string) {
 
     deleteBirthday: tool({
       description:
-        "Permanently delete a birthday entry by its unique ID. Use this to remove a birthday record completely.",
+        "Permanently delete a single birthday entry using its unique ID. Only use this when the user clearly states they want to 'delete a birthday' and provides the specific birthday ID or enough context to infer it.",
       parameters: z
         .object({
-          id: z.string().min(1).describe("The unique ID of the birthday to delete.")
+          id: z.string().min(1).describe("The unique ID of the birthday entry to be deleted.")
         })
         .strict(),
       execute: async ({ id }) => {
@@ -122,7 +125,7 @@ export function createBirthdayTools(userId: string) {
 
     deleteAllBirthdays: tool({
       description:
-        "Permanently delete all birthday entries associated with the current user. Use this to remove all birthday data for a user.",
+        "Permanently delete ALL birthday entries associated with the current user. This action is irreversible. Only use this tool if the user explicitly confirms they want to 'delete all my birthdays' or 'clear all birthday data'. Always seek explicit confirmation before executing.",
       parameters: z.object({}).strict(),
       execute: async () => {
         try {
