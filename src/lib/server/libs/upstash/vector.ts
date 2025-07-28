@@ -20,8 +20,8 @@ export class VectorNotConfiguredError extends Error {
 export type VectorClientConfig<T> = {
   vector: Index;
   openai: OpenAI;
-  model?: string;
-  textFn: (item: T) => string;
+  modelId?: OpenAI.Embeddings.EmbeddingCreateParams["model"];
+  textFn?: (item: T) => string;
   metadataFn?: (item: T) => Record<string, unknown>;
 };
 
@@ -59,8 +59,12 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
   const {
     vector,
     openai,
-    model = "text-embedding-3-small",
-    textFn,
+    modelId = "text-embedding-3-small",
+    textFn = (e: T) =>
+      Object.values(e)
+        .filter((value) => value !== null && typeof value !== "undefined")
+        .map((value) => String(value))
+        .join(" "),
     metadataFn = () => ({})
   } = config;
 
@@ -77,7 +81,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
   ): Promise<{ id: string; score: number }[]> {
     const { topK = 10, filter } = options;
     const emb = await retryWithBackoff(openai.embeddings.create.bind(openai.embeddings), [
-      { model, input: queryText }
+      { model: modelId, input: queryText }
     ]);
 
     const results = await vector.query({
@@ -96,7 +100,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
     if (!text) return;
 
     const emb = await retryWithBackoff(openai.embeddings.create.bind(openai.embeddings), [
-      { model, input: text }
+      { model: modelId, input: text }
     ]);
 
     await vector.upsert({
@@ -117,7 +121,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
       if (!texts.length) continue;
 
       const emb = await retryWithBackoff(openai.embeddings.create.bind(openai.embeddings), [
-        { model, input: texts }
+        { model: modelId, input: texts }
       ]);
 
       await vector.upsert(

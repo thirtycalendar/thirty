@@ -5,7 +5,6 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { holidayService } from "$lib/server/services/holiday";
-import { getAllHolidayCountries } from "$lib/server/libs/calendarific/cache";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { hdCountrySchema } from "$lib/shared/schemas/holiday";
@@ -50,7 +49,7 @@ const app = new Hono<Context>()
   })
   .get("/country/list", async (c) => {
     try {
-      const holidays = await getAllHolidayCountries();
+      const holidays = await holidayService.getAllHolidayCountries();
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,

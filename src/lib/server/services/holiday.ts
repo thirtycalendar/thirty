@@ -1,4 +1,3 @@
-// src/lib/server/services/holiday.ts
 import OpenAI from "openai";
 
 import { countries } from "$lib/server/libs/calendarific/countries";
@@ -7,7 +6,12 @@ import { createVectorClient, vector } from "$lib/server/libs/upstash/vector";
 
 import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
-import { KV_COUNTRY_HOLIDAYS, KV_HOLIDAY_COUNTRIES, KV_HOLIDAYS } from "$lib/shared/utils/kv-keys";
+import {
+  KV_ALL_HOLIDAY_COUNTRIES,
+  KV_COUNTRY_HOLIDAYS,
+  KV_HOLIDAY_COUNTRIES,
+  KV_HOLIDAYS
+} from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
 const allCountries = countries.flat();
@@ -19,24 +23,13 @@ function isWithinRange(date: Date): boolean {
   return date >= FROM && date <= TO;
 }
 
-const openai = new OpenAI({ apiKey: openAiEnvConfig.apiKey });
-const OPENAI_EMBEDDING_MODEL = "text-embedding-3-small";
-
-const getHolidayTextForEmbedding = (holiday: Holiday): string => {
-  return `${holiday.name} ${holiday.description || ""} holiday in ${holiday.countryCode} on ${holiday.date}`;
-};
-
-const getHolidayMetadata = (holiday: Holiday): Record<string, unknown> => ({
-  countryCode: holiday.countryCode,
-  date: holiday.date
-});
-
 const holidayVectorClient = createVectorClient<Holiday>({
-  openai,
+  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
   vector,
-  model: OPENAI_EMBEDDING_MODEL,
-  textFn: getHolidayTextForEmbedding,
-  metadataFn: getHolidayMetadata
+  metadataFn: (holiday: Holiday): Record<string, unknown> => ({
+    countryCode: holiday.countryCode,
+    date: holiday.date
+  })
 });
 
 async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]): Promise<void> {
@@ -62,6 +55,10 @@ async function updateHolidaysCache(
 }
 
 export const holidayService = {
+  async getAllHolidayCountries(): Promise<HolidayCountry[]> {
+    return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
+  },
+
   async getHolidays(userId: string): Promise<Holiday[]> {
     const cached = await kv.get<Holiday[]>(KV_HOLIDAYS(userId));
     if (cached) return cached;

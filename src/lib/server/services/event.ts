@@ -20,12 +20,6 @@ export const eventService = createDbService<Event, EventForm>(db, {
   },
   vector: {
     vector,
-    openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
-    textFn: (e) => {
-      return Object.values(e)
-        .filter((value) => value !== null && typeof value !== "undefined")
-        .map((value) => String(value))
-        .join(" ");
-    }
+    openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
   }
 });

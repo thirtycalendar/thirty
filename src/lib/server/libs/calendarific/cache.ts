@@ -9,18 +9,9 @@ import { countries } from "./countries";
 
 const API_KEY = CALENDARIFIC_API_KEY;
 
-// Get the current year
 const currentYear = new Date().getFullYear();
 // Generate years: past 3 (inclusive) and next 5 (inclusive)
 const years = Array.from({ length: 9 }, (_, i) => currentYear - 3 + i);
-
-export async function getAllHolidayCountries(): Promise<HolidayCountry[]> {
-  return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
-}
-
-export async function getCountryHolidays(countryCode: string): Promise<Holiday[]> {
-  return (await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(countryCode))) ?? [];
-}
 
 type CalendarificHoliday = {
   name: string;
