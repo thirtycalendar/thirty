@@ -23,22 +23,17 @@ function isWithinRange(date: Date): boolean {
   return date >= FROM && date <= TO;
 }
 
-export const holidayCountryVectorClient = createVectorClient<HolidayCountry>({
+export const holidayCountryVectorClient = createVectorClient<HolidayCountry & { userId?: string }>({
   namespace: "holiday-country",
   vector,
   openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
 });
 
 export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
-  namespace: "all-holiday-country",
+  namespace: "all-holiday-countries",
   vector,
   openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
 });
-
-async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]): Promise<void> {
-  await kv.set(KV_HOLIDAY_COUNTRIES(userId), list);
-  await updateHolidaysCache(userId, list);
-}
 
 async function updateHolidaysCache(
   userId: string,
@@ -58,18 +53,21 @@ async function updateHolidaysCache(
 }
 
 export const holidayService = {
-  async getAllHolidayCountries(): Promise<HolidayCountry[]> {
-    return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
-  },
-
   async getHolidays(userId: string): Promise<Holiday[]> {
     const cached = await kv.get<Holiday[]>(KV_HOLIDAYS(userId));
     if (cached) return cached;
 
-    const userCountries = await this.getCountries(userId);
+    const userCountries = await holidayCountryService.getCountries(userId);
     return await updateHolidaysCache(userId, userCountries);
-  },
+  }
+};
 
+async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]): Promise<void> {
+  await kv.set(KV_HOLIDAY_COUNTRIES(userId), list);
+  await updateHolidaysCache(userId, list);
+}
+
+export const holidayCountryService = {
   async getCountries(userId: string): Promise<HolidayCountry[]> {
     return (await kv.get<HolidayCountry[]>(KV_HOLIDAY_COUNTRIES(userId))) ?? [];
   },
@@ -84,7 +82,7 @@ export const holidayService = {
     const updatedCountries = [...currentCountries, matchedCountry];
     await cacheUserHolidayCountries(userId, updatedCountries);
 
-    await holidayCountryVectorClient.upsert(matchedCountry);
+    await holidayCountryVectorClient.upsert({ ...matchedCountry, userId });
 
     return matchedCountry;
   },
@@ -119,7 +117,7 @@ export const holidayService = {
     countryCode?: string,
     limit = 10
   ): Promise<HolidayCountry[]> {
-    const filter: Record<string, string> = {};
+    const filter: Record<string, string> = { userId };
     if (countryCode) {
       filter.countryCode = countryCode;
     }
@@ -142,6 +140,12 @@ export const holidayService = {
       .filter(Boolean) as HolidayCountry[];
 
     return orderedCountries;
+  }
+};
+
+export const allHolidayCountriesService = {
+  async getAllHolidayCountries(): Promise<HolidayCountry[]> {
+    return (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
   },
 
   async searchAllHolidayCountries(query: string, limit = 10): Promise<HolidayCountry[]> {

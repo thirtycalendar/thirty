@@ -6,6 +6,7 @@
   - (7.28.03) - Added all holiday countries vector things.
   - (7.28.04) - Fixed metadata default function in vector.
   - (7.28.05) - Added namespace parameter in vector client.
+  - (7.28.06) - Cleaned holiday, holiday country, and all holiday countries services.
 - Sun Jul 27, 2025
   - (7.27.01) - Added holiday tools. Added vector things in holiday service.
   - (7.27.02) - Better ai tool descriptions.

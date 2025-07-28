@@ -11,7 +11,7 @@ import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { calendarService } from "../services/calendar";
-import { holidayService } from "../services/holiday";
+import { holidayCountryService } from "../services/holiday";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -67,7 +67,7 @@ export const auth = betterAuth({
 
           await calendarService.create(id, calendar);
 
-          await holidayService.addCountryByCode(id, countryCode);
+          await holidayCountryService.addCountryByCode(id, countryCode);
         }
       }
     }

@@ -4,7 +4,11 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { holidayService } from "$lib/server/services/holiday";
+import {
+  allHolidayCountriesService,
+  holidayCountryService,
+  holidayService
+} from "$lib/server/services/holiday";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { hdCountrySchema } from "$lib/shared/schemas/holiday";
@@ -36,7 +40,7 @@ const app = new Hono<Context>()
       const ipLocation = await getIPLocation(user.id);
       const countryCode = ipLocation.countryCode;
 
-      await holidayService.addCountryByCode(user.id, countryCode);
+      await holidayCountryService.addCountryByCode(user.id, countryCode);
 
       return c.json<SuccessResponse<null>>({
         success: true,
@@ -49,7 +53,7 @@ const app = new Hono<Context>()
   })
   .get("/country/list", async (c) => {
     try {
-      const holidays = await holidayService.getAllHolidayCountries();
+      const holidays = await allHolidayCountriesService.getAllHolidayCountries();
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
@@ -64,7 +68,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      const countries = await holidayService.getCountries(user.id);
+      const countries = await holidayCountryService.getCountries(user.id);
 
       return c.json<SuccessResponse<HolidayCountry[]>>({
         success: true,
@@ -80,7 +84,7 @@ const app = new Hono<Context>()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const country = await holidayService.addCountry(user.id, data);
+      const country = await holidayCountryService.addCountry(user.id, data);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
@@ -98,7 +102,7 @@ const app = new Hono<Context>()
 
       const user = c.get("user") as User;
 
-      const removed = await holidayService.removeCountry(user.id, id);
+      const removed = await holidayCountryService.removeCountry(user.id, id);
 
       return c.json<SuccessResponse<HolidayCountry>>({
         success: true,
@@ -113,7 +117,7 @@ const app = new Hono<Context>()
     try {
       const user = c.get("user") as User;
 
-      await holidayService.clearCache(user.id);
+      await holidayCountryService.clearCache(user.id);
 
       return c.json<SuccessResponse<null>>({
         success: true,

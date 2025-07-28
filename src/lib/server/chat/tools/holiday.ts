@@ -3,7 +3,7 @@ import z from "zod";
 
 import type { HolidayCountryForm } from "$lib/shared/types";
 
-import { holidayService } from "../../services/holiday";
+import { allHolidayCountriesService, holidayCountryService } from "../../services/holiday";
 
 export const holidayCountryFormSchema = z
   .object({
@@ -32,7 +32,7 @@ export function createHolidayTools(userId: string) {
       }),
       execute: async ({ query, limit }) => {
         try {
-          const holidayCountries = await holidayService.searchCountries(
+          const holidayCountries = await holidayCountryService.searchCountries(
             query,
             userId,
             undefined,
@@ -68,7 +68,10 @@ export function createHolidayTools(userId: string) {
       }),
       execute: async ({ query, limit }) => {
         try {
-          const availableCountries = await holidayService.searchAllHolidayCountries(query, limit);
+          const availableCountries = await allHolidayCountriesService.searchAllHolidayCountries(
+            query,
+            limit
+          );
           return { availableCountries: availableCountries || [] };
         } catch (error) {
           console.error(`[searchAllHolidayCountries Tool] Error during execution:`, error);
@@ -87,7 +90,7 @@ export function createHolidayTools(userId: string) {
       ),
       execute: async (data: HolidayCountryForm) => {
         try {
-          const country = await holidayService.addCountry(userId, data);
+          const country = await holidayCountryService.addCountry(userId, data);
           return { country };
         } catch (error) {
           console.error(`[addHolidayCountry Tool] Error during execution:`, error);
@@ -111,7 +114,7 @@ export function createHolidayTools(userId: string) {
         .strict(),
       execute: async ({ countryId }) => {
         try {
-          const removedCountry = await holidayService.removeCountry(userId, countryId);
+          const removedCountry = await holidayCountryService.removeCountry(userId, countryId);
           return {
             country: removedCountry,
             success: true,
@@ -126,13 +129,13 @@ export function createHolidayTools(userId: string) {
       }
     }),
 
-    clearHolidays: tool({
+    clearHolidayCountries: tool({
       description:
         "Clear all cached holiday data and all subscribed countries for the current user. This action will effectively reset all holiday preferences and cached data. Only use if the user explicitly confirms they want to 'clear all holiday settings' or 'reset my holiday data'. Always seek explicit confirmation before executing.",
       parameters: z.object({}).strict(),
       execute: async () => {
         try {
-          await holidayService.clearCache(userId);
+          await holidayCountryService.clearCache(userId);
           return { success: true, message: "Holiday cache cleared successfully." };
         } catch (error) {
           console.error(`[clearHolidayCache Tool] Error during execution:`, error);
