@@ -25,10 +25,15 @@ function isWithinRange(date: Date): boolean {
 
 const holidayVectorClient = createVectorClient<Holiday>({
   openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
+  vector
+});
+
+export const holidayCountryVectorClient = createVectorClient<HolidayCountry>({
+  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
   vector,
-  metadataFn: (holiday: Holiday): Record<string, unknown> => ({
-    countryCode: holiday.countryCode,
-    date: holiday.date
+  metadataFn: (country: HolidayCountry): Record<string, unknown> => ({
+    countryCode: country.countryCode,
+    countryName: country.countryName
   })
 });
 
@@ -157,6 +162,23 @@ export const holidayService = {
       .filter(Boolean) as Holiday[];
 
     return orderedHolidays;
+  },
+
+  async searchAllHolidayCountries(query: string, limit = 10): Promise<HolidayCountry[]> {
+    const results = await holidayCountryVectorClient.query(query, {
+      topK: limit
+    });
+
+    const countryIds = results.map((r) => r.id);
+    if (!countryIds.length) return [];
+
+    const allHolidayCountries = await this.getAllHolidayCountries();
+
+    const orderedCountries = results
+      .map((r) => allHolidayCountries.find((c) => c.id === String(r.id)))
+      .filter(Boolean) as HolidayCountry[];
+
+    return orderedCountries;
   },
 
   async searchCountryVector(

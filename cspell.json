@@ -17,6 +17,7 @@
     "codebook",
     "neondatabase",
     "vite",
-    "sithucodes"
+    "sithucodes",
+    "upserted"
   ]
 }

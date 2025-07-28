@@ -15,7 +15,7 @@ export function createHolidayTools(userId: string) {
   return {
     searchHolidayCountries: tool({
       description:
-        "Search for the user's subscribed holiday countries using a natural language query. This helps identify which countries the user is interested in for holiday information. Returns an array of subscribed holiday country objects.",
+        "Search for the user's subscribed holiday countries using a natural language query. This helps identify which countries the user is interested in for holiday information. Returns an array of subscribed holiday countries.",
       parameters: z.object({
         query: z
           .string()
@@ -44,6 +44,36 @@ export function createHolidayTools(userId: string) {
           console.error(`[searchHolidayCountries Tool] Error during execution:`, error);
           return {
             error: `Failed to search holiday countries: ${error instanceof Error ? error.message : String(error)}`
+          };
+        }
+      }
+    }),
+
+    searchAllHolidayCountries: tool({
+      description:
+        "Search for all available holiday countries that a user can potentially add to their calendar, using a natural language query. This tool is useful when a user asks to 'find a country to add', 'list available countries', or 'what countries can I subscribe to?'.",
+      parameters: z.object({
+        query: z
+          .string()
+          .min(1)
+          .describe(
+            "A natural language query to find relevant available holiday countries (e.g., 'countries in Asia', 'countries with public holidays')."
+          ),
+        limit: z
+          .number()
+          .min(1)
+          .max(50)
+          .default(10)
+          .describe("The maximum number of available holiday country results to return.")
+      }),
+      execute: async ({ query, limit }) => {
+        try {
+          const availableCountries = await holidayService.searchAllHolidayCountries(query, limit);
+          return { availableCountries: availableCountries || [] };
+        } catch (error) {
+          console.error(`[searchAllHolidayCountries Tool] Error during execution:`, error);
+          return {
+            error: `Failed to search all holiday countries: ${error instanceof Error ? error.message : String(error)}`
           };
         }
       }

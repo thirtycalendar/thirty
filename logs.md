@@ -3,6 +3,7 @@
 - Mon Jul 28, 2025
   - (7.28.01) - Extracted vector utils functions.
   - (7.28.02) - Updated vector text fn.
+  - (7.28.03) - Added all holiday countries vector things.
 - Sun Jul 27, 2025
   - (7.27.01) - Added holiday tools. Added vector things in holiday service.
   - (7.27.02) - Better ai tool descriptions.
