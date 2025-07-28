@@ -19,6 +19,7 @@ export const eventService = createDbService<Event, EventForm>(db, {
     cacheTime: kvCacheTimes.event
   },
   vector: {
+    namespace: "events",
     vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
   }

@@ -19,6 +19,7 @@ export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
     cacheTime: kvCacheTimes.birthday
   },
   vector: {
+    namespace: "birthdays",
     vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
   }

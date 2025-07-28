@@ -23,18 +23,16 @@ function isWithinRange(date: Date): boolean {
   return date >= FROM && date <= TO;
 }
 
-const holidayVectorClient = createVectorClient<Holiday>({
-  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
-  vector
+export const holidayCountryVectorClient = createVectorClient<HolidayCountry>({
+  namespace: "holiday-country",
+  vector,
+  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
 });
 
-export const holidayCountryVectorClient = createVectorClient<HolidayCountry>({
-  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey }),
+export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
+  namespace: "all-holiday-country",
   vector,
-  metadataFn: (country: HolidayCountry): Record<string, unknown> => ({
-    countryCode: country.countryCode,
-    countryName: country.countryName
-  })
+  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
 });
 
 async function cacheUserHolidayCountries(userId: string, list: HolidayCountry[]): Promise<void> {
@@ -86,12 +84,7 @@ export const holidayService = {
     const updatedCountries = [...currentCountries, matchedCountry];
     await cacheUserHolidayCountries(userId, updatedCountries);
 
-    const holidaysForNewCountry =
-      (await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(matchedCountry.id))) || [];
-
-    if (holidaysForNewCountry.length > 0) {
-      await holidayVectorClient.upsertBulk(holidaysForNewCountry);
-    }
+    await holidayCountryVectorClient.upsert(matchedCountry);
 
     return matchedCountry;
   },
@@ -111,12 +104,7 @@ export const holidayService = {
     const [removed] = currentCountries.splice(index, 1);
     await cacheUserHolidayCountries(userId, currentCountries);
 
-    const holidaysToRemove =
-      (await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(removed.id))) || [];
-
-    if (holidaysToRemove.length > 0) {
-      await holidayVectorClient.delete(holidaysToRemove.map((h) => h.id));
-    }
+    await holidayCountryVectorClient.delete(removed.id);
 
     return removed;
   },
@@ -130,42 +118,34 @@ export const holidayService = {
     userId: string,
     countryCode?: string,
     limit = 10
-  ): Promise<Holiday[]> {
+  ): Promise<HolidayCountry[]> {
     const filter: Record<string, string> = {};
     if (countryCode) {
       filter.countryCode = countryCode;
     }
 
-    const results = await holidayVectorClient.query(query, {
+    const results = await holidayCountryVectorClient.query(query, {
       topK: limit,
       filter
     });
 
-    const holidayIds = results.map((r) => r.id);
-    if (!holidayIds.length) return [];
+    const countryIds = results.map((r) => r.id);
+    if (!countryIds.length) return [];
 
     const userSubscribedCountries = await this.getCountries(userId);
-    const userCountryCodes = new Set(userSubscribedCountries.map((c) => c.countryCode));
+    const userCountryIds = new Set(userSubscribedCountries.map((c) => c.id));
 
-    const allKnownHolidays: Holiday[] = [];
-    for (const country of userSubscribedCountries) {
-      const countryHolidays = await kvHoliday.get<Holiday[]>(KV_COUNTRY_HOLIDAYS(country.id));
-      if (countryHolidays) {
-        allKnownHolidays.push(...countryHolidays);
-      }
-    }
-
-    const orderedHolidays = results
+    const orderedCountries = results
       .map((r) =>
-        allKnownHolidays.find((h) => h.id === String(r.id) && userCountryCodes.has(h.countryCode))
+        userSubscribedCountries.find((c) => c.id === String(r.id) && userCountryIds.has(c.id))
       )
-      .filter(Boolean) as Holiday[];
+      .filter(Boolean) as HolidayCountry[];
 
-    return orderedHolidays;
+    return orderedCountries;
   },
 
   async searchAllHolidayCountries(query: string, limit = 10): Promise<HolidayCountry[]> {
-    const results = await holidayCountryVectorClient.query(query, {
+    const results = await allHolidayCountryVectorClient.query(query, {
       topK: limit
     });
 
@@ -179,33 +159,5 @@ export const holidayService = {
       .filter(Boolean) as HolidayCountry[];
 
     return orderedCountries;
-  },
-
-  async searchCountryVector(
-    query: string,
-    countryCode?: string,
-    limit = 10
-  ): Promise<{ id: string; score: number }[]> {
-    const filter: Record<string, string> = {};
-    if (countryCode) {
-      filter.countryCode = countryCode;
-    }
-
-    return await holidayVectorClient.query(query, {
-      topK: limit,
-      filter
-    });
-  },
-
-  async upsertCountryVector(holiday: Holiday): Promise<void> {
-    await holidayVectorClient.upsert(holiday);
-  },
-
-  async upsertCountryVectorBulk(holidays: Holiday[]): Promise<void> {
-    await holidayVectorClient.upsertBulk(holidays);
-  },
-
-  async deleteCountryVector(id: string): Promise<void> {
-    await holidayVectorClient.delete(id);
   }
 };

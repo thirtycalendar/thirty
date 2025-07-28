@@ -1,6 +1,6 @@
 import { CALENDARIFIC_API_KEY } from "$env/static/private";
 
-import { holidayCountryVectorClient } from "$lib/server/services/holiday";
+import { allHolidayCountryVectorClient } from "$lib/server/services/holiday";
 import { kvHoliday } from "$lib/server/libs/upstash/kv";
 
 import { KV_ALL_HOLIDAY_COUNTRIES, KV_COUNTRY_HOLIDAYS } from "$lib/shared/utils/kv-keys";
@@ -96,7 +96,7 @@ export async function cacheHolidaysToKV() {
     cachedCountries.push(newCountry);
     await kvHoliday.set(KV_ALL_HOLIDAY_COUNTRIES, cachedCountries);
 
-    await holidayCountryVectorClient.upsert(newCountry);
+    await allHolidayCountryVectorClient.upsert(newCountry);
     console.log(`Upserted ${countryName} (${countryCode}) to country vector index`);
 
     await new Promise((r) => setTimeout(r, 1000));

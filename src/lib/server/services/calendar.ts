@@ -20,6 +20,7 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
     cacheTime: kvCacheTimes.calendar
   },
   vector: {
+    namespace: "calendars",
     vector,
     openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
   },

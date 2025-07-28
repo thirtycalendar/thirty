@@ -72,14 +72,6 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
     limit?: number,
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]>;
-  searchVector(
-    query: string,
-    userId: string,
-    limit?: number
-  ): Promise<{ id: string; score: number }[]>;
-  upsertVector(row: T): Promise<void>;
-  upsertVectorBulk(rows: T[]): Promise<void>;
-  deleteVector(id: string): Promise<void>;
   addHooks(hooks: CreateDbServiceHooks<T, FormType>): void;
 };
 
@@ -322,21 +314,6 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     return ordered;
   }
 
-  async function upsertVector(row: T) {
-    if (!vectorClient) throw new VectorNotConfiguredError();
-    await vectorClient.upsert(row);
-  }
-
-  async function upsertVectorBulk(rows: T[]) {
-    if (!vectorClient) throw new VectorNotConfiguredError();
-    await vectorClient.upsertBulk(rows);
-  }
-
-  async function deleteVector(id: string) {
-    if (!vectorClient) throw new VectorNotConfiguredError();
-    await vectorClient.delete(id);
-  }
-
   function addHooks(hooks: CreateDbServiceHooks<T, FormType>) {
     Object.assign(addedHooks, hooks);
   }
@@ -351,10 +328,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     deleteAll,
     clearCache,
     search,
-    searchVector,
-    upsertVector,
-    upsertVectorBulk,
-    deleteVector,
+
     addHooks
   } as const;
 }

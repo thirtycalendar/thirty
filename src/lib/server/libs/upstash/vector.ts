@@ -18,6 +18,7 @@ export class VectorNotConfiguredError extends Error {
 }
 
 export type VectorClientConfig<T> = {
+  namespace: string;
   vector: Index;
   openai: OpenAI;
   modelId?: OpenAI.Embeddings.EmbeddingCreateParams["model"];
@@ -57,6 +58,7 @@ function buildFilterString(filter?: Record<string, string | number>): string | u
 
 export function createVectorClient<T extends { id: string }>(config: VectorClientConfig<T>) {
   const {
+    namespace,
     vector,
     openai,
     modelId = "text-embedding-3-small",
@@ -77,6 +79,8 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
     throw new VectorNotConfiguredError();
   }
 
+  const namespacedVector = vector.namespace(namespace);
+
   async function query(
     queryText: string,
     options: {
@@ -89,7 +93,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
       { model: modelId, input: queryText }
     ]);
 
-    const results = await vector.query({
+    const results = await namespacedVector.query({
       vector: emb.data[0].embedding,
       topK,
       includeMetadata: false,
@@ -108,7 +112,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
       { model: modelId, input: text }
     ]);
 
-    await vector.upsert({
+    await namespacedVector.upsert({
       id: item.id,
       vector: emb.data[0].embedding,
       metadata: metadataFn(item)
@@ -129,7 +133,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
         { model: modelId, input: texts }
       ]);
 
-      await vector.upsert(
+      await namespacedVector.upsert(
         emb.data.map((item, idx) => ({
           id: batch[idx].id,
           vector: item.embedding,
@@ -140,7 +144,7 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
   }
 
   async function remove(id: string | string[]): Promise<void> {
-    await vector.delete(id);
+    await namespacedVector.delete(id);
   }
 
   return { query, upsert, upsertBulk, delete: remove };
