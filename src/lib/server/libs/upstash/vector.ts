@@ -60,12 +60,17 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
     vector,
     openai,
     modelId = "text-embedding-3-small",
-    textFn = (e: T) =>
-      Object.values(e)
+    textFn = (i: T) =>
+      Object.values(i)
         .filter((value) => value !== null && typeof value !== "undefined")
         .map((value) => String(value))
         .join(" "),
-    metadataFn = () => ({})
+    metadataFn = (item: T) => {
+      if ("userId" in item && typeof item.userId === "string") {
+        return { userId: item.userId };
+      }
+      return {};
+    }
   } = config;
 
   if (!vector || !openai) {
