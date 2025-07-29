@@ -3,13 +3,8 @@ import z from "zod";
 
 import type { HolidayCountryForm } from "$lib/shared/types";
 
+import { hdCountrySchema } from "../../../shared/schemas/holiday";
 import { allHolidayCountriesService, holidayCountryService } from "../../services/holiday";
-
-export const holidayCountryFormSchema = z
-  .object({
-    id: z.string().min(1).describe("The unique ID of the country (e.g., 'US', 'GB').")
-  })
-  .strict();
 
 export function createHolidayTools(userId: string) {
   return {
@@ -85,7 +80,7 @@ export function createHolidayTools(userId: string) {
     addHolidayCountry: tool({
       description:
         "Add a new holiday country subscription for the user by its unique country ID (e.g., 'US' for United States, 'GB' for Great Britain). Use this when the user wants to 'add holidays for a specific country'.",
-      parameters: holidayCountryFormSchema.describe(
+      parameters: hdCountrySchema.describe(
         "An object containing the unique ID of the country to subscribe to (e.g., 'US', 'DE', 'FR')."
       ),
       execute: async (data: HolidayCountryForm) => {

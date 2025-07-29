@@ -4,21 +4,31 @@ import { Color, EventStatus, Source } from "../constants";
 import { dateYYYYMMDD, timeHHMMSS } from "./utils";
 
 export const eventSchema = z.object({
-  calendarId: z.string().min(1, { message: "Calendar ID is required" }),
-  externalId: z.string().nullable(),
-  source: z.enum(Source),
+  calendarId: z
+    .string()
+    .min(1, { message: "Calendar ID is required" })
+    .describe("The ID of the calendar this event belongs to."),
+  externalId: z
+    .string()
+    .nullable()
+    .describe("Optional external ID if synced from another service."),
+  source: z.enum(Source).describe("The source of the event (e.g., 'google', 'local')."),
 
-  name: z.string().min(1, { message: "Name is required" }),
-  color: z.enum(Color),
-  description: z.string().nullable(),
-  location: z.string().nullable(),
-
-  startDate: dateYYYYMMDD,
-  startTime: timeHHMMSS,
-  endDate: dateYYYYMMDD,
-  endTime: timeHHMMSS,
-
-  timezone: z.string().min(1, { message: "Timezone Id is required" }),
-  allDay: z.boolean(),
-  status: z.enum(EventStatus)
+  name: z
+    .string()
+    .min(1, { message: "Name is required" })
+    .describe("The name or title of the event."),
+  color: z.enum(Color).describe("The display color for this specific event."),
+  description: z.string().nullable().describe("A detailed description of the event."),
+  location: z.string().nullable().describe("The physical location of the event."),
+  startDate: dateYYYYMMDD.describe("The start date of the event in YYYY-MM-DD format."),
+  startTime: timeHHMMSS.describe("The start time of the event in HH:MM:SS format."),
+  endDate: dateYYYYMMDD.describe("The end date of the event in YYYY-MM-DD format."),
+  endTime: timeHHMMSS.describe("The end time of the event in HH:MM:SS format."),
+  timezone: z
+    .string()
+    .min(1, { message: "Timezone is required" })
+    .describe("The timezone of the event, e.g., 'Asia/Yangon'."),
+  allDay: z.boolean().describe("Indicates if the event lasts all day."),
+  status: z.enum(EventStatus).describe("The status of the event (e.g., 'confirmed', 'cancelled').")
 });
