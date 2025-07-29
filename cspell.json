@@ -18,6 +18,8 @@
     "neondatabase",
     "vite",
     "sithucodes",
-    "upserted"
+    "upserted",
+    "Clickjacking",
+    "DNSSEC"
   ]
 }

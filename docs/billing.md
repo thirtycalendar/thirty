@@ -1,5 +1,0 @@
-- IP Address
-  - Get the country and timezone of a user
-  - https://ipwhois.io/
-  - https://ipwho.is/
-- Calendarific
