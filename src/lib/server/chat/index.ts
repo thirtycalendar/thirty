@@ -14,7 +14,7 @@ export async function streamChat(userId: string, messages: Message[]) {
     model: openAiModel("gpt-4o-mini"),
     messages,
     tools: createTools(userId),
-    maxSteps: 100,
+    maxSteps: 30,
     system: systemPrompt
   });
 

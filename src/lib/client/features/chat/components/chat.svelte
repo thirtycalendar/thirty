@@ -1,7 +1,11 @@
 <script lang="ts">
   import { Chat } from "@ai-sdk/svelte";
 
-  const chat = new Chat({ maxSteps: 100 });
+  const chat = new Chat({ generateId: () => crypto.randomUUID(), maxSteps: 30 });
+
+  $effect(() => {
+    console.log("chat id:", chat.id);
+  });
 
   function onsubmit(e: Event) {
     e.preventDefault();

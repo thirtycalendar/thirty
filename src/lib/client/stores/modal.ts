@@ -1,7 +1,7 @@
 import { tick } from "svelte";
 import { get, writable } from "svelte/store";
 
-import type { Birthday, Calendar, Event, Holiday, HolidayCountry } from "$lib/shared/types";
+import type { Birthday, Calendar, Chat, Event, Holiday, HolidayCountry } from "$lib/shared/types";
 
 import { toggleModal } from "../components/utils";
 
@@ -10,6 +10,7 @@ export const eventModal = createModalStore<Event>("event");
 export const birthdayModal = createModalStore<Birthday>("birthday");
 export const holidayModal = createModalStore<Holiday>("holiday");
 export const holidayCountryModal = createModalStore<HolidayCountry>("holiday-country");
+export const chatModal = createModalStore<Chat>("chat");
 
 export function createModalStore<T extends { id: string }>(prefix: string) {
   const currentDetails = writable<T | null>(null);
