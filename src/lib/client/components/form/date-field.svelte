@@ -14,6 +14,7 @@
     isToday,
     isValid,
     parse,
+    startOfDay,
     startOfMonth,
     startOfWeek,
     subMonths
@@ -72,8 +73,7 @@
   });
 
   function selectDay(day: Date) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = startOfDay(new Date());
     if (isDisablePast && day < today) return;
     $formData[name] = formatDate(day, "yyyy-MM-dd");
     visibleMonth = startOfMonth(day);
@@ -138,8 +138,7 @@
 
   function handleDayKeydown(event: KeyboardEvent, day: Date) {
     const move = (d: Date) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = startOfDay(new Date());
       if (!isDisablePast || d >= today) {
         $formData[name] = formatDate(d, "yyyy-MM-dd");
         visibleMonth = startOfMonth(d);
@@ -296,11 +295,11 @@
               selected ? "bg-base-300 font-semibold text-base-content" : "",
               !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
               isToday(day) && !selected ? "font-medium" : "",
-              isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))
+              isDisablePast && day < startOfDay(new Date())
                 ? "opacity-30 cursor-not-allowed"
                 : "hover:bg-base-200/60"
             )}
-            disabled={isDisablePast && day < new Date(new Date().setHours(0, 0, 0, 0))}
+            disabled={isDisablePast && day < startOfDay(new Date())}
             onkeydown={(e) => handleDayKeydown(e, day)}
             onclick={() => selectDay(day)}
             tabindex="-1"

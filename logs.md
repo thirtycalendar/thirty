@@ -6,6 +6,7 @@
   - (7.29.03) - Added .env.example file.
   - (7.29.04) - Updated drizzle config.
   - (7.29.05) - Added zod describe method in schema files.
+  - (7.29.06) - Chat list query.
 - Mon Jul 28, 2025
   - (7.28.01) - Extracted vector utils functions.
   - (7.28.02) - Updated vector text fn.

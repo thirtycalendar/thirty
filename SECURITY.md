@@ -4,7 +4,7 @@
 
 Based on [https://supabase.com/.well-known/security.txt](https://supabase.com/.well-known/security.txt)
 
-At AI Calendar, we consider the security of our systems a top priority.  
+At Calen, we consider the security of our systems a top priority.  
 No matter how much effort we put into system security, there can still be vulnerabilities present.
 
 If you discover a vulnerability, we would like to know about it so we can take steps to address it as quickly as possible.  
