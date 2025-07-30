@@ -5,19 +5,21 @@
 
   import { getChats, getMessages } from "../query";
 
-  const { currentDetails } = chatModal;
+  const { currentDetails: currentChatDetails } = chatModal;
 
   const { data: chats } = getChats();
 
-  const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentDetails?.id));
+  const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentChatDetails?.id));
   const currentChatId = $derived.by(() => currentChat?.id ?? "");
 
   const { data: messages } = $derived.by(() => getMessages(currentChatId));
 
-  const chat = new Chat({
-    maxSteps: 30,
-    initialMessages: $messages ?? [],
-    body: { chatId: crypto.randomUUID() }
+  const chat = $derived.by(() => {
+    return new Chat({
+      maxSteps: 30,
+      initialMessages: $messages ?? [],
+      body: { chatId: currentChatId || crypto.randomUUID() }
+    });
   });
 
   function onsubmit(e: Event) {

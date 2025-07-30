@@ -13,6 +13,7 @@ import {
 type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
   queryFn: Fn;
   queryKeys: string[];
+  enabled?: boolean;
   onQuery?: () => void;
   onPending?: () => void;
   onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
@@ -24,7 +25,16 @@ type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
 export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
   opts: CreateQueryOptions<Fn, ErrorType>
 ) {
-  const { queryFn, queryKeys, onQuery, onPending, onSuccess, onError, staleTime = 60_000 } = opts;
+  const {
+    queryFn,
+    queryKeys,
+    enabled = true,
+    onQuery,
+    onPending,
+    onSuccess,
+    onError,
+    staleTime = 60_000
+  } = opts;
 
   type DataType = Awaited<ReturnType<Fn>>;
 
@@ -76,7 +86,9 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
     unregisterQuery(key, () => fetchData(true));
   });
 
-  fetchData();
+  if (enabled) {
+    fetchData();
+  }
 
   return { data, error, isPending, isSuccess, isError, refetch: () => fetchData(true) };
 }

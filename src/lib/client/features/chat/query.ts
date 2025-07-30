@@ -24,32 +24,10 @@ export function getChats() {
   return chatQuery;
 }
 
-// let messageQuery: ReturnType<typeof createQuery<() => Promise<Message[]>>> | null = null;
-
-// export function getMessages(chatId: string) {
-//   if (!messageQuery) {
-//     messageQuery = createQuery({
-//       queryFn: async () => {
-//         const res = await client.api.message.getAll[":chatId"].$get({ param: { chatId } });
-//         const data = await res.json();
-
-//         if (!data.success) throw new Error(data.message);
-
-//         return data.data.map((message) => ({
-//           ...message,
-//           createdAt: new Date(message.createdAt)
-//         }));
-//       },
-//       queryKeys: ["chat-list"],
-//       staleTime: Number.POSITIVE_INFINITY
-//     });
-//   }
-
-//   return messageQuery;
-// }
-
 export function getMessages(chatId: string) {
   const messageQuery = createQuery({
+    enabled: !!chatId,
+    staleTime: 0,
     queryFn: async () => {
       const res = await client.api.chat.message.getAll[":chatId"].$get({ param: { chatId } });
       const data = await res.json();
@@ -61,8 +39,7 @@ export function getMessages(chatId: string) {
         createdAt: new Date(message.createdAt)
       }));
     },
-    queryKeys: ["message-list"],
-    staleTime: Number.POSITIVE_INFINITY
+    queryKeys: ["message-list", chatId]
   });
 
   return messageQuery;
