@@ -8,11 +8,11 @@
 </script>
 
 {#if $currentDetails}
-  <Modal modalId={$currentDetails.id} title="Chat" onModalClose={stopEditing}>
+  <Modal modalId={$currentDetails.id} onModalClose={stopEditing}>
     {#if $isEditing}
       <EditChat />
     {:else}
-      <ChatDetails />
+      <ChatDetails chat={$currentDetails} />
     {/if}
   </Modal>
 {/if}

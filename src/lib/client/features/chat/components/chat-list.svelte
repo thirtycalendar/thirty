@@ -13,9 +13,7 @@
     e.stopPropagation();
     e.preventDefault();
 
-    chatModal.currentDetails.set(chat);
-
-    console.log("Click...");
+    chatModal.handleModal(chat);
   }
 
   function handleEllipsis() {
