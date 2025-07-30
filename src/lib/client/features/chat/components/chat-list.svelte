@@ -20,11 +20,14 @@
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) ?? []
   );
 
+  async function handleNewChat() {
+    console.log("New chat...");
+  }
+
   async function handleChatName(e: Event, chat: Chat) {
     e.stopPropagation();
     e.preventDefault();
 
-    await tick();
     currentDetails.set(chat);
   }
 
@@ -35,10 +38,10 @@
 </script>
 
 <div class="w-full">
-  <a href="/chat" class="btn my-2 px-2 btn-ghost text-left justify-start w-full">
+  <button class="btn my-2 px-2 btn-ghost text-left justify-start w-full" onclick={handleNewChat}>
     <SquarePen size="16" />
     New Chat
-  </a>
+  </button>
 
   <p class="text-sm mx-2 text-primary-content/70 my-1">Chats</p>
 

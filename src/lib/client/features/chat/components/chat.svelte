@@ -5,10 +5,9 @@
 
   import { getChats, getMessages } from "../query";
 
+  const { data: chats, refetch: refetchChats } = getChats();
+
   const { currentDetails: currentChatDetails } = chatModal;
-
-  const { data: chats } = getChats();
-
   const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentChatDetails?.id));
   const currentChatId = $derived.by(() => currentChat?.id ?? "");
 
@@ -18,7 +17,10 @@
     return new Chat({
       maxSteps: 30,
       initialMessages: $messages ?? [],
-      body: { chatId: currentChatId || crypto.randomUUID() }
+      body: { chatId: currentChatId || crypto.randomUUID() },
+      async onFinish() {
+        await refetchChats();
+      }
     });
   });
 

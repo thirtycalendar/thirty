@@ -1,7 +1,7 @@
 import { createQuery } from "$lib/client/utils/query/create-query";
 import { client } from "$lib/client/utils/rpc";
 
-import type { Chat } from "$lib/shared/types";
+import type { Chat, Message } from "$lib/shared/types";
 
 let chatQuery: ReturnType<typeof createQuery<() => Promise<Chat[]>>> | null = null;
 
@@ -24,8 +24,10 @@ export function getChats() {
   return chatQuery;
 }
 
+let messageQuery: ReturnType<typeof createQuery<() => Promise<Message[]>>> | null = null;
+
 export function getMessages(chatId: string) {
-  const messageQuery = createQuery({
+  messageQuery = createQuery({
     enabled: !!chatId,
     staleTime: 0,
     queryFn: async () => {
