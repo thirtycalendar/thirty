@@ -10,7 +10,7 @@
 {#if $currentDetails}
   <Modal modalId={$currentDetails.id} onModalClose={stopEditing}>
     {#if $isEditing}
-      <EditChat />
+      <EditChat chat={$currentDetails} />
     {:else}
       <ChatDetails chat={$currentDetails} />
     {/if}

@@ -4,6 +4,7 @@
   - (7.30.01) - Commited for safety. Trying to sync chat history.
   - (7.30.02) - Decided to roll my own custom ai sdk for svelte.
   - (7.30.03) - Chat modal.
+  - (7.30.04) - Edit chat.
 - Tue Jul 29, 2025
   - (7.29.01) - Made the repo open-source. Added license, security and code of conduct files.
   - (7.29.02) - Updated license.

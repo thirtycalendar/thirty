@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { tick } from "svelte";
+
   import { Ellipsis, SquarePen } from "@lucide/svelte";
 
+  import { toggleModal } from "$lib/client/components/utils";
   import { chatModal } from "$lib/client/stores/modal";
 
   import type { Chat } from "$lib/shared/types";
@@ -9,15 +12,22 @@
 
   const { data: chats } = getChats();
 
-  function handleClick(e: Event, chat: Chat) {
+  const sortedChats = $derived(
+    $chats
+      ?.slice()
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) ?? []
+  );
+
+  function handleChatName(e: Event, chat: Chat) {
     e.stopPropagation();
     e.preventDefault();
 
-    chatModal.handleModal(chat);
+    chatModal.currentDetails.set(chat);
   }
 
-  function handleEllipsis() {
-    console.log("clicked...");
+  async function handleEllipsis(chat: Chat) {
+    await tick();
+    toggleModal(chat.id);
   }
 </script>
 
@@ -35,19 +45,19 @@
         <span class="loading loading-spinner loading-md"></span>
       </div>
     </div>
-  {:else if $chats.length > 0}
+  {:else if sortedChats.length > 0}
     <div>
-      {#each $chats as chat (chat.id)}
+      {#each sortedChats as chat (chat.id)}
         <a
           href="/"
           class="group flex items-center justify-between text-sm p-2 py-1.5 w-full rounded-lg hover:bg-base-200/80"
-          onclick={(e) => handleClick(e, chat)}
+          onclick={(e) => handleChatName(e, chat)}
         >
           <span class="truncate flex-1">{chat.name}</span>
 
           <button
             class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
-            onclick={handleEllipsis}
+            onclick={() => handleEllipsis(chat)}
           >
             <Ellipsis size="15" />
           </button>
