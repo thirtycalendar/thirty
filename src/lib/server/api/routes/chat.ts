@@ -16,9 +16,9 @@ const app = new Hono()
   .post("/", async (c) => {
     try {
       const user = c.get("user") as User;
-      const { messages } = await c.req.json();
+      const { messages, chatId } = await c.req.json();
 
-      return streamChat(user.id, messages);
+      return streamChat(user.id, chatId, messages);
     } catch (err: unknown) {
       return errorResponse(c, err);
     }

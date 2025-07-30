@@ -1,15 +1,34 @@
 <script lang="ts">
   import { Chat } from "@ai-sdk/svelte";
 
-  const chat = new Chat({ generateId: () => crypto.randomUUID(), maxSteps: 30 });
+  import { chatModal } from "$lib/client/stores/modal";
+
+  import { getChats, getMessages } from "../query";
+
+  const { currentDetails } = chatModal;
+
+  const { data: chats } = getChats();
+
+  const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentDetails?.id));
+  const currentChatId = $derived.by(() => currentChat?.id ?? "");
+
+  const { data: messages } = $derived.by(() => getMessages(currentChatId));
 
   $effect(() => {
-    console.log("chat id:", chat.id);
+    console.log("currentChatId:", currentChatId);
+    console.log("$chats:", $chats);
+    console.log("$messages:", $messages);
+  });
+
+  const chat = new Chat({
+    generateId: () => crypto.randomUUID(),
+    maxSteps: 30,
+    initialMessages: $messages ?? [],
+    body: { chatId: crypto.randomUUID() }
   });
 
   function onsubmit(e: Event) {
     e.preventDefault();
-
     chat.handleSubmit();
   }
 </script>

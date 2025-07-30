@@ -1,4 +1,4 @@
-import type { Message } from "ai";
+import type { Message as AiSdkMessage } from "ai";
 import type { InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
@@ -7,6 +7,7 @@ import type { birthdayTable } from "$lib/server/db/tables/birthday";
 import type { calendarTable } from "$lib/server/db/tables/calendar";
 import type { chatTable } from "$lib/server/db/tables/chat";
 import type { eventTable } from "$lib/server/db/tables/event";
+import type { messageTable } from "$lib/server/db/tables/message";
 import type { taskTable } from "$lib/server/db/tables/task";
 
 import type * as Const from "$lib/shared/constants";
@@ -66,7 +67,9 @@ export type Holiday = {
 export type Chat = InferSelectModel<typeof chatTable>;
 export type ChatForm = z.infer<typeof chatSchema>;
 
-export type MessageRole = Exclude<Message["role"], "data">;
+export type Message = InferSelectModel<typeof messageTable>;
+
+export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
 
 export type Color = (typeof Const.Color)[number];
 export type Source = (typeof Const.Source)[number];

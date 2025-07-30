@@ -137,9 +137,7 @@ CREATE TABLE "messages" (
 	"chat_id" uuid NOT NULL,
 	"content" text NOT NULL,
 	"role" text NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"deleted_at" timestamp with time zone
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "tasks" (

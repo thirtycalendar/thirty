@@ -1,9 +1,8 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { MessageRole } from "$lib/shared/types";
 
 import { chatTable } from "./chat";
-import { timestamps } from "./utils";
 
 export const messageTable = pgTable("messages", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -15,5 +14,5 @@ export const messageTable = pgTable("messages", {
   content: text("content").notNull(),
   role: text("role").$type<MessageRole>().notNull(),
 
-  ...timestamps
+  createdAt: timestamp("created_at").notNull().defaultNow()
 });

@@ -1,14 +1,24 @@
 <script lang="ts">
   import { Ellipsis, SquarePen } from "@lucide/svelte";
 
+  import { chatModal } from "$lib/client/stores/modal";
+
+  import type { Chat } from "$lib/shared/types";
+
   import { getChats } from "../query";
 
   const { data: chats } = getChats();
 
-  function handleEllipsis(e: Event) {
+  function handleClick(e: Event, chat: Chat) {
     e.stopPropagation();
     e.preventDefault();
 
+    chatModal.currentDetails.set(chat);
+
+    console.log("Click...");
+  }
+
+  function handleEllipsis() {
     console.log("clicked...");
   }
 </script>
@@ -31,8 +41,9 @@
     <div>
       {#each $chats as chat (chat.id)}
         <a
-          href={`/chat/${chat.id}`}
+          href="/"
           class="group flex items-center justify-between text-sm p-2 py-1.5 w-full rounded-lg hover:bg-base-200/80"
+          onclick={(e) => handleClick(e, chat)}
         >
           <span class="truncate flex-1">{chat.name}</span>
 
