@@ -15,7 +15,6 @@
   const { data: messages } = $derived.by(() => getMessages(currentChatId));
 
   const chat = new Chat({
-    generateId: () => crypto.randomUUID(),
     maxSteps: 30,
     initialMessages: $messages ?? [],
     body: { chatId: crypto.randomUUID() }
