@@ -51,7 +51,7 @@ export function getChats() {
 export function getMessages(chatId: string) {
   const messageQuery = createQuery({
     queryFn: async () => {
-      const res = await client.api.message.getAll[":chatId"].$get({ param: { chatId } });
+      const res = await client.api.chat.message.getAll[":chatId"].$get({ param: { chatId } });
       const data = await res.json();
 
       if (!data.success) throw new Error(data.message);

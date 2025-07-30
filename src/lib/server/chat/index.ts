@@ -2,7 +2,6 @@ import { createOpenAI } from "@ai-sdk/openai";
 
 import { streamText, type Message } from "ai";
 import { eq } from "drizzle-orm";
-import { validate as uuidValidate } from "uuid";
 
 import { db } from "$lib/server/db";
 
@@ -16,12 +15,6 @@ import { createTools } from "./tools";
 const openAiModel = createOpenAI({ apiKey: openAiEnvConfig.apiKey });
 
 export async function streamChat(userId: string, chatId: string, messages: Message[]) {
-  // Validate chatId format
-  if (!uuidValidate(chatId)) {
-    throw new Error("Invalid chatId format");
-  }
-
-  // Check if chat exists, else create it
   const [existingChat] = await db.select().from(chatTable).where(eq(chatTable.id, chatId)).limit(1);
 
   if (!existingChat) {
@@ -41,7 +34,6 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
     });
   }
 
-  // Stream AI response
   const result = streamText({
     model: openAiModel("gpt-4o-mini"),
     messages,
@@ -55,7 +47,6 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
 
   const response = result.toDataStreamResponse();
 
-  // When steps finish, store assistant's completion in DB
   result.steps.then(async (steps) => {
     const completion = steps.map((s) => s.text).join("");
     if (completion.trim().length > 0) {

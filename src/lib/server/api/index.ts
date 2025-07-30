@@ -13,7 +13,6 @@ import calendarific from "./routes/calendarific";
 import chat from "./routes/chat";
 import event from "./routes/event";
 import holiday from "./routes/holiday";
-import message from "./routes/message";
 import sync from "./routes/sync";
 import task from "./routes/task";
 
@@ -30,7 +29,6 @@ const routes = app
   .route("/task", task)
   .route("/birthday", birthday)
   .route("/holiday", holiday)
-  .route("/message", message)
   .route("/sync", sync);
 
 // External routes

@@ -1,12 +1,15 @@
 import { zValidator } from "@hono/zod-validator";
 
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
 import { chatService } from "$lib/server/services/chat";
+import { db } from "$lib/server/db";
+import { messageTable } from "$lib/server/db/tables/message";
 import { streamChat } from "$lib/server/chat";
 
 import { chatSchema } from "$lib/shared/schemas/chat";
-import type { Chat, SuccessResponse, User } from "$lib/shared/types";
+import type { Chat, Message, SuccessResponse, User } from "$lib/shared/types";
 
 import { loggedIn } from "../middlewares/logged-in";
 import { errorResponse, requireParam } from "../utils";
@@ -19,6 +22,22 @@ const app = new Hono()
       const { messages, chatId } = await c.req.json();
 
       return streamChat(user.id, chatId, messages);
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
+  })
+  .get("/message/getAll/:chatId", async (c) => {
+    try {
+      const id = c.req.param("chatId");
+      if (!id) return requireParam(c, "chat id");
+
+      const messages = await db.select().from(messageTable).where(eq(messageTable.chatId, id));
+
+      return c.json<SuccessResponse<Message[]>>({
+        success: true,
+        message: "Success",
+        data: messages
+      });
     } catch (err: unknown) {
       return errorResponse(c, err);
     }

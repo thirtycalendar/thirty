@@ -14,12 +14,6 @@
 
   const { data: messages } = $derived.by(() => getMessages(currentChatId));
 
-  $effect(() => {
-    console.log("currentChatId:", currentChatId);
-    console.log("$chats:", $chats);
-    console.log("$messages:", $messages);
-  });
-
   const chat = new Chat({
     generateId: () => crypto.randomUUID(),
     maxSteps: 30,
