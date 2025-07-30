@@ -11,6 +11,7 @@ import { chatTable } from "../db/tables/chat";
 import { messageTable } from "../db/tables/message";
 import { systemPrompt } from "./prompt";
 import { createTools } from "./tools";
+import { generateChatName } from "./utils/generate-chat-name";
 
 const openAiModel = createOpenAI({ apiKey: openAiEnvConfig.apiKey });
 
@@ -18,9 +19,11 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
   const [existingChat] = await db.select().from(chatTable).where(eq(chatTable.id, chatId)).limit(1);
 
   if (!existingChat) {
+    const name = await generateChatName(messages);
+
     await db.insert(chatTable).values({
       id: chatId,
-      name: "New Chat",
+      name: name || "New Chat",
       userId
     });
   }

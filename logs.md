@@ -8,6 +8,7 @@
   - (7.30.05) - Improved chat list component.
   - (7.30.06) - Chat history is working now.
   - (7.30.07) - Show the latest created chat history in chat list.
+  - (7.30.08) - Generate chat title.
 - Tue Jul 29, 2025
   - (7.29.01) - Made the repo open-source. Added license, security and code of conduct files.
   - (7.29.02) - Updated license.
