@@ -60,7 +60,7 @@
   }
 </script>
 
-<form onsubmit={handleSubmit()} class="space-y-2 py-2">
+<form onsubmit={handleSubmit()} class="space-y-2 pt-3">
   {#if errorMessage}
     <p class="text-sm text-error mt-1">{errorMessage}</p>
   {/if}

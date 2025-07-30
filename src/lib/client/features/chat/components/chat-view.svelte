@@ -45,7 +45,7 @@
 <main class="flex h-screen flex-col">
   <div class="flex flex-1 flex-col overflow-y-auto">
     <div class="mx-auto w-full max-w-[900px] flex-1 p-1">
-      <ul class="space-y-8 pb-4">
+      <ul class="space-y-8 pb-15">
         {#each chat.messages as message, i (i)}
           <li class={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             <div
@@ -68,7 +68,7 @@
     <form {onsubmit} class="sticky bottom-5 flex w-full items-end p-2">
       <div class="mx-auto w-full max-w-[900px] relative">
         <div
-          class="relative flex items-end bg-base-100 border border-base-300 rounded-2xl shadow-lg focus-within:border-primary transition-colors"
+          class="relative flex items-end bg-base-100 border border-base-200 rounded-2xl shadow-lg transition-colors"
         >
           <textarea
             bind:this={textareaRef}
@@ -85,7 +85,7 @@
             disabled={!chat.input.trim() || chat.status === "submitted"}
             class="absolute right-2 bottom-2 p-2 rounded-full bg-primary text-primary-content hover:bg-primary/90 disabled:bg-base-300 disabled:text-base-content/50 disabled:cursor-not-allowed transition-colors"
           >
-            <Send size={18} />
+            <Send size={17} />
           </button>
         </div>
 

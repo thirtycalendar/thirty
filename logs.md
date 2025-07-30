@@ -11,6 +11,7 @@
   - (7.30.08) - Generate chat title.
   - (7.30.09) - Unblocked chat title generation and chat view component.
   - (7.30.10) - Styled chat input textarea.
+  - (7.30.11) - Better chat input ui.
 - Tue Jul 29, 2025
   - (7.29.01) - Made the repo open-source. Added license, security and code of conduct files.
   - (7.29.02) - Updated license.
