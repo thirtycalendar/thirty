@@ -19,13 +19,19 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
   const [existingChat] = await db.select().from(chatTable).where(eq(chatTable.id, chatId)).limit(1);
 
   if (!existingChat) {
-    const name = await generateChatName(messages);
-
     await db.insert(chatTable).values({
       id: chatId,
-      name: name || "New Chat",
+      name: "New Chat",
       userId
     });
+
+    generateChatName(messages)
+      .then((name) => {
+        if (name) {
+          return db.update(chatTable).set({ name }).where(eq(chatTable.id, chatId));
+        }
+      })
+      .catch((err) => console.error("Chat name error:", err));
   }
 
   const lastMessage = messages[messages.length - 1];
@@ -43,16 +49,12 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
     tools: createTools(userId),
     maxSteps: 30,
     system: systemPrompt,
-    onError: (err) => {
-      console.error("Streaming error:", err);
-    }
+    onError: (err) => console.error("Streaming error:", err)
   });
-
-  const response = result.toDataStreamResponse();
 
   result.steps.then(async (steps) => {
     const completion = steps.map((s) => s.text).join("");
-    if (completion.trim().length > 0) {
+    if (completion.trim()) {
       await db.insert(messageTable).values({
         chatId,
         content: completion,
@@ -61,5 +63,5 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
     }
   });
 
-  return response;
+  return result.toDataStreamResponse();
 }

@@ -21,7 +21,7 @@
   );
 
   async function handleNewChat() {
-    console.log("New chat...");
+    currentDetails.set(null);
   }
 
   async function handleChatName(e: Event, chat: Chat) {
