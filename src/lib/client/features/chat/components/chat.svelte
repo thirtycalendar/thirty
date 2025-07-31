@@ -3,6 +3,10 @@
 
   import { chatModal } from "$lib/client/stores/modal";
 
+  import { getBirthdays } from "../../birthday/query";
+  import { getCalendars } from "../../calendar/query";
+  import { getEvents } from "../../event/query";
+  import { getHolidayCountries, getHolidays } from "../../holiday/query";
   import { getChats, getMessages } from "../query";
 
   import { ChatView } from ".";
@@ -22,6 +26,16 @@
       body: { chatId: currentChatId || crypto.randomUUID() },
       async onFinish() {
         await refetchChats();
+
+        await getEvents().refetch();
+
+        await getCalendars().refetch();
+
+        await getBirthdays().refetch();
+
+        await getHolidays().refetch();
+
+        await getHolidayCountries().refetch();
       }
     });
   });

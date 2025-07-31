@@ -3,12 +3,12 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Birthday } from "$lib/shared/types";
 
-let queryInstance: ReturnType<typeof createQuery<() => Promise<Birthday[]>>> | null = null;
+let birthdayQuery: ReturnType<typeof createQuery<() => Promise<Birthday[]>>> | null = null;
 
 // Use ({fun1, fun2}) instead of (fun1, fun2)
 export function getBirthdays() {
-  if (!queryInstance) {
-    queryInstance = createQuery({
+  if (!birthdayQuery) {
+    birthdayQuery = createQuery({
       queryFn: async () => {
         const res = await client.api.birthday.getAll.$get();
         const data = await res.json();
@@ -21,5 +21,5 @@ export function getBirthdays() {
     });
   }
 
-  return queryInstance;
+  return birthdayQuery;
 }

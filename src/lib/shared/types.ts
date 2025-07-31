@@ -1,5 +1,5 @@
 import type { Message as AiSdkMessage } from "ai";
-import type { InferSelectModel } from "drizzle-orm";
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
 import type { auth } from "$lib/server/auth";
@@ -68,6 +68,7 @@ export type Chat = InferSelectModel<typeof chatTable>;
 export type ChatForm = z.infer<typeof chatSchema>;
 
 export type Message = InferSelectModel<typeof messageTable>;
+export type MessageForm = InferInsertModel<typeof messageTable>;
 
 export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
 

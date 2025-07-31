@@ -3,11 +3,11 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Event } from "$lib/shared/types";
 
-let queryInstance: ReturnType<typeof createQuery<() => Promise<Event[]>>> | null = null;
+let eventQuery: ReturnType<typeof createQuery<() => Promise<Event[]>>> | null = null;
 
 export function getEvents() {
-  if (!queryInstance) {
-    queryInstance = createQuery({
+  if (!eventQuery) {
+    eventQuery = createQuery({
       queryFn: async () => {
         const res = await client.api.event.getAll.$get();
         const data = await res.json();
@@ -20,5 +20,5 @@ export function getEvents() {
     });
   }
 
-  return queryInstance;
+  return eventQuery;
 }
