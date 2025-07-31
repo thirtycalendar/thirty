@@ -7,7 +7,7 @@
   import { client } from "$lib/client/utils/rpc";
 
   import { chatSchema } from "$lib/shared/schemas/chat";
-  import type { Chat, ChatForm } from "$lib/shared/types";
+  import type { Chat, ChatUpdateForm } from "$lib/shared/types";
 
   interface Props {
     chat: Chat;
@@ -17,9 +17,7 @@
 
   let errorMessage = $state("");
 
-  const defaultValues: ChatForm = {
-    id: chat.id,
-    userId: chat.userId,
+  const defaultValues: ChatUpdateForm = {
     name: chat.name
   };
 
@@ -30,7 +28,7 @@
   });
 
   let { mutate, isPending } = createMutation({
-    mutationFn: async (formData: ChatForm) => {
+    mutationFn: async (formData: ChatUpdateForm) => {
       const res = await client.api.chat.update[":id"].$put({
         param: { id: chat.id },
         json: formData
@@ -57,7 +55,7 @@
     queryKeys: ["chat-list", "message-list"]
   });
 
-  async function onSubmit(data: ChatForm) {
+  async function onSubmit(data: ChatUpdateForm) {
     await mutate(data);
   }
 </script>

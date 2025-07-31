@@ -78,7 +78,7 @@ const app = new Hono()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const chat = await chatService.create({ ...data, userId: user.id });
+      const chat = await chatService.create(user.id, { ...data, userId: user.id });
 
       return c.json<SuccessResponse<Chat>>({
         success: true,

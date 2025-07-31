@@ -65,7 +65,8 @@ export type Holiday = {
 };
 
 export type Chat = InferSelectModel<typeof chatTable>;
-export type ChatForm = z.infer<typeof chatSchema>;
+export type ChatForm = InferInsertModel<typeof chatTable>;
+export type ChatUpdateForm = z.infer<typeof chatSchema>;
 
 export type Message = InferSelectModel<typeof messageTable>;
 export type MessageForm = InferInsertModel<typeof messageTable>;

@@ -29,7 +29,6 @@ let messageQuery: ReturnType<typeof createQuery<() => Promise<Message[]>>> | nul
 export function getMessages(chatId: string) {
   messageQuery = createQuery({
     enabled: !!chatId,
-    staleTime: 0,
     queryFn: async () => {
       const res = await client.api.chat.message.getAll[":chatId"].$get({ param: { chatId } });
       const data = await res.json();
@@ -41,7 +40,8 @@ export function getMessages(chatId: string) {
         createdAt: new Date(message.createdAt)
       }));
     },
-    queryKeys: ["message-list", chatId]
+    queryKeys: ["message-list", chatId],
+    staleTime: Number.POSITIVE_INFINITY
   });
 
   return messageQuery;
