@@ -23,3 +23,4 @@
 - [ ] - Handle input props in input fields.
 - [ ] - Add accept and cancel button for tool calling requesting.
     - [ ] - Refetch the queries after the accepted ai sdk tool calling.
+- [ ] - Detect ip address country and add holiday country automatically.

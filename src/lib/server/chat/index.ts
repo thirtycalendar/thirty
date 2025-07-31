@@ -6,7 +6,7 @@ import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 
 import { chatService } from "../services/chat";
 import { messageService } from "../services/message";
-import { systemPrompt } from "./prompt";
+import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
 
@@ -45,7 +45,7 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
     messages,
     tools: createTools(userId),
     maxSteps: 30,
-    system: systemPrompt,
+    system: chatSystemMessage,
     onError: (err) => console.error("Streaming error:", err)
   });
 

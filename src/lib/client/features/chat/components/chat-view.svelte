@@ -13,7 +13,6 @@
     e.preventDefault();
     if (chat.input.trim()) {
       chat.handleSubmit();
-
       if (textareaRef) {
         textareaRef.style.height = "auto";
       }
@@ -45,24 +44,28 @@
 <main class="flex h-screen flex-col">
   <div class="flex flex-1 flex-col overflow-y-auto">
     <div class="mx-auto w-full max-w-[900px] flex-1 p-1">
-      <ul class="space-y-8 pb-15">
-        {#each chat.messages as message, i (i)}
-          <li class={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div
-              class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs md:max-w-md lg:max-w-lg px-3 py-2 rounded-xl"}`}
-            >
-              {#each message.parts as part, j (j)}
-                {#if part.type === "text"}
-                  <div class="whitespace-pre-wrap">{part.text}</div>
-                {/if}
-              {/each}
-            </div>
-          </li>
-        {/each}
-        {#if chat.status === "submitted"}
-          <li class="animate-pulse">Generating...</li>
-        {/if}
-      </ul>
+      {#if chat.messages.length === 0}
+        {@render welcomeSection()}
+      {:else}
+        <ul class="space-y-8 pb-15">
+          {#each chat.messages as message, i (i)}
+            <li class={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs md:max-w-md lg:max-w-lg px-3 py-2 rounded-xl"}`}
+              >
+                {#each message.parts as part, j (j)}
+                  {#if part.type === "text"}
+                    <div class="whitespace-pre-wrap">{part.text}</div>
+                  {/if}
+                {/each}
+              </div>
+            </li>
+          {/each}
+          {#if chat.status === "submitted"}
+            <li class="animate-pulse">Thinking...</li>
+          {/if}
+        </ul>
+      {/if}
     </div>
 
     <form {onsubmit} class="sticky bottom-5 flex w-full items-end p-2">
@@ -79,7 +82,6 @@
             placeholder="Send a message..."
             rows="3"
           ></textarea>
-
           <button
             type="submit"
             disabled={!chat.input.trim() || chat.status === "submitted"}
@@ -88,7 +90,6 @@
             <Send size={17} />
           </button>
         </div>
-
         <div class="text-xs text-base-content/60 text-center mt-2">
           Press Enter to send, Shift + Enter for new line
         </div>
@@ -96,3 +97,36 @@
     </form>
   </div>
 </main>
+
+#{#snippet welcomeSection()}
+  <div class="flex flex-col items-center justify-center h-full text-center px-4">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-base-content mb-4">How can I help with your calendar?</h1>
+      <p class="text-lg text-base-content/70 mb-6">
+        I'm your AI calendar assistant, ready to help you manage your schedule efficiently.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+        <div class="bg-base-200 rounded-lg p-4 text-left">
+          <h3 class="font-semibold text-base-content mb-2">📅 Schedule events</h3>
+          <p class="text-sm text-base-content/60">Create meetings, appointments, and reminders</p>
+        </div>
+        <div class="bg-base-200 rounded-lg p-4 text-left">
+          <h3 class="font-semibold text-base-content mb-2">🔍 Find free time</h3>
+          <p class="text-sm text-base-content/60">
+            Check availability and suggest optimal meeting times
+          </p>
+        </div>
+        <div class="bg-base-200 rounded-lg p-4 text-left">
+          <h3 class="font-semibold text-base-content mb-2">⏰ Manage conflicts</h3>
+          <p class="text-sm text-base-content/60">
+            Resolve scheduling conflicts and reschedule events
+          </p>
+        </div>
+        <div class="bg-base-200 rounded-lg p-4 text-left">
+          <h3 class="font-semibold text-base-content mb-2">📊 View schedule</h3>
+          <p class="text-sm text-base-content/60">Get summaries of your day, week, or month</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{/snippet}

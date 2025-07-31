@@ -6,6 +6,7 @@
   - (7.31.03) - Before hook in the right correct order in get, maybeGet, and maybeGetByUser.
   - (7.31.04) - Added skipHook option in create db service.
   - (7.31.05) - Used create db service for chat service. Update the chat update time.
+  - (7.31.06) - Better system messages. Added welcome section in chat view.
 - Wed Jul 30, 2025
   - (7.30.01) - Commited for safety. Trying to sync chat history.
   - (7.30.02) - Decided to roll my own custom ai sdk for svelte.
