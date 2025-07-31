@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { InputField } from "$lib/client/components";
+  import { FormActionButtons, InputField } from "$lib/client/components";
   import { chatModal } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
   import { createForm } from "$lib/client/utils/create-form";
@@ -18,6 +18,8 @@
   let errorMessage = $state("");
 
   const defaultValues: ChatForm = {
+    id: chat.id,
+    userId: chat.userId,
     name: chat.name
   };
 
@@ -67,13 +69,10 @@
 
   <InputField name="name" {handleInput} {formData} {formErrors} />
 
-  <div class="flex justify-end gap-2">
-    <button type="submit" class="btn btn-base-300 font-bold" disabled={$isSubmitting || $isPending}>
-      {#if $isSubmitting || $isPending}
-        <span class="loading loading-spinner loading-xs"></span>
-      {/if}
-
-      Save
-    </button>
-  </div>
+  <FormActionButtons
+    isCreate={false}
+    isSaving={$isSubmitting || $isPending}
+    isDisabled={$isSubmitting || $isPending}
+    onCancel={chatModal.stopEditing}
+  />
 </form>

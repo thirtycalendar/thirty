@@ -78,7 +78,7 @@ const app = new Hono()
       const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const chat = await chatService.create(user.id, data);
+      const chat = await chatService.create({ ...data, userId: user.id });
 
       return c.json<SuccessResponse<Chat>>({
         success: true,
@@ -94,9 +94,10 @@ const app = new Hono()
       const id = c.req.param("id");
       if (!id) return requireParam(c, "chat id");
 
+      const user = c.get("user") as User;
       const data = c.req.valid("json");
 
-      const chat = await chatService.update(id, data);
+      const chat = await chatService.update(id, { ...data, userId: user.id });
 
       return c.json<SuccessResponse<Chat>>({
         success: true,
@@ -118,21 +119,6 @@ const app = new Hono()
         success: true,
         message: `${chat.name} deleted`,
         data: chat
-      });
-    } catch (err: unknown) {
-      return errorResponse(c, err);
-    }
-  })
-  .post("/clearCache", async (c) => {
-    try {
-      const user = c.get("user") as User;
-
-      await chatService.clearCache(user.id);
-
-      return c.json<SuccessResponse<null>>({
-        success: true,
-        message: "Successfully cleared all the chats from cache",
-        data: null
       });
     } catch (err: unknown) {
       return errorResponse(c, err);

@@ -1,14 +1,11 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
 import { streamText, type Message } from "ai";
-import { eq } from "drizzle-orm";
-
-import { db } from "$lib/server/db";
 
 import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 
-import { chatTable } from "../db/tables/chat";
-import { messageTable } from "../db/tables/message";
+import { chatService } from "../services/chat";
+import { messageService } from "../services/message";
 import { systemPrompt } from "./prompt";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
@@ -16,31 +13,21 @@ import { generateChatName } from "./utils/generate-chat-name";
 const openAiModel = createOpenAI({ apiKey: openAiEnvConfig.apiKey });
 
 export async function streamChat(userId: string, chatId: string, messages: Message[]) {
-  const [existingChat] = await db.select().from(chatTable).where(eq(chatTable.id, chatId)).limit(1);
+  const existingChat = await chatService.maybeGet(chatId);
 
   if (!existingChat) {
-    await db.insert(chatTable).values({
-      id: chatId,
-      name: "New Chat",
-      userId
-    });
+    await chatService.create({ id: chatId, name: "New Chat", userId });
 
     generateChatName(messages)
       .then((name) => {
-        if (name) {
-          return db.update(chatTable).set({ name }).where(eq(chatTable.id, chatId));
-        }
+        if (name) chatService.update(chatId, { name });
       })
       .catch((err) => console.error("Chat name error:", err));
   }
 
   const lastMessage = messages[messages.length - 1];
   if (lastMessage?.role === "user") {
-    await db.insert(messageTable).values({
-      chatId,
-      content: lastMessage.content,
-      role: "user"
-    });
+    await messageService.create({ chatId, content: lastMessage.content, role: "user" });
   }
 
   const result = streamText({
@@ -55,11 +42,7 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
   result.steps.then(async (steps) => {
     const completion = steps.map((s) => s.text).join("");
     if (completion.trim()) {
-      await db.insert(messageTable).values({
-        chatId,
-        content: completion,
-        role: "assistant"
-      });
+      await messageService.create({ chatId, content: completion, role: "assistant" });
     }
   });
 

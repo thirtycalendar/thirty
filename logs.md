@@ -2,6 +2,7 @@
 
 - Thu Jul 31, 2025
   - (7.31.01) - Added message service codes.
+  - (7.31.02) - Created custom chat service. Updated create db service.
 - Wed Jul 30, 2025
   - (7.30.01) - Commited for safety. Trying to sync chat history.
   - (7.30.02) - Decided to roll my own custom ai sdk for svelte.

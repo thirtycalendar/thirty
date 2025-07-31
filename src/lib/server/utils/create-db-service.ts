@@ -39,6 +39,15 @@ type CreateDbServiceHooks<T, FormType> = {
 export type DbService<T extends { id: string; userId: string }, FormType> = {
   getAll(userId: string, options?: MethodOptions<string, T[], { userId: string }>): Promise<T[]>;
   get(id: string, options?: MethodOptions<string, T, { userId: string }>): Promise<T>;
+  maybeGet(
+    id: string,
+    options?: MethodOptions<string, T | null, { userId: string }>
+  ): Promise<T | null>;
+  maybeGetByUser(
+    userId: string,
+    id: string,
+    options?: MethodOptions<string, T | null, { userId: string }>
+  ): Promise<T | null>;
   create(
     userId: string,
     data: FormType,
@@ -153,6 +162,44 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
     await hooks.before?.({ input: id, context });
     await hooks.after?.({ input: id, result: row, context });
+    return row;
+  }
+
+  async function maybeGet(
+    id: string,
+    options?: MethodOptions<string, T | null, { userId: string }>
+  ): Promise<T | null> {
+    const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
+    if (!row) return null;
+
+    const context = { userId: row.userId };
+    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+
+    await hooks.before?.({ input: id, context });
+    await hooks.after?.({ input: id, result: row, context });
+
+    return row;
+  }
+
+  async function maybeGetByUser(
+    userId: string,
+    id: string,
+    options?: MethodOptions<string, T | null, { userId: string }>
+  ): Promise<T | null> {
+    const [row] = await db
+      .select()
+      .from(table)
+      .where(eq(table.id, id) && eq(table.userId, userId))
+      .limit(1);
+
+    if (!row) return null;
+
+    const context = { userId };
+    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+
+    await hooks.before?.({ input: id, context });
+    await hooks.after?.({ input: id, result: row, context });
+
     return row;
   }
 
@@ -321,6 +368,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
   return {
     getAll,
     get,
+    maybeGet,
+    maybeGetByUser,
     create,
     createBulk,
     update,
@@ -328,7 +377,6 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     deleteAll,
     clearCache,
     search,
-
     addHooks
   } as const;
 }

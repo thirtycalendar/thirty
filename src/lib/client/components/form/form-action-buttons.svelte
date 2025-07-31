@@ -1,12 +1,12 @@
 <script lang="ts">
   interface Props {
     isCreate: boolean;
-    isDisabled: boolean;
-    isSaving: boolean;
+    isDisabled?: boolean;
+    isSaving?: boolean;
     onCancel: () => void;
   }
 
-  let { isCreate = false, isDisabled = false, isSaving = false, onCancel }: Props = $props();
+  let { isCreate, isDisabled = false, isSaving = false, onCancel }: Props = $props();
 </script>
 
 <div class="flex justify-end gap-2 pt-4">
