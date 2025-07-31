@@ -27,6 +27,8 @@ type MethodOptions<Input, Result, Ctx> = {
 type CreateDbServiceHooks<T, FormType> = {
   getAll?: Hooks<string, T[], { userId: string }>;
   get?: Hooks<string, T, { userId: string }>;
+  maybeGet?: Hooks<string, T | null, { userId: string }>;
+  maybeGetByUser?: Hooks<string, T | null, { userId: string }>;
   create?: Hooks<FormType, T, { userId: string }>;
   createBulk?: Hooks<FormType[], T[], { userId: string }>;
   update?: Hooks<Partial<FormType>, T, { userId: string; id: string }>;
@@ -155,12 +157,22 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     id: string,
     options?: MethodOptions<string, T, { userId: string }>
   ): Promise<T> {
+    const [preRow] = await db
+      .select({ userId: table.userId })
+      .from(table)
+      .where(eq(table.id, id))
+      .limit(1);
+
+    if (!preRow) throw new NotFoundError("Row", id);
+
+    const context = { userId: preRow.userId };
+    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+
+    await hooks.before?.({ input: id, context });
+
     const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
     if (!row) throw new NotFoundError("Row", id);
 
-    const context = { userId: row.userId };
-    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
-    await hooks.before?.({ input: id, context });
     await hooks.after?.({ input: id, result: row, context });
     return row;
   }
@@ -169,15 +181,23 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     id: string,
     options?: MethodOptions<string, T | null, { userId: string }>
   ): Promise<T | null> {
-    const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
-    if (!row) return null;
+    const [preRow] = await db
+      .select({ userId: table.userId })
+      .from(table)
+      .where(eq(table.id, id))
+      .limit(1);
 
-    const context = { userId: row.userId };
+    if (!preRow) return null;
+
+    const context = { userId: preRow.userId };
     const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
 
     await hooks.before?.({ input: id, context });
-    await hooks.after?.({ input: id, result: row, context });
 
+    const [row] = await db.select().from(table).where(eq(table.id, id)).limit(1);
+    if (!row) return null;
+
+    await hooks.after?.({ input: id, result: row, context });
     return row;
   }
 
@@ -186,6 +206,11 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     id: string,
     options?: MethodOptions<string, T | null, { userId: string }>
   ): Promise<T | null> {
+    const context = { userId };
+    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+
+    await hooks.before?.({ input: id, context });
+
     const [row] = await db
       .select()
       .from(table)
@@ -194,12 +219,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     if (!row) return null;
 
-    const context = { userId };
-    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
-
-    await hooks.before?.({ input: id, context });
     await hooks.after?.({ input: id, result: row, context });
-
     return row;
   }
 
