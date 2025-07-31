@@ -1,6 +1,6 @@
 import type { Redis } from "@upstash/redis";
 
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import {
   createVectorClient,
@@ -22,6 +22,7 @@ type Hooks<Input, Result, Ctx> = {
 
 type MethodOptions<Input, Result, Ctx> = {
   hooks?: Hooks<Input, Result, Ctx>;
+  skipHooks?: boolean;
 };
 
 type CreateDbServiceHooks<T, FormType> = {
@@ -121,7 +122,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     const context = { userId };
 
-    const hooks = mergeHooks(globalHooks.clearCache, addedHooks.clearCache, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.clearCache, addedHooks.clearCache, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: userId, context });
 
@@ -135,7 +139,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]> {
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.getAll, addedHooks.getAll, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.getAll, addedHooks.getAll, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
     await hooks.before?.({ input: userId, context });
 
     let data: T[] = [];
@@ -166,7 +173,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     if (!preRow) throw new NotFoundError("Row", id);
 
     const context = { userId: preRow.userId };
-    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.get, addedHooks.get, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: id, context });
 
@@ -190,7 +200,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     if (!preRow) return null;
 
     const context = { userId: preRow.userId };
-    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.get, addedHooks.get, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: id, context });
 
@@ -207,14 +220,17 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, T | null, { userId: string }>
   ): Promise<T | null> {
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.get, addedHooks.get, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.get, addedHooks.get, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: id, context });
 
     const [row] = await db
       .select()
       .from(table)
-      .where(eq(table.id, id) && eq(table.userId, userId))
+      .where(and(eq(table.id, id), eq(table.userId, userId)))
       .limit(1);
 
     if (!row) return null;
@@ -229,7 +245,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<FormType, T, { userId: string }>
   ): Promise<T> {
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.create, addedHooks.create, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.create, addedHooks.create, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
     await hooks.before?.({ input: data, context });
 
     const [row] = await db
@@ -249,8 +268,12 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<FormType[], T[], { userId: string }>
   ): Promise<T[]> {
     if (!data.length) return [];
+
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.createBulk, addedHooks.createBulk, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.createBulk, addedHooks.createBulk, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
     await hooks.before?.({ input: data, context });
 
     const rows = data.map((d) => ({ ...d, userId }));
@@ -278,7 +301,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     if (!preRow) throw new NotFoundError("Row", id);
 
     const context = { userId: preRow.userId, id };
-    const hooks = mergeHooks(globalHooks.update, addedHooks.update, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.update, addedHooks.update, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: updates, context });
 
@@ -303,7 +329,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     if (!row) throw new NotFoundError("Row", id);
 
     const context = { userId: row.userId, id };
-    const hooks = mergeHooks(globalHooks.delete, addedHooks.delete, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.delete, addedHooks.delete, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: id, context });
 
@@ -320,7 +349,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     options?: MethodOptions<string, void, { userId: string }>
   ): Promise<void> {
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.deleteAll, addedHooks.deleteAll, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.deleteAll, addedHooks.deleteAll, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: userId, context });
 
@@ -357,7 +389,10 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     if (!vector?.openai) throw new VectorNotConfiguredError();
 
     const context = { userId };
-    const hooks = mergeHooks(globalHooks.search, addedHooks.search, options?.hooks);
+    const hooksToMerge = options?.skipHooks
+      ? [options?.hooks]
+      : [globalHooks.search, addedHooks.search, options?.hooks];
+    const hooks = mergeHooks(...hooksToMerge);
 
     await hooks.before?.({ input: query, context });
 
