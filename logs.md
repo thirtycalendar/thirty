@@ -3,6 +3,7 @@
 - Fir Aug 1, 2025
   - (8.1.01) - Rebranded the name. Updated license, code of conduct, and security file.
   - (8.1.02) - Setting things up.
+  - (8.1.03) - Added holiday vector config.
 - Thu Jul 31, 2025
   - (7.31.01) - Added message service codes.
   - (7.31.02) - Created custom chat service. Updated create db service.

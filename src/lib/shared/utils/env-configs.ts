@@ -32,3 +32,8 @@ export const vectorEnvConfig = {
   url: isProd ? env.UPSTASH_VECTOR_REST_URL_PROD : env.UPSTASH_VECTOR_REST_URL_DEV,
   token: isProd ? env.UPSTASH_VECTOR_REST_TOKEN_PROD : env.UPSTASH_VECTOR_REST_TOKEN_DEV
 };
+
+export const vectorHolidayEnvConfig = {
+  url: env.UPSTASH_VECTOR_REST_URL_HOLIDAY,
+  token: env.UPSTASH_VECTOR_REST_TOKEN_HOLIDAY
+};

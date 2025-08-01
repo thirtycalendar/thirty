@@ -3,11 +3,16 @@ import { Index } from "@upstash/vector";
 import type { OpenAI } from "openai";
 import { APIError } from "openai";
 
-import { vectorEnvConfig } from "$lib/shared/utils/env-configs";
+import { vectorEnvConfig, vectorHolidayEnvConfig } from "$lib/shared/utils/env-configs";
 
 export const vector = new Index({
   url: vectorEnvConfig.url,
   token: vectorEnvConfig.token
+});
+
+export const vectorHoliday = new Index({
+  url: vectorHolidayEnvConfig.url,
+  token: vectorHolidayEnvConfig.token
 });
 
 export class VectorNotConfiguredError extends Error {

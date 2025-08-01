@@ -82,6 +82,14 @@ export async function cacheHolidaysToKV() {
       await new Promise((r) => setTimeout(r, 500));
     }
 
+    // Skip caching if no holidays found for any year
+    if (allHolidays.length === 0) {
+      console.warn(
+        `⚠️ No holidays found for ${countryName} (${countryCode}), skipping KV and vector.`
+      );
+      continue;
+    }
+
     // Cache holidays by country
     await kvHoliday.set(KV_COUNTRY_HOLIDAYS(countryId), allHolidays);
     console.log(`Cached ${allHolidays.length} holidays for ${countryCode}`);

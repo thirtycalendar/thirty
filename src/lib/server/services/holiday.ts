@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 import { countries } from "$lib/server/libs/calendarific/countries";
 import { kv, kvHoliday } from "$lib/server/libs/upstash/kv";
-import { createVectorClient, vector } from "$lib/server/libs/upstash/vector";
+import { createVectorClient, vector, vectorHoliday } from "$lib/server/libs/upstash/vector";
 
 import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
@@ -31,7 +31,7 @@ export const holidayCountryVectorClient = createVectorClient<HolidayCountry & { 
 
 export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
   namespace: "all-holiday-countries",
-  vector,
+  vector: vectorHoliday,
   openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
 });
 
