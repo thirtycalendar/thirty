@@ -64,7 +64,7 @@ export async function cacheHolidaysToKV() {
   const cachedCountries = (await kvHoliday.get<HolidayCountry[]>(KV_ALL_HOLIDAY_COUNTRIES)) ?? [];
 
   for (const country of countries) {
-    const { countryCode, countryName } = country;
+    const { id: countryId, countryCode, countryName } = country;
 
     if (cachedCountries.some((c) => c.countryCode === countryCode)) {
       console.log(`Skipped ${countryName} (${countryCode}), already cached`);
@@ -83,7 +83,7 @@ export async function cacheHolidaysToKV() {
     }
 
     // Cache holidays by country
-    await kvHoliday.set(KV_COUNTRY_HOLIDAYS(countryCode), allHolidays);
+    await kvHoliday.set(KV_COUNTRY_HOLIDAYS(countryId), allHolidays);
     console.log(`Cached ${allHolidays.length} holidays for ${countryCode}`);
 
     const newCountry: HolidayCountry = {

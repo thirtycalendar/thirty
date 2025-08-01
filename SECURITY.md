@@ -8,8 +8,6 @@ At **Thirty**, the security of our systems and users is a top priority.
 
 If you discover a vulnerability, we appreciate your help in responsibly disclosing it so we can address it quickly and effectively.
 
----
-
 ## Out of Scope Vulnerabilities
 
 We do not consider the following to be in scope:
@@ -24,8 +22,6 @@ We do not consider the following to be in scope:
 - Non-sensitive cookies missing Secure/HTTP-only flags
 - Broken or dead links
 
----
-
 ## Responsible Disclosure Guidelines
 
 Please:
@@ -37,8 +33,6 @@ Please:
 - Do **not** engage in phishing, social engineering, physical attacks, or spam
 - Include clear reproduction steps (e.g., affected endpoint, payload, expected/actual behavior)
 
----
-
 ## Our Commitment
 
 - We will respond within **3 business days**
@@ -46,7 +40,5 @@ Please:
 - We will not pursue legal action if you follow the guidelines above
 - We will keep you informed of progress and coordinate disclosure
 - We will **credit your contribution** (unless you request anonymity)
-
----
 
 Thank you for helping us keep Thirty secure.
