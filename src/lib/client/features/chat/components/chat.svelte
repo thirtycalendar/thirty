@@ -19,6 +19,12 @@
 
   const { data: messages, isPending } = $derived.by(() => getMessages(currentChatId));
 
+  const eventQuery = getEvents();
+  const calendarQuery = getCalendars();
+  const birthdayQuery = getBirthdays();
+  const holidayQuery = getHolidays();
+  const holidayCountriesQuery = getHolidayCountries();
+
   const chat = $derived.by(() => {
     return new Chat({
       maxSteps: 30,
@@ -27,15 +33,15 @@
       async onFinish() {
         await refetchChats();
 
-        await getEvents().refetch();
+        await eventQuery.refetch();
 
-        await getCalendars().refetch();
+        await calendarQuery.refetch();
 
-        await getBirthdays().refetch();
+        await birthdayQuery.refetch();
 
-        await getHolidays().refetch();
+        await holidayQuery.refetch();
 
-        await getHolidayCountries().refetch();
+        await holidayCountriesQuery.refetch();
       }
     });
   });
