@@ -19,7 +19,7 @@ type CalendarificHoliday = {
   description: string;
   country: {
     id: string;
-    countryName: string;
+    name: string;
   };
   date: {
     iso: string;
@@ -50,7 +50,7 @@ async function fetchHolidaysForCountryYear(countryCode: string, year: number): P
       name: h.name,
       description: h.description,
       countryId: h.country.id.toLowerCase(),
-      countryName: h.country.countryName,
+      countryName: h.country.name,
       countryCode: h.country.id,
       date: h.date.iso
     }));

@@ -4,9 +4,10 @@
 
   interface Props {
     chat: Chat;
+    isMessagesPending: boolean;
   }
 
-  let { chat }: Props = $props();
+  let { chat, isMessagesPending }: Props = $props();
   let textareaRef: HTMLTextAreaElement;
 
   function onsubmit(e: Event) {
@@ -41,10 +42,14 @@
   });
 </script>
 
-<main class="flex h-screen flex-col">
+<main class="relative flex h-screen flex-col">
   <div class="flex flex-1 flex-col overflow-y-auto">
     <div class="mx-auto w-full max-w-[900px] flex-1 p-1">
-      {#if chat.messages.length === 0}
+      {#if isMessagesPending}
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+          <span class="loading loading-spinner loading-md"></span>
+        </div>
+      {:else if chat.messages.length === 0}
         {@render welcomeSection()}
       {:else}
         <ul class="space-y-8 pb-15">
@@ -62,7 +67,10 @@
             </li>
           {/each}
           {#if chat.status === "submitted"}
-            <li class="animate-pulse">Thinking...</li>
+            <div class="flex gap-2">
+              <span class="loading loading-dots loading-sm"></span>
+              <p>Thinking...</p>
+            </div>
           {/if}
         </ul>
       {/if}

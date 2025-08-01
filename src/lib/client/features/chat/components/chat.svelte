@@ -17,7 +17,7 @@
   const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentChatDetails?.id));
   const currentChatId = $derived.by(() => currentChat?.id ?? "");
 
-  const { data: messages } = $derived.by(() => getMessages(currentChatId));
+  const { data: messages, isPending } = $derived.by(() => getMessages(currentChatId));
 
   const chat = $derived.by(() => {
     return new Chat({
@@ -41,4 +41,4 @@
   });
 </script>
 
-<ChatView {chat} />
+<ChatView {chat} isMessagesPending={$isPending} />

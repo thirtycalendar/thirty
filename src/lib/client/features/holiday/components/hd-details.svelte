@@ -11,7 +11,7 @@
 
   let { holiday }: Props = $props();
 
-  const date = format(holiday.date, "EEE, MMM d, yyyy");
+  const date = $derived(format(holiday.date, "EEE, MMM d, yyyy"));
 
   let prevId = $derived(holiday.id);
   let errorMessage = $derived(prevId !== holiday.id ? "" : "");
@@ -33,7 +33,8 @@
   <div class="flex items-start gap-3">
     <Globe size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
-    <div class="flex-1">{holiday.countryName} ({holiday.countryCode})</div>
+    <!-- <div class="flex-1">{holiday.countryName} ({holiday.countryCode})</div> -->
+    <div class="flex-1">{holiday.countryCode.toUpperCase()}</div>
   </div>
 
   <div class="flex items-start gap-3">
