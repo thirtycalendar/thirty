@@ -1,47 +1,52 @@
 # Security
 
-**Contact:** sithuknt@gmail.com
+**Contact:** [sithuknt@gmail.com](mailto:sithuknt@gmail.com)
 
 Based on [https://supabase.com/.well-known/security.txt](https://supabase.com/.well-known/security.txt)
 
-At Calen, we consider the security of our systems a top priority.  
-No matter how much effort we put into system security, there can still be vulnerabilities present.
+At **Thirty**, the security of our systems and users is a top priority.
 
-If you discover a vulnerability, we would like to know about it so we can take steps to address it as quickly as possible.  
-We ask you to help us better protect our users and our systems.
+If you discover a vulnerability, we appreciate your help in responsibly disclosing it so we can address it quickly and effectively.
 
 ---
 
 ## Out of Scope Vulnerabilities
 
-- Clickjacking on pages with no sensitive actions.
-- Unauthenticated/logout/login CSRF.
-- Attacks requiring MITM or physical access to a user's device.
-- Any activity that could lead to the disruption of our service (DoS).
-- Content spoofing and text injection issues without a valid attack vector or ability to modify HTML/CSS.
-- Email spoofing.
-- Missing DNSSEC, CAA, CSP headers.
-- Lack of Secure or HTTP-only flags on non-sensitive cookies.
-- Dead links.
+We do not consider the following to be in scope:
+
+- Clickjacking on pages without sensitive actions
+- Logout/login CSRF or unauthenticated CSRF
+- Attacks requiring MITM or physical access
+- Denial of Service (DoS) attacks or related tooling
+- Content spoofing/text injection without a valid exploit path
+- Email spoofing without DMARC bypass
+- Missing DNSSEC, CAA, or CSP headers
+- Non-sensitive cookies missing Secure/HTTP-only flags
+- Broken or dead links
 
 ---
 
-## Please Do the Following
+## Responsible Disclosure Guidelines
 
-- E-mail your findings to **sithuknt@gmail.com**.
-- **Do not** run automated scanners on our infrastructure or dashboard. If you wish to do this, contact us first, and we will set up a sandbox environment.
-- **Do not** exploit the vulnerability (e.g., downloading more data than necessary or modifying/deleting user data).
-- **Do not** publicly disclose the issue until it has been resolved.
-- **Do not** use attacks on physical security, social engineering, distributed denial of service, spam, or third-party apps.
-- Provide sufficient information to reproduce the problem (e.g., IP address, URL, and vulnerability description). Complex vulnerabilities may require more detailed steps.
+Please:
+
+- Report vulnerabilities via email: **[sithuknt@gmail.com](mailto:sithuknt@gmail.com)**
+- Do **not** run automated scans without permission — we can provide a sandbox environment if needed
+- Do **not** exploit the issue (e.g., access or delete user data)
+- Do **not** disclose the vulnerability publicly before it is resolved
+- Do **not** engage in phishing, social engineering, physical attacks, or spam
+- Include clear reproduction steps (e.g., affected endpoint, payload, expected/actual behavior)
 
 ---
 
-## What We Promise
+## Our Commitment
 
-- We will respond to your report within **3 business days** with an evaluation and an expected resolution date.
-- If you follow the guidelines above, we will not pursue legal action against you regarding the report.
-- We will handle your report with **strict confidentiality** and not share your personal details without your permission.
-- We will keep you informed about the progress toward resolving the issue.
-- We will credit you as the discoverer in public advisories (unless you request otherwise).
-- We strive to resolve all security issues as quickly as possible and coordinate disclosure.
+- We will respond within **3 business days**
+- We will keep your report **confidential** and protect your privacy
+- We will not pursue legal action if you follow the guidelines above
+- We will keep you informed of progress and coordinate disclosure
+- We will **credit your contribution** (unless you request anonymity)
+
+---
+
+Thank you for helping us keep Thirty secure.

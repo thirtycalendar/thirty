@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ request }) => {
 
   const seo = {
     title: "Appearance",
-    url: "https://calen.chat/appearance",
+    url: "https://thirtycalendar.com/appearance",
     description: "Automate your calendar with AI — just type what you need, and it's done.",
     image: "https://hqqk5u623c.ufs.sh/f/iKaDWWmT042q17NthmSV2O87Dfkbp9I0KZuQP5exwUAgMGsJ",
     twitterHandle: "@sithucodes"
