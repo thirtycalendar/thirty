@@ -1,10 +1,7 @@
-import OpenAI from "openai";
-
 import { countries } from "$lib/server/libs/calendarific/countries";
 import { kv, kvHoliday } from "$lib/server/libs/upstash/kv";
 import { createVectorClient, vector, vectorHoliday } from "$lib/server/libs/upstash/vector";
 
-import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import {
   KV_ALL_HOLIDAY_COUNTRIES,
@@ -13,6 +10,8 @@ import {
   KV_HOLIDAYS
 } from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
+
+import { openAiClient } from "../utils/ai-clients";
 
 const allCountries = countries.flat();
 const YEAR = new Date().getFullYear();
@@ -26,13 +25,13 @@ function isWithinRange(date: Date): boolean {
 export const holidayCountryVectorClient = createVectorClient<HolidayCountry & { userId?: string }>({
   namespace: "holiday-country",
   vector,
-  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
+  openai: openAiClient
 });
 
 export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
   namespace: "all-holiday-countries",
   vector: vectorHoliday,
-  openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
+  openai: openAiClient
 });
 
 async function updateHolidaysCache(

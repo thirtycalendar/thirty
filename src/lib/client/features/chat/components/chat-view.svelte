@@ -13,38 +13,22 @@
 
   let { chat, isMessagesPending }: Props = $props();
 
-  const form = createChatForm(chat);
-
-  let chatMessagesContainer: HTMLDivElement;
+  const chatForm = $derived.by(() => createChatForm(chat));
 
   function handlePromptClick(prompt: string) {
     chat.input = prompt;
     setTimeout(() => chat.handleSubmit(), 0);
   }
 
-  // Auto-resize on input change
   $effect(() => {
     if (chat.input !== undefined) {
-      form.oninput();
-    }
-  });
-
-  // Smart auto-scroll
-  $effect(() => {
-    if (chatMessagesContainer) {
-      const isScrolledToBottom =
-        chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <=
-        chatMessagesContainer.scrollTop + 100;
-
-      if (isScrolledToBottom) {
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-      }
+      chatForm.oninput();
     }
   });
 </script>
 
 <main class="relative flex h-screen flex-col">
-  <div bind:this={chatMessagesContainer} class="flex-1 overflow-y-auto">
+  <div class="flex-1 overflow-y-auto">
     {#if isMessagesPending}
       <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
         <span class="loading loading-spinner loading-md"></span>
@@ -85,16 +69,16 @@
     {/if}
   </div>
 
-  <form onsubmit={form.onsubmit} class="sticky bottom-3 flex w-full items-end p-2">
+  <chatForm onsubmit={chatForm.onsubmit} class="sticky bottom-3 flex w-full items-end p-2">
     <div class="relative mx-auto w-full max-w-[900px]">
       <div
         class="border-base-200 bg-base-100 relative flex items-end rounded-2xl border shadow-lg transition-colors"
       >
         <textarea
-          bind:this={form.textareaRef}
+          bind:this={chatForm.textareaRef}
           bind:value={chat.input}
-          onkeydown={form.onkeydown}
-          oninput={form.oninput}
+          onkeydown={chatForm.onkeydown}
+          oninput={chatForm.oninput}
           class="placeholder-base-content/60 max-h-[200px] min-h-[52px] w-full resize-none bg-transparent px-4 py-3 pr-12 text-base focus:outline-none"
           placeholder="Send a message..."
         ></textarea>
@@ -114,7 +98,7 @@
         Thirty AI can make mistakes. Check important info.
       </div>
     </div>
-  </form>
+  </chatForm>
 </main>
 
 {#snippet welcomeSection({ onPromptClick }: { onPromptClick: (prompt: string) => void })}

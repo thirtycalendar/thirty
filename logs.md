@@ -5,6 +5,7 @@
   - (8.2.02) - Better chat view ui.
   - (8.2.03) - Committed for safety. Still styling beterr chat ui.
   - (8.2.04) - Better welcome section ui. Used tailwind css class sorting prettier package.
+  - (8.2.05) - Created ai models and ai clients util files.
 - Fri Aug 1, 2025
   - (8.1.01) - Rebranded the name. Updated license, code of conduct, and security file.
   - (8.1.02) - Setting things up.

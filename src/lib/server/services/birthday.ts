@@ -1,6 +1,3 @@
-import OpenAI from "openai";
-
-import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 import { kvCacheTimes } from "$lib/shared/utils/kv-cache-times";
 import { KV_BIRTHDAYS } from "$lib/shared/utils/kv-keys";
 import type { Birthday, BirthdayForm } from "$lib/shared/types";
@@ -9,6 +6,7 @@ import { db } from "../db";
 import { birthdayTable } from "../db/tables/birthday";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
+import { openAiClient } from "../utils/ai-clients";
 import { createDbService } from "../utils/create-db-service";
 
 export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
@@ -21,6 +19,6 @@ export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
   vector: {
     namespace: "birthdays",
     vector,
-    openai: new OpenAI({ apiKey: openAiEnvConfig.apiKey })
+    openai: openAiClient
   }
 });

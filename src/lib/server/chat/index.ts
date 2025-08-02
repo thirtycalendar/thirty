@@ -1,16 +1,11 @@
-import { createOpenAI } from "@ai-sdk/openai";
-
 import { streamText, type Message } from "ai";
-
-import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
 
 import { chatService } from "../services/chat";
 import { messageService } from "../services/message";
+import { gpt4oMini } from "../utils/ai-models";
 import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
-
-const openAiModel = createOpenAI({ apiKey: openAiEnvConfig.apiKey });
 
 export async function streamChat(userId: string, chatId: string, messages: Message[]) {
   const now = new Date().toISOString();
@@ -41,7 +36,7 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
   }
 
   const result = streamText({
-    model: openAiModel("gpt-4o-mini"),
+    model: gpt4oMini,
     messages,
     tools: createTools(userId),
     maxSteps: 30,
