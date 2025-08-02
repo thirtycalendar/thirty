@@ -2,6 +2,7 @@
 
 - Sat Aug 2, 2025
   - (8.2.01) - Updated system messages. Scroll to the bottom when there is new chat.
+  - (8.2.02) - Better chat view ui.
 - Fri Aug 1, 2025
   - (8.1.01) - Rebranded the name. Updated license, code of conduct, and security file.
   - (8.1.02) - Setting things up.

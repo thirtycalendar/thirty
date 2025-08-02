@@ -2,152 +2,145 @@
   import type { Chat } from "@ai-sdk/svelte";
   import { Send } from "@lucide/svelte";
 
+  import { marked } from "marked";
+
+  import { createChatForm } from "../utils/create-chat-form";
+
   interface Props {
     chat: Chat;
     isMessagesPending: boolean;
   }
 
   let { chat, isMessagesPending }: Props = $props();
-  let textareaRef: HTMLTextAreaElement;
+  const form = createChatForm(chat);
+
   let chatMessagesContainer: HTMLDivElement;
 
-  function onsubmit(e: Event) {
-    e.preventDefault();
-    if (chat.input.trim()) {
-      chat.handleSubmit();
-      if (textareaRef) {
-        textareaRef.style.height = "auto";
-      }
-    }
+  function handlePromptClick(prompt: string) {
+    chat.input = prompt;
+    // Wait for the next tick to ensure the input value is updated before submitting
+    setTimeout(() => chat.handleSubmit(), 0);
   }
 
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      onsubmit(e);
-    }
-  }
-
-  function autoResize() {
-    if (textareaRef) {
-      textareaRef.style.height = "auto";
-      textareaRef.style.height = Math.min(textareaRef.scrollHeight, 200) + "px";
-    }
-  }
-
-  // Auto-resize when input changes
+  // Auto-resize on input change
   $effect(() => {
     if (chat.input !== undefined) {
-      autoResize();
+      form.oninput();
     }
   });
 
-  // Auto-scroll to the bottom when new messages arrive
+  // Smart auto-scroll
   $effect(() => {
     if (chatMessagesContainer) {
-      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      const isScrolledToBottom =
+        chatMessagesContainer.scrollHeight - chatMessagesContainer.clientHeight <=
+        chatMessagesContainer.scrollTop + 100;
+
+      if (isScrolledToBottom) {
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+      }
     }
   });
 </script>
 
 <main class="relative flex h-screen flex-col">
-  <div bind:this={chatMessagesContainer} class="flex flex-1 flex-col overflow-y-auto">
+  <div bind:this={chatMessagesContainer} class="flex-1 overflow-y-auto">
     <div class="mx-auto w-full max-w-[900px] flex-1 p-1">
       {#if isMessagesPending}
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+        <div class="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3">
           <span class="loading loading-spinner loading-md"></span>
         </div>
       {:else if chat.messages.length === 0}
-        {@render welcomeSection()}
+        {@render welcomeSection({ onPromptClick: handlePromptClick })}
       {:else}
         <ul class="space-y-8 pb-15">
-          {#each chat.messages as message, i (i)}
+          {#each chat.messages as message (message.id)}
             <li
               class={`flex space-y-1 ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs md:max-w-md lg:max-w-lg px-3 py-2 rounded-xl"}`}
+                class={`${message.role === "user" ? "bg-base-300 text-base-content max-w-xs rounded-xl px-3 py-2 md:max-w-md lg:max-w-lg" : "prose max-w-xs md:max-w-md lg:max-w-lg"}`}
               >
-                {#each message.parts as part, j (j)}
-                  {#if part.type === "text"}
-                    {#if message.role === "assistant"}
-                      <div class="whitespace-pre-wrap">{part.text}</div>
-                    {:else}
-                      <div class="whitespace-pre-wrap">{part.text}</div>
-                    {/if}
-                  {/if}
-                {/each}
+                {#if message.content}
+                  <div class="whitespace-pre-wrap">
+                    <!-- eslint-disable svelte/no-at-html-tags -->
+                    {@html message.role === "assistant"
+                      ? marked.parse(message.content)
+                      : message.content}
+                  </div>
+                {/if}
               </div>
             </li>
           {/each}
           {#if chat.status === "submitted"}
-            <div class="flex gap-2">
-              <span class="loading loading-dots loading-sm"></span>
-              <p>Thinking...</p>
-            </div>
+            <li class="flex justify-start">
+              <div class="flex items-center gap-2">
+                <span class="loading loading-dots loading-sm"></span> Thinking...
+              </div>
+            </li>
           {/if}
         </ul>
       {/if}
     </div>
-
-    <form {onsubmit} class="sticky bottom-5 flex w-full items-end p-2">
-      <div class="mx-auto w-full max-w-[900px] relative">
-        <div
-          class="relative flex items-end bg-base-100 border border-base-200 rounded-2xl shadow-lg transition-colors"
-        >
-          <textarea
-            bind:this={textareaRef}
-            bind:value={chat.input}
-            onkeydown={handleKeydown}
-            oninput={autoResize}
-            class="flex-1 resize-none bg-transparent px-4 py-3 pr-12 text-base placeholder-base-content/60 focus:outline-none min-h-[52px] max-h-[200px]"
-            placeholder="Send a message..."
-            rows="3"
-          ></textarea>
-          <button
-            type="submit"
-            disabled={!chat.input.trim() || chat.status === "submitted"}
-            class="absolute right-2 bottom-2 p-2 rounded-full bg-primary text-primary-content hover:bg-primary/90 disabled:bg-base-300 disabled:text-base-content/50 disabled:cursor-not-allowed transition-colors"
-          >
-            <Send size={17} />
-          </button>
-        </div>
-        <div class="text-xs text-base-content/60 text-center mt-2">
-          Press Enter to send, Shift + Enter for new line
-        </div>
-      </div>
-    </form>
   </div>
+
+  <form onsubmit={form.onsubmit} class="sticky bottom-3 flex w-full items-end p-2">
+    <div class="relative mx-auto w-full max-w-[900px]">
+      <div
+        class="relative flex items-end rounded-2xl border border-base-200 bg-base-100 shadow-lg transition-colors"
+      >
+        <textarea
+          bind:this={form.textareaRef}
+          bind:value={chat.input}
+          onkeydown={form.onkeydown}
+          oninput={form.oninput}
+          class="w-full resize-none bg-transparent px-4 py-3 pr-12 text-base placeholder-base-content/60 focus:outline-none min-h-[52px] max-h-[200px]"
+          placeholder="Send a message..."
+        ></textarea>
+        <button
+          type="submit"
+          disabled={!chat.input.trim() || chat.status === "submitted"}
+          class="absolute bottom-2 right-2 rounded-full bg-primary p-2 text-primary-content transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-base-300 disabled:text-base-content/50"
+        >
+          <Send size={17} />
+        </button>
+      </div>
+      <div class="mt-2 text-center text-xs text-base-content/60">
+        Thirty AI can make mistakes. Check important info.
+      </div>
+    </div>
+  </form>
 </main>
 
-#{#snippet welcomeSection()}
-  <div class="flex flex-col items-center justify-center h-full text-center px-4">
+{#snippet welcomeSection({ onPromptClick }: { onPromptClick: (prompt: string) => void })}
+  {@const prompts = [
+    {
+      title: "📅 Schedule events",
+      text: "Schedule a meeting with the design team for tomorrow at 2 PM"
+    },
+    { title: "🔍 Find free time", text: "What free slots do I have next Monday morning?" },
+    {
+      title: "⏰ Manage conflicts",
+      text: "My 3 PM meeting has a conflict, can you find another time?"
+    },
+    { title: "📊 View schedule", text: "Show me my schedule for this Friday" }
+  ]}
+  <div class="flex h-full flex-col items-center justify-center px-4 text-center">
     <div class="mb-8">
-      <h1 class="text-4xl font-bold text-base-content mb-4">How can I help with your calendar?</h1>
-      <p class="text-lg text-base-content/70 mb-6">
+      <h1 class="mb-4 text-4xl font-bold text-base-content">How can I help with your calendar?</h1>
+      <p class="mb-6 text-lg text-base-content/70">
         I'm your AI calendar assistant, ready to help you manage your schedule efficiently.
       </p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-        <div class="bg-base-200 rounded-lg p-4 text-left">
-          <h3 class="font-semibold text-base-content mb-2">📅 Schedule events</h3>
-          <p class="text-sm text-base-content/60">Create meetings, appointments, and reminders</p>
-        </div>
-        <div class="bg-base-200 rounded-lg p-4 text-left">
-          <h3 class="font-semibold text-base-content mb-2">🔍 Find free time</h3>
-          <p class="text-sm text-base-content/60">
-            Check availability and suggest optimal meeting times
-          </p>
-        </div>
-        <div class="bg-base-200 rounded-lg p-4 text-left">
-          <h3 class="font-semibold text-base-content mb-2">⏰ Manage conflicts</h3>
-          <p class="text-sm text-base-content/60">
-            Resolve scheduling conflicts and reschedule events
-          </p>
-        </div>
-        <div class="bg-base-200 rounded-lg p-4 text-left">
-          <h3 class="font-semibold text-base-content mb-2">📊 View schedule</h3>
-          <p class="text-sm text-base-content/60">Get summaries of your day, week, or month</p>
-        </div>
+      <div class="grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2">
+        {#each prompts as prompt (prompt.title)}
+          <button
+            onclick={() => onPromptClick(prompt.text)}
+            class="rounded-lg bg-base-200 p-4 text-left transition-colors hover:bg-base-300"
+          >
+            <h3 class="mb-2 font-semibold text-base-content">{prompt.title}</h3>
+            <p class="text-sm text-base-content/60">{prompt.text}</p>
+          </button>
+        {/each}
       </div>
     </div>
   </div>
