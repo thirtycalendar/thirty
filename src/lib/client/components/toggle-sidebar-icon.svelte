@@ -4,23 +4,31 @@
   import { mainSidebarId, sidebars, toggleSidebar } from "$lib/client/stores/sidebar";
 
   interface Props {
+    sidebarId?: string;
     showIconOnHide?: boolean;
+    forceVisible?: boolean;
+    class?: string;
+    tooltip?: string;
   }
 
-  let { showIconOnHide = true }: Props = $props();
+  let {
+    sidebarId = mainSidebarId,
+    showIconOnHide = true,
+    forceVisible = false,
+    class: extraClass = "",
+    tooltip
+  }: Props = $props();
 
-  let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
+  let sidebarOpen = $derived($sidebars[sidebarId]);
 </script>
 
-{#if !mainSidebarOpen && showIconOnHide}
-  <button
-    class="btn btn-ghost btn-square hidden lg:flex"
-    onclick={() => toggleSidebar(mainSidebarId)}
-  >
-    <PanelLeft size="20px" />
-  </button>
+{#if forceVisible || (!sidebarOpen && showIconOnHide)}
+  <div class={tooltip ? "tooltip tooltip-bottom" : ""} data-tip={tooltip}>
+    <button
+      class={`btn btn-ghost btn-square ${extraClass}`}
+      onclick={() => toggleSidebar(sidebarId)}
+    >
+      <PanelLeft size="20px" />
+    </button>
+  </div>
 {/if}
-
-<button class="btn btn-ghost btn-square lg:hidden" onclick={() => toggleSidebar(mainSidebarId)}>
-  <PanelLeft size="20px" />
-</button>

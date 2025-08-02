@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { writable } from "svelte/store";
-
   import { calView } from "$lib/client/stores/cal-view";
 
   import { BdModal } from "../../birthday/components";
@@ -16,16 +13,6 @@
   let { data: events } = getEvents();
   let { data: birthdays } = getBirthdays();
   let { data: holidays } = getHolidays();
-
-  let state = writable(false);
-
-  onMount(() => {
-    if (!$state) {
-      console.log("Mounted...");
-    }
-
-    state.set(true);
-  });
 </script>
 
 <div class="flex h-[calc(100vh-60px)] flex-col">

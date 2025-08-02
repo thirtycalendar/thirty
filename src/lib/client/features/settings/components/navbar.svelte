@@ -11,7 +11,7 @@
 
 <div class="flex items-center justify-between">
   <div class="flex items-center gap-1">
-    <ToggleSidebarIcon />
+    <ToggleSidebarIcon tooltip="Show" />
     <p class="my-1 text-xl font-semibold">{title}</p>
   </div>
 

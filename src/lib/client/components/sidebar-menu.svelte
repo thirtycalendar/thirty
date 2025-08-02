@@ -1,9 +1,9 @@
 <script lang="ts">
   import { page } from "$app/state";
 
-  import { Calendar, MessagesSquareIcon, PanelLeft, Settings } from "@lucide/svelte";
+  import { Calendar, MessagesSquareIcon, Settings } from "@lucide/svelte";
 
-  import { mainSidebarId, toggleSidebar } from "$lib/client/stores/sidebar";
+  import { ToggleSidebarIcon } from ".";
 
   const activePath = $derived(page.url.pathname);
 </script>
@@ -42,11 +42,5 @@
     </div>
   </div>
 
-  <div>
-    <div class="tooltip tooltip-bottom" data-tip="Hide">
-      <button class="btn btn-square btn-ghost" onclick={() => toggleSidebar(mainSidebarId)}>
-        <PanelLeft size="20" />
-      </button>
-    </div>
-  </div>
+  <ToggleSidebarIcon tooltip="Hide" forceVisible={true} />
 </div>
