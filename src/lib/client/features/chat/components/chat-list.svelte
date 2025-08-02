@@ -10,7 +10,7 @@
 
   import { getChats } from "../query";
 
-  const { data: chats } = getChats();
+  const { data: chats } = $derived.by(() => getChats());
 
   const { currentDetails } = chatModal;
 
@@ -71,6 +71,6 @@
       {/each}
     </div>
   {:else}
-    <p class="text-primary-content/50 m-2 text-sm">No chat history. Start a new one.</p>
+    <p class="text-primary-content/50 m-2 text-sm">No chat history. Start a new chat.</p>
   {/if}
 </div>

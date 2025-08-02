@@ -41,6 +41,15 @@
       async onFinish(message) {
         await refetchChats();
 
+        const chatsList = $chats ?? [];
+        if (chatsList.length > 0) {
+          const latestChat = chatsList.reduce((latest, current) =>
+            new Date(current.updatedAt) > new Date(latest.updatedAt) ? current : latest
+          );
+
+          currentChatDetails.set(latestChat);
+        }
+
         const toolsUsed = new Set(
           message.parts
             ?.filter((p) => p.type === "tool-invocation")
