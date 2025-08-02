@@ -92,15 +92,15 @@
   });
 </script>
 
-<div class="flex flex-col h-full py-1">
-  <div class="grid grid-cols-7 bg-base-200 text-sm sticky top-0 z-10">
+<div class="flex h-full flex-col py-1">
+  <div class="bg-base-200 sticky top-0 z-10 grid grid-cols-7 text-sm">
     {#each dayLabels as label, i (label)}
       {@const today = i === new Date().getDay()}
       <div
-        class={`h-8 flex items-center justify-center font-semibold relative ${today ? "text-primary-content" : "text-primary-content/70"}`}
+        class={`relative flex h-8 items-center justify-center font-semibold ${today ? "text-primary-content" : "text-primary-content/70"}`}
       >
         {#if today}
-          <span class="w-2 h-2 rounded-full bg-primary-content mr-1"></span>
+          <span class="bg-primary-content mr-1 h-2 w-2 rounded-full"></span>
         {/if}
         {label}
       </div>
@@ -108,22 +108,22 @@
   </div>
 
   <div
-    class="grid flex-1 grid-cols-7 bg-base-100 rounded-2xl border-l border-t border-base-200"
+    class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 rounded-2xl border-t border-l"
     style="grid-template-rows: repeat({monthInfo.weekCount}, minmax(0, 1fr))"
   >
     {#each monthInfo.days as day (day.toISOString())}
       {@const key = getDayString(day)}
       {@const dayEvents = eventsByDay[key] || []}
       <button
-        class="border-b border-r border-base-200 px-1 py-1 text-left relative hover:bg-base-300/10 transition-colors flex flex-col items-start"
+        class="border-base-200 hover:bg-base-300/10 relative flex flex-col items-start border-r border-b px-1 py-1 text-left transition-colors"
         onclick={() => {
           currentDate.set(day);
           changeToDayView();
         }}
       >
-        <div class="self-end text-xs font-medium mb-1">
+        <div class="mb-1 self-end text-xs font-medium">
           <span
-            class="grid place-content-center h-5 w-5 rounded-md"
+            class="grid h-5 w-5 place-content-center rounded-md"
             class:bg-accent={isToday(day)}
             class:text-accent-content={isToday(day)}
             class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
@@ -133,12 +133,12 @@
           </span>
         </div>
 
-        <div class="w-full flex-1 space-y-1 text-[10px] leading-tight overflow-hidden">
+        <div class="w-full flex-1 space-y-1 overflow-hidden text-[10px] leading-tight">
           {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
             {@const match = $hdCountries?.filter((hdCountry) => hdCountry.id === holiday.countryId)}
             {@const color = match ? match[0].color : "transparent"}
             <div
-              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
               style={`background-color: ${color}22; color: ${color};`}
               title={holiday.name}
             >
@@ -155,7 +155,7 @@
             {@const color = bd.color}
 
             <div
-              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
               style={`background-color: ${color}22; color: ${color};`}
               title={`${name}'s birthday`}
             >
@@ -169,7 +169,7 @@
           {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
             {@const color = event.color}
             <div
-              class="truncate px-1.5 py-0.5 font-medium rounded-full shadow-sm backdrop-blur-sm"
+              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
               style={`background-color: ${color}22; color: ${color};`}
               title={event.name}
             >
@@ -178,7 +178,7 @@
           {/each}
 
           {#if dayEvents.length > MAX_EVENTS_PER_DAY}
-            <div class="font-bold text-base-content/80 pt-0.5">
+            <div class="text-base-content/80 pt-0.5 font-bold">
               + {dayEvents.length - MAX_EVENTS_PER_DAY} more
             </div>
           {/if}

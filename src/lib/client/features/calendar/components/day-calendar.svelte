@@ -81,14 +81,14 @@
   });
 </script>
 
-<div class="flex flex-col h-full py-1">
-  <div class="bg-base-200 sticky top-0 z-10 border-b border-base-200">
+<div class="flex h-full flex-col py-1">
+  <div class="bg-base-200 border-base-200 sticky top-0 z-10 border-b">
     <div
-      class={`font-semibold text-center ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
+      class={`text-center font-semibold ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
     >
       <span class="flex items-center justify-center">
         {#if isToday($currentDate)}
-          <span class="w-2 h-2 rounded-full bg-primary-content mr-1"></span>
+          <span class="bg-primary-content mr-1 h-2 w-2 rounded-full"></span>
         {/if}
 
         {format($currentDate, "EEEE, MMM d")}
@@ -96,9 +96,9 @@
     </div>
   </div>
 
-  <div class="bg-base-200 border-b border-base-200 grid grid-cols-[50px_1fr]">
+  <div class="bg-base-200 border-base-200 grid grid-cols-[50px_1fr] border-b">
     <div></div>
-    <div class="flex flex-col gap-1 pb-1 min-w-0">
+    <div class="flex min-w-0 flex-col gap-1 pb-1">
       {#each getHolidaysForDay(visibleHolidays, $currentDate) as holiday (holiday.id)}
         <HdBlock {holiday} />
       {/each}
@@ -115,20 +115,20 @@
 
   <div
     bind:this={scrollContainer}
-    class="flex-1 overflow-y-auto overflow-x-hidden bg-base-100 relative rounded-2xl"
+    class="bg-base-100 relative flex-1 overflow-x-hidden overflow-y-auto rounded-2xl"
   >
-    <div class="grid grid-cols-[50px_1fr] relative">
+    <div class="relative grid grid-cols-[50px_1fr]">
       {#each hours as hour (hour)}
         <div
-          class="col-start-1 h-15 flex justify-center items-center select-none leading-none text-xs text-primary-content/70 border-r border-base-200"
+          class="text-primary-content/70 border-base-200 col-start-1 flex h-15 items-center justify-center border-r text-xs leading-none select-none"
         >
           {format(setHours(new Date(), hour), "h a")}
         </div>
-        <div class="col-start-2 border-b border-base-200"></div>
+        <div class="border-base-200 col-start-2 border-b"></div>
       {/each}
 
-      <div class="col-start-2 row-start-1 col-span-1 row-span-full relative pointer-events-none">
-        <div class="absolute inset-0 pointer-events-auto">
+      <div class="pointer-events-none relative col-span-1 col-start-2 row-span-full row-start-1">
+        <div class="pointer-events-auto absolute inset-0">
           {#each timedEventChunks as { event, start, end, offset } (event.id)}
             <EventBlock {event} {start} {end} {offset} />
           {/each}

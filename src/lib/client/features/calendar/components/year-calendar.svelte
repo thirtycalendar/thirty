@@ -33,22 +33,22 @@
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 </script>
 
-<div class="bg-base-100/70 mt-3 mb-1 rounded-2xl h-full overflow-y-auto">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-[10px] leading-tight p-4">
+<div class="bg-base-100/70 mt-3 mb-1 h-full overflow-y-auto rounded-2xl">
+  <div class="grid grid-cols-1 gap-6 p-4 text-[10px] leading-tight sm:grid-cols-2 md:grid-cols-3">
     {#each $months as month (month)}
       <div class="flex flex-col">
-        <div class="text-center font-semibold mb-1 text-xs">
+        <div class="mb-1 text-center text-xs font-semibold">
           {format(month, "MMMM")}
         </div>
-        <div class="grid grid-cols-7 text-center mb-1 opacity-60">
+        <div class="mb-1 grid grid-cols-7 text-center opacity-60">
           {#each dayLabels as d, i (i)}
             <div>{d}</div>
           {/each}
         </div>
-        <div class="grid grid-cols-7 text-center gap-1 items-center justify-center">
+        <div class="grid grid-cols-7 items-center justify-center gap-1 text-center">
           {#each getDays(month) as day (day)}
             <button
-              class={`hover:bg-base-200 p-[2px] rounded-md ${
+              class={`hover:bg-base-200 rounded-md p-[2px] ${
                 isToday(day) ? "bg-base-300 font-semibold" : ""
               } ${!isSameMonth(day, month) ? "text-base-content/30" : ""}`}
               onclick={() => {

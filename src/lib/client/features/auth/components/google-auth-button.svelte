@@ -30,7 +30,11 @@
   });
 </script>
 
-<button class="btn btn-lg btn-soft w-full my-2 font-semibold" {onclick} disabled={$isPending}>
+<button
+  class="btn btn-lg btn-soft my-2 w-full font-semibold"
+  {onclick}
+  disabled={$isPending || isSuccess}
+>
   {#if $isPending}
     <span class="loading loading-spinner loading-xs"></span>
     <span class="text-sm sm:text-base">Continue with Google</span>

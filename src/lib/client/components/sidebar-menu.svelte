@@ -8,7 +8,7 @@
   const activePath = $derived(page.url.pathname);
 </script>
 
-<div class="flex items-center justify-between mb-2">
+<div class="mb-2 flex items-center justify-between">
   <div class="flex items-center gap-1">
     <div class="tooltip tooltip-bottom" data-tip="Chat">
       <a

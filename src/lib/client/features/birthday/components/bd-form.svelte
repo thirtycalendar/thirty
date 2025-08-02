@@ -44,13 +44,13 @@
 
 <form onsubmit={handleSubmit()} class="space-y-2">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
   <div class="flex items-start gap-3">
-    <div class="pt-1.5 text-muted-foreground">
+    <div class="text-muted-foreground pt-1.5">
       <CalendarCheck2 size="20" strokeWidth="2.5" />
     </div>
     <div class="flex flex-1 gap-2">
@@ -61,7 +61,7 @@
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="pt-1.5 text-muted-foreground">
+    <div class="text-muted-foreground pt-1.5">
       <AlignLeft size="20" strokeWidth="2.5" />
     </div>
     <div class="flex-1">
@@ -70,7 +70,7 @@
       {:else}
         <button
           type="button"
-          class="p-1.5 w-full text-left text-sm"
+          class="w-full p-1.5 text-left text-sm"
           onclick={() => (isNote = true)}
         >
           Add <span class="hover:underline">note</span>

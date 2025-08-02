@@ -8,7 +8,7 @@
   let views: CalView[] = ["year", "month", "week", "day"];
 </script>
 
-<div class="hidden lg:block tabs tabs-sm tabs-box bg-base-300">
+<div class="tabs tabs-sm tabs-box bg-base-300 hidden lg:block">
   {#each views as view (view)}
     <input
       type="radio"
@@ -16,19 +16,19 @@
       aria-label={view[0].toUpperCase() + view.slice(1)}
       value={view}
       onclick={handleCalViewChange}
-      class="tab px-3 text-sm focus:bg-primary"
+      class="tab focus:bg-primary px-3 text-sm"
       class:bg-primary={$calView === view}
       checked={$calView === view}
     />
   {/each}
 </div>
 
-<div class="lg:hidden dropdown dropdown-end">
+<div class="dropdown dropdown-end lg:hidden">
   <button tabindex="0" class="btn btn-sm sm:btn-md btn-secondary flex items-center">
     {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
     <ChevronDown size="16" />
   </button>
-  <ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-auto mt-1 border border-base-200">
+  <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-1 mt-1 w-auto border">
     {#each views as view (view)}
       <input
         type="radio"
@@ -38,7 +38,7 @@
           (document.activeElement as HTMLElement)?.blur();
           handleCalViewChange(e);
         }}
-        class="tab w-full flex items-center justify-start"
+        class="tab flex w-full items-center justify-start"
         checked={$calView === view}
       />
     {/each}

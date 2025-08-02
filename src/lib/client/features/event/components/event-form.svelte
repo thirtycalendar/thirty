@@ -137,21 +137,21 @@
 {#if $calendars}
   <form onsubmit={handleSubmit()} class="space-y-2">
     {#if !hasCalendars}
-      <p class="text-sm text-error mt-1">You need to create a calendar before adding events.</p>
+      <p class="text-error mt-1 text-sm">You need to create a calendar before adding events.</p>
     {/if}
 
     {#if errorMessage !== ""}
-      <p class="text-sm text-error mt-1">{errorMessage}</p>
+      <p class="text-error mt-1 text-sm">{errorMessage}</p>
     {/if}
 
     {#if isErrorMessage}
-      <p class="text-sm text-error mt-1">{formErrorMessage}</p>
+      <p class="text-error mt-1 text-sm">{formErrorMessage}</p>
     {/if}
 
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
     <div class="flex items-start gap-3">
-      <div class="pt-1.5 text-muted-foreground">
+      <div class="text-muted-foreground pt-1.5">
         <Clock3 size="20" strokeWidth="2.5" />
       </div>
 
@@ -189,7 +189,7 @@
     </div>
 
     <div class="flex items-start gap-3">
-      <div class="pt-1.5 text-muted-foreground">
+      <div class="text-muted-foreground pt-1.5">
         <CalendarCheck2 size="20" strokeWidth="2.5" />
       </div>
       <div class="flex flex-1 gap-2">
@@ -228,7 +228,7 @@
         {:else}
           <button
             type="button"
-            class="p-1.5 w-full text-left text-sm"
+            class="w-full p-1.5 text-left text-sm"
             onclick={() => (isLocation = true)}
           >
             Add <span class="hover:underline">location</span>
@@ -238,7 +238,7 @@
     </div>
 
     <div class="flex items-start gap-3">
-      <div class="pt-1.5 text-muted-foreground">
+      <div class="text-muted-foreground pt-1.5">
         <AlignLeft size="20" strokeWidth="2.5" />
       </div>
       <div class="flex-1">
@@ -253,7 +253,7 @@
         {:else}
           <button
             type="button"
-            class="p-1.5 w-full text-left text-sm"
+            class="w-full p-1.5 text-left text-sm"
             onclick={() => (isDescription = true)}
           >
             Add <span class="hover:underline">description</span>
@@ -264,7 +264,7 @@
 
     <button
       type="button"
-      class="flex items-center gap-2 w-full my-3 text-sm opacity-75"
+      class="my-3 flex w-full items-center gap-2 text-sm opacity-75"
       onclick={() => (isMoreOptions = !isMoreOptions)}
     >
       <ChevronRight
@@ -277,7 +277,7 @@
     {#if isMoreOptions}
       <div class="space-y-3">
         <div>
-          <label class="flex items-center cursor-pointer">
+          <label class="flex cursor-pointer items-center">
             <input
               name="allDay"
               type="checkbox"

@@ -15,12 +15,12 @@
 
 <div class="space-y-3">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
-  <h2 class="text-xl font-semibold flex items-center gap-2">
+  <h2 class="flex items-center gap-2 text-xl font-semibold">
     <div
-      class="w-5 aspect-square rounded-full"
+      class="aspect-square w-5 rounded-full"
       style="background-color: {holidayCountry.color}"
     ></div>
     {holidayCountry.countryName} ({holidayCountry.countryCode})

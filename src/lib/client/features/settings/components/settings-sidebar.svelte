@@ -22,13 +22,13 @@
   const activePath = $derived(page.url.pathname);
 </script>
 
-<div class="flex flex-col mt-5">
+<div class="mt-5 flex flex-col">
   <UserProfile />
 
   {#each links as { href, icon: Icon, label } (href)}
     <a
       href={`/settings/${href}`}
-      class="flex items-center gap-3 text-sm p-2 w-full rounded-lg hover:bg-base-200/80 {activePath ===
+      class="hover:bg-base-200/80 flex w-full items-center gap-3 rounded-lg p-2 text-sm {activePath ===
         `/settings/${href}` && 'bg-base-200'}"
     >
       <Icon size="17" strokeWidth="2.5" />

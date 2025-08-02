@@ -19,7 +19,7 @@
 
 <div class="space-y-3">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
   <h2 class="text-xl font-semibold">{holiday.name}</h2>

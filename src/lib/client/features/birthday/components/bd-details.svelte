@@ -27,14 +27,14 @@
 
 <div class="space-y-3">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
   <h2 class="text-xl font-semibold">{birthday.name}</h2>
 
   <div class="flex items-start gap-3">
     <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
-    <div class="flex-1 flex items-center gap-2">
+    <div class="flex flex-1 items-center gap-2">
       <p class="font-medium">{dob}</p>
       <div class="badge badge-outline badge-xs">{age}</div>
     </div>
@@ -42,9 +42,9 @@
 
   <div class="flex items-start gap-3">
     <Palette size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
-    <div class="flex-1 flex items-center gap-2">
+    <div class="flex flex-1 items-center gap-2">
       <span class="capitalize">Color:</span>
-      <div class="w-5 aspect-square rounded-full" style="background-color: {birthday.color}"></div>
+      <div class="aspect-square w-5 rounded-full" style="background-color: {birthday.color}"></div>
     </div>
   </div>
 

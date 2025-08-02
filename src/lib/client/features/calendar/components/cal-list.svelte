@@ -90,7 +90,7 @@
 
   <div class="my-2">
     <div
-      class="flex items-center justify-between gap-1 px-1 text-sm font-semibold w-full rounded-md"
+      class="flex w-full items-center justify-between gap-1 rounded-md px-1 text-sm font-semibold"
     >
       <p>{title}</p>
 
@@ -115,7 +115,7 @@
         <div class="my-1" transition:slide>
           {#each sortedItems as item (item.id)}
             <label
-              class="group flex justify-between items-center hover:bg-base-200 px-1 py-[2px] rounded-md cursor-pointer"
+              class="group hover:bg-base-200 flex cursor-pointer items-center justify-between rounded-md px-1 py-[2px]"
             >
               <div class="flex items-center gap-2">
                 <input
@@ -126,7 +126,7 @@
                 />
 
                 <span
-                  class="text-sm truncate max-w-[160px] text-ellipsis whitespace-nowrap"
+                  class="max-w-[160px] truncate text-sm text-ellipsis whitespace-nowrap"
                   style={`color: ${item.color}`}
                 >
                   {getItemName(item)}
@@ -135,7 +135,7 @@
 
               {#if onSettings}
                 <button
-                  class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+                  class="btn btn-ghost btn-square btn-xs invisible opacity-75 group-hover:visible"
                   onclick={() => onSettings(item)}
                 >
                   <Settings size="15" />
@@ -145,7 +145,7 @@
           {/each}
         </div>
       {:else}
-        <p class="text-sm m-1 text-primary-content/70">
+        <p class="text-primary-content/70 m-1 text-sm">
           No {title.toLowerCase().replace(/s$/, "")} yet. Create one.
         </p>
       {/if}

@@ -36,20 +36,20 @@
 </script>
 
 {#if confirmDelete}
-  <p class={`text-xs text-error text-right ${showEdit ? "mr-10" : "mr-2"}`}>{message}</p>
+  <p class={`text-error text-right text-xs ${showEdit ? "mr-10" : "mr-2"}`}>{message}</p>
 {/if}
 
 <div class="flex justify-end">
   {#if confirmDelete}
     <div>
       <button
-        class="btn btn-sm btn-neutral text-xs mr-1"
+        class="btn btn-sm btn-neutral mr-1 text-xs"
         onclick={toggleConfirm}
         disabled={isPending}
       >
         No
       </button>
-      <button class="btn btn-sm btn-error text-xs mr-1" onclick={onDelete} disabled={isPending}>
+      <button class="btn btn-sm btn-error mr-1 text-xs" onclick={onDelete} disabled={isPending}>
         {#if isPending}
           <span class="loading loading-spinner loading-xs"></span>
         {/if}

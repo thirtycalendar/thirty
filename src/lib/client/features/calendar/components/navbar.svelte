@@ -13,12 +13,12 @@
   const year = $derived(new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate));
 </script>
 
-<div class="flex justify-between items-center">
+<div class="flex items-center justify-between">
   <div class="flex items-center gap-1">
     <ToggleSidebarIcon />
 
     <div>
-      <p class="sm:text-lg font-semibold flex gap-1">
+      <p class="flex gap-1 font-semibold sm:text-lg">
         {#if $calView === "year"}
           {year}
         {:else}

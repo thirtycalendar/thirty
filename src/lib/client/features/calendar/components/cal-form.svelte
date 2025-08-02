@@ -39,33 +39,33 @@
 
 <form onsubmit={handleSubmit()} class="space-y-2">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
   <div class="flex items-start gap-3">
-    <div class="pt-1.5 text-muted-foreground">
+    <div class="text-muted-foreground pt-1.5">
       <Palette size="20" strokeWidth="2.5" />
     </div>
 
-    <div class="flex gap-2 flex-1">
+    <div class="flex flex-1 gap-2">
       <ColorChoiceField name="color" {formData} {formErrors} isLeftDiv />
     </div>
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="pt-1.5 text-muted-foreground">
+    <div class="text-muted-foreground pt-1.5">
       <Globe size="20" strokeWidth="2.5" />
     </div>
 
-    <div class="flex gap-2 flex-1">
+    <div class="flex flex-1 gap-2">
       <TimezoneField name="timezone" {formData} {formErrors} />
     </div>
   </div>
 
   <div class="w-full">
-    <label class="cursor-pointer w-full">
+    <label class="w-full cursor-pointer">
       <input
         name="isPrimary"
         type="checkbox"

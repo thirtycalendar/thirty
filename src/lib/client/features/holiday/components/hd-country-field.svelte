@@ -134,17 +134,17 @@
     placeholder="e.g., United States (US)"
   />
 
-  <ChevronDown class="absolute right-3 top-2.5 pointer-events-none h-4 w-4 opacity-40" />
+  <ChevronDown class="pointer-events-none absolute top-2.5 right-3 h-4 w-4 opacity-40" />
 
   {#if open}
     <div
       bind:this={dropdown}
-      class="absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border border-base-300 bg-base-100 shadow-xl"
+      class="border-base-300 bg-base-100 absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border shadow-xl"
     >
       {#each filtered.slice(0, 100) as country (country.value)}
         <button
           type="button"
-          class="w-full px-3 py-2 text-left text-sm hover:bg-base-200 focus:bg-base-200 outline-none"
+          class="hover:bg-base-200 focus:bg-base-200 w-full px-3 py-2 text-left text-sm outline-none"
           onclick={() => selectCountry(country.value)}
           tabindex="-1"
         >
@@ -152,12 +152,12 @@
         </button>
       {/each}
       {#if filtered.length === 0}
-        <div class="px-3 py-2 text-sm text-base-content/50">No results</div>
+        <div class="text-base-content/50 px-3 py-2 text-sm">No results</div>
       {/if}
     </div>
   {/if}
 
   {#if error}
-    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
+    <p class="text-error mt-1 text-sm">{error || "This field is required"}</p>
   {/if}
 </div>

@@ -67,7 +67,7 @@
 
 <div class="space-y-3">
   {#if errorMessage !== ""}
-    <p class="text-sm text-error mt-1">{errorMessage}</p>
+    <p class="text-error mt-1 text-sm">{errorMessage}</p>
   {/if}
 
   <h2 class="text-xl font-semibold">{event.name}</h2>
@@ -75,7 +75,7 @@
   <div class="flex items-start gap-3">
     <Clock3 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
     <div class="flex-1">
-      <div class={`${$isSm ? "flex" : "block my-1"} gap-2 items-center`}>
+      <div class={`${$isSm ? "flex" : "my-1 block"} items-center gap-2`}>
         <p class="font-medium">{formattedEventTime}</p>
 
         {#if event.allDay}
@@ -92,8 +92,8 @@
           {timezoneDiffInTime}{timezoneDiffInTime && " "}{userTimezone}
         </p>
 
-        <div class={`${$isSm ? "flex" : "block my-1"} items-center gap-2`}>
-          <p class="text-sm text-muted-foreground">{formattedLocalTime}</p>
+        <div class={`${$isSm ? "flex" : "my-1 block"} items-center gap-2`}>
+          <p class="text-muted-foreground text-sm">{formattedLocalTime}</p>
           <div class="badge badge-outline badge-xs">{userTimezone}</div>
         </div>
       {/if}
@@ -103,9 +103,9 @@
   <div class="flex items-start gap-3">
     <CalendarCheck2 size="20" strokeWidth="2.5" class="text-muted-foreground mt-0.5 shrink-0" />
 
-    <div class="flex-1 flex items-center gap-2">
+    <div class="flex flex-1 items-center gap-2">
       <div
-        class="w-5 h-5 aspect-square rounded-full shrink-0"
+        class="aspect-square h-5 w-5 shrink-0 rounded-full"
         style={`background: ${
           isSameColor
             ? eventColor

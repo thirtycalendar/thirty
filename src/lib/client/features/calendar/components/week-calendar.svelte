@@ -97,16 +97,16 @@
   });
 </script>
 
-<div class="flex flex-col h-full pt-2 pb-1">
-  <div class="grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm bg-base-200 sticky top-0 z-20">
-    <div class="border-r border-base-200"></div>
+<div class="flex h-full flex-col pt-2 pb-1">
+  <div class="bg-base-200 sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm">
+    <div class="border-base-200 border-r"></div>
     {#each days as day (day.toISOString())}
-      <div class="flex items-center justify-center border-b border-r border-base-200">
+      <div class="border-base-200 flex items-center justify-center border-r border-b">
         <span
-          class={`font-bold flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+          class={`flex items-center gap-1 font-bold ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
         >
           {#if isToday(day)}
-            <span class="w-2 h-2 rounded-full bg-primary-content"></span>
+            <span class="bg-primary-content h-2 w-2 rounded-full"></span>
           {/if}
           {format(day, "EEE")}
           {format(day, "d")}
@@ -115,10 +115,10 @@
     {/each}
   </div>
 
-  <div class="grid grid-cols-[50px_repeat(7,1fr)] pb-1 bg-base-200 border-b border-base-200">
+  <div class="bg-base-200 border-base-200 grid grid-cols-[50px_repeat(7,1fr)] border-b pb-1">
     <div></div>
     {#each days as day, i (i + day.toISOString())}
-      <div class="relative border-r border-base-200 px-1 flex flex-col gap-1 min-w-0">
+      <div class="border-base-200 relative flex min-w-0 flex-col gap-1 border-r px-1">
         {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
           <HdBlock {holiday} />
         {/each}
@@ -136,12 +136,12 @@
 
   <div
     bind:this={scrollContainer}
-    class="flex-1 overflow-y-auto overflow-x-hidden grid grid-cols-[50px_repeat(7,1fr)] rounded-2xl bg-base-100 relative"
+    class="bg-base-100 relative grid flex-1 grid-cols-[50px_repeat(7,1fr)] overflow-x-hidden overflow-y-auto rounded-2xl"
   >
     <div class="col-start-1 row-start-1 grid">
       {#each hours as hour (hour)}
         <div
-          class="h-15 flex justify-center items-center text-center select-none text-xs text-primary-content/70 border-r border-base-200"
+          class="text-primary-content/70 border-base-200 flex h-15 items-center justify-center border-r text-center text-xs select-none"
         >
           <span class="relative">
             {format(setHours(new Date(), hour), "h a")}
@@ -152,11 +152,11 @@
 
     {#each days as day, i (day.toISOString())}
       <div
-        class="relative grid grid-rows-24 border-r border-base-200"
+        class="border-base-200 relative grid grid-rows-24 border-r"
         style="grid-column: {i + 2}; grid-row: 1;"
       >
         {#each hours as hour (hour)}
-          <div class="h-15 border-b border-base-200"></div>
+          <div class="border-base-200 h-15 border-b"></div>
         {/each}
 
         <div class="absolute inset-0">

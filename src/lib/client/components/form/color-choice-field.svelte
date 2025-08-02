@@ -110,7 +110,7 @@
     type="button"
     bind:this={triggerButtonRef}
     class={cn(
-      "w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center outline-none",
+      "bg-base-100 hover:bg-base-200 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm outline-none",
       error ? "border-error" : "border-base-300"
     )}
     onclick={() => (open = !open)}
@@ -130,7 +130,7 @@
     <div class="flex items-center gap-2">
       {#if selectedColorHex}
         <span
-          class="inline-block w-5 h-5 rounded-full"
+          class="inline-block h-5 w-5 rounded-full"
           style="background-color: {selectedColorHex};"
           aria-label="Selected color preview"
         ></span>
@@ -142,18 +142,18 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} mt-1 z-50 w-55 rounded-xl border border-base-300 bg-base-100 shadow-xl p-3`}
+      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} border-base-300 bg-base-100 z-50 mt-1 w-55 rounded-xl border p-3 shadow-xl`}
       role="listbox"
       tabindex="-1"
     >
-      <div class="grid grid-cols-6 gap-2 auto-rows-fr">
+      <div class="grid auto-rows-fr grid-cols-6 gap-2">
         {#each Color as choice, index (choice)}
           <button
             type="button"
-            class="relative w-full aspect-square rounded-full flex items-center justify-center p-0.5
-              hover:ring-2 hover:ring-offset-2 hover:ring-base-300
-              focus:ring-2 focus:ring-offset-2 focus:ring-base-300 outline-none
-              transition-all duration-100 ease-in-out"
+            class="hover:ring-base-300 focus:ring-base-300 relative flex aspect-square w-full items-center justify-center
+              rounded-full p-0.5 transition-all
+              duration-100 ease-in-out outline-none hover:ring-2
+              hover:ring-offset-2 focus:ring-2 focus:ring-offset-2"
             style="background-color: {choice}; border: 1px solid {choice};"
             onclick={() => selectChoice(choice)}
             onkeydown={(e) => handleGridKeydown(e, index)}
@@ -173,6 +173,6 @@
   {/if}
 
   {#if error}
-    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
+    <p class="text-error mt-1 text-sm">{error || "This field is required"}</p>
   {/if}
 </div>

@@ -5,12 +5,12 @@
   import { eventModal } from "$lib/client/stores/modal";
 </script>
 
-<div class="z-1000 hidden sm:block dropdown dropdown-bottom dropdown-end">
+<div class="dropdown dropdown-bottom dropdown-end z-1000 hidden sm:block">
   <button tabindex="0" class="btn btn-md bg-primary shadow-none">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
-    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 border border-base-200"
+    class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-1 my-1 w-40 border p-2"
   >
     <li>
       <button
@@ -35,12 +35,12 @@
   </ul>
 </div>
 
-<div class="z-100 absolute sm:hidden right-8 bottom-8 dropdown dropdown-top dropdown-end">
-  <button tabindex="0" class="btn btn-md bg-base-200 border border-base-300">
+<div class="dropdown dropdown-top dropdown-end absolute right-8 bottom-8 z-100 sm:hidden">
+  <button tabindex="0" class="btn btn-md bg-base-200 border-base-300 border">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
   <ul
-    class="dropdown-content menu bg-base-100 rounded-box z-1 w-40 my-1 p-2 border border-base-200"
+    class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-1 my-1 w-40 border p-2"
   >
     <li>
       <button

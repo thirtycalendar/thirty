@@ -73,7 +73,7 @@
     type="button"
     bind:this={triggerButtonRef}
     class={cn(
-      "w-full px-3 py-2 border rounded-md text-sm bg-base-100 hover:bg-base-200 text-left flex justify-between items-center outline-none",
+      "bg-base-100 hover:bg-base-200 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm outline-none",
       error ? "border-error" : "border-base-300"
     )}
     onclick={() => (open = !open)}
@@ -93,7 +93,7 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class="absolute mt-1 z-50 w-full rounded-xl border border-base-300 bg-base-100 shadow-xl max-h-60 overflow-y-auto p-3"
+      class="border-base-300 bg-base-100 absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border p-3 shadow-xl"
       role="listbox"
       tabindex="-1"
     >
@@ -102,7 +102,7 @@
           <button
             type="button"
             class={cn(
-              "flex items-center justify-between w-full px-3 py-1.5 text-sm rounded-md transition-colors",
+              "flex w-full items-center justify-between rounded-md px-3 py-1.5 text-sm transition-colors",
               $formData[name] === choice ? "bg-base-200 text-primary-content font-semibold" : "",
               "hover:bg-base-300/60 focus:bg-base-300/60 focus:outline-none"
             )}
@@ -130,13 +130,13 @@
         {/each}
 
         {#if choiceList.length === 0}
-          <div class="px-3 py-2 text-sm text-base-content/60">No options available.</div>
+          <div class="text-base-content/60 px-3 py-2 text-sm">No options available.</div>
         {/if}
       </div>
     </div>
   {/if}
 
   {#if error}
-    <p class="mt-1 text-error text-sm">{error}</p>
+    <p class="text-error mt-1 text-sm">{error}</p>
   {/if}
 </div>

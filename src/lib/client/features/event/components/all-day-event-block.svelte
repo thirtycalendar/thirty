@@ -21,13 +21,13 @@
 </script>
 
 <button
-  class="text-primary-content w-full cursor-pointer select-none overflow-hidden rounded-xl flex items-center gap-1.5 backdrop-blur-md border border-primary-content/10 shadow-sm p-0 text-left"
+  class="text-primary-content border-primary-content/10 flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-xl border p-0 text-left shadow-sm backdrop-blur-md select-none"
   style:background-color="{eventColor}33"
   title={event.name}
   onclick={() => eventModal.handleModal(event)}
 >
-  <div class="w-1 h-full shrink-0" style:background-color={calendarColor}></div>
-  <div class="p-0.5 overflow-hidden min-w-0 w-full text-xs font-medium">
+  <div class="h-full w-1 shrink-0" style:background-color={calendarColor}></div>
+  <div class="w-full min-w-0 overflow-hidden p-0.5 text-xs font-medium">
     <p class="truncate">{event.name}</p>
   </div>
 </button>

@@ -45,14 +45,14 @@
 
 <main class="relative flex h-screen flex-col">
   <div bind:this={chatMessagesContainer} class="flex-1 overflow-y-auto">
-    <div class="mx-auto w-full max-w-[900px] flex-1 p-1 relative">
-      {#if isMessagesPending}
-        <div class="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3">
-          <span class="loading loading-spinner loading-md"></span>
-        </div>
-      {:else if chat.messages.length === 0}
-        {@render welcomeSection({ onPromptClick: handlePromptClick })}
-      {:else}
+    {#if isMessagesPending}
+      <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+        <span class="loading loading-spinner loading-md"></span>
+      </div>
+    {:else if chat.messages.length === 0}
+      {@render welcomeSection({ onPromptClick: handlePromptClick })}
+    {:else}
+      <div class="relative mx-auto w-full max-w-[900px] flex-1 p-1">
         <ul class="space-y-8 pb-15">
           {#each chat.messages as message (message.id)}
             <div
@@ -81,21 +81,21 @@
             </div>
           {/if}
         </ul>
-      {/if}
-    </div>
+      </div>
+    {/if}
   </div>
 
   <form onsubmit={form.onsubmit} class="sticky bottom-3 flex w-full items-end p-2">
     <div class="relative mx-auto w-full max-w-[900px]">
       <div
-        class="relative flex items-end rounded-2xl border border-base-200 bg-base-100 shadow-lg transition-colors"
+        class="border-base-200 bg-base-100 relative flex items-end rounded-2xl border shadow-lg transition-colors"
       >
         <textarea
           bind:this={form.textareaRef}
           bind:value={chat.input}
           onkeydown={form.onkeydown}
           oninput={form.oninput}
-          class="w-full resize-none bg-transparent px-4 py-3 pr-12 text-base placeholder-base-content/60 focus:outline-none min-h-[52px] max-h-[200px]"
+          class="placeholder-base-content/60 max-h-[200px] min-h-[52px] w-full resize-none bg-transparent px-4 py-3 pr-12 text-base focus:outline-none"
           placeholder="Send a message..."
         ></textarea>
 
@@ -104,13 +104,13 @@
           disabled={!chat.input.trim() ||
             chat.status === "submitted" ||
             chat.status === "streaming"}
-          class="absolute bottom-2 right-2 rounded-full bg-primary p-2 text-primary-content transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-base-300 disabled:text-base-content/50"
+          class="bg-primary text-primary-content hover:bg-primary/90 disabled:bg-base-300 disabled:text-base-content/50 absolute right-2 bottom-2 rounded-full p-2 transition-colors disabled:cursor-not-allowed"
         >
           <Send size={17} />
         </button>
       </div>
 
-      <div class="mt-2 text-center text-xs text-base-content/60">
+      <div class="text-base-content/60 mt-2 text-center text-xs">
         Thirty AI can make mistakes. Check important info.
       </div>
     </div>
@@ -121,26 +121,21 @@
   {@const prompts = [
     {
       title: "📅 Schedule events",
-
       text: "Schedule a meeting with the design team for tomorrow at 2 PM"
     },
-
     { title: "🔍 Find free time", text: "What free slots do I have next Monday morning?" },
-
     {
       title: "⏰ Manage conflicts",
-
       text: "My 3 PM meeting has a conflict, can you find another time?"
     },
-
     { title: "📊 View schedule", text: "Show me my schedule for this Friday" }
   ]}
 
-  <div class="flex h-full px-4 text-center">
+  <div class="flex h-full items-center justify-center px-4 text-center">
     <div class="mb-8">
-      <h1 class="mb-4 text-4xl font-bold text-base-content">How can I help with your calendar?</h1>
+      <h1 class="text-base-content mb-4 text-4xl font-bold">How can I help with your calendar?</h1>
 
-      <p class="mb-6 text-lg text-base-content/70">
+      <p class="text-base-content/70 mb-6 text-lg">
         I'm your AI calendar assistant, ready to help you manage your schedule efficiently.
       </p>
 
@@ -148,11 +143,11 @@
         {#each prompts as prompt (prompt.title)}
           <button
             onclick={() => onPromptClick(prompt.text)}
-            class="rounded-lg bg-base-200 p-4 text-left transition-colors hover:bg-base-300"
+            class="bg-base-200 hover:bg-base-300 rounded-lg p-4 text-left transition-colors"
           >
-            <h3 class="mb-2 font-semibold text-base-content">{prompt.title}</h3>
+            <h3 class="text-base-content mb-2 font-semibold">{prompt.title}</h3>
 
-            <p class="text-sm text-base-content/60">{prompt.text}</p>
+            <p class="text-base-content/60 text-sm">{prompt.text}</p>
           </button>
         {/each}
       </div>

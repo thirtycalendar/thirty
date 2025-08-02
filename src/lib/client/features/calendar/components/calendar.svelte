@@ -28,7 +28,7 @@
   });
 </script>
 
-<div class="h-[calc(100vh-60px)] flex flex-col">
+<div class="flex h-[calc(100vh-60px)] flex-col">
   {#if $events}
     {#if $calView === "year"}
       <YearCalendar />

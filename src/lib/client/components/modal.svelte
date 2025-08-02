@@ -19,11 +19,11 @@
 </script>
 
 <dialog id={String(modalId)} class="modal z-6000">
-  <div class="modal-box max-h-[85vh] border border-base-200">
+  <div class="modal-box border-base-200 max-h-[85vh] border">
     <!-- <div class="modal-action"> -->
     <form method="dialog">
       <button
-        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+        class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2"
         onclick={handleModalClose}
       >
         ✕

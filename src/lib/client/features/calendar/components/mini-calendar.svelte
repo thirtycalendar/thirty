@@ -30,8 +30,8 @@
   });
 </script>
 
-<div class="text-[10px] w-full select-none my-3">
-  <div class="flex justify-between items-center font-semibold mb-2 text-sm">
+<div class="my-3 w-full text-[10px] select-none">
+  <div class="mb-2 flex items-center justify-between text-sm font-semibold">
     <p>{format($currentDate, "MMMM yyyy")}</p>
 
     <div>
@@ -46,7 +46,7 @@
   </div>
 
   <!-- Day labels -->
-  <div class="grid grid-cols-7 gap-1 text-center opacity-50 mb-1">
+  <div class="mb-1 grid grid-cols-7 gap-1 text-center opacity-50">
     {#each dayLabels as label, i (i)}
       <div>{label}</div>
     {/each}

@@ -8,13 +8,13 @@
 
 {#if !mainSidebarOpen}
   <button
-    class="hidden lg:flex btn btn-ghost btn-square"
+    class="btn btn-ghost btn-square hidden lg:flex"
     onclick={() => toggleSidebar(mainSidebarId)}
   >
     <PanelLeft size="20px" />
   </button>
 {/if}
 
-<button class="lg:hidden btn btn-ghost btn-square" onclick={() => toggleSidebar(mainSidebarId)}>
+<button class="btn btn-ghost btn-square lg:hidden" onclick={() => toggleSidebar(mainSidebarId)}>
   <PanelLeft size="20px" />
 </button>

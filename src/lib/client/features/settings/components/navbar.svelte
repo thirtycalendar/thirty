@@ -10,9 +10,9 @@
 </script>
 
 <div class="flex items-center justify-between">
-  <div class="flex gap-1 items-center">
+  <div class="flex items-center gap-1">
     <ToggleSidebarIcon />
-    <p class="text-xl font-semibold my-1">{title}</p>
+    <p class="my-1 text-xl font-semibold">{title}</p>
   </div>
 
   <div>
@@ -20,4 +20,4 @@
   </div>
 </div>
 
-<hr class="mt-2 mb-3 text-base-300" />
+<hr class="text-base-300 mt-2 mb-3" />

@@ -40,7 +40,7 @@
     </Sidebar>
 
     <div
-      class={`min-h-screen max-h-screen overflow-hidden bg-base-200 transition-all duration-300 p-4 ${mainSidebarOpen ? "xl:ml-[260px]" : ""}`}
+      class={`bg-base-200 max-h-screen min-h-screen overflow-hidden p-4 transition-all duration-300 ${mainSidebarOpen ? "xl:ml-[260px]" : ""}`}
     >
       {@render children()}
     </div>

@@ -36,7 +36,7 @@
 </script>
 
 <button
-  class="absolute z-10 text-primary-content cursor-pointer select-none overflow-hidden rounded-xl flex items-start gap-1 backdrop-blur-md border border-primary-content/10 shadow-md hover:shadow-lg transition-shadow duration-200 p-0"
+  class="text-primary-content border-primary-content/10 absolute z-10 flex cursor-pointer items-start gap-1 overflow-hidden rounded-xl border p-0 shadow-md backdrop-blur-md transition-shadow duration-200 select-none hover:shadow-lg"
   style={`
     top: ${topPx}px;
     height: ${Math.max(0, heightPx)}px;
@@ -48,18 +48,18 @@
   title={event.name}
   onclick={() => eventModal.handleModal(event)}
 >
-  <div class="w-1 h-full rounded-l-md shrink-0" style="background-color: {calendarColor};"></div>
-  <div class="w-full text-left p-1 overflow-hidden">
+  <div class="h-full w-1 shrink-0 rounded-l-md" style="background-color: {calendarColor};"></div>
+  <div class="w-full overflow-hidden p-1 text-left">
     {#if heightPx < 28}
-      <p class="text-xs font-medium text-primary-content/90 truncate">
+      <p class="text-primary-content/90 truncate text-xs font-medium">
         {event.name}, {formatEventTime(start)}
       </p>
     {:else}
       <div class="space-y-0.5">
-        <p class="text-sm font-semibold text-primary-content/90" class:truncate={heightPx < 45}>
+        <p class="text-primary-content/90 text-sm font-semibold" class:truncate={heightPx < 45}>
           {event.name}
         </p>
-        <p class="text-xs text-primary-content/70 truncate">
+        <p class="text-primary-content/70 truncate text-xs">
           {formatTimeRange(start, end)}
         </p>
       </div>

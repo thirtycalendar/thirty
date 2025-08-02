@@ -57,9 +57,9 @@
 </script>
 
 {#if $holidayCountries}
-  <form onsubmit={handleSubmit()} class="space-y-2 my-2">
+  <form onsubmit={handleSubmit()} class="my-2 space-y-2">
     {#if errorMessage}
-      <p class="text-sm text-error mt-1">{errorMessage}</p>
+      <p class="text-error mt-1 text-sm">{errorMessage}</p>
     {/if}
 
     <HdCountryField name="id" {formData} {formErrors} holidayCountries={$holidayCountries} />

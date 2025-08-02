@@ -35,7 +35,7 @@
 </script>
 
 {#if $calView !== null && $calView in navHandlers}
-  <div class="gap-0 text-center w-full">
+  <div class="w-full gap-0 text-center">
     <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].prev}>
       <ChevronLeft size="20px" />
     </button>

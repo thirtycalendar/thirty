@@ -38,12 +38,12 @@
 </script>
 
 <div class="w-full">
-  <button class="btn my-2 px-2 btn-ghost text-left justify-start w-full" onclick={handleNewChat}>
+  <button class="btn btn-ghost my-2 w-full justify-start px-2 text-left" onclick={handleNewChat}>
     <SquarePen size="16" />
     New Chat
   </button>
 
-  <p class="text-sm mx-2 text-primary-content/70 my-1">Chats</p>
+  <p class="text-primary-content/70 mx-2 my-1 text-sm">Chats</p>
 
   {#if !$chats}
     <div class="relative h-[200px]">
@@ -56,13 +56,13 @@
       {#each sortedChats as chat (chat.id)}
         <a
           href="/"
-          class={`group flex items-center justify-between text-sm p-2 py-1.5 w-full rounded-lg ${$currentDetails?.id === chat.id && "bg-base-200"} hover:bg-base-200/80`}
+          class={`group flex w-full items-center justify-between rounded-lg p-2 py-1.5 text-sm ${$currentDetails?.id === chat.id && "bg-base-200"} hover:bg-base-200/80`}
           onclick={(e) => handleChatName(e, chat)}
         >
-          <span class="truncate flex-1">{chat.name}</span>
+          <span class="flex-1 truncate">{chat.name}</span>
 
           <button
-            class="btn btn-ghost btn-square btn-xs opacity-75 invisible group-hover:visible"
+            class="btn btn-ghost btn-square btn-xs invisible opacity-75 group-hover:visible"
             onclick={() => handleEllipsis(chat)}
           >
             <Ellipsis size="15" />
@@ -71,6 +71,6 @@
       {/each}
     </div>
   {:else}
-    <p class="text-sm m-2 text-primary-content/50">No chat history. Start a new one.</p>
+    <p class="text-primary-content/50 m-2 text-sm">No chat history. Start a new one.</p>
   {/if}
 </div>

@@ -237,7 +237,7 @@
       triggerButton?.select();
     }}
     class={cn(
-      "w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none hover:bg-base-200",
+      "hover:bg-base-200 w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
       error ? "border-error text-error" : "border-base-300 bg-base-100",
       className
     )}
@@ -246,15 +246,15 @@
   />
 
   {#if error}
-    <p class="mt-1 text-xs text-error">{error || "This field is required"}</p>
+    <p class="text-error mt-1 text-xs">{error || "This field is required"}</p>
   {/if}
 
   {#if open}
     <div
       bind:this={calendarDropdown}
-      class="absolute z-50 mt-1 w-72 p-3 rounded-xl border border-base-300 bg-base-100 shadow-xl"
+      class="border-base-300 bg-base-100 absolute z-50 mt-1 w-72 rounded-xl border p-3 shadow-xl"
     >
-      <div class="flex items-center justify-between mb-2 px-2 text-sm font-semibold">
+      <div class="mb-2 flex items-center justify-between px-2 text-sm font-semibold">
         <div>{formatDate(visibleMonth, "MMMM yyyy")}</div>
         <div class="flex gap-1">
           <button
@@ -277,7 +277,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-7 text-[10px] text-center opacity-50 mb-1">
+      <div class="mb-1 grid grid-cols-7 text-center text-[10px] opacity-50">
         {#each dayLabels as label, i (i)}
           <div>{label}</div>
         {/each}
@@ -291,12 +291,12 @@
             role="gridcell"
             aria-selected={selected}
             class={cn(
-              "py-1 rounded-md w-full transition-colors outline-none",
-              selected ? "bg-base-300 font-semibold text-base-content" : "",
+              "w-full rounded-md py-1 transition-colors outline-none",
+              selected ? "bg-base-300 text-base-content font-semibold" : "",
               !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
               isToday(day) && !selected ? "font-medium" : "",
               isDisablePast && day < startOfDay(new Date())
-                ? "opacity-30 cursor-not-allowed"
+                ? "cursor-not-allowed opacity-30"
                 : "hover:bg-base-200/60"
             )}
             disabled={isDisablePast && day < startOfDay(new Date())}

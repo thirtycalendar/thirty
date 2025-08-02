@@ -204,7 +204,7 @@
       triggerButtonElement?.select();
     }}
     class={cn(
-      "w-full cursor-pointer rounded-md border bg-base-100 px-3 py-2 text-left text-sm outline-none hover:bg-base-200",
+      "bg-base-100 hover:bg-base-200 w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
       error ? "border-error text-error" : "border-base-300"
     )}
     autocomplete="off"
@@ -215,7 +215,7 @@
     <div
       bind:this={timeSlotsDropdown}
       class={cn(
-        "absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-xl border bg-base-100 p-2 shadow-xl",
+        "bg-base-100 absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-xl border p-2 shadow-xl",
         error ? "border-error" : "border-base-300",
         isRightDiv ? "right-0" : "left-0"
       )}
@@ -232,7 +232,7 @@
             class={cn(
               "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors focus:outline-none",
               isSelected
-                ? "bg-base-300 font-semibold text-base-content"
+                ? "bg-base-300 text-base-content font-semibold"
                 : "hover:bg-base-200/60 focus:bg-base-200/60"
             )}
             onclick={() => selectTime(slot)}
@@ -247,6 +247,6 @@
   {/if}
 
   {#if error}
-    <p class="mt-1 text-sm text-error">{error || "This field is required"}</p>
+    <p class="text-error mt-1 text-sm">{error || "This field is required"}</p>
   {/if}
 </div>
