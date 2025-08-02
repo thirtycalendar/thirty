@@ -101,15 +101,15 @@
 
 {#snippet welcomeSection({ onPromptClick }: { onPromptClick: (prompt: string) => void })}
   {@const prompts = [
-    {
-      title: "📅 Schedule events",
-      text: "Schedule a meeting with the design team for tomorrow at 2 PM"
-    },
+    // {
+    //   title: "📅 Schedule events",
+    //   text: "Schedule a meeting with the design team for tomorrow at 2 PM"
+    // },
     { title: "🔍 Find free time", text: "What free slots do I have next Monday morning?" },
-    {
-      title: "⏰ Manage conflicts",
-      text: "My 3 PM meeting has a conflict, can you find another time?"
-    },
+    // {
+    //   title: "⏰ Manage conflicts",
+    //   text: "My 3 PM meeting has a conflict, can you find another time?"
+    // },
     { title: "📊 View schedule", text: "Show me my schedule for this Friday" }
   ]}
 
@@ -125,7 +125,7 @@
         {#each prompts as prompt (prompt.title)}
           <button
             onclick={() => onPromptClick(prompt.text)}
-            class="bg-base-200 hover:bg-base-300 rounded-lg p-4 text-left transition-colors"
+            class="bg-base-300 hover:bg-base-300 rounded-lg p-4 text-left transition-colors"
           >
             <h3 class="text-base-content mb-2 font-semibold">{prompt.title}</h3>
 

@@ -11,6 +11,7 @@
   - (8.2.08) - Better toogle sidebar icon component.
   - (8.2.09) - Automatically select the current chat details.
   - (8.2.10) - Mini chat menu component.
+  - (8.2.11) - Finished all the AI parts.
 - Fri Aug 1, 2025
   - (8.1.01) - Rebranded the name. Updated license, code of conduct, and security file.
   - (8.1.02) - Setting things up.

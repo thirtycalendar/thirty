@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Check, ChevronDown } from "@lucide/svelte";
 
+  import { chatModal } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Chat } from "$lib/shared/types";
@@ -17,16 +18,18 @@
   let triggerButtonRef = $state<HTMLButtonElement>();
   const placeholder = "New chat";
 
-  let currentSelectedChat = $state<Chat | null>(null);
+  const { currentDetails } = chatModal;
 
-  function selectChat(chat: Chat) {
-    if (currentSelectedChat?.id === chat.id) {
+  function selectChat(chat: Chat | null) {
+    const current = $currentDetails;
+
+    if (chat && current?.id === chat.id) {
       open = false;
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
 
-    currentSelectedChat = chat;
+    currentDetails.set(chat);
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
   }
@@ -67,7 +70,7 @@
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{currentSelectedChat ? currentSelectedChat.name : placeholder}</span>
+    <span>{$currentDetails ? $currentDetails.name : placeholder}</span>
     <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
   </button>
 
@@ -79,18 +82,38 @@
       tabindex="-1"
     >
       <div class="space-y-0.5">
+        <!-- Option to reset to "New chat" -->
+        <button
+          type="button"
+          class={cn(
+            "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors focus:outline-none",
+            !$currentDetails
+              ? "bg-base-200 text-primary-content font-semibold"
+              : "hover:bg-base-300/60 focus:bg-base-300/60"
+          )}
+          onclick={() => selectChat(null)}
+          role="option"
+          aria-selected={!$currentDetails}
+          tabindex="0"
+        >
+          <span class="flex-1 truncate text-left">{placeholder}</span>
+          {#if !$currentDetails}
+            <Check size="16" />
+          {/if}
+        </button>
+
         {#each chats as chat (chat.id)}
           <button
             type="button"
             class={cn(
               "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm transition-colors focus:outline-none",
-              currentSelectedChat?.id === chat.id
+              $currentDetails?.id === chat.id
                 ? "bg-base-200 text-primary-content font-semibold"
                 : "hover:bg-base-300/60 focus:bg-base-300/60"
             )}
             onclick={() => selectChat(chat)}
             role="option"
-            aria-selected={currentSelectedChat?.id === chat.id}
+            aria-selected={$currentDetails?.id === chat.id}
             tabindex="0"
             onkeydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -102,17 +125,17 @@
                 triggerButtonRef?.focus();
               }
             }}
-            disabled={currentSelectedChat?.id === chat.id}
+            disabled={$currentDetails?.id === chat.id}
           >
             <span class="flex-1 truncate text-left">{chat.name}</span>
-            {#if currentSelectedChat?.id === chat.id}
+            {#if $currentDetails?.id === chat.id}
               <Check size="16" />
             {/if}
           </button>
         {/each}
 
         {#if chats.length === 0}
-          <div class="text-base-content/60 px-3 py-2 text-sm">{placeholder}</div>
+          <div class="text-base-content/60 px-3 py-2 text-sm">No chat history.</div>
         {/if}
       </div>
     </div>

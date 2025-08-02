@@ -10,15 +10,14 @@
 
   import { getChats } from "../query";
 
-  const { data: chats } = $derived.by(() => getChats());
-
-  const { currentDetails } = chatModal;
-
+  const { data: chats } = getChats();
   const sortedChats = $derived(
     $chats
       ?.slice()
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()) ?? []
   );
+
+  const { currentDetails } = chatModal;
 
   async function handleNewChat() {
     currentDetails.set(null);
