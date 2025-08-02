@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ request }) => {
   const seo = {
     title: "Delete Account",
     url: "https://thirtycalendar.com/delete-account",
-    description: "Automate your calendar with AI — just type what you need, and it's done.",
+    description: "Your Calendar. Smarter, Open, and Always Listening.",
     image: "https://hqqk5u623c.ufs.sh/f/iKaDWWmT042q17NthmSV2O87Dfkbp9I0KZuQP5exwUAgMGsJ",
     twitterHandle: "@itsithu"
   };

@@ -57,7 +57,7 @@
             </div>
           {/each}
 
-          {#if chat.status === "submitted"}
+          {#if chat.status === "submitted" || chat.messages.at(-1)?.role === "user"}
             <div class="flex justify-start">
               <div class="flex items-center gap-2">
                 <span class="loading loading-dots loading-sm"></span> Thinking...

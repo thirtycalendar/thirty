@@ -30,18 +30,22 @@
       maxSteps: 30,
       initialMessages: $messages ?? [],
       body: { chatId: currentChatId || crypto.randomUUID() },
-      async onFinish() {
+      async onFinish(message) {
         await refetchChats();
 
-        await eventQuery.refetch();
+        const toolsUsed = new Set(
+          message.parts
+            ?.filter((p) => p.type === "tool-invocation")
+            .map((p) => p.toolInvocation.toolName)
+        );
 
-        await calendarQuery.refetch();
-
-        await birthdayQuery.refetch();
-
-        await holidayQuery.refetch();
-
-        await holidayCountriesQuery.refetch();
+        if ([...toolsUsed].some((name) => name.includes("Calendar"))) await calendarQuery.refetch();
+        if ([...toolsUsed].some((name) => name.includes("Event"))) await eventQuery.refetch();
+        if ([...toolsUsed].some((name) => name.includes("Birthday"))) await birthdayQuery.refetch();
+        if ([...toolsUsed].some((name) => name.includes("Holiday"))) {
+          await holidayQuery.refetch();
+          await holidayCountriesQuery.refetch();
+        }
       }
     });
   });
