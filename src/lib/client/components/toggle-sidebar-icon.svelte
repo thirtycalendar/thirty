@@ -3,10 +3,16 @@
 
   import { mainSidebarId, sidebars, toggleSidebar } from "$lib/client/stores/sidebar";
 
+  interface Props {
+    showIconOnHide?: boolean;
+  }
+
+  let { showIconOnHide = true }: Props = $props();
+
   let mainSidebarOpen = $derived($sidebars[mainSidebarId]);
 </script>
 
-{#if !mainSidebarOpen}
+{#if !mainSidebarOpen && showIconOnHide}
   <button
     class="btn btn-ghost btn-square hidden lg:flex"
     onclick={() => toggleSidebar(mainSidebarId)}

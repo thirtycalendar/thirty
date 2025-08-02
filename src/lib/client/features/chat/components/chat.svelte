@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Chat } from "@ai-sdk/svelte";
 
+  import { ToggleSidebarIcon } from "$lib/client/components";
   import { chatModal } from "$lib/client/stores/modal";
 
   import { getBirthdays } from "../../birthday/query";
@@ -10,6 +11,13 @@
   import { getChats, getMessages } from "../query";
 
   import { ChatView } from ".";
+
+  interface Props {
+    miniChat?: boolean;
+    showIconOnHide?: boolean;
+  }
+
+  let { miniChat = false, showIconOnHide = false }: Props = $props();
 
   const { data: chats, refetch: refetchChats } = getChats();
 
@@ -50,5 +58,9 @@
     });
   });
 </script>
+
+{#if !miniChat}
+  <ToggleSidebarIcon {showIconOnHide} />
+{/if}
 
 <ChatView {chat} isMessagesPending={$isPending} />

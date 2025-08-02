@@ -2,6 +2,6 @@
   import { Chat, ChatModal } from "$lib/client/features/chat/components";
 </script>
 
-<Chat />
+<Chat showIconOnHide={true} />
 
 <ChatModal />

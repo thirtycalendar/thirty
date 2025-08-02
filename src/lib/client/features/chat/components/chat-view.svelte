@@ -39,9 +39,7 @@
       <div class="relative mx-auto w-full max-w-[900px] flex-1 p-1">
         <ul class="space-y-8 pb-15">
           {#each chat.messages as message (message.id)}
-            <div
-              class={`flex space-y-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-            >
+            <div class={`flex  ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs rounded-xl px-3 py-2 md:max-w-md lg:max-w-lg"}`}
               >
