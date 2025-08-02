@@ -9,6 +9,7 @@
 
   let { chat, isMessagesPending }: Props = $props();
   let textareaRef: HTMLTextAreaElement;
+  let chatMessagesContainer: HTMLDivElement;
 
   function onsubmit(e: Event) {
     e.preventDefault();
@@ -40,10 +41,17 @@
       autoResize();
     }
   });
+
+  // Auto-scroll to the bottom when new messages arrive
+  $effect(() => {
+    if (chatMessagesContainer) {
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+  });
 </script>
 
 <main class="relative flex h-screen flex-col">
-  <div class="flex flex-1 flex-col overflow-y-auto">
+  <div bind:this={chatMessagesContainer} class="flex flex-1 flex-col overflow-y-auto">
     <div class="mx-auto w-full max-w-[900px] flex-1 p-1">
       {#if isMessagesPending}
         <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
@@ -54,13 +62,19 @@
       {:else}
         <ul class="space-y-8 pb-15">
           {#each chat.messages as message, i (i)}
-            <li class={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+            <li
+              class={`flex space-y-1 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+            >
               <div
                 class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs md:max-w-md lg:max-w-lg px-3 py-2 rounded-xl"}`}
               >
                 {#each message.parts as part, j (j)}
                   {#if part.type === "text"}
-                    <div class="whitespace-pre-wrap">{part.text}</div>
+                    {#if message.role === "assistant"}
+                      <div class="whitespace-pre-wrap">{part.text}</div>
+                    {:else}
+                      <div class="whitespace-pre-wrap">{part.text}</div>
+                    {/if}
                   {/if}
                 {/each}
               </div>

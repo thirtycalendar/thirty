@@ -1,6 +1,8 @@
 # Logs
 
-- Fir Aug 1, 2025
+- Sat Aug 2, 2025
+  - (8.2.01) - Updated system messages. Scroll to the bottom when there is new chat.
+- Fri Aug 1, 2025
   - (8.1.01) - Rebranded the name. Updated license, code of conduct, and security file.
   - (8.1.02) - Setting things up.
   - (8.1.03) - Added holiday vector config.

@@ -73,6 +73,7 @@
     "drizzle-orm": "^0.44.0",
     "googleapis": "^149.0.0",
     "hono": "^4.7.10",
+    "marked": "^16.1.1",
     "openai": "^5.10.2",
     "pg": "^8.16.0",
     "tailwind-merge": "^3.3.0",

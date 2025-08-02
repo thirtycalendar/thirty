@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwindcss/typography";
 
 @plugin "daisyui" {
   /* biome-ignore lint: */
