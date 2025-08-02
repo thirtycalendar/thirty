@@ -115,11 +115,11 @@
 
   <div class="flex h-full items-center justify-center px-4 text-center">
     <div class="mb-8">
-      <h1 class="text-base-content mb-4 text-4xl font-bold">How can I help with your calendar?</h1>
+      <h1 class="text-base-content mb-10 text-4xl font-bold">How can I help with your calendar?</h1>
 
-      <p class="text-base-content/70 mb-6 text-lg">
+      <!-- <p class="text-base-content/70 mb-6 text-lg">
         I'm your AI calendar assistant, ready to help you manage your schedule efficiently.
-      </p>
+      </p> -->
 
       <div class="grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2">
         {#each prompts as prompt (prompt.title)}

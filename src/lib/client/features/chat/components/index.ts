@@ -1,4 +1,5 @@
 export { default as ChatActionButtons } from "./chat-action-buttons.svelte";
+export { default as ChatChoiceField } from "./chat-choice-field.svelte";
 export { default as ChatDetails } from "./chat-details.svelte";
 export { default as ChatList } from "./chat-list.svelte";
 export { default as ChatModal } from "./chat-modal.svelte";
@@ -6,3 +7,4 @@ export { default as ChatSidebar } from "./chat-sidebar.svelte";
 export { default as ChatView } from "./chat-view.svelte";
 export { default as Chat } from "./chat.svelte";
 export { default as EditChat } from "./edit-chat.svelte";
+export { default as MiniChatMenu } from "./mini-chat-menu.svelte";
