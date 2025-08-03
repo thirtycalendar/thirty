@@ -18,6 +18,7 @@
     "format:write": "prettier --write .",
     "auth:generate": "npx @better-auth/cli generate --config ./libs/auth/index.ts --output ./libs/db/schemas/auth-table.ts --y",
     "db:reset": "npx tsx ./src/lib/server/scripts/reset-db.ts --url $DATABASE_URL",
+    "db:push": "cross-env NODE_ENV=development drizzle-kit push",
     "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
     "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
@@ -26,6 +27,8 @@
     "db:studio:prod": "cross-env NODE_ENV=production drizzle-kit studio"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/compat": "^1.3.1",
     "@eslint/js": "^9.30.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
