@@ -1,8 +1,8 @@
 import { google } from "googleapis";
 
 import { kv } from "$lib/server/libs/upstash/kv";
+import { googleEnvConfig } from "$lib/server/utils/env-config";
 
-import { googleEnvConfig } from "$lib/shared/utils/env-configs";
 import { KV_GOOGLE_TOKEN } from "$lib/shared/utils/kv-keys";
 import type { GoogleSessionKV } from "$lib/shared/types";
 

@@ -7,7 +7,7 @@ import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { polar as polarClient } from "$lib/server/libs/polar";
 
 import { getRandomColor } from "$lib/shared/utils/colors";
-import { googleEnvConfig, polarProductIdsEnvConfig } from "$lib/shared/utils/env-configs";
+import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
 import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
@@ -16,6 +16,7 @@ import { accountTable, sessionTable, userTable, verificationTable } from "../db/
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { calendarService } from "../services/calendar";
 import { holidayCountryService } from "../services/holiday";
+import { googleEnvConfig } from "../utils/env-config";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

@@ -2,7 +2,7 @@ import { neon } from "@neondatabase/serverless";
 
 import { drizzle } from "drizzle-orm/neon-http";
 
-import { dbEnvConfig } from "$lib/shared/utils/env-configs";
+import { dbEnvConfig } from "../utils/env-config";
 
 const client = neon(dbEnvConfig.dbUrl);
 

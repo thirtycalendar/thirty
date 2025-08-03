@@ -1,6 +1,6 @@
 import { Redis } from "@upstash/redis";
 
-import { kvEnvConfig, kvHolidayEnvConfig } from "$lib/shared/utils/env-configs";
+import { kvEnvConfig, kvHolidayEnvConfig } from "$lib/server/utils/env-config";
 
 export const kv = new Redis({
   url: kvEnvConfig.url,

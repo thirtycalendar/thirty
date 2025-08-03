@@ -3,7 +3,7 @@
 
   import { authClient } from "$lib/client/utils/rpc";
 
-  import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-configs";
+  import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
 
   async function handleCheckout() {
     await authClient.checkout({

@@ -1,9 +1,8 @@
 import { env } from "$env/dynamic/private";
-import { env as publicEnv } from "$env/dynamic/public";
 
 import { googleScopes } from "$lib/server/auth/scopes";
 
-import { isProd } from "./is-prod";
+import { isProd } from "$lib/shared/utils/is-prod";
 
 export const openAiEnvConfig = {
   apiKey: env.OPENAI_API_KEY
@@ -42,8 +41,4 @@ export const vectorHolidayEnvConfig = {
 export const polarEnvConfig = {
   token: isProd ? env.POLAR_ACCESS_TOKEN_PROD : env.POLAR_ACCESS_TOKEN_DEV,
   server: isProd ? "production" : "sandbox"
-} as const;
-
-export const polarProductIdsEnvConfig = {
-  pro: isProd ? publicEnv.PUBLIC_PRO_PRODUCT_ID_PROD : publicEnv.PUBLIC_PRO_PRODUCT_ID_DEV
 } as const;

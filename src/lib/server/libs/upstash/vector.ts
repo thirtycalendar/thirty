@@ -3,7 +3,7 @@ import { Index } from "@upstash/vector";
 import type { OpenAI } from "openai";
 import { APIError } from "openai";
 
-import { vectorEnvConfig, vectorHolidayEnvConfig } from "$lib/shared/utils/env-configs";
+import { vectorEnvConfig, vectorHolidayEnvConfig } from "$lib/server/utils/env-config";
 
 export const vector = new Index({
   url: vectorEnvConfig.url,

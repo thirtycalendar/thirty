@@ -1,6 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai";
 
-import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
+import { openAiEnvConfig } from "./env-config";
 
 const openAiModel = createOpenAI({ apiKey: openAiEnvConfig.apiKey });
 

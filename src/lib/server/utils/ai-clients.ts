@@ -1,5 +1,5 @@
 import OpenAI from "openai";
 
-import { openAiEnvConfig } from "$lib/shared/utils/env-configs";
+import { openAiEnvConfig } from "./env-config";
 
 export const openAiClient = new OpenAI({ apiKey: openAiEnvConfig.apiKey });
