@@ -19,20 +19,22 @@ import type { eventSchema } from "./schemas/event";
 import type { hdCountrySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
 
-export type CalView = "month" | "week" | "day" | "year";
+// Calendar
+export type CalView = (typeof Const.CalView)[number];
 
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;
 
+// Events
 export type Event = InferSelectModel<typeof eventTable>;
 export type EventForm = z.infer<typeof eventSchema>;
 
-export type EventChunk = {
+export interface EventChunk {
   event: Event;
   start: Date;
   end: Date;
   day?: Date;
-};
+}
 
 export interface AllDayLayoutInfo extends Event {
   startColumn: number;
@@ -40,21 +42,24 @@ export interface AllDayLayoutInfo extends Event {
   lane: number;
 }
 
+//  Tasks
 export type Task = InferSelectModel<typeof taskTable>;
 export type TaskForm = z.infer<typeof taskSchema>;
 
+// Birthdays
 export type Birthday = InferSelectModel<typeof birthdayTable>;
 export type BirthdayForm = z.infer<typeof birthdaySchema>;
 
-export type HolidayCountry = {
+//  Holidays
+export interface HolidayCountry {
   id: string;
   countryName: string;
   countryCode: string;
   color: Color;
-};
+}
 export type HolidayCountryForm = z.infer<typeof hdCountrySchema>;
 
-export type Holiday = {
+export interface Holiday {
   id: string;
   name: string;
   description: string;
@@ -62,17 +67,21 @@ export type Holiday = {
   countryName: string;
   countryCode: string;
   date: string;
-};
+}
 
+// Chat
 export type Chat = InferSelectModel<typeof chatTable>;
 export type ChatForm = InferInsertModel<typeof chatTable>;
 export type ChatUpdateForm = z.infer<typeof chatSchema>;
 
+// Messages
 export type Message = InferSelectModel<typeof messageTable>;
 export type MessageForm = InferInsertModel<typeof messageTable>;
 
 export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
 
+// Enums and Constants
+export type PolarSubPlan = (typeof Const.PolarSubPlan)[number];
 export type Color = (typeof Const.Color)[number];
 export type Source = (typeof Const.Source)[number];
 export type EventStatus = (typeof Const.EventStatus)[number];
@@ -81,25 +90,21 @@ export type TaskStatus = (typeof Const.TaskStatus)[number];
 export type NotifyInMin = (typeof Const.NotifyInMin)[number];
 export type NotifyInDay = (typeof Const.NotifyInDay)[number];
 
-export type IP_LOCATION_KV = {
+// KV
+export interface IpLocationKV {
   countryName: string;
   countryCode: string;
   timezone: string;
-};
+}
 
-export type User = typeof auth.$Infer.Session.user;
-export type Session = typeof auth.$Infer.Session.session;
-
-export type SuccessResponse<T = void> = {
-  success: true;
-  message: string;
-} & (T extends void ? Record<string, never> : { data: T });
-
-export type ErrorResponse = {
-  success: false;
-  message: string;
-  isFormError?: boolean;
-};
+export interface PolarSubKV {
+  subscriptionId: string | null;
+  plan: PolarSubPlan;
+  priceId: string | null;
+  currentPeriodStart: number | null;
+  currentPeriodEnd: number | null;
+  cancelAtPeriodEnd: boolean;
+}
 
 export interface GoogleSessionKV {
   userId: string;
@@ -107,4 +112,20 @@ export interface GoogleSessionKV {
   refreshToken: string;
   accessTokenExpiresAt: string;
   idToken: string;
+}
+
+// Auth
+export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session.session;
+
+// API Responses
+export type SuccessResponse<T = void> = {
+  success: true;
+  message: string;
+} & (T extends void ? Record<string, never> : { data: T });
+
+export interface ErrorResponse {
+  success: false;
+  message: string;
+  isFormError?: boolean;
 }

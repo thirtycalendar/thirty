@@ -1,3 +1,7 @@
+export const PolarSubPlan = ["power", "pro", "free"] as const;
+
+export const CalView = ["month", "week", "day", "year"] as const;
+
 export const Source = ["local", "file", "google", "outlook", "apple"] as const;
 
 export const EventStatus = ["confirmed", "cancelled", "tentative"] as const;

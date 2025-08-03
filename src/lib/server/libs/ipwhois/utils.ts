@@ -1,6 +1,6 @@
 import { isObject } from "$lib/shared/utils";
 import { KV_IP_LOCATION } from "$lib/shared/utils/kv-keys";
-import type { IP_LOCATION_KV } from "$lib/shared/types";
+import type { IpLocationKV } from "$lib/shared/types";
 
 import { kv } from "../upstash/kv";
 
@@ -25,7 +25,7 @@ export function getCountryCodeFromIP(data: unknown): string {
   return "Unknown";
 }
 
-export async function cacheIPLocation(userId: string): Promise<IP_LOCATION_KV> {
+export async function cacheIPLocation(userId: string): Promise<IpLocationKV> {
   const res = await fetch("https://ipwho.is/");
   const data: unknown = await res.json();
 
@@ -40,8 +40,8 @@ export async function cacheIPLocation(userId: string): Promise<IP_LOCATION_KV> {
   return value;
 }
 
-export async function getIPLocation(userId: string): Promise<IP_LOCATION_KV> {
-  const cached = await kv.get<IP_LOCATION_KV>(KV_IP_LOCATION(userId));
+export async function getIPLocation(userId: string): Promise<IpLocationKV> {
+  const cached = await kv.get<IpLocationKV>(KV_IP_LOCATION(userId));
 
   if (cached) return cached;
 

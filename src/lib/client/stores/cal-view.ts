@@ -1,33 +1,35 @@
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-import type { CalView } from "$lib/shared/types";
+import { CalView } from "$lib/shared/constants";
+import type { CalView as CalViewType } from "$lib/shared/types";
 
-export const calView: Writable<CalView | null> = writable(null);
+function isCalView(value: string): value is CalViewType {
+  return (CalView as readonly string[]).includes(value);
+}
+
+export const calView: Writable<CalViewType | null> = writable(null);
 
 if (browser) {
-  const stored = localStorage.getItem("cal-view") as CalView | null;
-
-  const validViews: CalView[] = ["month", "week", "day", "year"];
-  const initialView = validViews.includes(stored as CalView) ? (stored as CalView) : "week";
-
+  const stored = localStorage.getItem("cal-view");
+  const initialView: CalViewType = stored && isCalView(stored) ? stored : "week";
   calView.set(initialView);
 }
 
 export function handleCalViewChange(event: Event) {
   const { name } = event.target as HTMLInputElement;
 
-  if (!["month", "week", "day", "year"].includes(name)) return;
+  if (!isCalView(name)) return;
 
   if (browser) {
     localStorage.setItem("cal-view", name);
   }
 
-  calView.set(name as CalView);
+  calView.set(name);
 }
 
 export function changeToDayView() {
-  const day = "day" as CalView;
+  const day: CalViewType = "day";
 
   if (browser) {
     localStorage.setItem("cal-view", day);
