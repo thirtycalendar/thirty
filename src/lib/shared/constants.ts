@@ -1,4 +1,4 @@
-export const PolarSubPlan = ["power", "pro", "free"] as const;
+export const PolarSubPlan = ["pro", "free"] as const;
 
 export const CalView = ["month", "week", "day", "year"] as const;
 
