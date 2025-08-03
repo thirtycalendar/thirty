@@ -1,5 +1,7 @@
 # Logs
 
+- Sun Aug 3, 2025
+  - (8.3.01) - Sync bettwen chat and mini chat.
 - Sat Aug 2, 2025
   - (8.2.01) - Updated system messages. Scroll to the bottom when there is new chat.
   - (8.2.02) - Better chat view ui.

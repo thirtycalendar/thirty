@@ -25,7 +25,11 @@
   const currentChat = $derived.by(() => $chats?.find((c) => c.id === $currentChatDetails?.id));
   const currentChatId = $derived.by(() => currentChat?.id ?? "");
 
-  const { data: messages, isPending } = $derived.by(() => getMessages(currentChatId));
+  const {
+    data: messages,
+    isPending,
+    refetch: refetchMessages
+  } = $derived.by(() => getMessages(currentChatId));
 
   const eventQuery = getEvents();
   const calendarQuery = getCalendars();
@@ -40,6 +44,7 @@
       body: { chatId: currentChatId || crypto.randomUUID() },
       async onFinish(message) {
         await refetchChats();
+        await refetchMessages();
 
         const chatsList = $chats ?? [];
         if (chatsList.length > 0) {
