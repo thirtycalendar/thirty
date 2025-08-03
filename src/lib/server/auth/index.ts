@@ -1,9 +1,13 @@
+import { checkout, polar, portal } from "@polar-sh/better-auth";
+
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
+import { polar as polarClient } from "$lib/server/libs/polar";
+
 import { getRandomColor } from "$lib/shared/utils/colors";
-import { googleEnvConfig } from "$lib/shared/utils/env-configs";
+import { googleEnvConfig, polarProductIdsEnvConfig } from "$lib/shared/utils/env-configs";
 import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
@@ -85,10 +89,18 @@ export const auth = betterAuth({
           prompt: "consent"
         }
       ]
+    }),
+    polar({
+      client: polarClient,
+      createCustomerOnSignUp: true,
+      use: [
+        checkout({
+          products: [{ productId: polarProductIdsEnvConfig.pro, slug: "pro" }],
+          successUrl: "/calendar",
+          authenticatedUsersOnly: true
+        }),
+        portal()
+      ]
     })
-    //   polar({
-    //     client: polarClient,
-    //     createCustomerOnSignUp: true,
-    //   }),
   ]
 });

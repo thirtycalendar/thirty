@@ -1,3 +1,3 @@
-import { NODE_ENV } from "$env/static/private";
+import { PUBLIC_IS_PROD } from "$env/static/public";
 
-export const isProd = NODE_ENV === "production";
+export const isProd = PUBLIC_IS_PROD === "true";

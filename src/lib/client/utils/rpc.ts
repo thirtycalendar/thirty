@@ -1,3 +1,5 @@
+import { polarClient } from "@polar-sh/better-auth";
+
 import { genericOAuthClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/svelte";
 import { hc } from "hono/client";
@@ -12,4 +14,4 @@ export const serverClient = (fetch: Window["fetch"]) => {
   return client;
 };
 
-export const authClient = createAuthClient({ plugins: [genericOAuthClient()] });
+export const authClient = createAuthClient({ plugins: [genericOAuthClient(), polarClient()] });
