@@ -2,7 +2,7 @@ import { streamText, type Message } from "ai";
 
 import { chatService } from "../services/chat";
 import { messageService } from "../services/message";
-import { gpt4oMini } from "../utils/ai-models";
+import { openRouterGpt4oMini } from "../utils/ai-models";
 import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
@@ -36,7 +36,7 @@ export async function streamChat(userId: string, chatId: string, messages: Messa
   }
 
   const result = streamText({
-    model: gpt4oMini,
+    model: openRouterGpt4oMini,
     messages,
     tools: createTools(userId),
     maxSteps: 30,

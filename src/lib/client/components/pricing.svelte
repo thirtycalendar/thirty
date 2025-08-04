@@ -1,6 +1,5 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { PUBLIC_PRO_PRODUCT_ID } from "$env/static/public";
 
   import { Check } from "@lucide/svelte";
 
@@ -21,7 +20,7 @@
     },
     {
       name: "Pro",
-      id: PUBLIC_PRO_PRODUCT_ID,
+      id: "",
       price: "$15 / month",
       features: [
         "Unlimited AI for daily use (fair use ~1,500 messages / month)",

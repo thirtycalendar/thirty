@@ -1,5 +1,4 @@
 import { auth, calendar } from "@googleapis/calendar";
-import { tasks } from "@googleapis/tasks";
 
 import { googleEnvConfig } from "$lib/server/utils/env-config";
 
@@ -15,7 +14,6 @@ export async function getGoogleClients(userId: string) {
   oAuthClient.setCredentials({ access_token: accessToken });
 
   return {
-    calendar: calendar({ version: "v3", auth: oAuthClient }),
-    tasks: tasks({ version: "v1", auth: oAuthClient })
+    calendar: calendar({ version: "v3", auth: oAuthClient })
   };
 }

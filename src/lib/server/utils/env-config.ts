@@ -8,6 +8,10 @@ export const openAiEnvConfig = {
   apiKey: env.OPENAI_API_KEY
 } as const;
 
+export const openRouterEnvConfig = {
+  apiKey: env.OPENROUTER_API_KEY
+} as const;
+
 export const dbEnvConfig = {
   dbUrl: isProd ? env.DB_URL_PROD : env.DB_URL_DEV
 } as const;
