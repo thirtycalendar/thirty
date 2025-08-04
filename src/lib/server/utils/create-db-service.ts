@@ -6,7 +6,7 @@ import {
   createVectorClient,
   VectorNotConfiguredError,
   type VectorClientConfig
-} from "../libs/upstash/vector";
+} from "./create-vector-client";
 
 export class NotFoundError extends Error {
   constructor(entity: string, id: string) {
@@ -386,8 +386,6 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     limit = 10,
     options?: MethodOptions<string, T[], { userId: string }>
   ): Promise<T[]> {
-    if (!vector?.openai) throw new VectorNotConfiguredError();
-
     const context = { userId };
     const hooksToMerge = options?.skipHooks
       ? [options?.hooks]

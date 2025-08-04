@@ -8,7 +8,6 @@ import { db } from "../db";
 import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
-import { openAiClient } from "../utils/ai-clients";
 import { createDbService } from "../utils/create-db-service";
 
 export const calendarService = createDbService<Calendar, CalendarForm>(db, {
@@ -20,8 +19,7 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   },
   vector: {
     namespace: "calendars",
-    vector,
-    openai: openAiClient
+    vector
   },
   hooks: {
     create: {

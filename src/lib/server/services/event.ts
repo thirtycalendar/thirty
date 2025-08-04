@@ -6,7 +6,6 @@ import { db } from "../db";
 import { eventTable } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
-import { openAiClient } from "../utils/ai-clients";
 import { createDbService } from "../utils/create-db-service";
 
 export const eventService = createDbService<Event, EventForm>(db, {
@@ -18,7 +17,6 @@ export const eventService = createDbService<Event, EventForm>(db, {
   },
   vector: {
     namespace: "events",
-    vector,
-    openai: openAiClient
+    vector
   }
 });
