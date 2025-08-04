@@ -7,6 +7,7 @@ import { eventTable } from "../db/tables/event";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
+import { voyageAiEnvConfig } from "../utils/env-config";
 
 export const eventService = createDbService<Event, EventForm>(db, {
   table: eventTable,
@@ -17,6 +18,7 @@ export const eventService = createDbService<Event, EventForm>(db, {
   },
   vector: {
     namespace: "events",
+    voyageApiKey: voyageAiEnvConfig.apiKey,
     vector
   }
 });

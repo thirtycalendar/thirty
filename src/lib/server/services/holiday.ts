@@ -12,6 +12,7 @@ import {
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
 import { createVectorClient } from "../utils/create-vector-client";
+import { voyageAiEnvConfig } from "../utils/env-config";
 
 const allCountries = countries.flat();
 const YEAR = new Date().getFullYear();
@@ -24,11 +25,13 @@ function isWithinRange(date: Date): boolean {
 
 export const holidayCountryVectorClient = createVectorClient<HolidayCountry & { userId?: string }>({
   namespace: "holiday-country",
+  voyageApiKey: voyageAiEnvConfig.apiKey,
   vector
 });
 
 export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
   namespace: "all-holiday-countries",
+  voyageApiKey: voyageAiEnvConfig.apiKey,
   vector: vectorHoliday
 });
 

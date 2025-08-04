@@ -1,13 +1,17 @@
-import { Index } from "@upstash/vector";
+import type { Index } from "@upstash/vector";
 
 import { createVoyage } from "voyage-ai-provider";
 
-import { voyageAiEnvConfig } from "./env-config";
-
-const voyage = createVoyage({
-  baseURL: "https://api.voyageai.com/v1",
-  apiKey: voyageAiEnvConfig.apiKey
-});
+type VoyageModelId =
+  | "voyage-3-large"
+  | "voyage-3.5"
+  | "voyage-3.5-lite"
+  | "voyage-code-3"
+  | "voyage-finance-2"
+  | "voyage-law-2"
+  | "voyage-multilingual-2"
+  | "voyage-code-2"
+  | "voyage-2";
 
 export class VectorNotConfiguredError extends Error {
   constructor() {
@@ -19,7 +23,8 @@ export class VectorNotConfiguredError extends Error {
 export type VectorClientConfig<T> = {
   namespace: string;
   vector: Index;
-  embeddingModel?: ReturnType<typeof voyage.textEmbeddingModel>;
+  voyageApiKey: string;
+  modelId?: VoyageModelId;
   textFn?: (item: T) => string;
   metadataFn?: (item: T) => Record<string, unknown>;
 };
@@ -57,7 +62,8 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
   const {
     namespace,
     vector,
-    embeddingModel = voyage.textEmbeddingModel("voyage-3.5-lite"),
+    voyageApiKey,
+    modelId = "voyage-3.5-lite",
     textFn = (i: T) =>
       Object.values(i)
         .filter((value) => value !== null && typeof value !== "undefined")
@@ -70,6 +76,13 @@ export function createVectorClient<T extends { id: string }>(config: VectorClien
       return {};
     }
   } = config;
+
+  const voyage = createVoyage({
+    baseURL: "https://api.voyageai.com/v1",
+    apiKey: voyageApiKey
+  });
+
+  const embeddingModel = voyage.textEmbeddingModel(modelId);
 
   if (!vector || !embeddingModel) {
     throw new VectorNotConfiguredError();

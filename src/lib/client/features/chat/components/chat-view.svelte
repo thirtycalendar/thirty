@@ -44,7 +44,7 @@
                 class={`${message.role === "user" && "bg-base-300 text-base-content max-w-xs rounded-xl px-3 py-2 md:max-w-md lg:max-w-lg"}`}
               >
                 {#if message.content}
-                  <div class="flex flex-col space-y-5">
+                  <div class="flex flex-col space-y-5 *:space-y-2 **:space-y-1">
                     <!-- eslint-disable svelte/no-at-html-tags -->
                     {@html message.role === "assistant"
                       ? marked.parse(message.content)

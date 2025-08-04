@@ -7,6 +7,7 @@ import { birthdayTable } from "../db/tables/birthday";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
+import { voyageAiEnvConfig } from "../utils/env-config";
 
 export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
   table: birthdayTable,
@@ -17,6 +18,7 @@ export const birthdayService = createDbService<Birthday, BirthdayForm>(db, {
   },
   vector: {
     namespace: "birthdays",
+    voyageApiKey: voyageAiEnvConfig.apiKey,
     vector
   }
 });

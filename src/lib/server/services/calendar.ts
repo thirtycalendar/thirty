@@ -9,6 +9,7 @@ import { calendarTable } from "../db/tables/calendar";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
+import { voyageAiEnvConfig } from "../utils/env-config";
 
 export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   table: calendarTable,
@@ -19,6 +20,7 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   },
   vector: {
     namespace: "calendars",
+    voyageApiKey: voyageAiEnvConfig.apiKey,
     vector
   },
   hooks: {
