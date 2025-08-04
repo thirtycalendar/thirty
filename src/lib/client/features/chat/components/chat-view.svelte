@@ -67,7 +67,7 @@
     {/if}
   </div>
 
-  <chatForm onsubmit={chatForm.onsubmit} class="sticky bottom-3 flex w-full items-end p-2">
+  <form onsubmit={chatForm.onsubmit} class="sticky bottom-3 mt-8 flex w-full items-end p-2">
     <div class="relative mx-auto w-full max-w-[900px]">
       <div
         class="border-base-200 bg-base-100 relative flex items-end rounded-2xl border shadow-lg transition-colors"
@@ -96,7 +96,7 @@
         Thirty AI can make mistakes. Check important info.
       </div>
     </div>
-  </chatForm>
+  </form>
 </main>
 
 {#snippet welcomeSection({ onPromptClick }: { onPromptClick: (prompt: string) => void })}

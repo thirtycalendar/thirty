@@ -40,8 +40,9 @@ export function getMessages(chatId: string) {
         createdAt: new Date(message.createdAt)
       }));
     },
-    queryKeys: ["message-list", chatId]
+    queryKeys: ["message-list", chatId],
     // staleTime: Number.POSITIVE_INFINITY
+    staleTime: 0
   });
 
   return messageQuery;
