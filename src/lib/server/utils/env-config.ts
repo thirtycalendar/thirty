@@ -4,14 +4,6 @@ import { googleScopes } from "$lib/server/auth/scopes";
 
 import { isProd } from "$lib/shared/utils/is-prod";
 
-export const openAiEnvConfig = {
-  apiKey: env.OPENAI_API_KEY
-} as const;
-
-export const openRouterEnvConfig = {
-  apiKey: env.OPENROUTER_API_KEY
-} as const;
-
 export const dbEnvConfig = {
   dbUrl: isProd ? env.DB_URL_PROD : env.DB_URL_DEV
 } as const;
@@ -45,4 +37,16 @@ export const vectorHolidayEnvConfig = {
 export const polarEnvConfig = {
   token: isProd ? env.POLAR_ACCESS_TOKEN_PROD : env.POLAR_ACCESS_TOKEN_DEV,
   server: isProd ? "production" : "sandbox"
+} as const;
+
+export const openAiEnvConfig = {
+  apiKey: env.OPENAI_API_KEY
+} as const;
+
+export const openRouterEnvConfig = {
+  apiKey: env.OPENROUTER_API_KEY
+} as const;
+
+export const voyageAiEnvConfig = {
+  apiKey: env.VOYAGEAI_API_KEY
 } as const;
