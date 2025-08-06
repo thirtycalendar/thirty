@@ -29,7 +29,7 @@
   ];
 </script>
 
-<div class="flex w-full max-w-xl flex-col gap-4 p-4">
+<div class="flex w-full max-w-xl flex-col gap-4 py-4">
   {#each feedbackItems as { icon: Icon, title, description, href } (href)}
     <a
       {href}

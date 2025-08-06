@@ -17,7 +17,7 @@
   }
 </script>
 
-<div class="flex w-full max-w-xl flex-col gap-4 p-4">
+<div class="flex w-full max-w-xl flex-col gap-4 py-4">
   <div class="flex items-center justify-between">
     <div>
       <p class="text-primary-content font-bold">Current Plan ({planName})</p>
