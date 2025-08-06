@@ -7,7 +7,8 @@
     class="bg-base-100 m-auto w-full space-y-6 rounded-2xl p-8 text-center shadow-2xl sm:w-[400px] md:p-10"
   >
     <div>
-      <GoogleAuthButton />
+      <GoogleAuthButton class="btn btn-lg btn-soft my-2 w-full font-semibold" />
+
       <p class="text-base-content mt-3 text-xs opacity-60">
         Secure sign-in with your Google account
       </p>

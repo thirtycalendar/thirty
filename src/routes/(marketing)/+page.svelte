@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
+  import { GoogleAuthButton } from "$lib/client/features/auth/components";
   import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
 
-  let isDark = false;
+  let isDark = $state(false);
 
   onMount(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -16,7 +17,6 @@
   });
 
   const githubUrl = "https://github.com/thirtycalendar/thirty";
-  const getStartedUrl = "/auth";
 </script>
 
 <div class="navbar bg-base-100 fixed top-0 right-0 left-0 z-50 m-auto max-w-5xl">
@@ -28,11 +28,12 @@
 
   <div class="hidden flex-none gap-2 sm:flex">
     <a href={githubUrl} target="_blank" class="btn btn-ghost">⭐ Star on GitHub</a>
-    <a href={getStartedUrl} class="btn btn-primary-content">Get Started</a>
+
+    <GoogleAuthButton label="Get Started" class="btn btn-primary-content" showIcon={false} />
   </div>
 
   <div class="flex-none sm:hidden">
-    <a href={getStartedUrl} class="btn btn-primary-content btn-sm">Get Started</a>
+    <a href={githubUrl} class="btn btn-primary-content btn-sm">⭐ Star on GitHub</a>
   </div>
 </div>
 
@@ -45,12 +46,11 @@
   </p>
 
   <div class="mt-8 flex justify-center gap-3">
-    <a
-      href={getStartedUrl}
+    <GoogleAuthButton
+      label="Get Started →"
       class="btn btn-primary-content btn-lg flex min-w-[250px] items-center gap-2"
-    >
-      Get Started <span class="font-normal">→</span>
-    </a>
+      showIcon={false}
+    />
   </div>
 </section>
 
