@@ -1,6 +1,12 @@
 <script lang="ts">
+  import { Seo } from "$lib/client/components";
+
   import { businessName, effectiveDate, productName, supportEmail } from "../legal";
+
+  let { data } = $props();
 </script>
+
+<Seo seo={data.seo} />
 
 <h1 class="my-5 text-2xl font-bold">Privacy Policy</h1>
 <p class="my-3 font-semibold">Effective Date: {effectiveDate}</p>

@@ -2,7 +2,10 @@
   import { onMount } from "svelte";
 
   import { GoogleAuthButton } from "$lib/client/features/auth/components";
+  import { Seo } from "$lib/client/components";
   import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
+
+  let { data } = $props();
 
   let isDark = $state(false);
 
@@ -18,6 +21,8 @@
 
   const githubUrl = "https://github.com/thirtycalendar/thirty";
 </script>
+
+<Seo seo={data.seo} />
 
 <div class="navbar bg-base-100 fixed top-0 right-0 left-0 z-50 m-auto max-w-5xl">
   <div class="flex-1">
