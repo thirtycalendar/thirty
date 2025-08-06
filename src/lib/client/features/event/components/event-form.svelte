@@ -59,7 +59,6 @@
     schema: eventSchema,
     defaultValues,
     disabledFields: ["timezone"],
-    resetDisabledFields: ["calendarId", "timezone"],
     onSubmit,
     onSuccess: () => {
       isLocation = false;

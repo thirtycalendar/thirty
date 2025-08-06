@@ -36,7 +36,10 @@
       class="bg-base-100 hover:bg-base-300 flex items-center gap-5 rounded-lg p-3 px-5 transition"
       target={href.startsWith("mailto:") ? "" : "_blank"}
     >
-      <Icon class="text-primary-conent h-5 w-5" />
+      <div>
+        <Icon class="text-primary-conent" size="18" />
+      </div>
+
       <div>
         <p class="text-primary-content font-semibold">{title}</p>
         <p class="text-primary-content/70 text-sm">{description}</p>

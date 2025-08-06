@@ -7,7 +7,6 @@
     Milestone,
     ReceiptText,
     RefreshCcw,
-    SunMoon,
     TriangleAlert
   } from "@lucide/svelte";
 
@@ -16,7 +15,7 @@
   const links = [
     { href: "billing", icon: ReceiptText, label: "Billing" },
     { href: "sync", icon: RefreshCcw, label: "Sync" },
-    { href: "appearance", icon: SunMoon, label: "Appearance" },
+    // { href: "appearance", icon: SunMoon, label: "Appearance" },
     { href: "feedback", icon: MessageCircleMore, label: "Feedback" },
     { href: "https://thirty.userjot.com/roadmap", icon: Milestone, label: "Roadmap" },
     { href: "delete-account", icon: TriangleAlert, label: "Delete Account" }
