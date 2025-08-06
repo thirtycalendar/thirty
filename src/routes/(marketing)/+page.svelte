@@ -31,14 +31,8 @@
     </a>
   </div>
 
-  <div class="hidden flex-none gap-2 sm:flex">
-    <a href={githubUrl} target="_blank" class="btn btn-ghost">⭐ Star on GitHub</a>
-
-    <GoogleAuthButton label="Get Started" class="btn btn-primary-content" showIcon={false} />
-  </div>
-
-  <div class="flex-none sm:hidden">
-    <a href={githubUrl} class="btn btn-primary-content btn-sm">⭐ Star on GitHub</a>
+  <div>
+    <a href={githubUrl} target="_blank" class="btn btn-outline btn-sm sm:btn">⭐ Star on GitHub</a>
   </div>
 </div>
 
