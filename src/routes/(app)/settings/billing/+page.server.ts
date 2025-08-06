@@ -1,17 +1,18 @@
 import { requireAuth } from "$lib/server/auth/auth-helpers";
 
+import { seoConfig } from "$lib/shared/config";
+
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ request }) => {
   await requireAuth(request);
 
   const seo = {
-    title: "Billing",
-    url: "https://thirtycalendar.com/billing",
-    description: "Your Calendar. Smarter, Open, and Always Listening.",
-    image: "https://hqqk5u623c.ufs.sh/f/iKaDWWmT042q17NthmSV2O87Dfkbp9I0KZuQP5exwUAgMGsJ",
-    twitterHandle: "@itsithu"
+    title: seoConfig.title("Billing"),
+    url: seoConfig.url("settings/billing"),
+    description: seoConfig.description,
+    image: seoConfig.image,
+    twitterHandle: seoConfig.twitterHandle
   };
-
   return { seo };
 };
