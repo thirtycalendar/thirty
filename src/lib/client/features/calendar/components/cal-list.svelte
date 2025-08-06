@@ -120,15 +120,13 @@
               <div class="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  class="checkbox checkbox-xs"
+                  class="checkbox checkbox-xs rounded-sm text-shadow-2xs"
                   checked={onChecked(item)}
                   onchange={() => onChange(item)}
+                  style={`--checkedColor: ${item.color}`}
                 />
 
-                <span
-                  class="max-w-[160px] truncate text-sm text-ellipsis whitespace-nowrap"
-                  style={`color: ${item.color}`}
-                >
+                <span class="max-w-[160px] truncate text-sm text-ellipsis whitespace-nowrap">
                   {getItemName(item)}
                 </span>
               </div>
@@ -152,3 +150,9 @@
     {/if}
   </div>
 {/snippet}
+
+<style>
+  input[type="checkbox"]:checked {
+    background-color: var(--checkedColor) !important;
+  }
+</style>
