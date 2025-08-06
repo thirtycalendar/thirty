@@ -1,5 +1,19 @@
 <script lang="ts">
-  import { DemoImage, LogoImage } from "$lib/client/assets";
+  import { onMount } from "svelte";
+
+  import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
+
+  let isDark = false;
+
+  onMount(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    isDark = media.matches;
+
+    const listener = (e: MediaQueryListEvent) => (isDark = e.matches);
+    media.addEventListener("change", listener);
+
+    return () => media.removeEventListener("change", listener);
+  });
 
   const githubUrl = "https://github.com/thirtycalendar/thirty";
   const getStartedUrl = "/auth";
@@ -42,7 +56,7 @@
 
 <section class="mx-auto max-w-6xl px-4 pb-20">
   <img
-    src={DemoImage}
+    src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Dashboard Preview"
     class="ring-base-300 rounded-2xl shadow-2xl ring-10"
     loading="lazy"

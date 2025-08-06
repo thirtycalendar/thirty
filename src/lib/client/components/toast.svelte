@@ -4,10 +4,10 @@
   import { removeToast, toasts } from "../stores/toast";
 </script>
 
-<div class="toast toast-top toast-center z-10">
+<div class="toast toast-top toast-center z-5000">
   {#each $toasts as toast (toast.id)}
     <button
-      class="alert z-10 {toast.isError ? 'alert-error' : 'bg-base-300'}"
+      class="alert z-4000 {toast.isError ? 'alert-error' : 'bg-base-300'}"
       onclick={() => removeToast(toast.id)}
     >
       <Info size={18} />

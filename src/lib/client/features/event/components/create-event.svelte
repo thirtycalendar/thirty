@@ -47,7 +47,7 @@
     },
     onSuccess: (data) => {
       errorMessage = "";
-      defaultValues.color = getRandomColor();
+      // defaultValues.color = getRandomColor();
 
       showToast(data.message);
       toggleModal(eventModal.modalId);

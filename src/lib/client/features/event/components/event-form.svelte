@@ -12,10 +12,10 @@
   import { addDays, format } from "date-fns";
 
   import {
-    ChoiceField,
     ColorChoiceField,
     DateField,
     FormActionButtons,
+    FormChoiceField,
     InputField,
     TextareaField,
     TimeField,
@@ -294,7 +294,7 @@
           <div class="text-muted-foreground">
             <CircleCheck size="20" strokeWidth="2.5" />
           </div>
-          <ChoiceField
+          <FormChoiceField
             name="status"
             choiceList={EventStatus}
             {handleInput}

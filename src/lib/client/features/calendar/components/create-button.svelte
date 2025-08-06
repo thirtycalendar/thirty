@@ -5,7 +5,7 @@
   import { eventModal } from "$lib/client/stores/modal";
 </script>
 
-<div class="dropdown dropdown-bottom dropdown-end z-1000 hidden sm:block">
+<div class="dropdown dropdown-bottom dropdown-end z-200 hidden sm:block">
   <button tabindex="0" class="btn btn-md bg-primary shadow-none">
     <Plus size="20px" /> <span class="hidden lg:block">Create</span>
   </button>
