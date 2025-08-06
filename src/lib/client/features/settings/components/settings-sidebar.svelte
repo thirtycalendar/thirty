@@ -3,6 +3,7 @@
 
   import {
     MessageCircleMore,
+    Milestone,
     ReceiptText,
     RefreshCcw,
     SunMoon,
@@ -15,6 +16,7 @@
     { href: "billing", icon: ReceiptText, label: "Billing" },
     { href: "sync", icon: RefreshCcw, label: "Sync" },
     { href: "appearance", icon: SunMoon, label: "Appearance" },
+    { href: "roadmap", icon: Milestone, label: "Roadmap" },
     { href: "feedback", icon: MessageCircleMore, label: "Feedback" },
     { href: "delete-account", icon: TriangleAlert, label: "Delete Account" }
   ];

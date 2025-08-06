@@ -1,4 +1,4 @@
-export { default as ChoiceField } from "./form/choice-field.svelte";
+export { default as FormChoiceField } from "./form/choice-field.svelte";
 export { default as ColorChoiceField } from "./form/color-choice-field.svelte";
 export { default as DateField } from "./form/date-field.svelte";
 export { default as FormActionButtons } from "./form/form-action-buttons.svelte";
@@ -8,6 +8,7 @@ export { default as TimeField } from "./form/time-field.svelte";
 export { default as TimezoneField } from "./form/timezone-field.svelte";
 export { default as GoogleIcon } from "./icons/google-icon.svelte";
 export { default as GoogleCalendarIcon } from "./icons/google-calendar-icon.svelte";
+export { default as ChoiceField } from "./choice-field.svelte";
 export { default as DetailActionButtons } from "./detail-action-buttons.svelte";
 export { default as Pricing } from "./pricing.svelte";
 export { default as Modal } from "./modal.svelte";

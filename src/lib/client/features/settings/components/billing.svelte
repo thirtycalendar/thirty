@@ -1,19 +1,9 @@
 <script lang="ts">
-  interface Props {
-    planName: "Free" | "Pro";
-    renewalDate: string;
-    price: number;
-    usage: number;
-    limit: number;
-  }
-
-  let {
-    planName = "Free",
-    renewalDate = "25 Jan 2027",
-    price = 20,
-    usage = 100,
-    limit = 1500
-  }: Props = $props();
+  const planName = "Free";
+  const renewalDate = "25 Jan 2027";
+  const price = 20;
+  const usage = 100;
+  const limit = 1500;
 
   const percentage = Math.min(100, (usage / limit) * 100);
 
