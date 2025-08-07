@@ -1,4 +1,6 @@
-import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { date, integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
+
+import type { SubscriptionPlan } from "$lib/shared/types";
 
 import { userTable } from "./auth";
 import { timestamps } from "./utils";
@@ -9,9 +11,9 @@ export const creditTable = pgTable("credits", {
     .notNull()
     .references(() => userTable.id, { onDelete: "cascade" }),
 
-  month: text("month").notNull(), // e.g., "2025-08"
-  used: integer("used").default(0).notNull(),
-  limit: integer("limit").default(5000).notNull(),
+  plan: text("plan").$type<SubscriptionPlan>().default("free").notNull(),
+  count: integer("count").default(0),
+  month: date("month").notNull(),
 
   ...timestamps
 });

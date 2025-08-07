@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Color } from "../constants";
+import { Colors } from "../constants";
 import { dateYYYYMMDD } from "./utils";
 
 export const birthdaySchema = z.object({
@@ -9,6 +9,6 @@ export const birthdaySchema = z.object({
     .min(1, { message: "Name is required" })
     .describe("The name of the person whose birthday it is."),
   dob: dateYYYYMMDD.describe("The date of birth in YYYY-MM-DD format."),
-  color: z.enum(Color).describe("The display color for the birthday."),
+  color: z.enum(Colors).describe("The display color for the birthday."),
   note: z.string().nullable().describe("Any additional notes about the birthday.")
 });

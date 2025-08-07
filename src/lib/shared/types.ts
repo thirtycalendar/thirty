@@ -81,29 +81,20 @@ export type MessageForm = InferInsertModel<typeof messageTable>;
 export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
 
 // Enums and Constants
-export type PolarSubPlan = (typeof Const.PolarSubPlan)[number];
-export type Color = (typeof Const.Color)[number];
-export type Source = (typeof Const.Source)[number];
-export type EventStatus = (typeof Const.EventStatus)[number];
-export type EventAttendeeStatus = (typeof Const.EventAttendeeStatus)[number];
-export type TaskStatus = (typeof Const.TaskStatus)[number];
-export type NotifyInMin = (typeof Const.NotifyInMin)[number];
-export type NotifyInDay = (typeof Const.NotifyInDay)[number];
+export type SubscriptionPlan = (typeof Const.SubscriptionPlans)[number];
+export type Color = (typeof Const.Colors)[number];
+export type Source = (typeof Const.Sources)[number];
+export type EventStatus = (typeof Const.EventStatuses)[number];
+export type EventAttendeeStatus = (typeof Const.AttendeeStatuses)[number];
+export type TaskStatus = (typeof Const.TaskStatuses)[number];
+export type NotifyInMin = (typeof Const.NotificationMinutes)[number];
+export type NotifyInDay = (typeof Const.NotificationDays)[number];
 
 // KV
 export interface IpLocationKV {
   countryName: string;
   countryCode: string;
   timezone: string;
-}
-
-export interface PolarSubKV {
-  subscriptionId: string | null;
-  plan: PolarSubPlan;
-  priceId: string | null;
-  currentPeriodStart: number | null;
-  currentPeriodEnd: number | null;
-  cancelAtPeriodEnd: boolean;
 }
 
 export interface GoogleSessionKV {

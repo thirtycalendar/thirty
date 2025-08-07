@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Source, TaskStatus } from "../constants";
+import { Sources, TaskStatuses } from "../constants";
 
 export const taskSchema = z.object({
   externalId: z
@@ -8,7 +8,7 @@ export const taskSchema = z.object({
     .nullable()
     .describe("Optional external ID if synced from another service."),
   source: z
-    .enum(Source)
+    .enum(Sources)
     .default("local")
     .describe("The source of the task (e.g., 'google', 'local'). Defaults to 'local'."),
 
@@ -23,7 +23,7 @@ export const taskSchema = z.object({
     .min(1, { message: "Start date is required" })
     .describe("The due date of the task in YYYY-MM-DD format."),
   status: z
-    .enum(TaskStatus)
+    .enum(TaskStatuses)
     .default("pending")
     .describe(
       "The current status of the task (e.g., 'pending', 'completed'). Defaults to 'pending'."

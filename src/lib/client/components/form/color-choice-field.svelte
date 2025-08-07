@@ -5,7 +5,7 @@
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { Color } from "$lib/shared/constants";
+  import { Colors } from "$lib/shared/constants";
   import type { Color as ColorType } from "$lib/shared/types";
 
   interface Props {
@@ -59,7 +59,7 @@
 
   function handleGridKeydown(event: KeyboardEvent, index: number) {
     const numCols = 6;
-    const totalChoices = Color.length; // Use the new constant
+    const totalChoices = Colors.length;
 
     let nextIndex: number | null = null;
 
@@ -67,7 +67,7 @@
       case "Enter":
       case " ":
         event.preventDefault();
-        selectChoice(Color[index]); // Use the new constant
+        selectChoice(Colors[index]);
         break;
       case "ArrowRight":
         event.preventDefault();
@@ -96,7 +96,7 @@
 
     if (nextIndex !== null && nextIndex >= 0 && nextIndex < totalChoices) {
       const nextButton = dropdownRef?.querySelector(
-        `[data-color-id="${Color[nextIndex]}"]` // Use the new constant
+        `[data-color-id="${Colors[nextIndex]}"]`
       ) as HTMLButtonElement;
       nextButton?.focus();
     }
@@ -147,7 +147,7 @@
       tabindex="-1"
     >
       <div class="grid auto-rows-fr grid-cols-6 gap-2">
-        {#each Color as choice, index (choice)}
+        {#each Colors as choice, index (choice)}
           <button
             type="button"
             class="hover:ring-base-300 focus:ring-base-300 relative flex aspect-square w-full items-center justify-center
@@ -159,7 +159,7 @@
             onkeydown={(e) => handleGridKeydown(e, index)}
             role="option"
             aria-selected={selectedColorHex === choice}
-            aria-label={`Color ${choice}`}
+            aria-label={`Colors ${choice}`}
             data-color-id={choice}
             disabled={selectedColorHex === choice}
           >

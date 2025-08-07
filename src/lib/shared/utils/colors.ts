@@ -1,10 +1,10 @@
-import { Color } from "../constants";
+import { Colors } from "../constants";
 
-type HexColor = (typeof Color)[number];
+type HexColor = (typeof Colors)[number];
 
 export function getRandomColor(): HexColor {
-  const random = Math.floor(Math.random() * Color.length);
-  return Color[random];
+  const random = Math.floor(Math.random() * Colors.length);
+  return Colors[random];
 }
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -20,7 +20,7 @@ function hexToRgb(hex: string): [number, number, number] {
 export function getNearestColor(hexCode: string): HexColor {
   const targetRgb = hexToRgb(hexCode);
 
-  return Color.reduce(
+  return Colors.reduce(
     (closest, currentColor) => {
       const [r1, g1, b1] = targetRgb;
       const [r2, g2, b2] = hexToRgb(currentColor);
@@ -30,6 +30,9 @@ export function getNearestColor(hexCode: string): HexColor {
       return distance < closest.distance ? { color: currentColor, distance } : closest;
     },
 
-    { color: Color[0], distance: Number.POSITIVE_INFINITY } as { color: HexColor; distance: number }
+    { color: Colors[0], distance: Number.POSITIVE_INFINITY } as {
+      color: HexColor;
+      distance: number;
+    }
   ).color;
 }

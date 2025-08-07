@@ -24,7 +24,7 @@
   import { eventModal } from "$lib/client/stores/modal";
   import { createForm } from "$lib/client/utils/create-form";
 
-  import { EventStatus } from "$lib/shared/constants";
+  import { EventStatuses } from "$lib/shared/constants";
   import type { EventForm } from "$lib/shared/types";
 
   import { eventSchema } from "../../../../shared/schemas/event";
@@ -295,7 +295,7 @@
           </div>
           <FormChoiceField
             name="status"
-            choiceList={EventStatus}
+            choiceList={EventStatuses}
             {handleInput}
             {formData}
             {formErrors}

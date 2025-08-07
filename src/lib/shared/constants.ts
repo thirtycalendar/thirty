@@ -1,20 +1,25 @@
-export const PolarSubPlan = ["pro", "free"] as const;
+export const SubscriptionPlans = ["pro", "free"] as const;
+
+export const MessageLimitByPlan = {
+  pro: 2000,
+  free: 20
+} as const;
 
 export const CalView = ["month", "week", "day", "year"] as const;
 
-export const Source = ["local", "file", "google", "outlook", "apple"] as const;
+export const Sources = ["local", "file", "google", "outlook", "apple"] as const;
 
-export const EventStatus = ["confirmed", "cancelled", "tentative"] as const;
+export const EventStatuses = ["confirmed", "cancelled", "tentative"] as const;
 
-export const EventAttendeeStatus = ["accepted", "declined", "tentative", "needsAction"] as const;
+export const AttendeeStatuses = ["accepted", "declined", "tentative", "needsAction"] as const;
 
-export const TaskStatus = ["pending", "completed"] as const;
+export const TaskStatuses = ["pending", "completed"] as const;
 
-export const NotifyInMin = [0, 5, 10, 15, 30, 60] as const;
+export const NotificationMinutes = [0, 5, 10, 15, 30, 60] as const;
 
-export const NotifyInDay = [1, 7, 10, 15, 30] as const;
+export const NotificationDays = [1, 7, 10, 15, 30] as const;
 
-export const Color = [
+export const Colors = [
   "#ac725e",
   "#d06b64",
   "#f83a22",
