@@ -63,6 +63,6 @@
 </section>
 
 <div class="text-secondary-content flex justify-center gap-3 p-2 text-sm">
-  <a href="/terms">Terms of Service</a>
-  <a href="/privacy">Privacy Policy</a>
+  <a href="/terms" class="hover:text-primary-content">Terms of Service</a>
+  <a href="/privacy" class="hover:text-primary-content">Privacy Policy</a>
 </div>

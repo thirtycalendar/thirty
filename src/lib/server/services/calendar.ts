@@ -10,6 +10,7 @@ import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
 import { voyageAiEnvConfig } from "../utils/env-config";
+import { eventService } from "./event";
 
 export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   table: calendarTable,
@@ -32,6 +33,16 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
     update: {
       before: async ({ input, context }) => {
         if (input.isPrimary) await resetPrimaryCalendar(context.userId);
+      }
+    },
+    delete: {
+      before: async ({ context }) => {
+        await eventService.clearCache(context.userId);
+      }
+    },
+    deleteAll: {
+      before: async ({ context }) => {
+        await eventService.clearCache(context.userId);
       }
     }
   }
