@@ -84,6 +84,7 @@
     "marked": "^16.1.1",
     "openai": "^5.10.2",
     "pg": "^8.16.0",
+    "posthog-js": "^1.258.6",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
     "voyage-ai-provider": "^2.0.0",
