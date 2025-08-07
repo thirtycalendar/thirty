@@ -15,16 +15,14 @@
   let renewalDate = $state("");
   let price = $state(20);
 
-  const limit = $derived.by(() =>
-    planName === "free" ? MessageLimitByPlan.free : MessageLimitByPlan.pro
-  );
-
+  const isFree = $derived.by(() => planName === "free");
+  const limit = $derived.by(() => MessageLimitByPlan[planName]);
   const percentage = $derived.by(() => Math.min(100, (usage / limit) * 100));
 
   const persuasiveText = $derived.by(() =>
-    planName === "free"
+    isFree
       ? `Upgrade to Pro and unlock ~${MessageLimitByPlan.pro} messages/month, faster sync, and a smoother experience.`
-      : `You're on Pro – enjoy ~${MessageLimitByPlan.pro} messages/month with uninterrupted productivity.`
+      : `You're on Pro - enjoy ~${MessageLimitByPlan.pro} messages/month with uninterrupted productivity.`
   );
 
   onMount(async () => {
@@ -37,34 +35,28 @@
   });
 
   const {
-    mutate: upgradeMutation,
+    mutate: handleUpgrade,
     isPending: isUpgradePending,
     isSuccess: isUpgradeSuccess,
     isError: isUpgradeError
   } = createMutation({
-    mutationFn: async () => {
-      await authClient.checkout({ products: [polarProductIdsEnvConfig.pro] });
-    }
+    mutationFn: () => authClient.checkout({ products: [polarProductIdsEnvConfig.pro] })
   });
 
-  async function handleUpgrade() {
-    await upgradeMutation();
-  }
-
   const {
-    mutate: portalMutation,
+    mutate: handleBilling,
     isPending: isPortalPending,
     isSuccess: isPortalSuccess,
     isError: isPortalError
   } = createMutation({
-    mutationFn: async () => {
-      await authClient.customer.portal();
-    }
+    mutationFn: () => authClient.customer.portal()
   });
 
-  async function handleBilling() {
-    await portalMutation();
-  }
+  const isActionPending = $derived.by(() =>
+    isFree ? $isUpgradePending || $isUpgradeSuccess : $isPortalPending || $isPortalSuccess
+  );
+
+  const isActionError = $derived.by(() => (isFree ? $isUpgradeError : $isPortalError));
 </script>
 
 <div class="flex w-full max-w-xl flex-col gap-4 py-4">
@@ -74,13 +66,13 @@
         Current Plan ({capitalizeFirstLetter(planName)})
       </p>
       <p class="text-primary-content/70 text-sm">
-        {planName === "free" ? "No renewal required" : `Active until ${renewalDate}`}
+        {isFree ? "No renewal required" : `Active until ${renewalDate}`}
       </p>
     </div>
 
     <div class="text-right">
       <p class="text-primary-content text-2xl font-bold">
-        {planName === "free" ? "$0" : `$${price}`}
+        {isFree ? "$0" : `$${price}`}
         <span class="text-primary-content/70 text-sm">/mo</span>
       </p>
     </div>
@@ -96,30 +88,16 @@
   <p class="text-primary-content/80 text-sm italic">{persuasiveText}</p>
 
   <div class="mt-3 flex flex-col gap-2">
-    {#if planName === "free"}
-      <button
-        onclick={handleUpgrade}
-        class="btn btn-primary w-full"
-        disabled={($isUpgradePending || $isUpgradeSuccess) && !$isUpgradeError}
-      >
-        {#if $isUpgradePending || $isUpgradeSuccess}
-          <span class="loading loading-spinner loading-xs"></span>
-        {/if}
-
-        Upgrade to Pro
-      </button>
-    {:else}
-      <button
-        onclick={handleBilling}
-        class="btn btn-primary w-full"
-        disabled={($isPortalPending || $isPortalSuccess) && !$isPortalError}
-      >
-        {#if $isPortalPending || $isPortalSuccess}
-          <span class="loading loading-spinner loading-xs"></span>
-        {/if}
-        Manage Billing
-      </button>
-    {/if}
+    <button
+      onclick={isFree ? handleUpgrade : handleBilling}
+      class="btn btn-primary w-full"
+      disabled={isActionPending && !isActionError}
+    >
+      {#if isActionPending}
+        <span class="loading loading-spinner loading-xs"></span>
+      {/if}
+      {isFree ? "Upgrade to Pro" : "Manage Billing"}
+    </button>
 
     <p class="text-primary-content/50 text-center text-xs">
       Secure payments powered by <span class="font-semibold">Polar</span>
