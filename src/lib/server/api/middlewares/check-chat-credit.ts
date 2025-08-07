@@ -1,9 +1,7 @@
 import { startOfMonth } from "date-fns";
-import { eq } from "drizzle-orm";
 import { createMiddleware } from "hono/factory";
 
-import { db } from "$lib/server/db";
-import { creditTable } from "$lib/server/db/tables/credit";
+import { creditService } from "$lib/server/services/credit";
 
 import { MessageLimitByPlan } from "$lib/shared/constants";
 import type { ErrorResponse } from "$lib/shared/types";
@@ -17,39 +15,37 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
   }
 
   const today = startOfMonth(new Date());
+  const monthStr = today.toDateString();
 
-  const [row] = await db.select().from(creditTable).where(eq(creditTable.userId, user.id)).limit(1);
+  const existingCredit = await creditService.maybeGetByUser(user.id, user.id);
 
-  const plan = row?.plan ?? "free";
+  const plan = existingCredit?.plan ?? "free";
   const planLimit = plan === "pro" ? MessageLimitByPlan.pro : MessageLimitByPlan.free;
 
-  const isCurrentMonth = row?.month && new Date(row.month).getTime() === today.getTime();
+  const isCurrentMonth =
+    existingCredit?.month && new Date(existingCredit.month).getTime() === today.getTime();
 
-  if (!row || !isCurrentMonth) {
-    await db
-      .insert(creditTable)
-      .values({
-        userId: user.id,
-        plan,
-        count: 1,
-        month: today.toDateString()
-      })
-      .onConflictDoUpdate({
-        target: creditTable.userId,
-        set: { count: 1, month: today.toISOString() }
-      });
+  // Insert or reset credit if it's a new month or no record exists
+  if (!existingCredit || !isCurrentMonth) {
+    await creditService.create(user.id, {
+      plan,
+      count: 1,
+      month: monthStr,
+      userId: user.id
+    });
 
     return next();
   }
 
-  if (row.count! >= planLimit) {
+  // Limit check
+  if ((existingCredit.count ?? 0) >= planLimit) {
     return c.json<ErrorResponse>({ success: false, message: "Message limit reached." }, 403);
   }
 
-  await db
-    .update(creditTable)
-    .set({ count: row.count! + 1 })
-    .where(eq(creditTable.userId, user.id));
+  // Increment count
+  await creditService.update(existingCredit.id, {
+    count: (existingCredit.count ?? 0) + 1
+  });
 
   return next();
 });

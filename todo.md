@@ -24,3 +24,4 @@
 - [ ] - Add accept and cancel button for tool calling requesting.
     - [x] - Refetch the queries after the accepted ai sdk tool calling.
 - [ ] - Detect ip address country and add holiday country automatically.
+- [ ] - Add all the countires to Holiday country vector. Update country name in kv.

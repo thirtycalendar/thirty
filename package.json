@@ -17,7 +17,7 @@
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "auth:generate": "npx @better-auth/cli generate --config ./libs/auth/index.ts --output ./libs/db/schemas/auth-table.ts --y",
-    "db:reset": "npx tsx ./src/lib/server/scripts/reset-db.ts --url $DATABASE_URL",
+    "db:reset": "npx tsx ./src/lib/server/utils/scripts/reset-db.ts --url $DATABASE_URL",
     "db:push": "cross-env NODE_ENV=development drizzle-kit push",
     "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",

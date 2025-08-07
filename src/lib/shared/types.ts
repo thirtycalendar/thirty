@@ -6,6 +6,7 @@ import type { auth } from "$lib/server/auth";
 import type { birthdayTable } from "$lib/server/db/tables/birthday";
 import type { calendarTable } from "$lib/server/db/tables/calendar";
 import type { chatTable } from "$lib/server/db/tables/chat";
+import type { creditTable } from "$lib/server/db/tables/credit";
 import type { eventTable } from "$lib/server/db/tables/event";
 import type { messageTable } from "$lib/server/db/tables/message";
 import type { taskTable } from "$lib/server/db/tables/task";
@@ -79,6 +80,10 @@ export type Message = InferSelectModel<typeof messageTable>;
 export type MessageForm = InferInsertModel<typeof messageTable>;
 
 export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
+
+// Credit
+export type Credit = InferSelectModel<typeof creditTable>;
+export type CreditForm = InferInsertModel<typeof creditTable>;
 
 // Enums and Constants
 export type SubscriptionPlan = (typeof Const.SubscriptionPlans)[number];
