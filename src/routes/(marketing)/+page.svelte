@@ -61,3 +61,8 @@
     loading="lazy"
   />
 </section>
+
+<div class="text-secondary-content flex justify-center gap-3 p-2 text-sm">
+  <a href="/terms">Terms of Service</a>
+  <a href="/privacy">Privacy Policy</a>
+</div>
