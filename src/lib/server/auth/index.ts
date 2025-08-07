@@ -1,10 +1,10 @@
-import { checkout, polar, portal } from "@polar-sh/better-auth";
+import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 
-import { polar as polarClient } from "$lib/server/libs/polar";
+import { polarClient } from "$lib/server/libs/polar/client";
 
 import { getRandomColor } from "$lib/shared/utils/colors";
 import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
@@ -15,8 +15,9 @@ import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { calendarService } from "../services/calendar";
+import { creditService } from "../services/credit";
 import { holidayCountryService } from "../services/holiday";
-import { googleEnvConfig } from "../utils/env-config";
+import { googleEnvConfig, polarEnvConfig } from "../utils/env-config";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -95,12 +96,27 @@ export const auth = betterAuth({
       client: polarClient,
       createCustomerOnSignUp: true,
       use: [
+        portal(),
         checkout({
           products: [{ productId: polarProductIdsEnvConfig.pro, slug: "pro" }],
           successUrl: "/calendar",
           authenticatedUsersOnly: true
         }),
-        portal()
+        webhooks({
+          secret: polarEnvConfig.webhookSecret,
+          onOrderPaid: async (payload) => {
+            const userId = payload.data.customer.externalId;
+
+            const plan = payload.data.productId === polarProductIdsEnvConfig.pro ? "pro" : "free";
+
+            if (userId) await creditService.update(userId, { plan });
+          },
+          onSubscriptionRevoked: async (payload) => {
+            const userId = payload.data.customer.externalId;
+
+            if (userId) await creditService.update(userId, { plan: "free" });
+          }
+        })
       ]
     })
   ]

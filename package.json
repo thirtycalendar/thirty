@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
+    "tunnel": "npx localtunnel --port 5173",
+    "tunnel:dev": "npx localtunnel --port 5173 --subdomain thirty-calendar-dev || true",
     "deploy": "vercel --force",
     "prod": "vercel --force --prod",
     "build": "vite build",

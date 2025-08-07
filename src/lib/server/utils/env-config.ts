@@ -35,8 +35,9 @@ export const vectorHolidayEnvConfig = {
 } as const;
 
 export const polarEnvConfig = {
+  server: isProd ? "production" : "sandbox",
   token: isProd ? env.POLAR_ACCESS_TOKEN_PROD : env.POLAR_ACCESS_TOKEN_DEV,
-  server: isProd ? "production" : "sandbox"
+  webhookSecret: isProd ? env.POLAR_WEBHOOK_SECRET_PROD : env.POLAR_WEBHOOK_SECRET_DEV
 } as const;
 
 export const openAiEnvConfig = {

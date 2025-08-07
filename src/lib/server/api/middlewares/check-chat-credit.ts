@@ -1,7 +1,7 @@
 import { startOfMonth } from "date-fns";
 import { createMiddleware } from "hono/factory";
 
-import { creditService } from "$lib/server/services/credit";
+import { creditService, maybeGetCreditByUserId } from "$lib/server/services/credit";
 
 import { MessageLimitByPlan } from "$lib/shared/constants";
 import type { ErrorResponse } from "$lib/shared/types";
@@ -17,7 +17,7 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
   const today = startOfMonth(new Date());
   const monthStr = today.toDateString();
 
-  const existingCredit = await creditService.maybeGetByUser(user.id, user.id);
+  const existingCredit = await maybeGetCreditByUserId(user.id);
 
   const plan = existingCredit?.plan ?? "free";
   const planLimit = plan === "pro" ? MessageLimitByPlan.pro : MessageLimitByPlan.free;
