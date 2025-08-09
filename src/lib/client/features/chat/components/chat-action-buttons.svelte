@@ -37,7 +37,7 @@
       confirmDelete = false;
       errorMessage = message;
     },
-    queryKeys: ["chat-list", "message-list"]
+    queryKeys: ["chats", "messages"]
   });
 
   function handleDelete() {

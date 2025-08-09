@@ -48,7 +48,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["hd-list", "hd-country-list", "all-hd-country-list"]
+    queryKeys: ["holidays", "holiday-countries", "all-holiday-countries"]
   });
 
   async function onSubmit(data: HolidayCountryForm) {

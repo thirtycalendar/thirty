@@ -16,7 +16,7 @@ export function getChats() {
 
         return data.data;
       },
-      queryKeys: ["chat-list"],
+      queryKeys: ["chats"],
       staleTime: Number.POSITIVE_INFINITY
     });
   }
@@ -40,7 +40,7 @@ export function getMessages(chatId: string) {
         createdAt: new Date(message.createdAt)
       }));
     },
-    queryKeys: ["message-list", chatId],
+    queryKeys: ["messages", chatId],
     // staleTime: Number.POSITIVE_INFINITY
     staleTime: 0
   });

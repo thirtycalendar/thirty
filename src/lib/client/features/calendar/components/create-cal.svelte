@@ -44,7 +44,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["cal-list", "event-list"]
+    queryKeys: ["calendars", "events"]
   });
 
   async function onSubmit(data: CalendarFormType) {

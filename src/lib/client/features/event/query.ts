@@ -16,7 +16,7 @@ export function getEvents() {
 
         return data.data;
       },
-      queryKeys: ["event-list"]
+      queryKeys: ["events"]
     });
   }
 

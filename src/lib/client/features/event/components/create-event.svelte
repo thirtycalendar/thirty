@@ -69,7 +69,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["event-list"]
+    queryKeys: ["events"]
   });
 
   async function onSubmit(data: EventFormType) {

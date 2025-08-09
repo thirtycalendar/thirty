@@ -25,7 +25,7 @@
       await authClient.signOut();
       goto("/auth");
     },
-    queryKeys: ["cal-list", "event-list"]
+    queryKeys: ["calendars", "events"]
   });
 
   function syncGoogleCalendar() {

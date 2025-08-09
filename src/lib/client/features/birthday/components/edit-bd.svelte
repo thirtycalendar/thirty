@@ -48,7 +48,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["bd-list"]
+    queryKeys: ["birthdays"]
   });
 
   async function onSubmit(data: BirthdayFormType) {

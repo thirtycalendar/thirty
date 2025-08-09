@@ -37,7 +37,7 @@
       confirmDelete = false;
       errorMessage = message;
     },
-    queryKeys: ["bd-list"]
+    queryKeys: ["birthdays"]
   });
 
   function handleDelete() {

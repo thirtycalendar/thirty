@@ -17,7 +17,7 @@ export function getCalendars() {
 
         return data.data;
       },
-      queryKeys: ["cal-list"]
+      queryKeys: ["calendars"]
     });
   }
 

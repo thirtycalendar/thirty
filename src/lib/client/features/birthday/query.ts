@@ -17,7 +17,7 @@ export function getBirthdays() {
 
         return data.data;
       },
-      queryKeys: ["bd-list"]
+      queryKeys: ["birthdays"]
     });
   }
 

@@ -37,7 +37,7 @@
       confirmDelete = false;
       errorMessage = message;
     },
-    queryKeys: ["event-list"]
+    queryKeys: ["events"]
   });
 
   function handleDelete() {

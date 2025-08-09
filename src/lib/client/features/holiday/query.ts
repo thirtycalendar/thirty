@@ -16,7 +16,7 @@ export function getHolidays() {
 
         return data.data;
       },
-      queryKeys: ["hd-list"]
+      queryKeys: ["holidays"]
     });
   }
 
@@ -38,7 +38,7 @@ export function getHolidayCountries() {
 
         return data.data;
       },
-      queryKeys: ["hd-country-list"]
+      queryKeys: ["holiday-countries"]
     });
   }
 
@@ -60,7 +60,7 @@ export function getAllHolidayCountries() {
 
         return data.data;
       },
-      queryKeys: ["all-hd-country-list"]
+      queryKeys: ["all-holiday-countries"]
     });
   }
 

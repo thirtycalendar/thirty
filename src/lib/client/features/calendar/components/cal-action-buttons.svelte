@@ -37,7 +37,7 @@
       confirmDelete = false;
       errorMessage = message;
     },
-    queryKeys: ["cal-list", "event-list"]
+    queryKeys: ["calendars", "events"]
   });
 
   function handleDelete() {

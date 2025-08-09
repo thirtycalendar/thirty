@@ -52,7 +52,7 @@
     onError: (message: Error["message"]) => {
       errorMessage = message;
     },
-    queryKeys: ["chat-list", "message-list"]
+    queryKeys: ["chats", "messages"]
   });
 
   async function onSubmit(data: ChatUpdateForm) {
