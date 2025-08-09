@@ -12,7 +12,7 @@ export const creditTable = pgTable("credits", {
     .references(() => userTable.id, { onDelete: "cascade" }),
 
   plan: text("plan").$type<SubscriptionPlan>().default("free").notNull(),
-  count: integer("count").default(0),
+  count: integer("count").default(0).notNull(),
   month: date("month").notNull(),
 
   ...timestamps

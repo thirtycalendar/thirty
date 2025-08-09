@@ -8,7 +8,7 @@ import { polarClient } from "$lib/server/libs/polar/client";
 
 import { getRandomColor } from "$lib/shared/utils/colors";
 import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
-import type { CalendarForm, GoogleSessionKV } from "$lib/shared/types";
+import type { CalendarForm, CreditForm, GoogleSessionKV } from "$lib/shared/types";
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
@@ -72,6 +72,13 @@ export const auth = betterAuth({
           };
 
           await calendarService.create(id, calendar);
+
+          const credit: CreditForm = {
+            userId: id,
+            month: new Date().toISOString()
+          };
+
+          await creditService.create(id, credit);
 
           await holidayCountryService.addCountryByCode(id, countryCode);
         }
