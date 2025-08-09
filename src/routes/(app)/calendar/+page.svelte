@@ -16,7 +16,7 @@
   <Calendar />
 </div>
 
-<Sidebar sidebarId={chatSidebarId} className="w-[340px] right-0" mainSidebar={false}>
+<Sidebar sidebarId={chatSidebarId} class="right-0 w-[340px]" mainSidebar={false}>
   <MiniChatMenu />
 
   <Chat />

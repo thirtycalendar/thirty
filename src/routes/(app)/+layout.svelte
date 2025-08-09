@@ -27,7 +27,7 @@
   <Toast />
 
   <div class="relative h-screen overflow-hidden">
-    <Sidebar sidebarId={mainSidebarId} className="w-[260px] left-0 absolute z-200" mainSidebar>
+    <Sidebar sidebarId={mainSidebarId} class="absolute left-0 z-200 w-[260px]" mainSidebar>
       <SidebarMenu />
 
       {#if pathSegment === "calendar"}

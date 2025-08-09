@@ -24,7 +24,7 @@
 
   interface Props {
     name: string;
-    className?: string;
+    class?: string;
     isDisablePast?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
@@ -32,7 +32,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isDisablePast = false, formData, formErrors }: Props = $props();
+  let { name, class: classCn, isDisablePast = false, formData, formErrors }: Props = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let calendarDropdown = $state<HTMLDivElement | undefined>();
@@ -218,7 +218,7 @@
 
 <svelte:window onmousedown={handleClickOutside} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <input
     type="text"
     aria-label="Date input"
@@ -238,8 +238,7 @@
     }}
     class={cn(
       "hover:bg-base-200 w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
-      error ? "border-error text-error" : "border-base-300 bg-base-100",
-      className
+      error ? "border-error text-error" : "border-base-300 bg-base-100"
     )}
     autocomplete="off"
     placeholder="yyyy-MM-dd"

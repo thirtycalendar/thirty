@@ -54,9 +54,9 @@
       <CalendarCheck2 size="20" strokeWidth="2.5" />
     </div>
     <div class="flex flex-1 gap-2">
-      <DateField name="dob" className="flex-[3]" {formData} {formErrors} />
+      <DateField name="dob" class="flex-[3]" {formData} {formErrors} />
 
-      <ColorChoiceField name="color" className="flex-1" {formData} {formErrors} />
+      <ColorChoiceField name="color" class="flex-1" {formData} {formErrors} />
     </div>
   </div>
 

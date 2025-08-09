@@ -10,7 +10,7 @@
   interface Props {
     name: string;
     choiceList: readonly string[];
-    className?: string;
+    class?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,7 @@
     handleInput: (event: Event) => void;
   }
 
-  let { name, choiceList, className, formData, formErrors, handleInput }: Props = $props();
+  let { name, choiceList, class: classCn, formData, formErrors, handleInput }: Props = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();
@@ -68,7 +68,7 @@
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <button
     type="button"
     bind:this={triggerButtonRef}

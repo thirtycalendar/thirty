@@ -8,10 +8,10 @@
   interface Props {
     choiceList: readonly string[];
     value: string;
-    className?: string;
+    class?: string;
   }
 
-  let { choiceList, className, value = $bindable() }: Props = $props();
+  let { choiceList, class: classCn, value = $bindable() }: Props = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();
@@ -47,7 +47,7 @@
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <button
     type="button"
     bind:this={triggerButtonRef}

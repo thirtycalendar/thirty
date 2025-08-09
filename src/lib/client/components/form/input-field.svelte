@@ -10,7 +10,7 @@
     placeholder?: string;
     fieldsetClassName?: string;
     legendClassName?: string;
-    className?: string;
+    class?: string;
     disabled?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
@@ -26,7 +26,7 @@
     placeholder,
     fieldsetClassName,
     legendClassName,
-    className,
+    class: classCn,
     disabled,
     formData,
     formErrors,
@@ -45,7 +45,7 @@
   <input
     {type}
     {name}
-    class={cn("input w-full focus:outline-none", error ? "input-error" : "", className)}
+    class={cn("input w-full focus:outline-none", error ? "input-error" : "", classCn)}
     oninput={handleInput}
     value={value ?? ""}
     {placeholder}

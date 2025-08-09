@@ -159,30 +159,24 @@
           {#if isMultiDay}
             <div class="space-y-2">
               <div class="flex gap-2">
-                <DateField name="startDate" className="flex-[3]" {formData} {formErrors} />
-                <TimeField name="startTime" className="flex-[2]" {formData} {formErrors} />
+                <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
+                <TimeField name="startTime" class="flex-[2]" {formData} {formErrors} />
               </div>
               <div class="flex gap-2">
-                <DateField
-                  name="endDate"
-                  {formData}
-                  {formErrors}
-                  className="flex-[3]"
-                  isDisablePast
-                />
-                <TimeField name="endTime" className="flex-[2]" {formData} {formErrors} />
+                <DateField name="endDate" {formData} {formErrors} class="flex-[3]" isDisablePast />
+                <TimeField name="endTime" class="flex-[2]" {formData} {formErrors} />
               </div>
             </div>
           {:else}
             <div class="flex items-center gap-2">
-              <DateField name="startDate" className="flex-[2]" {formData} {formErrors} />
-              <TimeField name="startTime" className="flex-1" {formData} {formErrors} />
+              <DateField name="startDate" class="flex-[2]" {formData} {formErrors} />
+              <TimeField name="startTime" class="flex-1" {formData} {formErrors} />
               <span class="text-muted-foreground">-</span>
-              <TimeField name="endTime" className="flex-1" {formData} {formErrors} />
+              <TimeField name="endTime" class="flex-1" {formData} {formErrors} />
             </div>
           {/if}
         {:else}
-          <DateField name="startDate" className="flex-[3]" {formData} {formErrors} />
+          <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
         {/if}
       </div>
     </div>
@@ -198,9 +192,9 @@
           {formErrors}
           calendars={$calendars}
           placeholder="Select Calendar"
-          className="flex-[3]"
+          class="flex-[3]"
         />
-        <ColorChoiceField name="color" className="flex-1" {formData} {formErrors} />
+        <ColorChoiceField name="color" class="flex-1" {formData} {formErrors} />
       </div>
     </div>
 

@@ -18,7 +18,7 @@
 
   interface Props {
     name: string;
-    className?: string;
+    class?: string;
     isRightDiv?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
@@ -26,7 +26,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isRightDiv = false, formData, formErrors }: Props = $props();
+  let { name, class: classCn, isRightDiv = false, formData, formErrors }: Props = $props();
 
   const timeSlotInterval = 15;
 
@@ -185,7 +185,7 @@
 
 <svelte:window onmousedown={handleClickOutside} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <input
     type="text"
     aria-label="Time input"

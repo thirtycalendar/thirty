@@ -10,7 +10,7 @@
 
   interface Props {
     name: string;
-    className?: string;
+    class?: string;
     isLeftDiv?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
@@ -18,7 +18,7 @@
     formErrors: Writable<any>;
   }
 
-  let { name, className, isLeftDiv, formData, formErrors }: Props = $props();
+  let { name, class: classCn, isLeftDiv, formData, formErrors }: Props = $props();
 
   let selectedColorHex = $derived($formData[name]);
   let error = $derived($formErrors[name]);
@@ -105,7 +105,7 @@
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <button
     type="button"
     bind:this={triggerButtonRef}

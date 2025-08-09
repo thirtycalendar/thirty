@@ -11,14 +11,14 @@
     name: string;
     calendars: Calendar[];
     placeholder?: string;
-    className?: string;
+    class?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
   }
 
-  let { name, calendars, className, formData, formErrors }: Props = $props();
+  let { name, calendars, class: classCn, formData, formErrors }: Props = $props();
 
   let open = $state(false);
   let dropdownRef = $state<HTMLDivElement>();
@@ -60,7 +60,7 @@
 
 <svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <button
     type="button"
     bind:this={triggerButtonRef}

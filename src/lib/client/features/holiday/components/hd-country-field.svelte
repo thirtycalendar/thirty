@@ -10,14 +10,14 @@
   interface Props {
     name: string;
     holidayCountries: HolidayCountry[];
-    className?: string;
+    class?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
   }
 
-  let { name, holidayCountries, className, formData, formErrors }: Props = $props();
+  let { name, holidayCountries, class: classCn, formData, formErrors }: Props = $props();
 
   let triggerButton = $state<HTMLInputElement | undefined>();
   let dropdown = $state<HTMLDivElement | undefined>();
@@ -108,7 +108,7 @@
 
 <svelte:window onmousedown={handleClickOutside} />
 
-<div class={cn("relative w-full", className)}>
+<div class={cn("relative w-full", classCn)}>
   <input
     type="text"
     aria-label="Country input"
