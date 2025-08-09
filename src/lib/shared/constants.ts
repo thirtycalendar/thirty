@@ -1,6 +1,11 @@
+import type { SubscriptionPlan } from "./types";
+
 export const SubscriptionPlans = ["pro", "free"] as const;
 
-export const MessageLimitByPlan = { pro: 2000, free: 20 } as const;
+export const MessageLimitByPlan: Record<SubscriptionPlan, number> = {
+  pro: 2000,
+  free: 20
+};
 
 export const CalView = ["month", "week", "day", "year"] as const;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { GoogleIcon, Toast } from "$lib/client/components";
+  import { GoogleIcon } from "$lib/client/components";
   import { isMd } from "$lib/client/stores/responsive";
   import { mainSidebarId } from "$lib/client/stores/sidebar";
   import { showToast } from "$lib/client/stores/toast";
@@ -51,8 +51,6 @@
     };
   });
 </script>
-
-<Toast />
 
 <button class={cn("btn", classCn)} {onclick} disabled={$isPending || $isSuccess}>
   {#if $isPending}

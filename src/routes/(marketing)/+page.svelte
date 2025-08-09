@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   import { GoogleAuthButton } from "$lib/client/features/auth/components";
-  import { Seo } from "$lib/client/components";
+  import { Seo, Toast } from "$lib/client/components";
   import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
 
   let { data } = $props();
@@ -24,7 +24,9 @@
 
 <Seo seo={data.seo} />
 
-<div class="navbar bg-base-100 fixed top-0 right-0 left-0 z-50 m-auto max-w-5xl">
+<Toast />
+
+<div class="navbar bg-base-100 fixed top-0 right-0 left-0 z-50 m-auto max-w-5xl rounded-xl">
   <div class="flex-1">
     <a href="/" class="flex items-center gap-1 text-xl font-bold">
       <img src={LogoImage} alt="Thirty Logo" class="h-8 w-8" />
