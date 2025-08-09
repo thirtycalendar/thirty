@@ -15,6 +15,7 @@ import event from "./routes/event";
 import holiday from "./routes/holiday";
 import sync from "./routes/sync";
 import task from "./routes/task";
+import user from "./routes/user";
 
 const app = new Hono<Context>().basePath("/api");
 
@@ -23,6 +24,7 @@ app.use("*", cors());
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
   .route("/auth", auth)
+  .route("/user", user)
   .route("/chat", chat)
   .route("/calendar", calendar)
   .route("/event", event)

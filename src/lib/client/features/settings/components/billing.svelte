@@ -9,7 +9,10 @@
   import { MessageLimitByPlan } from "$lib/shared/constants";
   import type { SubscriptionPlan } from "$lib/shared/types";
 
-  let usage = 14; // Placeholder value
+  import { getCredit } from "../query";
+
+  const { data: credit } = getCredit();
+  const usage: number = $derived($credit?.count ?? 0);
 
   let planName = $state<SubscriptionPlan>("free");
   let renewalDate = $state("");

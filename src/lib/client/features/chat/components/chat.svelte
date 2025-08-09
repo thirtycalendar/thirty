@@ -8,6 +8,7 @@
   import { getCalendars } from "../../calendar/query";
   import { getEvents } from "../../event/query";
   import { getHolidayCountries, getHolidays } from "../../holiday/query";
+  import { getCredit } from "../../settings/query";
   import { getChats, getMessages } from "../query";
 
   import { ChatView } from ".";
@@ -27,6 +28,7 @@
 
   const { data: messages, isPending } = $derived.by(() => getMessages(currentChatId));
 
+  const creditQuery = getCredit();
   const eventQuery = getEvents();
   const calendarQuery = getCalendars();
   const birthdayQuery = getBirthdays();
@@ -40,6 +42,7 @@
       body: { chatId: currentChatId || crypto.randomUUID() },
       async onFinish(message) {
         await refetchChats();
+        await creditQuery.refetch();
 
         const chatsList = $chats ?? [];
         if (chatsList.length > 0) {

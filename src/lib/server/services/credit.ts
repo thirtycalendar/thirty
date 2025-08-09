@@ -10,6 +10,19 @@ export const creditService = createDbService<Credit, CreditForm>(db, {
   table: creditTable
 });
 
+export async function getCreditByUserId(userId: string): Promise<Credit> {
+  const [row] = await db
+    .select()
+    .from(creditTable)
+    .where(eq(creditTable.userId, userId))
+    .orderBy(desc(creditTable.month))
+    .limit(1);
+
+  if (!row) throw new Error(`User ID (${userId}) credit not found`);
+
+  return row;
+}
+
 export async function maybeGetCreditByUserId(userId: string): Promise<Credit | null> {
   const [row] = await db
     .select()
