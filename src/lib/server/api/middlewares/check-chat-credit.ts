@@ -1,8 +1,10 @@
-import { startOfMonth } from "date-fns";
+import { formatISO, startOfMonth } from "date-fns";
 import { createMiddleware } from "hono/factory";
 
 import { creditService, maybeGetCreditByUserId } from "$lib/server/services/credit";
+import { auth } from "$lib/server/auth";
 
+import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
 import { MessageLimitByPlan } from "$lib/shared/constants";
 import type { ErrorResponse } from "$lib/shared/types";
 
@@ -15,17 +17,20 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
   }
 
   const today = startOfMonth(new Date());
-  const monthStr = today.toDateString();
+  const monthStr = formatISO(today, { representation: "date" });
+
+  const subscriptions = await auth.api.subscriptions({
+    query: { page: 1, limit: 1, active: true }
+  });
+  const sub = subscriptions.result.items[0];
+
+  const plan = sub?.productId === polarProductIdsEnvConfig.pro ? "pro" : "free";
+  const planLimit = plan === "pro" ? MessageLimitByPlan.pro : MessageLimitByPlan.free;
 
   const existingCredit = await maybeGetCreditByUserId(user.id);
 
-  const plan = existingCredit?.plan ?? "free";
-  const planLimit = plan === "pro" ? MessageLimitByPlan.pro : MessageLimitByPlan.free;
+  const isCurrentMonth = existingCredit?.month === monthStr;
 
-  const isCurrentMonth =
-    existingCredit?.month && new Date(existingCredit.month).getTime() === today.getTime();
-
-  // Insert or reset credit if it's a new month or no record exists
   if (!existingCredit || !isCurrentMonth) {
     await creditService.create(user.id, {
       plan,
@@ -37,12 +42,10 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
     return next();
   }
 
-  // Limit check
   if ((existingCredit.count ?? 0) >= planLimit) {
     return c.json<ErrorResponse>({ success: false, message: "Message limit reached." }, 403);
   }
 
-  // Increment count
   await creditService.update(existingCredit.id, {
     count: (existingCredit.count ?? 0) + 1
   });

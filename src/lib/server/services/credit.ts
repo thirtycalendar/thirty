@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import type { Credit, CreditForm } from "$lib/shared/types";
 
@@ -11,6 +11,12 @@ export const creditService = createDbService<Credit, CreditForm>(db, {
 });
 
 export async function maybeGetCreditByUserId(userId: string): Promise<Credit | null> {
-  const [row] = await db.select().from(creditTable).where(eq(creditTable.userId, userId)).limit(1);
+  const [row] = await db
+    .select()
+    .from(creditTable)
+    .where(eq(creditTable.userId, userId))
+    .orderBy(desc(creditTable.month))
+    .limit(1);
+
   return row ?? null;
 }
