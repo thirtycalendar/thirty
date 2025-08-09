@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "$lib/server/db";
@@ -113,26 +113,27 @@ export async function syncGoogleEvents(userId: string) {
         let startTime = "";
         let endDate = "";
         let endTime = "";
-        const timezone = gEvent.start?.timeZone ?? "UTC";
+        const timezone = gEvent.start?.timeZone ?? gEvent.end?.timeZone ?? "UTC";
         let allDay = false;
 
         if (gEvent.start?.date) {
-          // All-day event
+          // All-day event (date only, no time)
           startDate = gEvent.start.date;
           startTime = "00:00:00";
           endDate = gEvent.end?.date ?? gEvent.start.date;
           endTime = "00:00:00";
           allDay = true;
         } else if (gEvent.start?.dateTime && gEvent.end?.dateTime) {
-          const start = parseISO(gEvent.start.dateTime);
-          const end = parseISO(gEvent.end.dateTime);
+          // Timed event - format in event's timezone
+          const start = new Date(gEvent.start.dateTime);
+          const end = new Date(gEvent.end.dateTime);
 
-          startDate = format(start, "yyyy-MM-dd");
-          startTime = format(start, "HH:mm:ss");
-          endDate = format(end, "yyyy-MM-dd");
-          endTime = format(end, "HH:mm:ss");
+          startDate = formatInTimeZone(start, timezone, "yyyy-MM-dd");
+          startTime = formatInTimeZone(start, timezone, "HH:mm:ss");
+          endDate = formatInTimeZone(end, timezone, "yyyy-MM-dd");
+          endTime = formatInTimeZone(end, timezone, "HH:mm:ss");
         } else {
-          continue;
+          continue; // skip invalid events
         }
 
         toCreate.push({

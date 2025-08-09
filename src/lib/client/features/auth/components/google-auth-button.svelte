@@ -41,6 +41,9 @@
   }
 
   onMount(() => {
+    isPending.set(false);
+    isSuccess.set(false);
+
     if ($isMd) {
       localStorage.setItem(mainSidebarId, "true");
     }
