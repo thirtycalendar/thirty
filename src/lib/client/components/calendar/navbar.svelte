@@ -1,6 +1,7 @@
 <script lang="ts">
   import { calView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { mainSidebarId, toggleSidebar } from "$lib/client/stores/sidebar";
 
   import { Sidebar } from "../icons";
 
@@ -12,7 +13,10 @@
 
 <div class="flex items-center justify-between">
   <div class="flex items-center gap-1">
-    <button class="btn btn-link btn-square text-primary-content mx-2">
+    <button
+      class="btn btn-link btn-square text-primary-content/80 hover:text-primary-content mx-2"
+      onclick={() => toggleSidebar(mainSidebarId)}
+    >
       <Sidebar strokeWidth="2.2" />
     </button>
 
@@ -21,7 +25,7 @@
         {#if $calView === "year"}
           {year}
         {:else}
-          {month} <span class="text-base-content/75 hidden sm:flex">{year}</span>
+          {month} <span class="text-base-content/75 hidden font-normal sm:flex">{year}</span>
         {/if}
       </p>
     </div>

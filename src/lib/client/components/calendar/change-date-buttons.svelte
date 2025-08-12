@@ -37,7 +37,7 @@
 {#if $calView !== null && $calView in navHandlers}
   <div class="w-full gap-0 text-center">
     <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].prev}>
-      <ChevronLeft size="20px" />
+      <ChevronLeft size="20" />
     </button>
 
     <button class="btn btn-outline border-base-300 btn-xs sm:btn-sm" onclick={goToToday}>
@@ -45,7 +45,7 @@
     </button>
 
     <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].next}>
-      <ChevronRight size="20px" />
+      <ChevronRight size="20" />
     </button>
   </div>
 {/if}
