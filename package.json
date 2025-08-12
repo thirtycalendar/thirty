@@ -47,5 +47,10 @@
   },
   "lint-staged": {
     "*": "node ./pre-commit.js"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "daisyui": "^5.0.50",
+    "tailwindcss": "^4.1.11"
   }
 }
