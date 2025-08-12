@@ -2,6 +2,8 @@
 
 An AI-powered open-source calendar built to make scheduling faster, smarter, and more personal.
 
+> **Notice**: The `main` branch is a complete reboot of the project (now considered `v2`). The original `v1` is available [here](https://github.com/thirtycalendar/thirty/blob/v1/).
+
 ## What is Thirty?
 
 Thirty is an AI-first calendar that helps you manage events, tasks, and holidays with precision and simplicity. It’s designed for people and teams who want a self-hosted, privacy-focused alternative to traditional calendars, with AI-powered features baked in.
