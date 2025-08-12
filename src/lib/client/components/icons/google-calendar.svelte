@@ -1,12 +1,16 @@
 <script lang="ts">
+  import { cn } from "$lib/client/utils/cn";
+
   interface Props {
-    size?: number;
+    size?: string;
+    class?: string;
   }
 
-  let { size = 20 }: Props = $props();
+  let { size = "20", class: classCn }: Props = $props();
 </script>
 
 <svg
+  class={cn("stroke-current", classCn)}
   version="1.1"
   id="Livello_1"
   xmlns="http://www.w3.org/2000/svg"

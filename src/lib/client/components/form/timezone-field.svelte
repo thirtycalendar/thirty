@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
-  import { ChevronDown } from "@lucide/svelte";
   import { getTimeZones } from "@vvo/tzdb";
 
   import { cn } from "$lib/client/utils/cn";
+
+  import { ChevronDown } from "../icons";
 
   interface Props {
     name: string;

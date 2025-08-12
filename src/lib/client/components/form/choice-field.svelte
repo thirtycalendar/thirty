@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
-  import { Check, ChevronDown } from "@lucide/svelte";
-
   import { cn } from "$lib/client/utils/cn";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
+
+  import { Check, ChevronDown } from "../icons";
 
   interface Props {
     name: string;
