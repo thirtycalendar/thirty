@@ -36,6 +36,7 @@
     "@sveltejs/adapter-auto": "^6.1.0",
     "@sveltejs/kit": "^2.28.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.1",
+    "@types/pg": "^8.15.5",
     "commitlint": "^19.8.1",
     "cross-env": "^10.0.0",
     "drizzle-kit": "^0.31.4",
@@ -87,7 +88,12 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
-    ]
+    ],
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "zod"
+      ]
+    }
   },
   "lint-staged": {
     "*": "node ./pre-commit.js"
