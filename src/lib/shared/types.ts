@@ -1,4 +1,4 @@
-import type { Message as AiSdkMessage } from "ai";
+import type { UIMessage } from "ai";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
@@ -79,7 +79,7 @@ export type ChatUpdateForm = z.infer<typeof chatSchema>;
 export type Message = InferSelectModel<typeof messageTable>;
 export type MessageForm = InferInsertModel<typeof messageTable>;
 
-export type MessageRole = Exclude<AiSdkMessage["role"], "data">;
+export type MessageRole = UIMessage["role"];
 
 // Credit
 export type Credit = InferSelectModel<typeof creditTable>;

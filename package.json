@@ -24,6 +24,7 @@
     "@sveltejs/kit": "^2.28.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.1",
     "commitlint": "^19.8.1",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.11.0",
@@ -40,6 +41,35 @@
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2"
   },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.10",
+    "@googleapis/calendar": "^11.0.1",
+    "@hono/zod-validator": "^0.7.2",
+    "@neondatabase/serverless": "^1.0.1",
+    "@openrouter/ai-sdk-provider": "^1.1.2",
+    "@polar-sh/better-auth": "^1.1.0",
+    "@polar-sh/sdk": "^0.34.10",
+    "@tailwindcss/vite": "^4.1.11",
+    "@upstash/redis": "^1.35.3",
+    "@upstash/vector": "^1.2.2",
+    "@vvo/tzdb": "^6.183.0",
+    "ai": "^5.0.10",
+    "better-auth": "^1.3.5",
+    "clsx": "^2.1.1",
+    "daisyui": "^5.0.50",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
+    "googleapis": "^155.0.1",
+    "hono": "^4.9.0",
+    "openai": "^5.12.2",
+    "pg": "^8.16.3",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11",
+    "voyage-ai-provider": "^2.0.0",
+    "zod": "^4.0.17"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
@@ -47,14 +77,5 @@
   },
   "lint-staged": {
     "*": "node ./pre-commit.js"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.11",
-    "@vvo/tzdb": "^6.183.0",
-    "clsx": "^2.1.1",
-    "daisyui": "^5.0.50",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.11",
-    "zod": "^4.0.17"
   }
 }
