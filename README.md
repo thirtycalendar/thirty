@@ -81,7 +81,7 @@ We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md
 
 ## License
 
-MIT License.
+MIT License
 
 ## Star History
 
