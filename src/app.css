@@ -12,34 +12,34 @@
   prefersdark: true;
   color-scheme: "dark";
 
-  --color-base-100: oklch(15% 0 0); /* true dark background */
-  --color-base-200: oklch(22% 0 0); /* card background */
-  --color-base-300: oklch(28% 0 0); /* hover/lift */
-  --color-base-content: oklch(95% 0 0); /* pure white text */
+  --color-base-100: oklch(20% 0 0); /* deep gray background */
+  --color-base-200: oklch(26% 0 0); /* card background */
+  --color-base-300: oklch(32% 0 0); /* hover/lift */
+  --color-base-content: oklch(92% 0 0); /* soft white text */
 
-  --color-primary: oklch(15% 0 0); /* black buttons, links */
-  --color-primary-content: oklch(95% 0 0); /* white text on white */
+  --color-primary: oklch(26% 0 0); /* button background */
+  --color-primary-content: oklch(94% 0 0);
 
-  --color-secondary: oklch(15% 0 0); /* readable on gray */
-  --color-secondary-content: oklch(65% 0 0); /* mid-gray  */
+  --color-secondary: oklch(32% 0 0);
+  --color-secondary-content: oklch(78% 0 0);
 
-  --color-accent: oklch(35% 0 0); /* dark accent UI */
-  --color-accent-content: oklch(95% 0 0);
+  --color-accent: oklch(38% 0 0);
+  --color-accent-content: oklch(94% 0 0);
 
-  --color-neutral: oklch(25% 0 0);
-  --color-neutral-content: oklch(95% 0 0);
+  --color-neutral: oklch(30% 0 0);
+  --color-neutral-content: oklch(92% 0 0);
 
-  --color-info: oklch(75% 0.1 250);
-  --color-info-content: oklch(15% 0 0);
+  --color-info: oklch(72% 0.1 250);
+  --color-info-content: oklch(18% 0 0);
 
-  --color-success: oklch(70% 0.15 145);
-  --color-success-content: oklch(15% 0 0);
+  --color-success: oklch(68% 0.15 145);
+  --color-success-content: oklch(18% 0 0);
 
-  --color-warning: oklch(75% 0.16 85);
-  --color-warning-content: oklch(15% 0 0);
+  --color-warning: oklch(72% 0.16 85);
+  --color-warning-content: oklch(18% 0 0);
 
-  --color-error: oklch(65% 0.18 27);
-  --color-error-content: oklch(95% 0 0);
+  --color-error: oklch(62% 0.18 27);
+  --color-error-content: oklch(94% 0 0);
 
   --radius-selector: 0.5rem;
   --radius-field: 0.5rem;
@@ -48,7 +48,7 @@
   --size-field: 0.25rem;
   --border: 1px;
   --depth: 0.25;
-  --noise: 0; /* keep ultra clean */
+  --noise: 0;
 }
 
 @plugin "daisyui/theme" {
@@ -57,34 +57,34 @@
   prefersdark: false;
   color-scheme: "light";
 
-  --color-base-100: oklch(98% 0 0); /* white background */
-  --color-base-200: oklch(95% 0 0); /* card background */
-  --color-base-300: oklch(92% 0 0); /* hover/lift */
-  --color-base-content: oklch(12% 0 0); /* near black text */
+  --color-base-100: oklch(97% 0 0); /* warm off-white background */
+  --color-base-200: oklch(94% 0 0); /* card background */
+  --color-base-300: oklch(91% 0 0); /* hover/lift */
+  --color-base-content: oklch(15% 0 0); /* softer dark text */
 
-  --color-primary: oklch(98% 0 0); /* white buttons, links */
-  --color-primary-content: oklch(12% 0 0); /* black text on black */
+  --color-primary: oklch(94% 0 0);
+  --color-primary-content: oklch(15% 0 0);
 
-  --color-secondary: oklch(12% 0 0);
-  --color-secondary-content: oklch(70% 0 0); /* mid-light gray */
+  --color-secondary: oklch(18% 0 0);
+  --color-secondary-content: oklch(72% 0 0);
 
-  --color-accent: oklch(35% 0 0); /* dark gray for accents */
-  --color-accent-content: oklch(98% 0 0);
+  --color-accent: oklch(38% 0 0);
+  --color-accent-content: oklch(97% 0 0);
 
-  --color-neutral: oklch(85% 0 0); /* subtle border lines */
-  --color-neutral-content: oklch(12% 0 0);
+  --color-neutral: oklch(85% 0 0);
+  --color-neutral-content: oklch(18% 0 0);
 
-  --color-info: oklch(55% 0.12 250);
-  --color-info-content: oklch(98% 0 0);
+  --color-info: oklch(58% 0.12 250);
+  --color-info-content: oklch(97% 0 0);
 
-  --color-success: oklch(60% 0.14 145);
-  --color-success-content: oklch(98% 0 0);
+  --color-success: oklch(63% 0.14 145);
+  --color-success-content: oklch(97% 0 0);
 
-  --color-warning: oklch(70% 0.15 85);
-  --color-warning-content: oklch(12% 0 0);
+  --color-warning: oklch(73% 0.15 85);
+  --color-warning-content: oklch(18% 0 0);
 
-  --color-error: oklch(60% 0.18 27);
-  --color-error-content: oklch(98% 0 0);
+  --color-error: oklch(62% 0.18 27);
+  --color-error-content: oklch(97% 0 0);
 
   --radius-selector: 0.5rem;
   --radius-field: 0.5rem;
@@ -93,5 +93,5 @@
   --size-field: 0.25rem;
   --border: 1px;
   --depth: 0.25;
-  --noise: 0; /* pristine, no grain */
+  --noise: 0;
 }
