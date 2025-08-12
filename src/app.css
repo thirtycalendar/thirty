@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
 
 @plugin "daisyui" {
   themes:
@@ -42,10 +47,10 @@
   --color-error-content: oklch(94% 0 0);
 
   --radius-selector: 0.5rem;
-  --radius-field: 0.5rem;
-  --radius-box: 0.75rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.15rem;
+  --size-field: 0.2rem;
   --border: 1px;
   --depth: 0.25;
   --noise: 0;
@@ -87,10 +92,10 @@
   --color-error-content: oklch(97% 0 0);
 
   --radius-selector: 0.5rem;
-  --radius-field: 0.5rem;
-  --radius-box: 0.75rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.15rem;
+  --size-field: 0.2rem;
   --border: 1px;
   --depth: 0.25;
   --noise: 0;
