@@ -10,8 +10,8 @@
   <!-- Sidebar -->
   <div
     class={cn(
-      "bg-base-200 h-screen overflow-y-auto p-2 transition-all duration-300",
-      $isOpen ? "w-[250px]" : "w-0"
+      "bg-base-200 h-screen overflow-y-auto transition-all duration-300",
+      $isOpen ? "w-[255px] p-2" : "w-0"
     )}
   >
     <div class={cn("transition-opacity duration-200", $isOpen ? "opacity-100" : "opacity-0")}>

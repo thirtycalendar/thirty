@@ -7,7 +7,7 @@ export const MessageLimitByPlan: Record<SubscriptionPlan, number> = {
   free: 20
 };
 
-export const CalView = ["month", "week", "day", "year"] as const;
+export const CalView = ["year", "month", "week", "day"] as const;
 
 export const Sources = ["local", "file", "google", "outlook", "apple"] as const;
 
