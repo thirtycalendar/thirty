@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Navbar, SidebarCalendar } from "$lib/client/components/calendar";
-  import { mainSidebarId, sidebarState } from "$lib/client/stores/sidebar";
+  import { Navbar, SidebarItems } from "$lib/client/components/calendar";
+  import { mainSidebarState } from "$lib/client/stores/sidebar";
   import { cn } from "$lib/client/utils/cn";
 
-  const isOpen = $derived(sidebarState(mainSidebarId));
+  const isOpen = $derived(mainSidebarState());
 </script>
 
 <div class="flex w-full">
@@ -15,7 +15,7 @@
     )}
   >
     <div class={cn("transition-opacity duration-200", $isOpen ? "opacity-100" : "opacity-0")}>
-      <SidebarCalendar />
+      <SidebarItems />
     </div>
   </div>
 

@@ -1,8 +1,18 @@
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
+// Main sidebar
 export const mainSidebarId = "main-side-bar";
 
+export function toggleMainSidebar() {
+  toggleSidebar(mainSidebarId);
+}
+
+export function mainSidebarState(): Writable<boolean> {
+  return sidebarState(mainSidebarId);
+}
+
+// Utils
 const sidebarStates = new Map<string, Writable<boolean>>();
 
 export function sidebarState(id: string, initial = false): Writable<boolean> {

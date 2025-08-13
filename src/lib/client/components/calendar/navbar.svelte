@@ -1,7 +1,7 @@
 <script lang="ts">
   import { calView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { mainSidebarId, toggleSidebar } from "$lib/client/stores/sidebar";
+  import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
   import { Sidebar } from "../icons";
 
@@ -15,7 +15,7 @@
   <div class="flex items-center gap-1">
     <button
       class="btn btn-link btn-square text-primary-content/80 hover:text-primary-content mx-2"
-      onclick={() => toggleSidebar(mainSidebarId)}
+      onclick={toggleMainSidebar}
     >
       <Sidebar strokeWidth="2.2" />
     </button>

@@ -1,16 +1,7 @@
 <script lang="ts">
   import { derived } from "svelte/store";
 
-  import {
-    addDays,
-    endOfMonth,
-    endOfWeek,
-    format,
-    isSameMonth,
-    isToday,
-    startOfMonth,
-    startOfWeek
-  } from "date-fns";
+  import { addDays, format, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 
   import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/client/stores/change-date";
 
@@ -20,11 +11,10 @@
 
   const days = derived(currentDate, ($currentDate) => {
     const start = startOfWeek(startOfMonth($currentDate), { weekStartsOn: 0 });
-    const end = endOfWeek(endOfMonth($currentDate), { weekStartsOn: 0 });
 
     const result: Date[] = [];
-    for (let d = start; d <= end; d = addDays(d, 1)) {
-      result.push(d);
+    for (let i = 0; i < 42; i++) {
+      result.push(addDays(start, i));
     }
     return result;
   });
