@@ -10,7 +10,7 @@
 </script>
 
 <svg
-  class={cn("stroke-current", classCn)}
+  class={cn(classCn)}
   xmlns="http://www.w3.org/2000/svg"
   x="0px"
   y="0px"

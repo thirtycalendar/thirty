@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { Seo } from "$lib/client/components";
   import { Navbar, SidebarItems } from "$lib/client/components/calendar";
   import { mainSidebarState } from "$lib/client/stores/sidebar";
   import { cn } from "$lib/client/utils/cn";
 
+  let { data } = $props();
+
   const isOpen = $derived(mainSidebarState());
 </script>
+
+<Seo seo={data.seo} />
 
 <div class="flex w-full">
   <!-- Sidebar -->

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Pen, Trash } from "@lucide/svelte";
+  import { Pen, Trash } from "./icons";
 
   interface Props {
     id: string;

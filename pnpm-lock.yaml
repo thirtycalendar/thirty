@@ -17,12 +17,6 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.7.2
         version: 0.7.2(hono@4.9.0)(zod@4.0.17)
-      '@hugeicons/core-free-icons':
-        specifier: ^1.0.16
-        version: 1.0.16
-      '@hugeicons/svelte':
-        specifier: ^1.0.2
-        version: 1.0.2(svelte@5.38.1)
       '@neondatabase/serverless':
         specifier: ^1.0.1
         version: 1.0.1
@@ -676,14 +670,6 @@ packages:
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.25.0 || ^4.0.0
-
-  '@hugeicons/core-free-icons@1.0.16':
-    resolution: {integrity: sha512-rm48rjUN8a58yOZ7mpk3HkMvZPmOMTkMtNdXXq9m0Af6BsRQWJZl+4zd6ssj52y+A9Zn4Yg/TptobNtNpx3GCg==}
-
-  '@hugeicons/svelte@1.0.2':
-    resolution: {integrity: sha512-JBkirOE361SorXQwU8cFNDH+MVIn7OwBDfVrC+C9LAPtK0Yyt0CmjRwdlO4whlmKTtCPZy2dQ2XW46J826s2qg==}
-    peerDependencies:
-      svelte: ^5.0.0
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3298,12 +3284,6 @@ snapshots:
     dependencies:
       hono: 4.9.0
       zod: 4.0.17
-
-  '@hugeicons/core-free-icons@1.0.16': {}
-
-  '@hugeicons/svelte@1.0.2(svelte@5.38.1)':
-    dependencies:
-      svelte: 5.38.1
 
   '@humanfs/core@0.19.1': {}
 

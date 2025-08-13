@@ -6,5 +6,6 @@ export const seoConfig = {
   description:
     "Your Calendar. Smarter, Open, and Always Listening. Thirty is the open AI calendar you talk to, and it organizes your life.",
   // image: DemoLightImage,
+  image: "",
   twitterHandle: "@itsithu"
 };

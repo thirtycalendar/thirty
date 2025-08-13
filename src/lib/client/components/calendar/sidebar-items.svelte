@@ -2,4 +2,6 @@
   import { SidebarCalendar } from ".";
 </script>
 
-<SidebarCalendar />
+<div class="my-4">
+  <SidebarCalendar />
+</div>

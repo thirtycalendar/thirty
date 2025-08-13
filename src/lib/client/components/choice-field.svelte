@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Check, ChevronDown } from "@lucide/svelte";
-
   import { cn } from "$lib/client/utils/cn";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
+
+  import { Check, ChevronDown } from "./icons";
 
   interface Props {
     choiceList: readonly string[];
