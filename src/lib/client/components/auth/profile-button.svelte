@@ -1,8 +1,27 @@
 <script lang="ts">
-  import { session } from "$lib/client/stores/user-session";
-  import { cn } from "$lib/client/utils/cn";
+  import {
+    DiscordIcon,
+    Logout05Icon,
+    Settings01Icon,
+    SparklesIcon
+  } from "@hugeicons/core-free-icons";
+  import type { IconSvgElement } from "@hugeicons/svelte";
 
-  const menuItems: { name: string }[] = [{ name: "Settings" }];
+  import { session } from "$lib/client/stores/user-session";
+
+  import { Icon } from "../icons";
+
+  type Item = {
+    label: string;
+    icon: IconSvgElement;
+  }[];
+
+  const menuItems: Item = [
+    { label: "Upgrade plan", icon: SparklesIcon },
+    { label: "Discord", icon: DiscordIcon },
+    { label: "Settings", icon: Settings01Icon },
+    { label: "Logout", icon: Logout05Icon }
+  ];
 </script>
 
 {#if $session}
@@ -12,15 +31,20 @@
     </button>
 
     <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 mt-1 w-auto border">
-      {#each menuItems as item (item.name)}
-        <input
-          type="radio"
-          name={item.name}
-          aria-label={item.name}
-          class={cn(
-            "btn btn-sm sm:btn-md btn-ghost hover:btn-secondary flex w-full min-w-[130px] items-center justify-start font-normal"
-          )}
-        />
+      {#each menuItems as item (item.label)}
+        {#if item.label === "Logout"}
+          <div class="divider m-0 p-0 before:h-0.5 after:h-0.5"></div>
+        {/if}
+
+        <label
+          class="btn btn-sm sm:btn-md btn-ghost flex w-full items-center justify-start gap-3 font-normal whitespace-nowrap"
+        >
+          <span>
+            <Icon icon={item.icon} size={17} absoluteStrokeWidth />
+          </span>
+          {item.label}
+          <input type="radio" name="menu" aria-label={item.label} class="hidden" />
+        </label>
       {/each}
     </ul>
   </div>
