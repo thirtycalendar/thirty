@@ -8,13 +8,13 @@
 <div class="z-200 hidden sm:block">
   <button
     tabindex="0"
-    class="btn btn-md bg-primary shadow-none"
+    class="btn btn-md bg-primary border-base-300 border shadow-none"
     onclick={() => {
       toggleModal(eventModal.modalId);
       (document.activeElement as HTMLElement)?.blur();
     }}
   >
-    <Plus size="20px" /> <span class="hidden lg:block">Create</span>
+    <Plus size="20" /> <span class="hidden lg:block">Create</span>
   </button>
 </div>
 

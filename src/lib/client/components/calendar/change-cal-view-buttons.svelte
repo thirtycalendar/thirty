@@ -1,32 +1,22 @@
 <script lang="ts">
   import { calView, handleCalViewChange } from "$lib/client/stores/cal-view";
 
-  import { CalView } from "$lib/shared/constants";
+  import { CalViews } from "$lib/shared/constants";
 
   import { ChevronDown } from "../icons";
 
-  let views = CalView;
+  let views = CalViews;
 </script>
 
-<div class="tabs tabs-sm tabs-box bg-base-300 hidden lg:block">
-  {#each views as view (view)}
-    <input
-      type="radio"
-      name={view}
-      aria-label={view[0].toUpperCase() + view.slice(1)}
-      value={view}
-      onclick={handleCalViewChange}
-      class="tab focus:bg-primary px-3 text-sm"
-      class:bg-primary={$calView === view}
-      checked={$calView === view}
-    />
-  {/each}
-</div>
-
-<div class="dropdown dropdown-end lg:hidden">
-  <button tabindex="0" class="btn btn-sm sm:btn-md btn-secondary flex items-center">
-    {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
-    <ChevronDown size="16" />
+<div class="dropdown dropdown-end">
+  <button
+    tabindex="0"
+    class="btn btn-sm sm:btn-md btn-primary border-base-300 flex items-center border"
+  >
+    <span>
+      {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
+    </span>
+    <ChevronDown size="23" strokeWidth="1.2" />
   </button>
   <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-1 mt-1 w-auto border">
     {#each views as view (view)}
@@ -38,7 +28,7 @@
           (document.activeElement as HTMLElement)?.blur();
           handleCalViewChange(e);
         }}
-        class="tab flex w-full items-center justify-start"
+        class="tab flex w-full items-center justify-start text-base sm:text-lg"
         checked={$calView === view}
       />
     {/each}

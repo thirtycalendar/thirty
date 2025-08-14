@@ -3,14 +3,12 @@
 </script>
 
 {#if $session}
-  <div class="flex items-center gap-2">
-    <button>
-      <img
-        class="border-accent w-8 rounded-full border-2"
-        src={$session.image}
-        referrerpolicy="no-referrer"
-        alt="Img"
-      />
-    </button>
-  </div>
+  <button class="btn btn-circle">
+    <img
+      class="border-base-300 w-8 rounded-full border-2"
+      src={$session.image}
+      referrerpolicy="no-referrer"
+      alt="Img"
+    />
+  </button>
 {/if}

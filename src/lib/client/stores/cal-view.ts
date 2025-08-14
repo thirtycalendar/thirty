@@ -1,11 +1,11 @@
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-import { CalView } from "$lib/shared/constants";
+import { CalViews } from "$lib/shared/constants";
 import type { CalView as CalViewType } from "$lib/shared/types";
 
 function isCalView(value: string): value is CalViewType {
-  return (CalView as readonly string[]).includes(value);
+  return (CalViews as readonly string[]).includes(value);
 }
 
 export const calView: Writable<CalViewType | null> = writable(null);
