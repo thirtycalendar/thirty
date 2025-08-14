@@ -1,5 +1,6 @@
 <script lang="ts">
   import { calView, handleCalViewChange } from "$lib/client/stores/cal-view";
+  import { cn } from "$lib/client/utils/cn";
 
   import { CalViews } from "$lib/shared/constants";
 
@@ -28,7 +29,10 @@
           (document.activeElement as HTMLElement)?.blur();
           handleCalViewChange(e);
         }}
-        class="tab flex w-full items-center justify-start text-base sm:text-lg"
+        class={cn(
+          "btn btn-sm sm:btn-md flex w-full items-center justify-start font-normal",
+          $calView === view ? "btn-secondary" : "btn-ghost"
+        )}
         checked={$calView === view}
       />
     {/each}
