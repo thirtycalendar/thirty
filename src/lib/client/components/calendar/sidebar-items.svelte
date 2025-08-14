@@ -1,7 +1,11 @@
 <script lang="ts">
+  // import { ProfileButton } from "../auth";
+
   import { SidebarCalendar } from ".";
 </script>
 
-<div class="my-4">
+<div class="relative h-screen">
+  <!-- <ProfileButton /> -->
+
   <SidebarCalendar />
 </div>

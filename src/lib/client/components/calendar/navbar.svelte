@@ -3,6 +3,7 @@
   import { currentDate } from "$lib/client/stores/change-date";
   import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
+  import { ProfileButton } from "../auth";
   import { Sidebar } from "../icons";
 
   import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
@@ -37,5 +38,7 @@
     <CreateButton />
 
     <ChangeCalViewButtons />
+
+    <ProfileButton />
   </div>
 </div>
