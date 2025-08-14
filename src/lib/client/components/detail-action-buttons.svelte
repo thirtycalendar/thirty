@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { Pen, Trash } from "./icons";
+  import { Delete02Icon, Pen01Icon } from "@hugeicons/core-free-icons";
+
+  import { Icon } from "./icons";
 
   interface Props {
     id: string;
@@ -62,7 +64,7 @@
       onclick={toggleConfirm}
       disabled={isPending}
     >
-      <Trash size="17" />
+      <Icon icon={Delete02Icon} size={17} absoluteStrokeWidth />
     </button>
   {/if}
 
@@ -72,7 +74,7 @@
       onclick={onEdit}
       disabled={isPending || confirmDelete}
     >
-      <Pen size="17" />
+      <Icon icon={Pen01Icon} size={17} absoluteStrokeWidth />
     </button>
   {/if}
 </div>

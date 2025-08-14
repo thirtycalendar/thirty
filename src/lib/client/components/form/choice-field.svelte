@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
+
   import { cn } from "$lib/client/utils/cn";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
 
-  import { Check, ChevronDown } from "../icons";
+  import { Icon } from "../icons";
 
   interface Props {
     name: string;
@@ -87,7 +89,12 @@
     aria-expanded={open}
   >
     <span>{capitalizeFirstLetter(selectedValue)}</span>
-    <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
+    <Icon
+      icon={ArrowDown01Icon}
+      size={16}
+      class={cn("transition-transform", open && "rotate-180")}
+      absoluteStrokeWidth
+    />
   </button>
 
   {#if open}
@@ -124,7 +131,7 @@
           >
             {capitalizeFirstLetter(choice)}
             {#if $formData[name] === choice}
-              <Check size="16" />
+              <Icon icon={Tick02Icon} size={16} absoluteStrokeWidth />
             {/if}
           </button>
         {/each}

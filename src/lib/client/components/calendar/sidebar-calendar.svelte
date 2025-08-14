@@ -1,11 +1,13 @@
 <script lang="ts">
   import { derived } from "svelte/store";
 
+  import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
+
   import { addDays, format, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 
   import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/client/stores/change-date";
 
-  import { ChevronLeft, ChevronRight } from "../icons";
+  import { Icon } from "../icons";
 
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -26,10 +28,10 @@
 
     <div>
       <button class="btn btn-xs btn-square btn-ghost" onclick={goToPreviousMonth}>
-        <ChevronLeft size="20" />
+        <Icon icon={ArrowLeft01Icon} absoluteStrokeWidth />
       </button>
       <button class="btn btn-xs btn-square btn-ghost" onclick={goToNextMonth}>
-        <ChevronRight size="20" />
+        <Icon icon={ArrowRight01Icon} absoluteStrokeWidth />
       </button>
     </div>
   </div>

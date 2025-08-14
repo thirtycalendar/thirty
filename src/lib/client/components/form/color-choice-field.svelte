@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
-  import { Check, ChevronDown } from "@lucide/svelte";
+  import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 
   import { cn } from "$lib/client/utils/cn";
 
   import { Colors } from "$lib/shared/constants";
   import type { Color as ColorType } from "$lib/shared/types";
+
+  import { Icon } from "../icons";
 
   interface Props {
     name: string;
@@ -136,7 +138,12 @@
         ></span>
       {/if}
     </div>
-    <ChevronDown size="16" class={cn("transition-transform", open && "rotate-180")} />
+    <Icon
+      icon={ArrowDown01Icon}
+      size={16}
+      class={cn("transition-transform", open && "rotate-180")}
+      absoluteStrokeWidth
+    />
   </button>
 
   {#if open}
@@ -164,7 +171,13 @@
             disabled={selectedColorHex === choice}
           >
             {#if selectedColorHex === choice}
-              <Check size="16" strokeWidth="4" class="text-white drop-shadow-sm" />
+              <Icon
+                icon={Tick02Icon}
+                size={16}
+                strokeWidth={4}
+                class="text-white drop-shadow-sm"
+                absoluteStrokeWidth
+              />
             {/if}
           </button>
         {/each}

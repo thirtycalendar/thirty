@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
+
   import { calView } from "$lib/client/stores/cal-view";
   import {
     goToNextDay,
@@ -12,7 +14,7 @@
     goToToday
   } from "$lib/client/stores/change-date";
 
-  import { ChevronLeft, ChevronRight } from "../icons";
+  import { Icon } from "../icons";
 
   const navHandlers = {
     year: {
@@ -37,7 +39,7 @@
 {#if $calView !== null && $calView in navHandlers}
   <div class="w-full gap-1 text-center">
     <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].prev}>
-      <ChevronLeft size="20" />
+      <Icon icon={ArrowLeft01Icon} absoluteStrokeWidth />
     </button>
 
     <button class="btn btn-outline border-base-300 btn-xs sm:btn-sm" onclick={goToToday}>
@@ -45,7 +47,7 @@
     </button>
 
     <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].next}>
-      <ChevronRight size="20" />
+      <Icon icon={ArrowRight01Icon} absoluteStrokeWidth />
     </button>
   </div>
 {/if}

@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
   import { getTimeZones } from "@vvo/tzdb";
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { ChevronDown } from "../icons";
+  import { Icon } from "../icons";
 
   interface Props {
     name: string;
@@ -135,7 +136,11 @@
     placeholder="e.g., Asia/Tokyo"
   />
 
-  <ChevronDown class="pointer-events-none absolute top-2.5 right-3 h-4 w-4 opacity-40" />
+  <Icon
+    icon={ArrowDown01Icon}
+    class="pointer-events-none absolute top-2.5 right-3 h-4 w-4 opacity-40"
+    absoluteStrokeWidth
+  />
 
   {#if open}
     <div

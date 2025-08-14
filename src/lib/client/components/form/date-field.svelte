@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
-  import { ChevronLeft, ChevronRight } from "@lucide/svelte";
+  import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
   import {
     addDays,
@@ -21,6 +21,8 @@
   } from "date-fns";
 
   import { cn } from "$lib/client/utils/cn";
+
+  import { Icon } from "../icons";
 
   interface Props {
     name: string;
@@ -263,7 +265,7 @@
             disabled={isDisablePast && startOfMonth(visibleMonth) <= startOfMonth(new Date())}
             aria-label="Previous Month"
           >
-            <ChevronLeft size="15" />
+            <Icon icon={ArrowLeft01Icon} size={15} absoluteStrokeWidth />
           </button>
           <button
             type="button"
@@ -271,7 +273,7 @@
             onclick={nextMonth}
             aria-label="Next Month"
           >
-            <ChevronRight size="15" />
+            <Icon icon={ArrowRight01Icon} size={15} absoluteStrokeWidth />
           </button>
         </div>
       </div>

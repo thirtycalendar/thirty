@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+
   import { calView, handleCalViewChange } from "$lib/client/stores/cal-view";
   import { cn } from "$lib/client/utils/cn";
 
   import { CalViews } from "$lib/shared/constants";
 
-  import { ChevronDown } from "../icons";
+  import { Icon } from "../icons";
 
   let views = CalViews;
 </script>
@@ -17,7 +19,7 @@
     <span>
       {$calView && $calView[0].toUpperCase() + $calView.slice(1)}
     </span>
-    <ChevronDown size="23" strokeWidth="1.2" />
+    <Icon icon={ArrowDown01Icon} />
   </button>
   <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-1 mt-1 w-auto border">
     {#each views as view (view)}

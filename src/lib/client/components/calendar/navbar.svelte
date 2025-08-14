@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
+
   import { calView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
   import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
   import { ProfileButton } from "../auth";
-  import { Sidebar } from "../icons";
+  import { Icon } from "../icons";
 
   import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
 
@@ -18,7 +20,7 @@
       class="btn btn-link btn-square text-primary-content/80 hover:text-primary-content mx-2"
       onclick={toggleMainSidebar}
     >
-      <Sidebar strokeWidth="2.2" />
+      <Icon icon={SidebarLeftIcon} strokeWidth={2} absoluteStrokeWidth />
     </button>
 
     <div>
