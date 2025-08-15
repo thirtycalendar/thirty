@@ -54,7 +54,8 @@
     "svelte-check": "^4.3.1",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vite-plugin-devtools-json": "^1.0.0"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.10",
@@ -95,7 +96,10 @@
       "ignoreMissing": [
         "zod"
       ]
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "lint-staged": {
     "*": "node ./pre-commit.js"

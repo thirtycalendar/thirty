@@ -24,8 +24,8 @@
 
     "",
 
-    "^\\$lib/client/features",
     "^\\$lib/client/components",
+    "^\\$lib/client/data",
     "^\\$lib/client/stores",
     "^\\$lib/client/contexts",
     "^\\$lib/client/actions",
