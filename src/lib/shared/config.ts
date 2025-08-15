@@ -8,3 +8,12 @@ export const seoConfig = {
   image: DemoLightImage,
   twitterHandle: "@itsithu"
 };
+
+export const legalConfig = {
+  effectiveDate: "Wed Aug 6, 2025",
+  productName: "Thirty",
+  businessName: "Thirty",
+  supportEmail: "sithuknt@gmail.com",
+  minAge: "13",
+  pricingOptions: ["Free", "Pro"]
+};

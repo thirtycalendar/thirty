@@ -1,12 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { DiscordIcon } from "@hugeicons/core-free-icons";
-
-  import { GithubStarButton, Seo, Toast } from "$lib/client/components";
+  import { Seo, Toast } from "$lib/client/components";
   import { GoogleAuthButton } from "$lib/client/components/auth";
-  import { Icon } from "$lib/client/components/icons";
-  import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
+  import { Navbar } from "$lib/client/components/home";
+  import { DemoDarkImage, DemoLightImage } from "$lib/client/assets";
 
   let { data } = $props();
 
@@ -21,29 +19,13 @@
 
     return () => media.removeEventListener("change", listener);
   });
-
-  const discordLink = "https://discord.gg/Y8XQ4dV4UC";
 </script>
 
 <Seo seo={data.seo} />
 
 <Toast />
 
-<div class="navbar bg-base-100 z-50 m-auto max-w-5xl">
-  <div class="flex-1">
-    <a href="/">
-      <img src={LogoImage} alt="Thirty Logo" class="h-8 w-8" />
-    </a>
-  </div>
-
-  <div class="flex items-center">
-    <a href={discordLink} target="_blank" class="btn btn-ghost btn-square">
-      <Icon icon={DiscordIcon} absoluteStrokeWidth />
-    </a>
-
-    <GithubStarButton />
-  </div>
-</div>
+<Navbar />
 
 <section class="mx-auto max-w-4xl px-3 pt-20 pb-20 text-center">
   <h1 class="text-4xl font-bold sm:text-6xl">

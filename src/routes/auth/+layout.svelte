@@ -6,12 +6,10 @@
   let { children } = $props();
 </script>
 
-<main class="bg-base-200 min-h-screen w-full p-4">
-  <nav class="m-2 flex items-center justify-between">
-    <a href="/" class="btn btn-square btn-secondary flex items-center">
-      <Icon icon={ArrowLeft01Icon} />
-    </a>
-  </nav>
+<main class="min-h-screen w-full p-4">
+  <a href="/" class="btn btn-square btn-secondary">
+    <Icon icon={ArrowLeft01Icon} />
+  </a>
 
   {@render children()}
 </main>
