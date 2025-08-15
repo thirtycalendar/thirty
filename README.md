@@ -5,10 +5,6 @@
 
 Thirty is an open-source AI calendar you talk to, making scheduling effortless and stress-free.
 
-<!-- ![GitHub License](https://img.shields.io/github/license/thirtycalendar/thirty)
-![GitHub Repo stars](https://img.shields.io/github/stars/thirtycalendar/thirty)
-![GitHub forks](https://img.shields.io/github/forks/thirtycalendar/thirty) -->
-
 </div>
 
 > **Notice**: The `main` branch is a complete reboot of the project (now considered `v2`). The original `v1` is available [here](https://github.com/thirtycalendar/thirty/blob/v1/).
@@ -89,7 +85,3 @@ We welcome contributions! Please read our [Contributing Guide](./CONTRIBUTING.md
 ## License
 
 MIT License
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=thirtycalendar/thirty&type=Date)](https://www.star-history.com/#thirtycalendar/thirty&Date)
