@@ -4,7 +4,7 @@
   import { getBirthdays } from "$lib/client/data/queries/birthday";
   import { getEvents } from "$lib/client/data/queries/event";
   import { getHolidays } from "$lib/client/data/queries/holiday";
-  import { currentCalView } from "$lib/client/stores/cal-view";
+  import { currentCalendarView } from "$lib/client/stores/calendar-view";
 
   let { data } = $props();
 
@@ -18,11 +18,11 @@
 <Navbar />
 
 {#if $events}
-  {#if $currentCalView === "year"}
+  {#if $currentCalendarView === "year"}
     <!-- <YearCalendar /> -->
-  {:else if $currentCalView === "month"}
+  {:else if $currentCalendarView === "month"}
     <!-- <MonthCalendar events={$events} birthdays={$birthdays} holidays={$holidays} /> -->
-  {:else if $currentCalView === "day"}
+  {:else if $currentCalendarView === "day"}
     <!-- <DayCalendar events={$events} birthdays={$birthdays} holidays={$holidays} /> -->
   {:else}
     <WeekCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />

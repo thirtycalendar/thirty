@@ -1,14 +1,14 @@
 <script lang="ts">
   import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 
-  import { currentCalView, setCalView } from "$lib/client/stores/cal-view";
+  import { currentCalendarView, setCalendarView } from "$lib/client/stores/calendar-view";
   import { cn } from "$lib/client/utils/cn";
 
   import { CalViews } from "$lib/shared/constants";
 
   import { Icon } from "../icons";
 
-  const currentView = $derived($currentCalView);
+  const currentView = $derived($currentCalendarView);
   const views = CalViews;
 </script>
 
@@ -30,7 +30,7 @@
           currentView === view ? "btn-secondary" : "btn-ghost"
         )}
         onclick={() => {
-          setCalView(view);
+          setCalendarView(view);
           (document.activeElement as HTMLElement)?.blur();
         }}
       >

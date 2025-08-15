@@ -1,4 +1,4 @@
-export { default as ChangeCalViewButtons } from "./change-cal-view-buttons.svelte";
+export { default as ChangeCalendarViewButtons } from "./change-calendar-view-buttons.svelte";
 export { default as ChangeDateButtons } from "./change-date-buttons.svelte";
 export { default as CreateButton } from "./create-button.svelte";
 export { default as CurrentTimeIndicator } from "./current-time-indicator.svelte";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
-  import { currentCalView } from "$lib/client/stores/cal-view";
+  import { currentCalendarView } from "$lib/client/stores/calendar-view";
   import {
     goToNextDay,
     goToNextMonth,
@@ -16,7 +16,7 @@
 
   import { Icon } from "../icons";
 
-  const currentView = $derived($currentCalView);
+  const currentView = $derived($currentCalendarView);
 
   const navHandlers = {
     year: {

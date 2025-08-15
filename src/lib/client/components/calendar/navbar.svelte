@@ -1,14 +1,14 @@
 <script lang="ts">
   import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
 
-  import { currentCalView } from "$lib/client/stores/cal-view";
+  import { currentCalendarView } from "$lib/client/stores/calendar-view";
   import { currentDate } from "$lib/client/stores/change-date";
   import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
   import { ProfileButton } from "../auth";
   import { Icon } from "../icons";
 
-  import { ChangeCalViewButtons, ChangeDateButtons, CreateButton } from ".";
+  import { ChangeCalendarViewButtons, ChangeDateButtons, CreateButton } from ".";
 
   const month = $derived(new Intl.DateTimeFormat("en-US", { month: "short" }).format($currentDate));
   const year = $derived(new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate));
@@ -25,7 +25,7 @@
 
     <div>
       <p class="flex gap-1 text-base font-semibold sm:text-lg">
-        {#if $currentCalView === "year"}
+        {#if $currentCalendarView === "year"}
           {year}
         {:else}
           {month} <span class="text-base-content/75">{year}</span>
@@ -40,7 +40,7 @@
     <CreateButton />
 
     <div class="hidden items-center gap-2 sm:flex">
-      <ChangeCalViewButtons />
+      <ChangeCalendarViewButtons />
 
       <ProfileButton />
     </div>
