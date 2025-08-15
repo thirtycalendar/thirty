@@ -28,7 +28,7 @@
   const dayLabels = ["S", "M", "T", "W", "T", "F", "S"];
 </script>
 
-<div class="relative h-full overflow-y-auto">
+<div class="relative flex-1 overflow-y-auto">
   <div class="grid grid-cols-1 gap-6 leading-tight sm:grid-cols-2 md:grid-cols-3">
     {#each $months as month (month)}
       <div class="flex flex-col">
@@ -50,8 +50,8 @@
             <div class="flex justify-center">
               <button
                 class={cn(
-                  "btn btn-xs btn-square text-primary-content/70 rounded-md",
-                  isToday(day) ? "btn-primary" : "btn-ghost",
+                  "btn btn-xs btn-square rounded-md",
+                  isToday(day) ? "btn-primary" : "btn-ghost text-primary-content/70",
                   !isSameMonth(day, month) && "text-base-content/30"
                 )}
                 on:click={() => {

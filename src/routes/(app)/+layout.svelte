@@ -38,8 +38,8 @@
     ></button>
   {/if}
 
-  <!-- Main content -->
-  <div class="bg-base-100 m-2 flex-1 overflow-hidden rounded-xl p-3 shadow-md">
+  <!-- Main -->
+  <div class="bg-base-100 m-2 flex flex-1 flex-col overflow-hidden rounded-xl p-3 shadow-md">
     {@render children?.()}
   </div>
 </div>

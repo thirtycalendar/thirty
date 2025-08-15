@@ -14,8 +14,7 @@
 
   import { StickyBirthdayBlock } from "../birthday";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../birthday/utils";
-  import { EventBlock } from "../event";
-  import StickyEventBlock from "../event/sticky-event-block.svelte";
+  import { EventBlock, StickyEventBlock } from "../event";
   import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
   import { StickyHolidayBlock } from "../holiday";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
@@ -132,7 +131,7 @@
 
   <div
     bind:this={scrollContainer}
-    class="bg-base-100 relative grid flex-1 grid-cols-[50px_repeat(7,1fr)] overflow-x-hidden overflow-y-auto rounded-2xl"
+    class="bg-base-100 relative grid flex-1 grid-cols-[50px_repeat(7,1fr)] overflow-x-hidden overflow-y-auto"
   >
     <div class="col-start-1 row-start-1 grid">
       {#each hours as hour (hour)}
