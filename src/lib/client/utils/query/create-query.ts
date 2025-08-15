@@ -9,22 +9,18 @@ import {
   unregisterQuery
 } from "./query-client";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CreateQueryOptions<Fn extends () => Promise<any>, ErrorType> = {
-  queryFn: Fn;
+type CreateQueryOptions<TData, TError> = {
+  queryFn: () => Promise<TData>;
   queryKeys: string[];
   enabled?: boolean;
   onQuery?: () => void;
   onPending?: () => void;
-  onSuccess?: (data: Awaited<ReturnType<Fn>>) => void;
-  onError?: (err: ErrorType) => void;
+  onSuccess?: (data: TData) => void;
+  onError?: (err: TError) => void;
   staleTime?: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
-  opts: CreateQueryOptions<Fn, ErrorType>
-) {
+export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TData, TError>) {
   const {
     queryFn,
     queryKeys,
@@ -36,10 +32,8 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
     staleTime = 60_000
   } = opts;
 
-  type DataType = Awaited<ReturnType<Fn>>;
-
-  const data = writable<DataType | null>(null);
-  const error = writable<ErrorType | null>(null);
+  const data = writable<TData | null>(null);
+  const error = writable<TError | null>(null);
   const isPending = writable(false);
   const isSuccess = writable(false);
   const isError = writable(false);
@@ -72,9 +66,9 @@ export function createQuery<Fn extends () => Promise<any>, ErrorType = unknown>(
       onSuccess?.(result);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      error.set(err);
+      error.set(err as TError);
       isError.set(true);
-      onError?.(err);
+      onError?.(err as TError);
     } finally {
       isPending.set(false);
     }

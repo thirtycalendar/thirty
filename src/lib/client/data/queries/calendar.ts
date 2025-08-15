@@ -3,7 +3,7 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Calendar } from "$lib/shared/types";
 
-let calendarQuery: ReturnType<typeof createQuery<() => Promise<Calendar[]>>> | null = null;
+let calendarQuery: ReturnType<typeof createQuery<Calendar[]>> | null = null;
 
 export function getCalendars() {
   if (!calendarQuery) {

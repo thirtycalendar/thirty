@@ -3,7 +3,7 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Event } from "$lib/shared/types";
 
-let eventQuery: ReturnType<typeof createQuery<() => Promise<Event[]>>> | null = null;
+let eventQuery: ReturnType<typeof createQuery<Event[]>> | null = null;
 
 export function getEvents() {
   if (!eventQuery) {

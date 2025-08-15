@@ -3,7 +3,7 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Holiday, HolidayCountry } from "$lib/shared/types";
 
-let userHolidaysQuery: ReturnType<typeof createQuery<() => Promise<Holiday[]>>> | null = null;
+let userHolidaysQuery: ReturnType<typeof createQuery<Holiday[]>> | null = null;
 
 export function getHolidays() {
   if (!userHolidaysQuery) {
@@ -23,9 +23,7 @@ export function getHolidays() {
   return userHolidaysQuery;
 }
 
-let userHolidayCountriesQuery: ReturnType<
-  typeof createQuery<() => Promise<HolidayCountry[]>>
-> | null = null;
+let userHolidayCountriesQuery: ReturnType<typeof createQuery<HolidayCountry[]>> | null = null;
 
 export function getHolidayCountries() {
   if (!userHolidayCountriesQuery) {
@@ -45,9 +43,7 @@ export function getHolidayCountries() {
   return userHolidayCountriesQuery;
 }
 
-let allHolidayCountriesQuery: ReturnType<
-  typeof createQuery<() => Promise<HolidayCountry[]>>
-> | null = null;
+let allHolidayCountriesQuery: ReturnType<typeof createQuery<HolidayCountry[]>> | null = null;
 
 export function getAllHolidayCountries() {
   if (!allHolidayCountriesQuery) {

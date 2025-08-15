@@ -3,7 +3,7 @@ import { client } from "$lib/client/utils/rpc";
 
 import type { Birthday } from "$lib/shared/types";
 
-let birthdayQuery: ReturnType<typeof createQuery<() => Promise<Birthday[]>>> | null = null;
+let birthdayQuery: ReturnType<typeof createQuery<Birthday[]>> | null = null;
 
 export function getBirthdays() {
   if (!birthdayQuery) {
