@@ -19,9 +19,9 @@
   <!-- Sidebar / Drawer -->
   <div
     class={cn(
-      "bg-base-200 z-40 min-h-screen overflow-y-auto transition-all duration-300 sm:static sm:w-[255px] sm:translate-x-0 sm:p-2 sm:pt-3",
-      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3",
-      $isOpen ? "translate-x-0" : "-translate-x-full"
+      "bg-base-200 z-40 min-h-screen overflow-y-auto transition-all duration-300",
+      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static",
+      $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
     )}
   >
     {#if pathSegment === "calendar"}
@@ -41,9 +41,7 @@
   <!-- Main content -->
   <div
     class={cn(
-      "bg-base-100 my-2 h-[calc(100vh-16px)] flex-1 overflow-hidden p-3 shadow-md",
-      "sm:ml-0 sm:rounded-l-xl",
-      !$isOpen && "m-2 rounded-xl sm:m-0"
+      "bg-base-100 m-2 h-[calc(100vh-16px)] flex-1 overflow-hidden rounded-xl p-3 shadow-md"
     )}
   >
     {@render children?.()}
