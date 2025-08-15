@@ -21,7 +21,7 @@
     <Icon icon={ArrowDown01Icon} class="ml-2" />
   </button>
 
-  <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-10 mt-1 w-auto border">
+  <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-10 mt-1 w-full border">
     {#each views as view (view)}
       <button
         type="button"

@@ -24,11 +24,11 @@
     </button>
 
     <div>
-      <p class="flex gap-1 font-semibold sm:text-lg">
+      <p class="flex gap-1 text-base font-semibold sm:text-lg">
         {#if $currentCalView === "year"}
           {year}
         {:else}
-          {month} <span class="text-base-content/75 hidden font-normal sm:flex">{year}</span>
+          {month} <span class="text-base-content/75">{year}</span>
         {/if}
       </p>
     </div>
@@ -39,8 +39,10 @@
   <div class="flex items-center gap-2">
     <CreateButton />
 
-    <ChangeCalViewButtons />
+    <div class="hidden items-center gap-2 sm:flex">
+      <ChangeCalViewButtons />
 
-    <ProfileButton />
+      <ProfileButton />
+    </div>
   </div>
 </div>

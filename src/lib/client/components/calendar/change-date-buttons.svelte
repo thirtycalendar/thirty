@@ -40,21 +40,13 @@
 
 {#if currentView !== null && currentView in navHandlers}
   <div class="w-full gap-1 text-center">
-    <button
-      class="btn btn-ghost btn-xs sm:btn-sm btn-square"
-      onclick={navHandlers[currentView].prev}
-    >
+    <button class="btn btn-ghost btn-sm btn-square" onclick={navHandlers[currentView].prev}>
       <Icon icon={ArrowLeft01Icon} absoluteStrokeWidth />
     </button>
 
-    <button class="btn btn-outline border-base-300 btn-xs sm:btn-sm" onclick={goToToday}>
-      Today
-    </button>
+    <button class="btn btn-outline border-base-300 btn-sm" onclick={goToToday}> Today </button>
 
-    <button
-      class="btn btn-ghost btn-xs sm:btn-sm btn-square"
-      onclick={navHandlers[currentView].next}
-    >
+    <button class="btn btn-ghost btn-sm btn-square" onclick={navHandlers[currentView].next}>
       <Icon icon={ArrowRight01Icon} absoluteStrokeWidth />
     </button>
   </div>

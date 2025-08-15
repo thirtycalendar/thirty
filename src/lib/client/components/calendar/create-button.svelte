@@ -9,11 +9,9 @@
 
 <div class="z-200 hidden sm:block">
   <button
-    tabindex="0"
     class="btn btn-md bg-primary border-base-300 border shadow-none"
     onclick={() => {
       toggleModal(eventModal.modalId);
-      (document.activeElement as HTMLElement)?.blur();
     }}
   >
     <Icon icon={Add01Icon} />
@@ -22,8 +20,12 @@
 </div>
 
 <div class="absolute right-8 bottom-8 z-200 sm:hidden">
-  <button tabindex="0" class="btn btn-md bg-base-200 border-base-300 border">
+  <button
+    class="btn btn-md bg-base-200 border-base-300 border"
+    onclick={() => {
+      toggleModal(eventModal.modalId);
+    }}
+  >
     <Icon icon={Add01Icon} />
-    <span class="hidden lg:block">Create</span>
   </button>
 </div>
