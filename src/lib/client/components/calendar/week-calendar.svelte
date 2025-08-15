@@ -93,13 +93,13 @@
   });
 </script>
 
-<div class="flex h-full flex-col pt-2 pb-1">
-  <div class="bg-base-200 sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm">
-    <div class="border-base-200 border-r"></div>
+<div class="flex h-full flex-col pt-2">
+  <div class="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm">
+    <div></div>
     {#each days as day (day.toISOString())}
-      <div class="border-base-200 flex items-center justify-center border-r border-b">
+      <div class="flex items-center justify-center">
         <span
-          class={`flex items-center gap-1 font-bold ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+          class={`flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
         >
           {#if isToday(day)}
             <span class="bg-primary-content h-2 w-2 rounded-full"></span>
@@ -111,7 +111,7 @@
     {/each}
   </div>
 
-  <div class="bg-base-200 border-base-200 grid grid-cols-[50px_repeat(7,1fr)] border-b pb-1">
+  <div class="border-base-200 grid grid-cols-[50px_repeat(7,1fr)] border-b pb-1">
     <div></div>
     {#each days as day, i (i + day.toISOString())}
       <div class="border-base-200 relative flex min-w-0 flex-col gap-1 border-r px-1">
