@@ -21,7 +21,7 @@ import type { hdCountrySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
 
 // Calendar
-export type CalView = (typeof Const.CalViews)[number];
+export type CalendarView = (typeof Const.CalendarViews)[number];
 
 export type Calendar = InferSelectModel<typeof calendarTable>;
 export type CalendarForm = z.infer<typeof calendarSchema>;

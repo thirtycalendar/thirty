@@ -1,22 +1,22 @@
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-import { CalViews } from "$lib/shared/constants";
-import type { CalView } from "$lib/shared/types";
+import { CalendarViews } from "$lib/shared/constants";
+import type { CalendarView } from "$lib/shared/types";
 
-function isCalView(value: string): value is CalView {
-  return (CalViews as readonly string[]).includes(value);
+function isCalendarView(value: string): value is CalendarView {
+  return (CalendarViews as readonly string[]).includes(value);
 }
 
-export const currentCalendarView: Writable<CalView | null> = writable(null);
+export const currentCalendarView: Writable<CalendarView | null> = writable(null);
 
 if (browser) {
   const stored = localStorage.getItem("calendar-view");
-  const initialView: CalView = stored && isCalView(stored) ? stored : "week";
+  const initialView: CalendarView = stored && isCalendarView(stored) ? stored : "week";
   currentCalendarView.set(initialView);
 }
 
-export function setCalendarView(value: CalView) {
+export function setCalendarView(value: CalendarView) {
   if (browser) {
     localStorage.setItem("calendar-view", value);
   }

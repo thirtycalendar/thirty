@@ -4,12 +4,12 @@
   import { currentCalendarView, setCalendarView } from "$lib/client/stores/calendar-view";
   import { cn } from "$lib/client/utils/cn";
 
-  import { CalViews } from "$lib/shared/constants";
+  import { CalendarViews } from "$lib/shared/constants";
 
   import { Icon } from "../icons";
 
   const currentView = $derived($currentCalendarView);
-  const views = CalViews;
+  const views = CalendarViews;
 </script>
 
 <div class="dropdown dropdown-end">
