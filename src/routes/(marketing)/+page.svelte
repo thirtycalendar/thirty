@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Seo, Toast } from "$lib/client/components";
+  import { DiscordIcon } from "@hugeicons/core-free-icons";
+
+  import { GithubStarButton, Seo, Toast } from "$lib/client/components";
   import { GoogleAuthButton } from "$lib/client/components/auth";
+  import { Icon } from "$lib/client/components/icons";
   import { DemoDarkImage, DemoLightImage, LogoImage } from "$lib/client/assets";
 
   let { data } = $props();
@@ -19,7 +22,7 @@
     return () => media.removeEventListener("change", listener);
   });
 
-  const githubUrl = "https://github.com/thirtycalendar/thirty";
+  const discordLink = "https://discord.gg/Y8XQ4dV4UC";
 </script>
 
 <Seo seo={data.seo} />
@@ -28,13 +31,17 @@
 
 <div class="navbar bg-base-100 z-50 m-auto max-w-5xl">
   <div class="flex-1">
-    <a href="/" class="flex items-center gap-1 text-xl font-bold">
+    <a href="/">
       <img src={LogoImage} alt="Thirty Logo" class="h-8 w-8" />
     </a>
   </div>
 
-  <div>
-    <a href={githubUrl} target="_blank" class="btn btn-outline btn-sm sm:btn">⭐ Star on GitHub</a>
+  <div class="flex items-center">
+    <a href={discordLink} target="_blank" class="btn btn-ghost btn-square">
+      <Icon icon={DiscordIcon} absoluteStrokeWidth />
+    </a>
+
+    <GithubStarButton />
   </div>
 </div>
 
@@ -42,8 +49,9 @@
   <h1 class="text-4xl font-bold sm:text-6xl">
     Your Calendar. Smarter, Open, and Always Listening.
   </h1>
-  <p class="mt-4 text-lg opacity-70">
-    Thirty is the open AI calendar you talk to, and it organizes your life.
+
+  <p class="mt-6 text-lg opacity-80">
+    Thirty is an open-source AI calendar you talk to, so you can focus on living, not scheduling.
   </p>
 
   <div class="mt-8 flex justify-center gap-3">
