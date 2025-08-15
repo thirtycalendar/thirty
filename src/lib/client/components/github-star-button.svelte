@@ -34,7 +34,5 @@
 
   {#if !loading}
     <AnimateNumber value={stars} />
-  {:else}
-    <span>0</span>
   {/if}
 </a>

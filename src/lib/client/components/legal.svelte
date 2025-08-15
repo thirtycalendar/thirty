@@ -23,7 +23,7 @@
         {#if typeof item === "string"}
           <p>{item}</p>
         {:else if item.type === "link"}
-          <p><a href={item.href}>{item.text}</a></p>
+          <a href={item.href}>{item.text}</a>
         {:else if item.type === "list"}
           <ul class="list-disc space-y-1 pl-6">
             {#each item.items as li (li)}<li>{li}</li>{/each}
@@ -35,7 +35,7 @@
     {/each}
   </div>
 
-  <p class="mt-10 mb-5">
+  <p class="mt-10 mb-15">
     By using the hosted version of {productName}, you consent to the practices described in this {title}.
   </p>
 </div>

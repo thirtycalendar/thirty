@@ -67,13 +67,28 @@
       ]
     },
     {
-      title: "5. Data Security",
+      title: "5. Data Sharing & Disclosure",
+      content: [
+        `We do not sell or rent your Google user data to third parties. Your Google Calendar data is only used internally to provide the Service and to improve your experience.`,
+        `We may share your data only in the following cases:`,
+        {
+          type: "list",
+          items: [
+            "With our service providers who perform functions on our behalf, such as hosting, analytics, or security, and who are bound by confidentiality obligations.",
+            "To comply with legal obligations, enforce our terms, or protect rights, property, or safety."
+          ]
+        },
+        `We do not share your Google Calendar events with advertisers or other external parties.`
+      ]
+    },
+    {
+      title: "6. Data Security",
       content: [
         `We implement commercially reasonable measures to protect your information, including encrypting Google user data in transit (TLS 1.3) and at rest (AES-256). However, no method of electronic storage is 100% secure.`
       ]
     },
     {
-      title: "6. Retention of Data",
+      title: "7. Retention of Data",
       content: [
         `We retain personal information only as long as necessary to provide the Service or comply with legal obligations. You may disconnect Google access at any time via `,
         {
@@ -85,32 +100,32 @@
       ]
     },
     {
-      title: "7. Children's Privacy",
+      title: "8. Children's Privacy",
       content: [
         `${productName} is not directed to children under 13, and we do not knowingly collect personal information from them.`
       ]
     },
     {
-      title: "8. Your Rights",
+      title: "9. Your Rights",
       content: [
         `Depending on your location, you may have rights to access, correct, download, or delete your personal data. You can exercise these rights by contacting us at `,
         { type: "link", href: `mailto:${supportEmail}`, text: supportEmail }
       ]
     },
     {
-      title: "9. International Data Transfers",
+      title: "10. International Data Transfers",
       content: [
         `Your data may be processed in countries other than your own. We take appropriate measures to protect your information in accordance with applicable data protection laws.`
       ]
     },
     {
-      title: "10. Changes to This Policy",
+      title: "11. Changes to This Policy",
       content: [
         `We may update this Privacy Policy from time to time. Material changes will be communicated through email or in-app notification, and where required, we will seek your consent.`
       ]
     },
     {
-      title: "11. Contact Us",
+      title: "12. Contact Us",
       content: [
         `If you have questions about this Privacy Policy, contact ${businessName} at `,
         { type: "link", href: `mailto:${supportEmail}`, text: supportEmail }
