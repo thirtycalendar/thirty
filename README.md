@@ -1,12 +1,17 @@
+<div style="text-align: center;">
+  <img src="./src/lib/client/assets/logo.png" alt="Thirty Logo" width="100" />
+
 # Thirty
 
-An AI-powered open-source calendar built to make scheduling faster, smarter, and more personal.
+Thirty is an open-source AI calendar you talk to, making scheduling effortless and stress-free.
+
+<!-- ![GitHub License](https://img.shields.io/github/license/thirtycalendar/thirty)
+![GitHub Repo stars](https://img.shields.io/github/stars/thirtycalendar/thirty)
+![GitHub forks](https://img.shields.io/github/forks/thirtycalendar/thirty) -->
+
+</div>
 
 > **Notice**: The `main` branch is a complete reboot of the project (now considered `v2`). The original `v1` is available [here](https://github.com/thirtycalendar/thirty/blob/v1/).
-
-## What is Thirty?
-
-Thirty is an AI-first calendar that helps you manage events, tasks, and holidays with precision and simplicity. It’s designed for people and teams who want a self-hosted, privacy-focused alternative to traditional calendars, with AI-powered features baked in.
 
 ## Tech Stack
 
@@ -16,7 +21,7 @@ Thirty is an AI-first calendar that helps you manage events, tasks, and holidays
 - **Authentication**: Better Auth
 - **Cache/Queues**: Upstash (Redis & Vector)
 - **Hosting/CDN**: Vercel, Bunny.net
-- **AI**: OpenAI (via OpenRouter)
+- **AI**: OpenAI (via OpenRouter), Voyage vector embedding
 - **Payments**: Polar
 
 ## Getting Started

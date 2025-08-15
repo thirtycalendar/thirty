@@ -28,7 +28,8 @@ export default {
         "auth", // Authentication / Authorization
         "core", // Core logic / shared utilities
         "config", // Configuration files
-        "deps" // Dependency updates
+        "deps", // Dependency updates
+        "docs" // Documentation updates
       ]
     ],
     "scope-empty": [2, "never"], // Scope is required
