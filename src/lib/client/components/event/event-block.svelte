@@ -36,7 +36,7 @@
 </script>
 
 <button
-  class="text-primary-content border-primary-content/10 absolute z-10 flex cursor-pointer items-start gap-1 overflow-hidden rounded-xl border p-0 shadow-md backdrop-blur-md transition-shadow duration-200 select-none hover:shadow-lg"
+  class="text-primary-content border-primary-content/10 absolute z-10 flex cursor-pointer items-start gap-1 overflow-hidden rounded-md border p-0 shadow-md backdrop-blur-md transition-shadow duration-200 select-none hover:shadow-lg"
   style={`
     top: ${topPx}px;
     height: ${Math.max(0, heightPx)}px;
