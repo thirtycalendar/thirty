@@ -45,18 +45,19 @@
           <div class="divider m-0 p-0 before:h-0.5 after:h-0.5"></div>
         {/if}
 
-        <li>
-          <button
-            class="btn btn-sm sm:btn-md btn-ghost flex w-full items-center justify-start gap-3 font-normal whitespace-nowrap"
-            onclick={item.onClick}
-            disabled={item.label === "Logout" && $isPending}
-          >
-            <span>
-              <Icon icon={item.icon} size={17} absoluteStrokeWidth />
-            </span>
-            {item.label}
-          </button>
-        </li>
+        <button
+          class="btn btn-sm sm:btn-md btn-ghost flex w-full items-center justify-start gap-3 font-normal whitespace-nowrap"
+          onclick={() => {
+            item.onClick?.();
+            (document.activeElement as HTMLElement)?.blur();
+          }}
+          disabled={item.label === "Logout" && $isPending}
+        >
+          <span>
+            <Icon icon={item.icon} size={17} absoluteStrokeWidth />
+          </span>
+          {item.label}
+        </button>
       {/each}
     </ul>
   </div>

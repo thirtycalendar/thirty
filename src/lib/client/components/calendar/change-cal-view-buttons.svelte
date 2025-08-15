@@ -23,22 +23,19 @@
 
   <ul class="dropdown-content menu bg-base-100 rounded-box border-base-200 z-10 mt-1 w-auto border">
     {#each views as view (view)}
-      <label
+      <button
+        type="button"
         class={cn(
-          "btn btn-sm sm:btn-md flex w-full cursor-pointer items-center justify-start font-normal",
+          "btn btn-sm sm:btn-md flex w-full items-center justify-start font-normal",
           currentView === view ? "btn-secondary" : "btn-ghost"
         )}
+        onclick={() => {
+          setCalView(view);
+          (document.activeElement as HTMLElement)?.blur();
+        }}
       >
-        <input
-          type="radio"
-          name="calendar-view"
-          class="hidden"
-          value={view}
-          checked={currentView === view}
-          onchange={() => setCalView(view)}
-        />
         {view[0].toUpperCase() + view.slice(1)}
-      </label>
+      </button>
     {/each}
   </ul>
 </div>
