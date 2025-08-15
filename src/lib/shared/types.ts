@@ -125,3 +125,14 @@ export interface ErrorResponse {
   message: string;
   isFormError?: boolean;
 }
+
+// Utils
+export type LegalSection = {
+  title: string;
+  content: (
+    | string
+    | { type: "pre"; text: string }
+    | { type: "link"; href: string; text: string }
+    | { type: "list"; items: string[] }
+  )[];
+};

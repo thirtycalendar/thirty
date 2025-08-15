@@ -7,5 +7,7 @@
 <main class="min-h-screen w-full">
   <Navbar />
 
-  {@render children()}
+  <div class="m-auto max-w-4xl">
+    {@render children()}
+  </div>
 </main>
