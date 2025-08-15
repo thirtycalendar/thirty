@@ -15,12 +15,12 @@
   onMount(initUserSession);
 </script>
 
-<div class="bg-base-200 flex w-full">
-  <!-- Sidebar / Drawer -->
+<div class="bg-base-200 flex h-screen w-full">
+  <!-- Sidebar -->
   <div
     class={cn(
-      "bg-base-200 z-40 min-h-screen overflow-y-auto transition-all duration-300",
-      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static",
+      "bg-base-200 z-40 overflow-y-auto transition-all duration-300",
+      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static sm:h-full",
       $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
     )}
   >
@@ -29,7 +29,7 @@
     {/if}
   </div>
 
-  <!-- Backdrop for mobile -->
+  <!-- Backdrop -->
   {#if $isOpen}
     <button
       class="fixed inset-0 z-30 bg-black/40 sm:hidden"
@@ -39,11 +39,7 @@
   {/if}
 
   <!-- Main content -->
-  <div
-    class={cn(
-      "bg-base-100 m-2 h-[calc(100vh-16px)] flex-1 overflow-hidden rounded-xl p-3 shadow-md"
-    )}
-  >
+  <div class="bg-base-100 m-2 flex-1 overflow-hidden rounded-xl p-3 shadow-md">
     {@render children?.()}
   </div>
 </div>
