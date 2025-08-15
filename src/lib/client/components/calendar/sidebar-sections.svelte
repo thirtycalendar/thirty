@@ -14,6 +14,7 @@
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
   import { birthdayModal, calendarModal, holidayCountryModal } from "$lib/client/stores/modal";
+  import { cn } from "$lib/client/utils/cn";
 
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
 
@@ -92,7 +93,7 @@
     <div class="flex w-full items-center justify-between gap-1 rounded-md px-1 text-sm">
       <p class="text-primary-content/70 ml-1 font-semibold">{title}</p>
 
-      <div class="flex items-center gap-1">
+      <div class="text-primary-content/70 flex items-center gap-1">
         <div class="tooltip font-normal" data-tip="New">
           <button class="btn btn-xs btn-ghost btn-square" onclick={onAdd}>
             <Icon icon={Add01Icon} size={16} absoluteStrokeWidth />
@@ -100,7 +101,10 @@
         </div>
 
         <button
-          class={`btn btn-xs btn-ghost btn-square opacity-75 transition-transform duration-300 ${!$collapsed.includes(title) && "rotate-180"}`}
+          class={cn(
+            "btn btn-xs btn-ghost btn-square transition-transform duration-300",
+            !$collapsed.includes(title) && "rotate-180"
+          )}
           onclick={() => collapsedLists.toggle(title)}
         >
           <Icon icon={ArrowDown01Icon} size={16} absoluteStrokeWidth />
@@ -113,7 +117,7 @@
         <div class="my-1" transition:slide>
           {#each sortedItems as item (item.id)}
             <label
-              class="group btn btn-ghost hover:btn-secondary flex items-center justify-between px-2 font-normal"
+              class="group btn btn-ghost btn-sm flex items-center justify-between px-2 py-1 font-normal"
             >
               <div class="flex items-center gap-2">
                 <input

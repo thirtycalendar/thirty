@@ -6,6 +6,7 @@
   import { addDays, format, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 
   import { currentDate, goToNextMonth, goToPreviousMonth } from "$lib/client/stores/change-date";
+  import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
 
@@ -26,7 +27,7 @@
   <div class="mb-2 flex items-center justify-between text-sm font-semibold">
     <p class="text-primary-content/70 ml-3">{format($currentDate, "MMMM yyyy")}</p>
 
-    <div>
+    <div class="text-primary-content/70">
       <button class="btn btn-xs btn-square btn-ghost" onclick={goToPreviousMonth}>
         <Icon icon={ArrowLeft01Icon} absoluteStrokeWidth />
       </button>
@@ -46,16 +47,19 @@
   <!-- Mini month grid -->
   <div class="grid grid-cols-7 gap-1 text-center">
     {#each $days as day (day)}
-      <button
-        class={`rounded-md py-[2px] transition-colors
-          ${isToday(day) ? "bg-base-300 text-primary-content font-semibold" : ""}
-          ${!isSameMonth(day, $currentDate) ? "text-base-content/30" : ""}
-          hover:bg-base-300/50 cursor-pointer`}
-        title={format(day, "PPP")}
-        onclick={() => currentDate.set(day)}
-      >
-        {format(day, "d")}
-      </button>
+      <div class="items-center justify-center">
+        <button
+          class={cn(
+            "btn btn-xs btn-square font-normal transition-colors",
+            isToday(day) ? "btn-accent" : "btn-ghost text-primary-content/70",
+            !isSameMonth(day, $currentDate) && "text-base-content/30"
+          )}
+          title={format(day, "PPP")}
+          onclick={() => currentDate.set(day)}
+        >
+          {format(day, "d")}
+        </button>
+      </div>
     {/each}
   </div>
 </div>

@@ -17,10 +17,10 @@
 <div class="mb-2 flex items-center justify-between text-xs">
   <div class="flex items-center gap-1">
     <button
-      class="btn btn-link btn-square text-primary-content/80 hover:text-primary-content mx-2"
+      class="btn btn-link btn-square text-primary-content/70 hover:text-primary-content mx-2"
       onclick={toggleMainSidebar}
     >
-      <Icon icon={SidebarLeftIcon} strokeWidth={2} absoluteStrokeWidth />
+      <Icon icon={SidebarLeftIcon} absoluteStrokeWidth />
     </button>
 
     <div>
@@ -28,7 +28,7 @@
         {#if $currentCalendarView === "year"}
           {year}
         {:else}
-          {month} <span class="text-base-content/75">{year}</span>
+          {month} <span class="text-accent/90">{year}</span>
         {/if}
       </p>
     </div>

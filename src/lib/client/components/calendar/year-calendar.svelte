@@ -50,11 +50,11 @@
             <div class="flex justify-center">
               <button
                 class={cn(
-                  "btn btn-xs btn-square rounded-md",
-                  isToday(day) ? "btn-primary" : "btn-ghost text-primary-content/70",
+                  "btn btn-xs btn-square font-normal",
+                  isToday(day) ? "btn-accent" : "btn-ghost text-primary-content/70",
                   !isSameMonth(day, month) && "text-base-content/30"
                 )}
-                on:click={() => {
+                onclick={() => {
                   currentDate.set(day);
                   setDayView();
                 }}
