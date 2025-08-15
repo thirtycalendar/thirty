@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
-  import { calView } from "$lib/client/stores/cal-view";
+  import { currentCalView } from "$lib/client/stores/cal-view";
   import {
     goToNextDay,
     goToNextMonth,
@@ -15,6 +15,8 @@
   } from "$lib/client/stores/change-date";
 
   import { Icon } from "../icons";
+
+  const currentView = $derived($currentCalView);
 
   const navHandlers = {
     year: {
@@ -36,9 +38,12 @@
   } as const;
 </script>
 
-{#if $calView !== null && $calView in navHandlers}
+{#if currentView !== null && currentView in navHandlers}
   <div class="w-full gap-1 text-center">
-    <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].prev}>
+    <button
+      class="btn btn-ghost btn-xs sm:btn-sm btn-square"
+      onclick={navHandlers[currentView].prev}
+    >
       <Icon icon={ArrowLeft01Icon} absoluteStrokeWidth />
     </button>
 
@@ -46,7 +51,10 @@
       Today
     </button>
 
-    <button class="btn btn-ghost btn-xs sm:btn-sm btn-square" onclick={navHandlers[$calView].next}>
+    <button
+      class="btn btn-ghost btn-xs sm:btn-sm btn-square"
+      onclick={navHandlers[currentView].next}
+    >
       <Icon icon={ArrowRight01Icon} absoluteStrokeWidth />
     </button>
   </div>

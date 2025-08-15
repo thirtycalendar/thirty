@@ -1,7 +1,7 @@
 <script lang="ts">
   import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
 
-  import { calView } from "$lib/client/stores/cal-view";
+  import { currentCalView } from "$lib/client/stores/cal-view";
   import { currentDate } from "$lib/client/stores/change-date";
   import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
@@ -25,7 +25,7 @@
 
     <div>
       <p class="flex gap-1 font-semibold sm:text-lg">
-        {#if $calView === "year"}
+        {#if $currentCalView === "year"}
           {year}
         {:else}
           {month} <span class="text-base-content/75 hidden font-normal sm:flex">{year}</span>
