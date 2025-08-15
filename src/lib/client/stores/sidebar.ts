@@ -15,7 +15,7 @@ export function mainSidebarState(): Writable<boolean> {
 // Utils
 const sidebarStates = new Map<string, Writable<boolean>>();
 
-export function sidebarState(id: string, initial = false): Writable<boolean> {
+export function sidebarState(id: string, initial = true): Writable<boolean> {
   if (!sidebarStates.has(id)) {
     const startValue =
       browser && localStorage.getItem(id) !== null ? localStorage.getItem(id) === "true" : initial;

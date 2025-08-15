@@ -5,5 +5,6 @@ export { default as CurrentTimeIndicator } from "./current-time-indicator.svelte
 export { default as Navbar } from "./navbar.svelte";
 export { default as SidebarCalendar } from "./sidebar-calendar.svelte";
 export { default as SidebarItems } from "./sidebar-items.svelte";
+export { default as SidebarSections } from "./sidebar-sections.svelte";
 export { default as WeekCalendar } from "./week-calendar.svelte";
 export { default as YearCalendar } from "./year-calendar.svelte";

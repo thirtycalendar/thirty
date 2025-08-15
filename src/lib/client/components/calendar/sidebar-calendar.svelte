@@ -24,7 +24,7 @@
 
 <div class="my-3 w-full text-[10px] select-none">
   <div class="mb-2 flex items-center justify-between text-sm font-semibold">
-    <p class="text-primary-content/90 ml-3">{format($currentDate, "MMMM yyyy")}</p>
+    <p class="text-primary-content/70 ml-3">{format($currentDate, "MMMM yyyy")}</p>
 
     <div>
       <button class="btn btn-xs btn-square btn-ghost" onclick={goToPreviousMonth}>
