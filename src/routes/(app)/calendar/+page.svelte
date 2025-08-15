@@ -15,20 +15,24 @@
 
 <Seo seo={data.seo} />
 
-<Navbar />
+<div class="relative flex h-full flex-col">
+  <Navbar />
 
-{#if $events}
-  {#if $currentCalendarView === "year"}
-    <YearCalendar />
-  {:else if $currentCalendarView === "month"}
-    <!-- <MonthCalendar events={$events} birthdays={$birthdays} holidays={$holidays} /> -->
-  {:else if $currentCalendarView === "day"}
-    <!-- <DayCalendar events={$events} birthdays={$birthdays} holidays={$holidays} /> -->
+  {#if $events}
+    <div class="flex-1 overflow-y-scroll">
+      {#if $currentCalendarView === "year"}
+        <YearCalendar />
+      {:else if $currentCalendarView === "month"}
+        <!--  -->
+      {:else if $currentCalendarView === "day"}
+        <!--  -->
+      {:else}
+        <WeekCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
+      {/if}
+    </div>
   {:else}
-    <WeekCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
+      <span class="loading loading-spinner loading-md"></span>
+    </div>
   {/if}
-{:else}
-  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/3">
-    <span class="loading loading-spinner loading-md"></span>
-  </div>
-{/if}
+</div>
