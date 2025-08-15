@@ -9,7 +9,7 @@
   const discordLink = "https://discord.gg/Y8XQ4dV4UC";
 </script>
 
-<div class="navbar bg-base-100 z-50 m-auto max-w-5xl">
+<div class="navbar bg-base-100 z-50 m-auto max-w-5xl p-3">
   <div class="flex-1">
     <a href="/">
       <img src={LogoImage} alt="Thirty Logo" class="h-8 w-8" />

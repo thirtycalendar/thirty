@@ -2,6 +2,7 @@ export { default as AnimateNumber } from "./animate-number.svelte";
 export { default as ChoiceField } from "./choice-field.svelte";
 export { default as DetailActionButtons } from "./detail-action-buttons.svelte";
 export { default as GithubStarButton } from "./github-star-button.svelte";
+export { default as Legal } from "./legal.svelte";
 export { default as Modal } from "./modal.svelte";
 export { default as StickyBlock } from "./sticky-block.svelte";
 export { default as Seo } from "./seo.svelte";

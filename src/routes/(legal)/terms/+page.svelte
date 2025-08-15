@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { Seo } from "$lib/client/components";
+  import { Legal, Seo } from "$lib/client/components";
 
   import type { LegalSection } from "$lib/shared/types";
   import { legalConfig } from "$lib/shared/config";
 
   let { data } = $props();
 
-  const { businessName, effectiveDate, minAge, pricingOptions, productName, supportEmail } =
-    legalConfig;
+  const { businessName, minAge, pricingOptions, productName, supportEmail } = legalConfig;
 
   const sections: LegalSection[] = [
     {
@@ -136,28 +135,4 @@ SOFTWARE.`
 
 <Seo seo={data.seo} />
 
-<h1 class="my-5 text-center text-3xl">Terms of Service</h1>
-<p class="my-5">Effective Date: {effectiveDate}</p>
-
-<div class="text-primary-content/70 flex flex-col space-y-8">
-  {#each sections as section (section.title)}
-    <h2 class="text-primary-content text-xl">{section.title}</h2>
-    {#each section.content as item (item)}
-      {#if typeof item === "string"}
-        <p>{item}</p>
-      {:else if item.type === "link"}
-        <p><a href={item.href}>{item.text}</a></p>
-      {:else if item.type === "list"}
-        <ul class="list-disc space-y-1 pl-6">
-          {#each item.items as li (li)}<li>{li}</li>{/each}
-        </ul>
-      {:else if item.type === "pre"}
-        <pre class="bg-base overflow-x-auto p-3 text-sm">{item.text}</pre>
-      {/if}
-    {/each}
-  {/each}
-</div>
-
-<p class="mt-10 mb-5">
-  By using the hosted version of {productName}, you acknowledge and agree to these Terms.
-</p>
+<Legal title="Terms of Service" {sections} />
