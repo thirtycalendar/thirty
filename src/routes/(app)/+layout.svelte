@@ -3,7 +3,7 @@
   import { page } from "$app/state";
 
   import { SidebarItems as CalendarSidebarItems } from "$lib/client/components/calendar";
-  import { mainSidebarState } from "$lib/client/stores/sidebar";
+  import { mainSidebarState, toggleMainSidebar } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
 
@@ -12,31 +12,38 @@
   const isOpen = $derived(mainSidebarState());
   let pathSegment = $derived(page.url.pathname.split("/").filter(Boolean)[0]);
 
-  onMount(async () => {
-    await initUserSession();
-  });
+  onMount(initUserSession);
 </script>
 
 <div class="bg-base-200 flex w-full">
-  <!-- Sidebar -->
+  <!-- Sidebar / Drawer -->
   <div
     class={cn(
-      "bg-base-200 min-h-screen overflow-y-auto transition-all duration-300",
-      $isOpen ? "w-[255px] p-2 pt-3" : "w-0"
+      "bg-base-200 z-40 min-h-screen overflow-y-auto transition-all duration-300 sm:static sm:w-[255px] sm:translate-x-0 sm:p-2 sm:pt-3",
+      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3",
+      $isOpen ? "translate-x-0" : "-translate-x-full"
     )}
   >
-    <div class={cn("transition-opacity duration-200", $isOpen ? "opacity-100" : "opacity-0")}>
-      {#if pathSegment === "calendar"}
-        <CalendarSidebarItems />
-      {/if}
-    </div>
+    {#if pathSegment === "calendar"}
+      <CalendarSidebarItems />
+    {/if}
   </div>
 
-  <!-- Container -->
+  <!-- Backdrop for mobile -->
+  {#if $isOpen}
+    <button
+      class="fixed inset-0 z-30 bg-black/40 sm:hidden"
+      onclick={toggleMainSidebar}
+      aria-label="backdrop"
+    ></button>
+  {/if}
+
+  <!-- Main content -->
   <div
     class={cn(
       "bg-base-100 my-2 h-[calc(100vh-16px)] flex-1 overflow-hidden p-3 shadow-md",
-      $isOpen ? "ml-0 rounded-l-xl" : "m-2 rounded-xl"
+      "sm:ml-0 sm:rounded-l-xl",
+      !$isOpen && "m-2 rounded-xl sm:m-0"
     )}
   >
     {@render children?.()}
