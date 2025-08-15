@@ -14,7 +14,7 @@
   const year = $derived(new Intl.DateTimeFormat("en-US", { year: "numeric" }).format($currentDate));
 </script>
 
-<div class="flex items-center justify-between text-xs">
+<div class="mb-2 flex items-center justify-between text-xs">
   <div class="flex items-center gap-1">
     <button
       class="btn btn-link btn-square text-primary-content/80 hover:text-primary-content mx-2"
