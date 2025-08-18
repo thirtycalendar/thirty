@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Seo } from "$lib/client/components";
-  import { GoogleAuthButton } from "$lib/client/components/auth";
+  import { Seo, WaitingList } from "$lib/client/components";
   import { DemoDarkImage, DemoLightImage } from "$lib/client/assets";
 
   let { data } = $props();
@@ -22,23 +21,18 @@
 
 <Seo seo={data.seo} />
 
-<section class="mx-auto max-w-4xl px-3 pt-20 pb-20 text-center">
+<section class="mx-auto max-w-4xl px-3 pt-12 pb-6 text-center sm:pt-16 sm:pb-8">
   <h1 class="text-4xl font-bold sm:text-6xl">Open. Smart. Yours.</h1>
-
-  <p class="mt-6 text-lg opacity-80">
+  <p class="mt-5 text-base opacity-75 sm:text-lg">
     Not reinventing the wheel, just improving your workflow with AI.
   </p>
-
-  <div class="mt-8 flex justify-center gap-3">
-    <GoogleAuthButton
-      label="Get Started →"
-      class="btn btn-primary-content btn-lg flex min-w-[250px] items-center gap-2"
-      showIcon={false}
-    />
-  </div>
 </section>
 
-<section class="mx-auto max-w-6xl px-4 pb-20">
+<section class="px-5 py-8 sm:py-10">
+  <WaitingList />
+</section>
+
+<section class="mx-auto max-w-6xl px-4 py-16">
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Dashboard Preview"

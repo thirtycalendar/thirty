@@ -35,7 +35,7 @@
   let value = $derived($formData[name]);
 </script>
 
-<fieldset class={cn("fieldset w-full basis-[49%]", fieldsetClassName)}>
+<fieldset class={cn("fieldset w-full", fieldsetClassName)}>
   {#if legendText}
     <legend class={cn("fieldset-legend", legendClassName)}>{legendText}</legend>
   {/if}

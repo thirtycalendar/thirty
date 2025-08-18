@@ -1,6 +1,10 @@
 import { Redis } from "@upstash/redis";
 
-import { kvEnvConfig, kvHolidayEnvConfig, kvWishlistEnvConfig } from "$lib/server/utils/env-config";
+import {
+  kvEnvConfig,
+  kvHolidayEnvConfig,
+  kvWaitingListEnvConfig
+} from "$lib/server/utils/env-config";
 
 export const kv = new Redis({
   url: kvEnvConfig.url,
@@ -12,7 +16,7 @@ export const kvHoliday = new Redis({
   token: kvHolidayEnvConfig.token
 });
 
-export const kvWishlist = new Redis({
-  url: kvWishlistEnvConfig.url,
-  token: kvWishlistEnvConfig.token
+export const kvWaitingList = new Redis({
+  url: kvWaitingListEnvConfig.url,
+  token: kvWaitingListEnvConfig.token
 });

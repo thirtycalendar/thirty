@@ -19,6 +19,7 @@ import type { chatSchema } from "./schemas/chat";
 import type { eventSchema } from "./schemas/event";
 import type { hdCountrySchema } from "./schemas/holiday";
 import type { taskSchema } from "./schemas/task";
+import type { waitingListSchema } from "./schemas/waiting-list";
 
 // Calendar
 export type CalendarView = (typeof Const.CalendarViews)[number];
@@ -84,6 +85,9 @@ export type MessageRole = UIMessage["role"];
 // Credit
 export type Credit = InferSelectModel<typeof creditTable>;
 export type CreditForm = InferInsertModel<typeof creditTable>;
+
+// Waiting List
+export type WaitingListForm = z.infer<typeof waitingListSchema>;
 
 // Enums and Constants
 export type SubscriptionPlan = (typeof Const.SubscriptionPlans)[number];

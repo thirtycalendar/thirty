@@ -37,7 +37,7 @@
   let value = $derived($formData[name] === "9999-12-31" ? "" : $formData[name]);
 </script>
 
-<fieldset class={cn("fieldset w-full basis-[49%]", fieldsetClassName)}>
+<fieldset class={cn("fieldset w-full", fieldsetClassName)}>
   {#if legendText}
     <legend class={cn("fieldset-legend", legendClassName)}>{legendText}</legend>
   {/if}

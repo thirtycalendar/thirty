@@ -18,6 +18,7 @@ import holiday from "./routes/holiday";
 import sync from "./routes/sync";
 import task from "./routes/task";
 import user from "./routes/user";
+import waitingList from "./routes/waiting-list";
 
 const app = new Hono<Context>().basePath("/api");
 
@@ -33,7 +34,8 @@ const routes = app
   .route("/task", task)
   .route("/birthday", birthday)
   .route("/holiday", holiday)
-  .route("/sync", sync);
+  .route("/sync", sync)
+  .route("/waitingList", waitingList);
 
 // External routes
 app.route("/calendarific", calendarific);
