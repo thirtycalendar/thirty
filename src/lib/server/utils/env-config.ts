@@ -24,6 +24,11 @@ export const kvHolidayEnvConfig = {
   token: env.UPSTASH_REDIS_REST_TOKEN_HOLIDAY
 } as const;
 
+export const kvWishlistEnvConfig = {
+  url: env.UPSTASH_REDIS_REST_URL_HOLIDAY,
+  token: env.UPSTASH_REDIS_REST_TOKEN_HOLIDAY
+} as const;
+
 export const vectorEnvConfig = {
   url: isProd ? env.UPSTASH_VECTOR_REST_URL_PROD : env.UPSTASH_VECTOR_REST_URL_DEV,
   token: isProd ? env.UPSTASH_VECTOR_REST_TOKEN_PROD : env.UPSTASH_VECTOR_REST_TOKEN_DEV

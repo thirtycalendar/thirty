@@ -21,3 +21,5 @@ export const KV_GOOGLE_TOKEN = (userId: string) => `google:token:${userId}`;
 export const KV_SYNC_LOCK_CALENDARS = (userId: string) => `sync:lock:calendars:${userId}`;
 
 export const KV_SYNC_LOCK_EVENTS = (userId: string) => `sync:lock:events:${userId}`;
+
+export const KV_WISHLIST = `wishlist`;
