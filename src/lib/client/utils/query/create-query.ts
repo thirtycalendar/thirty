@@ -1,4 +1,4 @@
-import { onDestroy } from "svelte";
+import { onMount } from "svelte";
 import { writable } from "svelte/store";
 
 import {
@@ -40,6 +40,12 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
 
   const key = queryKeys.join("::");
 
+  // Use a function declaration for the refetch function
+  function refetchFn() {
+    fetchData(true);
+  }
+
+  // Use a function declaration for the data fetching function
   async function fetchData(force = false) {
     onQuery?.();
 
@@ -74,15 +80,25 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
     }
   }
 
-  registerQuery(key, () => fetchData(true));
+  onMount(() => {
+    registerQuery(key, refetchFn);
+    if (enabled) {
+      fetchData();
+    }
 
-  onDestroy(() => {
-    unregisterQuery(key, () => fetchData(true));
+    function handleVisibilityChange() {
+      if (document.visibilityState === "visible") {
+        refetchFn();
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      unregisterQuery(key, refetchFn);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   });
 
-  if (enabled) {
-    fetchData();
-  }
-
-  return { data, error, isPending, isSuccess, isError, refetch: () => fetchData(true) };
+  return { data, error, isPending, isSuccess, isError, refetch: refetchFn };
 }
