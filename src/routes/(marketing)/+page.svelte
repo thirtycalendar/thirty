@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Seo, Toast } from "$lib/client/components";
+  import { Seo } from "$lib/client/components";
   import { GoogleAuthButton } from "$lib/client/components/auth";
-  import { Navbar } from "$lib/client/components/home";
   import { DemoDarkImage, DemoLightImage } from "$lib/client/assets";
 
   let { data } = $props();
@@ -23,17 +22,11 @@
 
 <Seo seo={data.seo} />
 
-<Toast />
-
-<Navbar />
-
 <section class="mx-auto max-w-4xl px-3 pt-20 pb-20 text-center">
-  <h1 class="text-4xl font-bold sm:text-6xl">
-    Your Calendar. Smarter, Open, and Always Listening.
-  </h1>
+  <h1 class="text-4xl font-bold sm:text-6xl">Open. Smart. Yours.</h1>
 
   <p class="mt-6 text-lg opacity-80">
-    Thirty is an open-source AI calendar you talk to, so you can focus on living, not scheduling.
+    Not reinventing the wheel, just improving your workflow with AI.
   </p>
 
   <div class="mt-8 flex justify-center gap-3">
@@ -49,7 +42,7 @@
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Dashboard Preview"
-    class="ring-base-300 rounded-2xl shadow-2xl ring-10"
+    class="ring-base-300 rounded-2xl shadow-2xl ring-6 sm:ring-10"
     loading="lazy"
   />
 </section>

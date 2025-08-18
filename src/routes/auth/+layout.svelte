@@ -6,7 +6,7 @@
   let { children } = $props();
 </script>
 
-<main class="min-h-screen w-full p-4">
+<main class="bg-base-200 min-h-screen w-full p-4">
   <a href="/" class="btn btn-square btn-secondary">
     <Icon icon={ArrowLeft01Icon} />
   </a>

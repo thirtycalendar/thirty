@@ -4,10 +4,8 @@
   let { children } = $props();
 </script>
 
-<main class="min-h-screen w-full">
-  <Navbar />
+<Navbar />
 
-  <div class="m-auto max-w-4xl">
-    {@render children()}
-  </div>
-</main>
+<div class="m-auto mt-15 max-w-4xl">
+  {@render children()}
+</div>
