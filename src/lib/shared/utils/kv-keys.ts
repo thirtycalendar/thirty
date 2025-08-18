@@ -22,4 +22,4 @@ export const KV_SYNC_LOCK_CALENDARS = (userId: string) => `sync:lock:calendars:$
 
 export const KV_SYNC_LOCK_EVENTS = (userId: string) => `sync:lock:events:${userId}`;
 
-export const KV_WISHLIST = `wishlist`;
+export const KV_WAITING_LIST = `waiting-list`;
