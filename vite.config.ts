@@ -7,5 +7,11 @@ import devtoolsJson from "vite-plugin-devtools-json";
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
-  ssr: { noExternal: ["@hugeicons/svelte"] }
+  ssr: {
+    noExternal: ["@hugeicons/svelte", "@polar-sh/sdk", "@polar-sh/better-auth"]
+  },
+  optimizeDeps: {
+    include: ["@hugeicons/core-free-icons"],
+    exclude: ["@polar-sh/sdk/webhooks.ts"]
+  }
 });
