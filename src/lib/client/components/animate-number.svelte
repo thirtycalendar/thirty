@@ -19,11 +19,16 @@
     easing: cubicOut
   });
 
+  const formatter = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+
   $effect(() => {
     tween.set(value);
   });
 </script>
 
 <span class={cn(classCn)}>
-  {tween.current.toFixed(decimals)}
+  {formatter.format(tween.current)}
 </span>

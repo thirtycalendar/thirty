@@ -10,6 +10,10 @@ export class WaitingListEmailNotFoundError extends Error {
 }
 
 export const waitingListServices = {
+  async getCount(): Promise<number> {
+    return kvWaitingList.scard(KV_WAITING_LIST);
+  },
+
   async addEmail(email: string): Promise<boolean> {
     const result = await kvWaitingList.sadd(KV_WAITING_LIST, email);
     return result === 1;

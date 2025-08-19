@@ -28,7 +28,7 @@
   </p>
 </section>
 
-<section class="px-5 py-8 sm:py-10">
+<section class="p-5">
   <WaitingList />
 </section>
 
