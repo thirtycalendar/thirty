@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
-import { waitingListServices } from "$lib/server/services/waiting-list";
+import { waitingListServices } from "$lib/server/services";
 
 import { waitingListSchema } from "$lib/shared/schemas/waiting-list";
 import type { SuccessResponse } from "$lib/shared/types";

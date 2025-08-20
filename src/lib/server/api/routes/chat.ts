@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 
-import { chatService } from "$lib/server/services/chat";
+import { chatService } from "$lib/server/services";
 import { db } from "$lib/server/db";
 import { messageTable } from "$lib/server/db/tables";
 

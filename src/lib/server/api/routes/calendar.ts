@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { calendarService } from "$lib/server/services/calendar";
+import { calendarService } from "$lib/server/services";
 
 import { calendarSchema } from "$lib/shared/schemas/calendar";
 import type { Calendar, SuccessResponse, User } from "$lib/shared/types";

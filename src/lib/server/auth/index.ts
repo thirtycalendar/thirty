@@ -14,9 +14,7 @@ import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
-import { calendarService } from "../services/calendar";
-import { creditService } from "../services/credit";
-import { holidayCountryService } from "../services/holiday";
+import { calendarService, creditService, holidayCountryService } from "../services";
 import { googleEnvConfig, polarEnvConfig } from "../utils/env-config";
 
 export const auth = betterAuth({

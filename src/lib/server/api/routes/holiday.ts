@@ -8,7 +8,7 @@ import {
   allHolidayCountriesService,
   holidayCountryService,
   holidayService
-} from "$lib/server/services/holiday";
+} from "$lib/server/services";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
 import { hdCountrySchema } from "$lib/shared/schemas/holiday";

@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { eventService } from "$lib/server/services/event";
+import { eventService } from "$lib/server/services";
 
 import { eventSchema } from "$lib/shared/schemas/event";
 import type { Event, SuccessResponse, User } from "$lib/shared/types";

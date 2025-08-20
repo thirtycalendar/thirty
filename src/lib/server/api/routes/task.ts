@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { taskService } from "$lib/server/services/task";
+import { taskService } from "$lib/server/services";
 
 import { taskSchema } from "$lib/shared/schemas/task";
 import type { SuccessResponse, Task, User } from "$lib/shared/types";

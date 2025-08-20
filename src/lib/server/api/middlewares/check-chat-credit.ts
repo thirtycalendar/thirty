@@ -1,7 +1,7 @@
 import { formatISO, startOfMonth } from "date-fns";
 import { createMiddleware } from "hono/factory";
 
-import { creditService, maybeGetCreditByUserId } from "$lib/server/services/credit";
+import { creditService, maybeGetCreditByUserId } from "$lib/server/services";
 import { auth } from "$lib/server/auth";
 
 import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
