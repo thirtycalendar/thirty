@@ -8,7 +8,7 @@ import type { Credit, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
-const app = new Hono<Context>().use(loggedIn).get("/credit", async (c) => {
+export const userRoute = new Hono<Context>().use(loggedIn).get("/credit", async (c) => {
   try {
     const user = c.get("user") as User;
 
@@ -23,5 +23,3 @@ const app = new Hono<Context>().use(loggedIn).get("/credit", async (c) => {
     return errorResponse(c, err);
   }
 });
-
-export default app;

@@ -10,7 +10,7 @@ import type { SuccessResponse } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
-const app = new Hono<Context>()
+export const waitingListRoute = new Hono<Context>()
   .get("/count", async (c) => {
     try {
       const count = await waitingListServices.getCount();
@@ -43,5 +43,3 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   });
-
-export default app;

@@ -7,7 +7,7 @@ import type { SuccessResponse } from "$lib/shared/types";
 import type { Context } from "../context";
 import { errorResponse } from "../utils";
 
-const app = new Hono<Context>().get("/cache", async (c) => {
+export const calendarificRoute = new Hono<Context>().get("/cache", async (c) => {
   try {
     cacheHolidaysToKV();
 
@@ -20,5 +20,3 @@ const app = new Hono<Context>().get("/cache", async (c) => {
     return errorResponse(c, err);
   }
 });
-
-export default app;

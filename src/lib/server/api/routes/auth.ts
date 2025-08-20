@@ -2,10 +2,8 @@ import { Hono } from "hono";
 
 import { auth } from "$lib/server/auth";
 
-const app = new Hono();
+export const authRoute = new Hono();
 
-app.on(["POST", "GET"], "/*", (c) => {
+authRoute.on(["POST", "GET"], "/*", (c) => {
   return auth.handler(c.req.raw);
 });
-
-export default app;

@@ -11,7 +11,7 @@ import type { Birthday, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParam } from "../utils";
 
-const app = new Hono<Context>()
+export const birthdayRoute = new Hono<Context>()
   .use(loggedIn)
   .get("/getAll", async (c) => {
     try {
@@ -109,5 +109,3 @@ const app = new Hono<Context>()
       return errorResponse(c, err);
     }
   });
-
-export default app;

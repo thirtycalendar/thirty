@@ -1,0 +1,10 @@
+export { authRoute } from "./auth";
+export { userRoute } from "./user";
+export { chatRoute } from "./chat";
+export { calendarRoute } from "./calendar";
+export { eventRoute } from "./event";
+export { taskRoute } from "./task";
+export { birthdayRoute } from "./birthday";
+export { holidayRoute } from "./holiday";
+export { syncRoute } from "./sync";
+export { waitingListRoute } from "./waiting-list";

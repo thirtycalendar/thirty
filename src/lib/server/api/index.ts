@@ -8,17 +8,19 @@ import { isProd } from "$lib/shared/utils/is-prod";
 import type { ErrorResponse } from "$lib/shared/types";
 
 import type { Context } from "./context";
-import auth from "./routes/auth";
-import birthday from "./routes/birthday";
-import calendar from "./routes/calendar";
-import calendarific from "./routes/calendarific";
-import chat from "./routes/chat";
-import event from "./routes/event";
-import holiday from "./routes/holiday";
-import sync from "./routes/sync";
-import task from "./routes/task";
-import user from "./routes/user";
-import waitingList from "./routes/waiting-list";
+import {
+  authRoute,
+  birthdayRoute,
+  calendarRoute,
+  chatRoute,
+  eventRoute,
+  holidayRoute,
+  syncRoute,
+  taskRoute,
+  userRoute,
+  waitingListRoute
+} from "./routes";
+import { calendarificRoute } from "./routes/calendarific";
 
 const app = new Hono<Context>().basePath("/api");
 
@@ -26,19 +28,19 @@ app.use("*", cors({ origin: PUBLIC_BASE_URL }));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const routes = app
-  .route("/auth", auth)
-  .route("/user", user)
-  .route("/chat", chat)
-  .route("/calendar", calendar)
-  .route("/event", event)
-  .route("/task", task)
-  .route("/birthday", birthday)
-  .route("/holiday", holiday)
-  .route("/sync", sync)
-  .route("/waitingList", waitingList);
+  .route("/auth", authRoute)
+  .route("/user", userRoute)
+  .route("/chat", chatRoute)
+  .route("/calendar", calendarRoute)
+  .route("/event", eventRoute)
+  .route("/task", taskRoute)
+  .route("/birthday", birthdayRoute)
+  .route("/holiday", holidayRoute)
+  .route("/sync", syncRoute)
+  .route("/waitingList", waitingListRoute);
 
 // External routes
-app.route("/calendarific", calendarific);
+app.route("/calendarific", calendarificRoute);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {

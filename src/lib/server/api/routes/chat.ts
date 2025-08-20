@@ -14,7 +14,7 @@ import { checkChatCredits } from "../middlewares/check-chat-credit";
 import { loggedIn } from "../middlewares/logged-in";
 import { errorResponse, requireParam } from "../utils";
 
-const app = new Hono()
+export const chatRoute = new Hono()
   .use(loggedIn)
   .post("/", checkChatCredits, async (c) => {
     try {
@@ -124,5 +124,3 @@ const app = new Hono()
       return errorResponse(c, err);
     }
   });
-
-export default app;

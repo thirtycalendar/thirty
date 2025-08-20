@@ -10,7 +10,7 @@ import type { SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";
 
-const app = new Hono<Context>().use(loggedIn).post("/google", async (c) => {
+export const syncRoute = new Hono<Context>().use(loggedIn).post("/google", async (c) => {
   try {
     const user = c.get("user") as User;
 
@@ -30,5 +30,3 @@ const app = new Hono<Context>().use(loggedIn).post("/google", async (c) => {
     return errorResponse(c, err);
   }
 });
-
-export default app;
