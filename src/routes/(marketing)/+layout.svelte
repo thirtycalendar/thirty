@@ -9,6 +9,6 @@
 
 <Navbar />
 
-<div class="mt-15">
+<div class="pt-15">
   {@render children()}
 </div>

@@ -102,8 +102,8 @@
     </form>
   </div>
 
-  {#if $data}
-    <div class="text-success mt-3 flex items-center justify-center gap-1.5">
+  <div class="text-success mt-3 flex h-4 items-center justify-center gap-1.5">
+    {#if $data}
       <div class="inline-grid *:[grid-area:1/1]">
         <div class="status status-success animate-ping"></div>
         <div class="status status-success"></div>
@@ -121,6 +121,6 @@
           people are waiting for launch.
         {/if}
       </div>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </div>

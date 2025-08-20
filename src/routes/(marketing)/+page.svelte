@@ -5,43 +5,40 @@
   import { DemoDarkImage, DemoLightImage } from "$lib/client/assets";
 
   let { data } = $props();
-
   let isDark = $state(false);
 
   onMount(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     isDark = media.matches;
-
     const listener = (e: MediaQueryListEvent) => (isDark = e.matches);
     media.addEventListener("change", listener);
-
     return () => media.removeEventListener("change", listener);
   });
 </script>
 
 <Seo seo={data.seo} />
 
-<section class="mx-auto max-w-4xl px-3 pt-12 pb-6 text-center sm:pt-16 sm:pb-8">
+<div class="mx-auto mt-12 mb-6 max-w-4xl px-3 text-center sm:mt-16 sm:mb-8">
   <h1 class="text-4xl font-bold sm:text-6xl">Open. Smart. Yours.</h1>
   <p class="mt-5 text-base opacity-75 sm:text-lg">
     Not reinventing the wheel, just improving your workflow with AI.
   </p>
-</section>
+</div>
 
-<section class="p-5">
+<div class="my-8 px-5">
   <WaitingList />
-</section>
+</div>
 
-<section class="mx-auto max-w-6xl px-4 py-16">
+<div class="mx-auto my-16 max-w-6xl px-4">
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Dashboard Preview"
-    class="ring-base-300 rounded-2xl shadow-2xl ring-6 sm:ring-10"
+    class="ring-base-300 rounded-2xl shadow-2xl ring-8 sm:ring-10"
     loading="lazy"
   />
-</section>
+</div>
 
-<div class="text-secondary-content flex justify-center gap-3 p-2 text-sm">
+<div class="text-secondary-content my-4 flex justify-center gap-3 text-sm">
   <a href="/terms" class="hover:text-primary-content">Terms of Service</a>
   <a href="/privacy" class="hover:text-primary-content">Privacy Policy</a>
 </div>
