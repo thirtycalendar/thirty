@@ -7,6 +7,7 @@ export const load: PageServerLoad = () => {
     title: seoConfig.title("Privacy Policy"),
     url: seoConfig.url("privacy"),
     description: seoConfig.description,
+    favicon: seoConfig.favicon,
     image: seoConfig.image,
     twitterHandle: seoConfig.twitterHandle
   };

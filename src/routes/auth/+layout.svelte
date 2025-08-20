@@ -7,7 +7,7 @@
 </script>
 
 <main class="bg-base-200 min-h-screen w-full p-4">
-  <a href="/" class="btn btn-square btn-secondary">
+  <a href="/" class="btn btn-square btn-neutral">
     <Icon icon={ArrowLeft01Icon} />
   </a>
 

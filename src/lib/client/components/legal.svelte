@@ -9,12 +9,17 @@
 
   const { title, sections }: Props = $props();
 
-  const { effectiveDate, productName } = legalConfig;
+  const { effectiveDate, productName, lastUpdatedDate } = legalConfig;
 </script>
 
 <div class="p-3">
   <h1 class="my-5 text-center text-xl sm:text-3xl">{title}</h1>
-  <p class="my-5">Effective Date: {effectiveDate}</p>
+  <div class="my-5 flex flex-col space-y-2">
+    <p>Effective Date: {effectiveDate}</p>
+    <p>Last updated: {lastUpdatedDate}</p>
+  </div>
+
+  <div class="divider"></div>
 
   <div class="text-primary-content/70 flex flex-col space-y-8">
     {#each sections as section (section.title)}

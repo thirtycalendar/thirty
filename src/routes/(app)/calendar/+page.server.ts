@@ -11,6 +11,7 @@ export const load: PageServerLoad = async ({ request }) => {
     title: seoConfig.title("Calendar"),
     url: seoConfig.url("calendar"),
     description: seoConfig.description,
+    favicon: seoConfig.favicon,
     image: seoConfig.image,
     twitterHandle: seoConfig.twitterHandle
   };
