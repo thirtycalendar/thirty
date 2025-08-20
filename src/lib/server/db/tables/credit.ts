@@ -2,7 +2,9 @@ import { date, integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import type { SubscriptionPlan } from "$lib/shared/types";
 
-import { timestamps, userTable } from ".";
+import { timestamps } from "./utils";
+
+import { userTable } from ".";
 
 export const creditTable = pgTable("credits", {
   id: uuid("id").primaryKey().defaultRandom(),

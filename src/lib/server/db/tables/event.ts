@@ -2,7 +2,9 @@ import { boolean, date, jsonb, pgTable, text, time, uuid } from "drizzle-orm/pg-
 
 import type { Color, EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
 
-import { calendarTable, notification, timestamps, userTable } from ".";
+import { notification, timestamps } from "./utils";
+
+import { calendarTable, userTable } from ".";
 
 export const eventTable = pgTable("events", {
   id: uuid("id").primaryKey().defaultRandom(),
