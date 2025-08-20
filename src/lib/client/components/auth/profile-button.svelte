@@ -7,7 +7,7 @@
   } from "@hugeicons/core-free-icons";
   import type { IconSvgElement } from "@hugeicons/svelte";
 
-  import { createLogout } from "$lib/client/data/mutations/auth";
+  import { createLogout } from "$lib/client/data/mutations";
   import { session } from "$lib/client/stores/user-session";
 
   import { Icon } from "../icons";

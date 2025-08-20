@@ -1,7 +1,7 @@
 <script lang="ts">
   import { differenceInMinutes, startOfDay } from "date-fns";
 
-  import { calendarsQuery } from "$lib/client/data/queries/calendar";
+  import { calendarsQuery } from "$lib/client/data/queries";
   import { eventModal } from "$lib/client/stores/modal";
 
   import type { Event } from "$lib/shared/types";

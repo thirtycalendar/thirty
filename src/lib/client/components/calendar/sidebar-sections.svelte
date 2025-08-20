@@ -4,9 +4,11 @@
   import { Add01Icon, ArrowDown01Icon, Settings01Icon } from "@hugeicons/core-free-icons";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { birthdaysQuery } from "$lib/client/data/queries/birthday";
-  import { calendarsQuery } from "$lib/client/data/queries/calendar";
-  import { userHolidayCountriesQuery } from "$lib/client/data/queries/holiday";
+  import {
+    birthdaysQuery,
+    calendarsQuery,
+    userHolidayCountriesQuery
+  } from "$lib/client/data/queries";
   import {
     collapsedLists,
     uncheckedBirthdays,

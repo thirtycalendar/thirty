@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Flag02Icon } from "@hugeicons/core-free-icons";
 
-  import { userHolidayCountriesQuery } from "$lib/client/data/queries/holiday";
+  import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { holidayModal } from "$lib/client/stores/modal";
 
   import type { Holiday } from "$lib/shared/types";

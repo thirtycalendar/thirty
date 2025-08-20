@@ -1,9 +1,7 @@
 <script lang="ts">
   import { Seo } from "$lib/client/components";
   import { Navbar, WeekCalendar, YearCalendar } from "$lib/client/components/calendar";
-  import { birthdaysQuery } from "$lib/client/data/queries/birthday";
-  import { eventsQuery } from "$lib/client/data/queries/event";
-  import { userHolidaysQuery } from "$lib/client/data/queries/holiday";
+  import { birthdaysQuery, eventsQuery, userHolidaysQuery } from "$lib/client/data/queries";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
 
   let { data } = $props();
