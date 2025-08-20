@@ -19,8 +19,8 @@
 
 <div
   class={cn(
-    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-4xl border px-3 py-3 transition-all duration-300 sm:mx-auto",
-    scrolled ? "border-base-200 rounded-xl shadow-md" : "w-full border-transparent"
+    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-4xl rounded-xl border px-3 py-3 transition-all duration-300 sm:mx-auto",
+    scrolled ? "border-base-200 shadow-md" : "border-transparent"
   )}
 >
   <div class="flex items-center justify-between">
