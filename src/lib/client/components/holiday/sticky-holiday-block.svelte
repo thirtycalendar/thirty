@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Flag02Icon } from "@hugeicons/core-free-icons";
 
-  import { getHolidayCountries } from "$lib/client/data/queries/holiday";
+  import { userHolidayCountriesQuery } from "$lib/client/data/queries/holiday";
   import { holidayModal } from "$lib/client/stores/modal";
 
   import type { Holiday } from "$lib/shared/types";
@@ -14,7 +14,7 @@
 
   let { holiday }: Props = $props();
 
-  const { data: hdCountries } = getHolidayCountries();
+  const { data: hdCountries } = userHolidayCountriesQuery();
 
   const color = $derived.by(() => {
     const color = $hdCountries?.find((c) => c.id === holiday.countryId)?.color ?? "transparent";

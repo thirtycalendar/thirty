@@ -1,7 +1,7 @@
 <script lang="ts">
   import { differenceInMinutes, startOfDay } from "date-fns";
 
-  import { getCalendars } from "$lib/client/data/queries/calendar";
+  import { calendarsQuery } from "$lib/client/data/queries/calendar";
   import { eventModal } from "$lib/client/stores/modal";
 
   import type { Event } from "$lib/shared/types";
@@ -19,7 +19,7 @@
 
   const eventColor = $derived(event.color);
 
-  const { data: calendars } = getCalendars();
+  const { data: calendars } = calendarsQuery();
   const calendarColor = $derived.by(() => {
     const color = $calendars?.find((cal) => cal.id === event.calendarId)?.color ?? "transparent";
     return color;

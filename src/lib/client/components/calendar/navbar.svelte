@@ -17,7 +17,7 @@
 <div class="mb-2 flex items-center justify-between text-xs">
   <div class="flex items-center gap-1">
     <button
-      class="btn btn-link btn-square text-primary-content/70 hover:text-primary-content mx-2"
+      class="btn btn-ghost btn-square text-primary-content/70 hover:text-primary-content mx-2"
       onclick={toggleMainSidebar}
     >
       <Icon icon={SidebarLeftIcon} absoluteStrokeWidth />

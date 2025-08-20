@@ -4,9 +4,9 @@
   import { Add01Icon, ArrowDown01Icon, Settings01Icon } from "@hugeicons/core-free-icons";
 
   import { toggleModal } from "$lib/client/components/utils";
-  import { getBirthdays } from "$lib/client/data/queries/birthday";
-  import { getCalendars } from "$lib/client/data/queries/calendar";
-  import { getHolidayCountries } from "$lib/client/data/queries/holiday";
+  import { birthdaysQuery } from "$lib/client/data/queries/birthday";
+  import { calendarsQuery } from "$lib/client/data/queries/calendar";
+  import { userHolidayCountriesQuery } from "$lib/client/data/queries/holiday";
   import {
     collapsedLists,
     uncheckedBirthdays,
@@ -20,9 +20,9 @@
 
   import { Icon } from "../icons";
 
-  const { data: calendars } = getCalendars();
-  const { data: birthdays } = getBirthdays();
-  const { data: holidayCountries } = getHolidayCountries();
+  const { data: calendars } = calendarsQuery();
+  const { data: birthdays } = birthdaysQuery();
+  const { data: holidayCountries } = userHolidayCountriesQuery();
 
   const { store: collapsed } = collapsedLists;
 </script>

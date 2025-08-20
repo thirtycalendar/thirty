@@ -1,16 +1,16 @@
 <script lang="ts">
   import { Seo } from "$lib/client/components";
   import { Navbar, WeekCalendar, YearCalendar } from "$lib/client/components/calendar";
-  import { getBirthdays } from "$lib/client/data/queries/birthday";
-  import { getEvents } from "$lib/client/data/queries/event";
-  import { getHolidays } from "$lib/client/data/queries/holiday";
+  import { birthdaysQuery } from "$lib/client/data/queries/birthday";
+  import { eventsQuery } from "$lib/client/data/queries/event";
+  import { userHolidaysQuery } from "$lib/client/data/queries/holiday";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
 
   let { data } = $props();
 
-  let { data: events } = getEvents();
-  let { data: birthdays } = getBirthdays();
-  let { data: holidays } = getHolidays();
+  let { data: events } = eventsQuery();
+  let { data: birthdays } = birthdaysQuery();
+  let { data: holidays } = userHolidaysQuery();
 </script>
 
 <Seo seo={data.seo} />
