@@ -6,7 +6,7 @@ import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { calendarService } from "$lib/server/services";
 
-import { calendarSchema } from "$lib/shared/schemas/calendar";
+import { calendarSchema } from "$lib/shared/schemas";
 import type { Calendar, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParam } from "../utils";

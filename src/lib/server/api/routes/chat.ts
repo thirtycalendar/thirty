@@ -7,7 +7,7 @@ import { chatService } from "$lib/server/services";
 import { db } from "$lib/server/db";
 import { messageTable } from "$lib/server/db/tables";
 
-import { chatSchema } from "$lib/shared/schemas/chat";
+import { chatSchema } from "$lib/shared/schemas";
 import type { Chat, Message, SuccessResponse, User } from "$lib/shared/types";
 
 import { checkChatCredits } from "../middlewares/check-chat-credit";

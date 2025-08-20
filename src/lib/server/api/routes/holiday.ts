@@ -11,7 +11,7 @@ import {
 } from "$lib/server/services";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
-import { hdCountrySchema } from "$lib/shared/schemas/holiday";
+import { hdCountrySchema } from "$lib/shared/schemas";
 import type { Holiday, HolidayCountry, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParam } from "../utils";

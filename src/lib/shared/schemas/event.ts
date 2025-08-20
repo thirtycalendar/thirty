@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { Colors, EventStatuses, Sources } from "../constants";
-import { dateYYYYMMDD, timeHHMMSS } from "./utils";
+
+import { dateYYYYMMDD, timeHHMMSS } from ".";
 
 export const eventSchema = z.object({
   calendarId: z

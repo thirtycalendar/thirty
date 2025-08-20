@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { waitingListSchema } from "$lib/shared/schemas/waiting-list";
+  import { waitingListSchema } from "$lib/shared/schemas";
   import type { WaitingListForm } from "$lib/shared/types";
 
   import { createForm } from "../utils/create-form";

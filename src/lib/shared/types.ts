@@ -15,13 +15,15 @@ import type {
 
 import type * as Const from "$lib/shared/constants";
 
-import type { birthdaySchema } from "./schemas/birthday";
-import type { calendarSchema } from "./schemas/calendar";
-import type { chatSchema } from "./schemas/chat";
-import type { eventSchema } from "./schemas/event";
-import type { hdCountrySchema } from "./schemas/holiday";
-import type { taskSchema } from "./schemas/task";
-import type { waitingListSchema } from "./schemas/waiting-list";
+import type {
+  birthdaySchema,
+  calendarSchema,
+  chatSchema,
+  eventSchema,
+  hdCountrySchema,
+  taskSchema,
+  waitingListSchema
+} from "./schemas";
 
 // Calendar
 export type CalendarView = (typeof Const.CalendarViews)[number];

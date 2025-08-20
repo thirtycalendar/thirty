@@ -5,7 +5,7 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { waitingListServices } from "$lib/server/services";
 
-import { waitingListSchema } from "$lib/shared/schemas/waiting-list";
+import { waitingListSchema } from "$lib/shared/schemas";
 import type { SuccessResponse } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";

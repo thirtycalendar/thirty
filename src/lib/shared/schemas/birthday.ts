@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import { Colors } from "../constants";
-import { dateYYYYMMDD } from "./utils";
+
+import { dateYYYYMMDD } from ".";
 
 export const birthdaySchema = z.object({
   name: z
