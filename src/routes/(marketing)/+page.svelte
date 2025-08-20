@@ -19,7 +19,7 @@
 <Seo seo={data.seo} />
 
 <div class="mx-auto mt-12 mb-6 max-w-4xl px-3 text-center sm:mt-16 sm:mb-8">
-  <h1 class="text-4xl font-bold sm:text-6xl">Open. Smart. Yours.</h1>
+  <h1 class="text-4xl font-bold sm:text-8xl">The AI Calendar</h1>
   <p class="mt-5 text-base opacity-75 sm:text-lg">
     Not reinventing the wheel, just improving your workflow with AI.
   </p>
