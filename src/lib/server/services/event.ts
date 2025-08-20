@@ -3,7 +3,7 @@ import { KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { Event, EventForm } from "$lib/shared/types";
 
 import { db } from "../db";
-import { eventTable } from "../db/tables/event";
+import { eventTable } from "../db/tables";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";

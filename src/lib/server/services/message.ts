@@ -4,7 +4,7 @@ import { db } from "$lib/server/db";
 
 import type { Message, MessageForm } from "$lib/shared/types";
 
-import { messageTable } from "../db/tables/message";
+import { messageTable } from "../db/tables";
 
 export class MessageNotFoundError extends Error {
   constructor(id: string) {

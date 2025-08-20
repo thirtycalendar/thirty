@@ -3,7 +3,7 @@ import { KV_TASKS } from "$lib/shared/utils/kv-keys";
 import type { Task, TaskForm } from "$lib/shared/types";
 
 import { db } from "../db";
-import { taskTable } from "../db/tables/task";
+import { taskTable } from "../db/tables";
 import { kv } from "../libs/upstash/kv";
 import { createDbService } from "../utils/create-db-service";
 

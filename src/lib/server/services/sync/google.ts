@@ -2,8 +2,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { and, eq } from "drizzle-orm";
 
 import { db } from "$lib/server/db";
-import { calendarTable } from "$lib/server/db/tables/calendar";
-import { eventTable } from "$lib/server/db/tables/event";
+import { calendarTable, eventTable } from "$lib/server/db/tables";
 import { getLock, releaseLock, setLock } from "$lib/server/utils/lock";
 import { getGoogleClients } from "$lib/server/calendars/google/client";
 

@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { MessageRole } from "$lib/shared/types";
 
-import { chatTable } from "./chat";
+import { chatTable } from ".";
 
 export const messageTable = pgTable("messages", {
   id: uuid("id").primaryKey().defaultRandom(),

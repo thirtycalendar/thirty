@@ -2,8 +2,7 @@ import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { Source, TaskStatus } from "$lib/shared/types";
 
-import { userTable } from "./auth";
-import { notification, timestamps } from "./utils";
+import { notification, timestamps, userTable } from ".";
 
 export const taskTable = pgTable("tasks", {
   id: uuid("id").primaryKey().defaultRandom(),

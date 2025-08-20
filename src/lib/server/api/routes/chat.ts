@@ -5,7 +5,7 @@ import { Hono } from "hono";
 
 import { chatService } from "$lib/server/services/chat";
 import { db } from "$lib/server/db";
-import { messageTable } from "$lib/server/db/tables/message";
+import { messageTable } from "$lib/server/db/tables";
 
 import { chatSchema } from "$lib/shared/schemas/chat";
 import type { Chat, Message, SuccessResponse, User } from "$lib/shared/types";

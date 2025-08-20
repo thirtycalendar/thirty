@@ -2,8 +2,7 @@ import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import type { Color } from "$lib/shared/types";
 
-import { userTable } from "./auth";
-import { birthdayNotification, timestamps } from "./utils";
+import { birthdayNotification, timestamps, userTable } from ".";
 
 export const birthdayTable = pgTable("birthdays", {
   id: uuid("id").primaryKey().defaultRandom(),

@@ -3,13 +3,15 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { z } from "zod";
 
 import type { auth } from "$lib/server/auth";
-import type { birthdayTable } from "$lib/server/db/tables/birthday";
-import type { calendarTable } from "$lib/server/db/tables/calendar";
-import type { chatTable } from "$lib/server/db/tables/chat";
-import type { creditTable } from "$lib/server/db/tables/credit";
-import type { eventTable } from "$lib/server/db/tables/event";
-import type { messageTable } from "$lib/server/db/tables/message";
-import type { taskTable } from "$lib/server/db/tables/task";
+import type {
+  birthdayTable,
+  calendarTable,
+  chatTable,
+  creditTable,
+  eventTable,
+  messageTable,
+  taskTable
+} from "$lib/server/db/tables";
 
 import type * as Const from "$lib/shared/constants";
 

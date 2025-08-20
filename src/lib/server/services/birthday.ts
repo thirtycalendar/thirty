@@ -3,7 +3,7 @@ import { KV_BIRTHDAYS } from "$lib/shared/utils/kv-keys";
 import type { Birthday, BirthdayForm } from "$lib/shared/types";
 
 import { db } from "../db";
-import { birthdayTable } from "../db/tables/birthday";
+import { birthdayTable } from "../db/tables";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";

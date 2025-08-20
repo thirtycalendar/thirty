@@ -12,7 +12,7 @@ import type { CalendarForm, CreditForm, GoogleSessionKV } from "$lib/shared/type
 
 import { storeGoogleSessionToKV } from "../calendars/google/token";
 import { db } from "../db";
-import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables/auth";
+import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables";
 import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { calendarService } from "../services/calendar";
 import { creditService } from "../services/credit";

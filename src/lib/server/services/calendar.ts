@@ -5,7 +5,7 @@ import { KV_CALENDARS } from "$lib/shared/utils/kv-keys";
 import type { Calendar, CalendarForm } from "$lib/shared/types";
 
 import { db } from "../db";
-import { calendarTable } from "../db/tables/calendar";
+import { calendarTable } from "../db/tables";
 import { kv } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/create-db-service";
