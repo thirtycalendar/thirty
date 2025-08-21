@@ -5,6 +5,10 @@ body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 
+.draggable-modal-open {
+  display: block;
+}
+
 @plugin "daisyui" {
   themes:
     light --default,
