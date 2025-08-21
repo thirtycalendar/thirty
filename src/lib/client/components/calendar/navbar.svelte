@@ -28,7 +28,7 @@
         {#if $currentCalendarView === "year"}
           {year}
         {:else}
-          {month} <span class="text-accent/90">{year}</span>
+          {month} <span class="font-normal">{year}</span>
         {/if}
       </p>
     </div>

@@ -16,7 +16,7 @@
     onClose?: () => void;
   }
 
-  let { id, title, position = { x: 80, y: 80 }, children, onClose }: Props = $props();
+  let { id, title, position, children, onClose }: Props = $props();
 
   let boxEl: HTMLDivElement | undefined = $state();
   let headerEl: HTMLDivElement | undefined = $state();
@@ -39,8 +39,17 @@
   }
 
   onMount(() => {
-    document.addEventListener("keydown", onKey);
+    if (!position && boxEl) {
+      const { innerWidth, innerHeight } = window;
+      const rect = boxEl.getBoundingClientRect();
+      position = {
+        x: (innerWidth - rect.width) / 2,
+        // 30% from top
+        y: innerHeight * 0.3 - rect.height / 2
+      };
+    }
 
+    document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   });
 </script>
@@ -63,7 +72,7 @@
       position,
       onDrag: (p) => (position = p)
     }}
-    style="transform: translate3d({position.x}px, {position.y}px, 0)"
+    style="transform: translate3d({position?.x}px, {position?.y}px, 0)"
   >
     <div bind:this={headerEl} class="flex !cursor-all-scroll items-center justify-center py-1">
       <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
