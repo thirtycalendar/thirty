@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type SvelteComponent } from "svelte";
 
   import { addDays, endOfDay, format, isToday, setHours, startOfDay, startOfWeek } from "date-fns";
 
@@ -14,6 +14,7 @@
 
   import { StickyBirthdayBlock } from "../birthday";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../birthday/utils";
+  import DraggableModal from "../draggable-modal.svelte";
   import { EventBlock, StickyEventBlock } from "../event";
   import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
   import { StickyHolidayBlock } from "../holiday";
@@ -90,7 +91,17 @@
       }
     });
   });
+
+  let modalRef: (DraggableModal & SvelteComponent) | null = null;
+
+  function openCreateAtCursor(e: MouseEvent) {
+    modalRef?.show({ x: e.clientX - 260, y: e.clientY - 24 });
+  }
 </script>
+
+<DraggableModal bind:this={modalRef} title="New event" onClose={() => {}} />
+
+<button class="btn btn-primary" onclick={openCreateAtCursor}>New event</button>
 
 <div class="flex h-full flex-col">
   <div class="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm">
