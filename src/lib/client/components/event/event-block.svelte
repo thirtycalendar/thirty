@@ -2,7 +2,7 @@
   import { differenceInMinutes, startOfDay } from "date-fns";
 
   import { calendarsQuery } from "$lib/client/data/queries";
-  import { eventModal } from "$lib/client/stores/modal";
+  import { eventModalStore } from "$lib/client/stores/modal";
 
   import type { Event } from "$lib/shared/types";
 
@@ -46,7 +46,7 @@
     z-index: ${10 + offset};
   `}
   title={event.name}
-  onclick={() => eventModal.handleModal(event)}
+  onclick={() => eventModalStore.openModal(event)}
 >
   <div class="h-full w-1 shrink-0 rounded-l-md" style="background-color: {calendarColor};"></div>
   <div class="w-full overflow-hidden p-1 text-left">

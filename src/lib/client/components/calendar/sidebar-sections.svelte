@@ -15,7 +15,11 @@
     uncheckedCalendars,
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
-  import { birthdayModal, calendarModal, holidayCountryModal } from "$lib/client/stores/modal";
+  import {
+    birthdayModalStore,
+    calendarModalStore,
+    holidayCountryModalStore
+  } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";
@@ -42,8 +46,8 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedCalendars.isChecked(item.id),
     onChange: (item) => uncheckedCalendars.toggle(item.id),
-    onAdd: () => toggleModal(calendarModal.modalId),
-    onSettings: calendarModal.handleModal
+    onAdd: () => toggleModal(calendarModalStore.modalId),
+    onSettings: calendarModalStore.openModal
   })}
 {/if}
 
@@ -54,8 +58,8 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedBirthdays.isChecked(item.id),
     onChange: (item) => uncheckedBirthdays.toggle(item.id),
-    onAdd: () => toggleModal(birthdayModal.modalId),
-    onSettings: birthdayModal.handleModal
+    onAdd: () => toggleModal(birthdayModalStore.modalId),
+    onSettings: birthdayModalStore.openModal
   })}
 {/if}
 
@@ -66,8 +70,8 @@
     getItemName: (item) => item.countryName,
     onChecked: (item) => uncheckedHolidays.isChecked(item.id),
     onChange: (item) => uncheckedHolidays.toggle(item.id),
-    onAdd: () => toggleModal(holidayCountryModal.modalId),
-    onSettings: holidayCountryModal.handleModal
+    onAdd: () => toggleModal(holidayCountryModalStore.modalId),
+    onSettings: holidayCountryModalStore.openModal
   })}
 {/if}
 

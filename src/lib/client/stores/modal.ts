@@ -3,38 +3,47 @@ import { get, writable } from "svelte/store";
 
 import type { Birthday, Calendar, Chat, Event, Holiday, HolidayCountry } from "$lib/shared/types";
 
-import { toggleModal } from "../components/utils";
+import { toggleDraggableModal } from "../components/utils";
 
-export const calendarModal = createModalStore<Calendar>("calendar");
-export const eventModal = createModalStore<Event>("event");
-export const birthdayModal = createModalStore<Birthday>("birthday");
-export const holidayModal = createModalStore<Holiday>("holiday");
-export const holidayCountryModal = createModalStore<HolidayCountry>("holiday-country");
-export const chatModal = createModalStore<Chat>("chat");
+export const calendarModalStore = createModalStore<Calendar>("calendar", toggleDraggableModal);
+export const eventModalStore = createModalStore<Event>("event", toggleDraggableModal);
+export const birthdayModalStore = createModalStore<Birthday>("birthday", toggleDraggableModal);
+export const holidayModalStore = createModalStore<Holiday>("holiday", toggleDraggableModal);
+export const holidayCountryModalStore = createModalStore<HolidayCountry>(
+  "holiday-country",
+  toggleDraggableModal
+);
+export const chatModalStore = createModalStore<Chat>("chat", toggleDraggableModal);
 
-export function createModalStore<T extends { id: string }>(prefix: string) {
-  const currentDetails = writable<T | null>(null);
+export function createModalStore<T extends { id: string }>(
+  prefix: string,
+  toggleFn: (modalId: string | number) => void
+) {
+  const activeItem = writable<T | null>(null);
   const isEditing = writable(false);
 
-  async function handleModal(item: T) {
-    if (get(currentDetails)?.id === item.id) {
-      currentDetails.set(null);
+  async function openModal(item: T) {
+    // Close if same item is already open
+    if (get(activeItem)?.id === item.id) {
+      activeItem.set(null);
       await tick();
     }
-    currentDetails.set(item);
+
+    activeItem.set(item);
     await tick();
-    toggleModal(item.id);
+
+    toggleFn(item.id);
   }
 
   return {
     prefix,
-    currentDetails,
+    activeItem,
     isEditing,
     modalId: `${prefix}-modal-id`,
-    createModalId: `${prefix}-create-modal-id`,
-    handleModal,
+    createModalId: `${prefix}-modal-id`,
+    openModal,
     startEditing: () => isEditing.set(true),
     stopEditing: () => isEditing.set(false),
-    toggleEditMode: () => isEditing.update((c) => !c)
+    toggleEditing: () => isEditing.update((v) => !v)
   };
 }
