@@ -2,7 +2,10 @@
   import type { Snippet } from "svelte";
   import { onMount } from "svelte";
 
+  import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
+
   import { draggable, type DragPos } from "../actions/draggable";
+  import { Icon } from "./icons";
   import { toggleDraggableModal } from "./utils";
 
   interface Props {
@@ -19,7 +22,6 @@
   let headerEl: HTMLDivElement | undefined = $state();
 
   export function hide() {
-    console.log(id, "hide...");
     toggleDraggableModal(id);
     onClose?.();
   }
@@ -38,13 +40,14 @@
 
   onMount(() => {
     document.addEventListener("keydown", onKey);
+
     return () => document.removeEventListener("keydown", onKey);
   });
 </script>
 
 <div
   id={String(id)}
-  class="fixed inset-0 z-[100] hidden"
+  class="draggable-modal-open fixed inset-0 z-[6000] hidden"
   role="presentation"
   onclick={onBackdropClick}
 >
@@ -53,7 +56,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="rounded-box bg-base-100 outline-base-300 fixed z-[101] w-[92vw] max-w-md overflow-hidden shadow-2xl outline-1 sm:w-[520px]"
+    class="border-radius border-base-300 bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg overflow-y-auto border p-1 shadow-md"
     use:draggable={{
       handle: headerEl,
       boundary: "window",
@@ -62,17 +65,22 @@
     }}
     style="transform: translate3d({position.x}px, {position.y}px, 0)"
   >
-    <div bind:this={headerEl} class="bg-red-100 p-2"></div>
-
-    <div class="border-base-300 flex items-center gap-2 border-b p-3 select-none">
-      {#if title}
-        <h3 class="text-base font-semibold">{title}</h3>
-      {/if}
-      <button class="btn btn-ghost btn-xs ml-auto" onclick={hide} tabindex="0">✕</button>
+    <div bind:this={headerEl} class="flex !cursor-all-scroll items-center justify-center py-1">
+      <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
     </div>
 
-    <div class="max-h-[80vh] overflow-y-auto p-4">
-      {@render children()}
+    <button class="btn btn-sm btn-circle btn-ghost absolute top-10 right-2" onclick={hide}>
+      ✕
+    </button>
+
+    <div class="border-radius border-base-200 bg-base-100 max-h-[85vh] rounded border p-[24px]">
+      {#if title}
+        <h3 class="mb-1 text-lg font-semibold">{title}</h3>
+      {/if}
+
+      <div class="overflow-y-auto">
+        {@render children()}
+      </div>
     </div>
   </div>
 </div>

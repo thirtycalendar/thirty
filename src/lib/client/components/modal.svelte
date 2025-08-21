@@ -4,28 +4,25 @@
   import { toggleModal } from "./utils";
 
   interface Props {
-    modalId: string | number;
+    id: string | number;
     children: Snippet;
     title?: string;
-    onModalClose?: () => void;
+    onClose?: () => void;
   }
 
-  let { modalId, children, title, onModalClose }: Props = $props();
+  let { id, children, title, onClose }: Props = $props();
 
-  function handleModalClose() {
-    toggleModal(modalId);
-    onModalClose?.();
+  function hide() {
+    toggleModal(id);
+    onClose?.();
   }
 </script>
 
-<dialog id={String(modalId)} class="modal z-6000">
+<dialog id={String(id)} class="modal z-6000">
   <div class="modal-box border-base-200 max-h-[85vh] border">
     <!-- <div class="modal-action"> -->
     <form method="dialog">
-      <button
-        class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2"
-        onclick={handleModalClose}
-      >
+      <button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2" onclick={hide}>
         ✕
       </button>
     </form>

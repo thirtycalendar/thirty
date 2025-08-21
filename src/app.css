@@ -9,6 +9,13 @@ body {
   display: block;
 }
 
+.border-radius {
+  border-top-left-radius: var(--modal-tl, var(--radius-box));
+  border-top-right-radius: var(--modal-tr, var(--radius-box));
+  border-bottom-left-radius: var(--modal-bl, var(--radius-box));
+  border-bottom-right-radius: var(--modal-br, var(--radius-box));
+}
+
 @plugin "daisyui" {
   themes:
     light --default,

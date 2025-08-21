@@ -3,6 +3,7 @@
   import { page } from "$app/state";
 
   import { SidebarItems as CalendarSidebarItems } from "$lib/client/components/calendar";
+  import DraggableModal from "$lib/client/components/draggable-modal.svelte";
   import { mainSidebarState, toggleMainSidebar } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
@@ -14,6 +15,8 @@
 
   onMount(initUserSession);
 </script>
+
+<DraggableModal id="draggable-modal-id">Hello</DraggableModal>
 
 <div class="bg-base-200 flex h-screen w-full">
   <!-- Sidebar -->
