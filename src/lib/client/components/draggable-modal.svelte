@@ -24,7 +24,7 @@
 
   const defaultPosition: DragPos = {
     x: browser ? innerWidth / 2 : 0,
-    y: browser ? innerHeight * 0.4 : 0
+    y: browser ? innerHeight / 2 : 0
   };
 
   export function hide() {

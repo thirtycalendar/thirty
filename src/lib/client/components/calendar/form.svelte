@@ -42,7 +42,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={2} absoluteStrokeWidth />
+      <Icon icon={PaintBoardIcon} strokeWidth={1.8} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 gap-2">
@@ -52,7 +52,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={2} absoluteStrokeWidth />
+      <Icon icon={GlobalRefreshIcon} strokeWidth={1.8} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 gap-2">

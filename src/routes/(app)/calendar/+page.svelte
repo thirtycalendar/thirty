@@ -6,9 +6,9 @@
 
   let { data } = $props();
 
-  let { data: events } = eventsQuery();
-  let { data: birthdays } = birthdaysQuery();
-  let { data: holidays } = userHolidaysQuery();
+  const { data: events } = eventsQuery();
+  const { data: birthdays } = birthdaysQuery();
+  const { data: holidays } = userHolidaysQuery();
 </script>
 
 <Seo seo={data.seo} />

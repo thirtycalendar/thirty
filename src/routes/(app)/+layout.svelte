@@ -3,6 +3,7 @@
   import { page } from "$app/state";
 
   import { Toast } from "$lib/client/components";
+  import { Modals as BirthdayModals } from "$lib/client/components/birthday";
   import {
     Modals as CalendarModals,
     SidebarItems as CalendarSidebarItems
@@ -22,6 +23,7 @@
 <Toast />
 
 <CalendarModals />
+<BirthdayModals />
 
 <div class="bg-base-200 flex h-screen w-full">
   <!-- Sidebar -->
