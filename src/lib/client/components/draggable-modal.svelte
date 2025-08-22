@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { onMount } from "svelte";
+  import { browser } from "$app/environment";
 
   import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
 
@@ -21,9 +22,16 @@
   let boxEl: HTMLDivElement | undefined = $state();
   let headerEl: HTMLDivElement | undefined = $state();
 
+  const defaultPosition: DragPos = {
+    x: browser ? innerWidth / 2 : 0,
+    y: browser ? innerHeight * 0.4 : 0
+  };
+
   export function hide() {
     toggleDraggableModal(id);
     onClose?.();
+
+    position = defaultPosition;
   }
 
   export function setPosition(p: DragPos) {
@@ -39,12 +47,7 @@
   }
 
   onMount(() => {
-    if (!position && boxEl) {
-      position = {
-        x: innerWidth / 2,
-        y: innerHeight * 0.4
-      };
-    }
+    position = defaultPosition;
 
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -69,7 +72,11 @@
       position,
       onDrag: (p) => (position = p)
     }}
-    style="left: {position?.x}px; top: {position?.y}px; transform: translate(-50%, -50%)"
+    style="
+      left: {position?.x ?? 0}px;
+      top: {position?.y ?? 0}px;
+      transform: translate(-50%, -50%);
+    "
   >
     <div bind:this={headerEl} class="flex !cursor-all-scroll items-center justify-center py-1">
       <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
@@ -83,7 +90,6 @@
       {#if title}
         <h3 class="mb-1 font-semibold">{title}</h3>
       {/if}
-
       <div class="overflow-y-auto">
         {@render children()}
       </div>
