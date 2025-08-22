@@ -3,7 +3,7 @@
 
   import { Add01Icon, ArrowDown01Icon, Settings01Icon } from "@hugeicons/core-free-icons";
 
-  import { toggleModal } from "$lib/client/components/utils";
+  import { toggleDraggableModal } from "$lib/client/components/utils";
   import {
     birthdaysQuery,
     calendarsQuery,
@@ -46,7 +46,7 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedCalendars.isChecked(item.id),
     onChange: (item) => uncheckedCalendars.toggle(item.id),
-    onAdd: () => toggleModal(calendarModalStore.modalId),
+    onAdd: () => toggleDraggableModal(calendarModalStore.modalId),
     onSettings: calendarModalStore.openModal
   })}
 {/if}
@@ -58,7 +58,7 @@
     getItemName: (item) => item.name,
     onChecked: (item) => uncheckedBirthdays.isChecked(item.id),
     onChange: (item) => uncheckedBirthdays.toggle(item.id),
-    onAdd: () => toggleModal(birthdayModalStore.modalId),
+    onAdd: () => toggleDraggableModal(birthdayModalStore.modalId),
     onSettings: birthdayModalStore.openModal
   })}
 {/if}
@@ -70,7 +70,7 @@
     getItemName: (item) => item.countryName,
     onChecked: (item) => uncheckedHolidays.isChecked(item.id),
     onChange: (item) => uncheckedHolidays.toggle(item.id),
-    onAdd: () => toggleModal(holidayCountryModalStore.modalId),
+    onAdd: () => toggleDraggableModal(holidayCountryModalStore.modalId),
     onSettings: holidayCountryModalStore.openModal
   })}
 {/if}

@@ -40,12 +40,9 @@
 
   onMount(() => {
     if (!position && boxEl) {
-      const { innerWidth, innerHeight } = window;
-      const rect = boxEl.getBoundingClientRect();
       position = {
-        x: (innerWidth - rect.width) / 2,
-        // 30% from top
-        y: innerHeight * 0.3 - rect.height / 2
+        x: innerWidth / 2,
+        y: innerHeight * 0.4
       };
     }
 
@@ -56,7 +53,7 @@
 
 <div
   id={String(id)}
-  class="draggable-modal-open fixed inset-0 z-[6000] hidden"
+  class="fixed inset-0 z-[6000] hidden"
   role="presentation"
   onclick={onBackdropClick}
 >
@@ -72,7 +69,7 @@
       position,
       onDrag: (p) => (position = p)
     }}
-    style="transform: translate3d({position?.x}px, {position?.y}px, 0)"
+    style="left: {position?.x}px; top: {position?.y}px; transform: translate(-50%, -50%)"
   >
     <div bind:this={headerEl} class="flex !cursor-all-scroll items-center justify-center py-1">
       <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
@@ -84,7 +81,7 @@
 
     <div class="border-radius border-base-200 bg-base-100 max-h-[85vh] rounded border p-[24px]">
       {#if title}
-        <h3 class="mb-1 text-lg font-semibold">{title}</h3>
+        <h3 class="mb-1 font-semibold">{title}</h3>
       {/if}
 
       <div class="overflow-y-auto">

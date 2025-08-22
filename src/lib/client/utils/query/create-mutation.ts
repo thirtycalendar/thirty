@@ -7,7 +7,7 @@ type CreateMutationOptions<Fn extends (...args: any[]) => Promise<any>, ErrorTyp
   mutationFn: Fn;
   queryKeys?: string[];
   onPending?: () => void | Promise<void>;
-  onMutate?: (...args: Parameters<Fn>) => () => void | Promise<void>;
+  onMutate?: (...args: Parameters<Fn>) => void | (() => void | Promise<void>);
   onSuccess?: (data: Awaited<ReturnType<Fn>>) => void | Promise<void>;
   onError?: (err: ErrorType, ...args: Parameters<Fn>) => void | Promise<void>;
 };
@@ -38,7 +38,8 @@ export function createMutation<Fn extends (...args: any[]) => Promise<any>, Erro
       }
 
       if (onMutate) {
-        rollbackFn = onMutate(...args);
+        const maybeRollback = onMutate(...args);
+        if (typeof maybeRollback === "function") rollbackFn = maybeRollback;
       }
 
       const result = await mutationFn(...args);
