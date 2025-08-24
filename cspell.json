@@ -19,6 +19,7 @@
     "hugeicons",
     "openrouter",
     "tzdb",
-    "commitlint"
+    "commitlint",
+    "lintstagedrc"
   ]
 }

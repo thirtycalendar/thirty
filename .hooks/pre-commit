@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/hook.sh"
 
-deno run -A npm:lint-staged
+deno run -A npm:lint-staged --config .lintstagedrc
