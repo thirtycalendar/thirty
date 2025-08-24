@@ -1,1 +1,4 @@
-deno task --eval commitlint --edit \$1
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/hook.sh"
+
+deno run -A npm:commitlint --config commitlint.config.mjs --edit "$1"
