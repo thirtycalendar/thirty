@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "ignoreWords": [
+    "sithu",
+    "khant",
+    "thae",
+    "sveltejs",
+    "ianvs",
+    "calendarific",
+    "hono",
+    "ipwhois",
+    "zod",
+    "vite",
+    "itsithu",
+    "upserted",
+    "Clickjacking",
+    "DNSSEC",
+    "hugeicons",
+    "openrouter",
+    "tzdb",
+    "commitlint"
+  ]
+}
