@@ -1,13 +1,13 @@
-import { auth, calendar } from "@googleapis/calendar";
+import { env } from "$env/dynamic/private";
 
-import { googleEnvConfig } from "$lib/server/utils/env-config";
+import { auth, calendar } from "@googleapis/calendar";
 
 import { getGoogleAccessToken } from "./token";
 
 export async function getGoogleClients(userId: string) {
   const oAuthClient = new auth.OAuth2({
-    clientId: googleEnvConfig.clientId,
-    clientSecret: googleEnvConfig.clientSecret
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET
   });
 
   const accessToken = await getGoogleAccessToken(userId);

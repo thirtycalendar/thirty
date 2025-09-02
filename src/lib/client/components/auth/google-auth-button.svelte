@@ -18,8 +18,8 @@
 
   const { mutate, isSuccess, isPending } = createMutation({
     mutationFn: async () => {
-      const data = await authClient.signIn.oauth2({
-        providerId: "google",
+      const data = await authClient.signIn.social({
+        provider: "google",
         callbackURL: "/calendar"
       });
 

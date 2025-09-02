@@ -1,10 +1,11 @@
+import { env } from "$env/dynamic/private";
+
 import { countries } from "$lib/server/libs/calendarific/countries";
 import { kv, kvCacheTimes, kvHoliday } from "$lib/server/libs/upstash/kv";
 import { vector, vectorHoliday } from "$lib/server/libs/upstash/vector";
 
 import type { Holiday, HolidayCountry, HolidayCountryForm } from "$lib/shared/types";
 
-import { voyageAiEnvConfig } from "../utils/env-config";
 import {
   KV_ALL_HOLIDAY_COUNTRIES,
   KV_COUNTRY_HOLIDAYS,
@@ -24,13 +25,13 @@ function isWithinRange(date: Date): boolean {
 
 export const holidayCountryVectorClient = createVectorClient<HolidayCountry & { userId?: string }>({
   namespace: "holiday-country",
-  voyageApiKey: voyageAiEnvConfig.apiKey,
+  voyageApiKey: env.VOYAGEAI_API_KEY,
   vector
 });
 
 export const allHolidayCountryVectorClient = createVectorClient<HolidayCountry>({
   namespace: "all-holiday-countries",
-  voyageApiKey: voyageAiEnvConfig.apiKey,
+  voyageApiKey: env.VOYAGEAI_API_KEY,
   vector: vectorHoliday
 });
 

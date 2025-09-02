@@ -1,10 +1,11 @@
+import { env as publicEnv } from "$env/dynamic/public";
+
 import { formatISO, startOfMonth } from "date-fns";
 import { createMiddleware } from "hono/factory";
 
 import { creditService, maybeGetCreditByUserId } from "$lib/server/services";
 import { auth } from "$lib/server/auth";
 
-import { polarProductIdsEnvConfig } from "$lib/shared/utils/env-config";
 import { MessageLimitByPlan } from "$lib/shared/constants";
 import type { ErrorResponse } from "$lib/shared/types";
 
@@ -24,7 +25,7 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
   });
   const sub = subscriptions.result.items[0];
 
-  const plan = sub?.productId === polarProductIdsEnvConfig.pro ? "pro" : "free";
+  const plan = sub?.productId === publicEnv.PUBLIC_POLAR_PRODUCT_ID_PRO ? "pro" : "free";
   const planLimit = plan === "pro" ? MessageLimitByPlan.pro : MessageLimitByPlan.free;
 
   const existingCredit = await maybeGetCreditByUserId(user.id);

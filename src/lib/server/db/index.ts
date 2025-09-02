@@ -1,12 +1,12 @@
+import { env } from "$env/dynamic/private";
+
 import { createClient } from "@libsql/client";
 
 import { drizzle } from "drizzle-orm/libsql";
 
-import { dbEnvConfig } from "../utils/env-config";
-
 const client = createClient({
-  url: dbEnvConfig.url,
-  authToken: dbEnvConfig.authToken
+  url: env.DB_URL,
+  authToken: env.DB_AUTH_TOKEN
 });
 
 export const db = drizzle({ client });

@@ -1,3 +1,5 @@
+import { env } from "$env/dynamic/private";
+
 import { and, eq, sql } from "drizzle-orm";
 
 import type { Calendar, CalendarForm } from "$lib/shared/types";
@@ -7,7 +9,6 @@ import { calendarTable } from "../db/tables";
 import { kv, kvCacheTimes } from "../libs/upstash/kv";
 import { vector } from "../libs/upstash/vector";
 import { createDbService } from "../utils/db-service";
-import { voyageAiEnvConfig } from "../utils/env-config";
 import { KV_CALENDARS } from "../utils/kv-keys";
 
 import { eventService } from ".";
@@ -21,7 +22,7 @@ export const calendarService = createDbService<Calendar, CalendarForm>(db, {
   },
   vector: {
     namespace: "calendars",
-    voyageApiKey: voyageAiEnvConfig.apiKey,
+    voyageApiKey: env.VOYAGEAI_API_KEY,
     vector
   },
   hooks: {

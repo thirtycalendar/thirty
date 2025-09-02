@@ -1,8 +1,8 @@
+import { env } from "$env/dynamic/private";
+
 import { Polar } from "@polar-sh/sdk";
 
-import { polarEnvConfig } from "$lib/server/utils/env-config";
-
 export const polarClient = new Polar({
-  accessToken: polarEnvConfig.token,
-  server: polarEnvConfig.server as "production" | "sandbox"
+  accessToken: env.POLAR_TOKEN,
+  server: env.POLAR_SERVER as "production" | "sandbox"
 });

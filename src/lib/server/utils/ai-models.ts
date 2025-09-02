@@ -1,14 +1,14 @@
+import { env } from "$env/dynamic/private";
+
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
 import { createVoyage } from "voyage-ai-provider";
 
-import { openRouterEnvConfig, voyageAiEnvConfig } from "./env-config";
-
-const openrouter = createOpenRouter({ apiKey: openRouterEnvConfig.apiKey });
+const openrouter = createOpenRouter({ apiKey: env.OPENROUTER_API_KEY });
 
 const voyage = createVoyage({
   baseURL: "https://api.voyageai.com/v1",
-  apiKey: voyageAiEnvConfig.apiKey
+  apiKey: env.VOYAGEAI_API_KEY
 });
 
 export const openRouterGpt4oMini = openrouter.chat("openai/gpt-4o-mini");

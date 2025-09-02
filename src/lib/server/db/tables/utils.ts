@@ -19,5 +19,5 @@ export const timestamps = {
   updatedAt: text("updated_at")
     .$defaultFn(() => new Date().toISOString())
     .notNull(),
-  deletedAt: text("deleted_at").notNull()
+  deletedAt: text("deleted_at")
 };

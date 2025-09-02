@@ -1,10 +1,6 @@
-import { Redis } from "@upstash/redis";
+import { env } from "$env/dynamic/private";
 
-import {
-  kvEnvConfig,
-  kvHolidayEnvConfig,
-  kvWaitingListEnvConfig
-} from "$lib/server/utils/env-config";
+import { Redis } from "@upstash/redis";
 
 export const kvCacheTimes = {
   calendar: 60 * 60,
@@ -16,16 +12,16 @@ export const kvCacheTimes = {
 } as const;
 
 export const kv = new Redis({
-  url: kvEnvConfig.url,
-  token: kvEnvConfig.token
+  url: env.KV_URL,
+  token: env.KV_TOKEN
 });
 
 export const kvHoliday = new Redis({
-  url: kvHolidayEnvConfig.url,
-  token: kvHolidayEnvConfig.token
+  url: env.KV_URL_HOLIDAY,
+  token: env.KV_TOKEN_HOLIDAY
 });
 
 export const kvWaitingList = new Redis({
-  url: kvWaitingListEnvConfig.url,
-  token: kvWaitingListEnvConfig.token
+  url: env.KV_URL_WAITING_LIST,
+  token: env.KV_TOKEN_WAITING_LIST
 });

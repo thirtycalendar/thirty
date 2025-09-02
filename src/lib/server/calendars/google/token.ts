@@ -1,7 +1,8 @@
+import { env } from "$env/dynamic/private";
+
 import { google } from "googleapis";
 
 import { kv } from "$lib/server/libs/upstash/kv";
-import { googleEnvConfig } from "$lib/server/utils/env-config";
 import { KV_GOOGLE_TOKEN } from "$lib/server/utils/kv-keys";
 
 import type { GoogleSessionKV } from "$lib/shared/types";
@@ -20,8 +21,8 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
   if (!isExpired) return session.accessToken;
 
   const client = new google.auth.OAuth2({
-    clientId: googleEnvConfig.clientId,
-    clientSecret: googleEnvConfig.clientSecret
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET
   });
 
   client.setCredentials({ refresh_token: session.refreshToken });
