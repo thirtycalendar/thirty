@@ -2,10 +2,10 @@
  * To keep migrations: --keep-migrations
  *
  * For Dev
- * pnpm dlx dotenv -e .env -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
+ * pnpm dlx dotenv-cli -e .env -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
  *
  * For Prod
- * pnpm dlx dotenv -e .env.prod -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
+ * pnpm dlx dotenv-cli -e .env.prod -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
  */
 
 import "dotenv/config";
@@ -17,9 +17,8 @@ import { drizzle } from "drizzle-orm/libsql";
 const args = process.argv;
 const keepMigrations = args.includes("--keep-migrations");
 
-const isProd = process.env.NODE_ENV === "production";
-const url = isProd ? process.env.DB_URL_PROD! : process.env.DB_URL_DEV!;
-const authToken = isProd ? process.env.DB_AUTH_TOKEN_PROD! : process.env.DB_AUTH_TOKEN_DEV!;
+const url = process.env.DB_URL!;
+const authToken = process.env.DB_AUTH_TOKEN!;
 
 const client = createClient({ url, authToken });
 const db = drizzle({ client });
