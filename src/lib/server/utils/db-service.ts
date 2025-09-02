@@ -1,12 +1,8 @@
 import type { Redis } from "@upstash/redis";
 
-import { and, eq, inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
-import {
-  createVectorClient,
-  VectorNotConfiguredError,
-  type VectorClientConfig
-} from "./create-vector-client";
+import { createVectorClient, VectorNotConfiguredError, type VectorClientConfig } from "./vector";
 
 export class NotFoundError extends Error {
   constructor(entity: string, id: string) {
@@ -29,9 +25,8 @@ type CreateDbServiceHooks<T, FormType> = {
   getAll?: Hooks<string, T[], { userId: string }>;
   get?: Hooks<string, T, { userId: string }>;
   maybeGet?: Hooks<string, T | null, { userId: string }>;
-  maybeGetByUser?: Hooks<string, T | null, { userId: string }>;
   create?: Hooks<FormType, T, { userId: string }>;
-  createBulk?: Hooks<FormType[], T[], { userId: string }>;
+  createMany?: Hooks<FormType[], T[], { userId: string }>;
   update?: Hooks<Partial<FormType>, T, { userId: string; id: string }>;
   delete?: Hooks<string, T, { userId: string; id: string }>;
   deleteAll?: Hooks<string, void, { userId: string }>;
@@ -46,17 +41,12 @@ export type DbService<T extends { id: string; userId: string }, FormType> = {
     id: string,
     options?: MethodOptions<string, T | null, { userId: string }>
   ): Promise<T | null>;
-  maybeGetByUser(
-    userId: string,
-    id: string,
-    options?: MethodOptions<string, T | null, { userId: string }>
-  ): Promise<T | null>;
   create(
     userId: string,
     data: FormType,
     options?: MethodOptions<FormType, T, { userId: string }>
   ): Promise<T>;
-  createBulk(
+  createMany(
     userId: string,
     data: FormType[],
     options?: MethodOptions<FormType[], T[], { userId: string }>
@@ -214,31 +204,6 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     return row;
   }
 
-  async function maybeGetByUser(
-    userId: string,
-    id: string,
-    options?: MethodOptions<string, T | null, { userId: string }>
-  ): Promise<T | null> {
-    const context = { userId };
-    const hooksToMerge = options?.skipHooks
-      ? [options?.hooks]
-      : [globalHooks.get, addedHooks.get, options?.hooks];
-    const hooks = mergeHooks(...hooksToMerge);
-
-    await hooks.before?.({ input: id, context });
-
-    const [row] = await db
-      .select()
-      .from(table)
-      .where(and(eq(table.id, id), eq(table.userId, userId)))
-      .limit(1);
-
-    if (!row) return null;
-
-    await hooks.after?.({ input: id, result: row, context });
-    return row;
-  }
-
   async function create(
     userId: string,
     data: FormType,
@@ -262,7 +227,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     return row;
   }
 
-  async function createBulk(
+  async function createMany(
     userId: string,
     data: FormType[],
     options?: MethodOptions<FormType[], T[], { userId: string }>
@@ -272,7 +237,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     const context = { userId };
     const hooksToMerge = options?.skipHooks
       ? [options?.hooks]
-      : [globalHooks.createBulk, addedHooks.createBulk, options?.hooks];
+      : [globalHooks.createMany, addedHooks.createMany, options?.hooks];
     const hooks = mergeHooks(...hooksToMerge);
     await hooks.before?.({ input: data, context });
 
@@ -422,9 +387,8 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
     getAll,
     get,
     maybeGet,
-    maybeGetByUser,
     create,
-    createBulk,
+    createMany,
     update,
     delete: remove,
     deleteAll,
