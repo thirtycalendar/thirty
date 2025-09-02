@@ -1,14 +1,25 @@
-import { sql } from "drizzle-orm";
-import { text } from "drizzle-orm/sqlite-core";
+import { integer } from "drizzle-orm/sqlite-core";
+
+import type { NotifyInDay, NotifyInMin } from "$lib/shared/types";
+
+export const notification = {
+  notifyInMin: integer("notifyInMin").$type<NotifyInMin>().default(0).notNull(),
+  notificationSent: integer("notificationSent", { mode: "boolean" }).default(false).notNull()
+};
+
+export const birthdayNotification = {
+  notifyInDay: integer("notifyInDay").$type<NotifyInDay>().default(1).notNull(),
+  notificationSent: integer("notificationSent", { mode: "boolean" }).default(false).notNull()
+};
 
 export const timestamps = {
-  createdAt: text("created_at")
-    .default(sql`(current_timestamp)`)
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
     .notNull(),
-  updatedAt: text("updated_at")
-    .default(sql`(current_timestamp)`)
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
     .notNull(),
-  deletedAt: text("deleted_at")
-    .default(sql`(current_timestamp)`)
+  deletedAt: integer("deleted_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
     .notNull()
 };

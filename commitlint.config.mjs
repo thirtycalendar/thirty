@@ -18,21 +18,6 @@ export default {
         "revert" // Reverts a previous commit
       ]
     ],
-    "scope-enum": [
-      2,
-      "always",
-      [
-        "ui", // User interface
-        "api", // API layer
-        "db", // Database / Drizzle ORM
-        "auth", // Authentication / Authorization
-        "core", // Core logic / shared utilities
-        "config", // Configuration files
-        "deps", // Dependency updates
-        "docs" // Documentation updates
-      ]
-    ],
-    "scope-empty": [2, "never"], // Scope is required
     "subject-empty": [2, "never"], // Subject is required
     "subject-case": [2, "always", ["lower-case"]] // Subject in lower-case
   }

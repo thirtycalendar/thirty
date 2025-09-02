@@ -1,1 +1,3 @@
-export const isProd = Deno.env.get("PUBLIC_IS_PROD") === "true";
+import { PUBLIC_IS_PROD } from "$env/static/public";
+
+export const isProd = PUBLIC_IS_PROD === "true";
