@@ -1,5 +1,6 @@
+import { KV_IP_LOCATION } from "$lib/server/utils/kv-keys";
+
 import { isObject } from "$lib/shared/utils";
-import { KV_IP_LOCATION } from "$lib/shared/utils/kv-keys";
 import type { IpLocationKV } from "$lib/shared/types";
 
 import { kv } from "../upstash/kv";

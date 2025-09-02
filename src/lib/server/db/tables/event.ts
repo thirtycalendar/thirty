@@ -27,10 +27,10 @@ export const eventTable = sqliteTable("events", {
   description: text("description"),
   location: text("location"),
 
-  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  startTime: integer("start_time", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }).notNull(),
-  endTime: integer("end_time", { mode: "timestamp" }).notNull(),
+  startDate: text("start_date").notNull(),
+  startTime: text("start_time").notNull(),
+  endDate: text("end_date").notNull(),
+  endTime: text("end_time").notNull(),
 
   timezone: text("timezone").default("UTC").notNull(),
   allDay: integer("all_day", { mode: "boolean" }).default(false).notNull(),

@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import type { MessageRole } from "$lib/shared/types";
 
@@ -18,7 +18,7 @@ export const messageTable = sqliteTable("messages", {
   content: text("content").notNull(),
   role: text("role").$type<MessageRole>().notNull(),
 
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .$defaultFn(() => new Date())
+  createdAt: text("created_at")
+    .$defaultFn(() => new Date().toISOString())
     .notNull()
 });

@@ -44,7 +44,7 @@ export const vectorHolidayEnvConfig = {
 
 // Polar
 export const polarEnvConfig = {
-  server: env.POLAR_SERVER, // "production" or "sandbox", set via .env
+  server: env.POLAR_SERVER,
   token: env.POLAR_TOKEN,
   webhookSecret: env.POLAR_WEBHOOK_SECRET
 } as const;

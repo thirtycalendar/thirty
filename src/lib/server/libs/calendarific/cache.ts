@@ -2,8 +2,8 @@ import { CALENDARIFIC_API_KEY } from "$env/static/private";
 
 import { allHolidayCountryVectorClient } from "$lib/server/services/holiday";
 import { kvHoliday } from "$lib/server/libs/upstash/kv";
+import { KV_ALL_HOLIDAY_COUNTRIES, KV_COUNTRY_HOLIDAYS } from "$lib/server/utils/kv-keys";
 
-import { KV_ALL_HOLIDAY_COUNTRIES, KV_COUNTRY_HOLIDAYS } from "$lib/shared/utils/kv-keys";
 import type { Holiday, HolidayCountry } from "$lib/shared/types";
 
 import { countries } from "./countries";

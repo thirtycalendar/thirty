@@ -1,4 +1,4 @@
-import { integer } from "drizzle-orm/sqlite-core";
+import { integer, text } from "drizzle-orm/sqlite-core";
 
 import type { NotifyInDay, NotifyInMin } from "$lib/shared/types";
 
@@ -13,13 +13,11 @@ export const birthdayNotification = {
 };
 
 export const timestamps = {
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .$defaultFn(() => new Date())
+  createdAt: text("created_at")
+    .$defaultFn(() => new Date().toISOString())
     .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .$defaultFn(() => new Date())
+  updatedAt: text("updated_at")
+    .$defaultFn(() => new Date().toISOString())
     .notNull(),
-  deletedAt: integer("deleted_at", { mode: "timestamp" })
-    .$defaultFn(() => new Date())
-    .notNull()
+  deletedAt: text("deleted_at").notNull()
 };

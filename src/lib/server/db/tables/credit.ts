@@ -18,7 +18,7 @@ export const creditTable = sqliteTable("credits", {
 
   plan: text("plan").$type<SubscriptionPlan>().default("free").notNull(),
   count: integer("count").default(0).notNull(),
-  month: integer("month", { mode: "timestamp" }).notNull(),
+  month: text("month").notNull(),
 
   ...timestamps
 });

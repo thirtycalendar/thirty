@@ -2,10 +2,10 @@ import { Hono } from "hono";
 
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
-import { syncGoogleCalendars, syncGoogleEvents } from "$lib/server/services";
+import { syncGoogleCalendars, syncGoogleEvents } from "$lib/server/services/sync/google";
 import { kv } from "$lib/server/libs/upstash/kv";
+import { KV_CALENDARS, KV_EVENTS } from "$lib/server/utils/kv-keys";
 
-import { KV_CALENDARS, KV_EVENTS } from "$lib/shared/utils/kv-keys";
 import type { SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse } from "../utils";

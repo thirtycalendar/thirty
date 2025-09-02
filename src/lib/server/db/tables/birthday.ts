@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import type { Color } from "$lib/shared/types";
 
@@ -18,7 +18,7 @@ export const birthdayTable = sqliteTable("birthdays", {
     .references(() => userTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
-  dob: integer("dob", { mode: "timestamp" }).notNull(),
+  dob: text("dob").notNull(),
 
   color: text("color").$type<Color>().default("#4986e7").notNull(),
   note: text("note"),

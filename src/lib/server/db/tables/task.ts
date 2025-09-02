@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import type { Source, TaskStatus } from "$lib/shared/types";
 
@@ -22,7 +22,7 @@ export const taskTable = sqliteTable("tasks", {
   name: text("name").notNull(),
   notes: text("notes"),
   colorId: text("color_id").notNull(),
-  due: integer("due", { mode: "timestamp" }).notNull(),
+  due: text("due").notNull(),
 
   status: text("status").$type<TaskStatus>().default("pending").notNull(),
 
