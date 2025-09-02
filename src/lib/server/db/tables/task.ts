@@ -7,7 +7,11 @@ import { notification, timestamps } from "./utils";
 import { userTable } from ".";
 
 export const taskTable = sqliteTable("tasks", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),
 

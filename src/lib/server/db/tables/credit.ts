@@ -7,7 +7,11 @@ import { timestamps } from "./utils";
 import { userTable } from ".";
 
 export const creditTable = sqliteTable("credits", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => userTable.id, { onDelete: "cascade" }),

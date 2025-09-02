@@ -1,7 +1,11 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("users", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: integer("email_verified", { mode: "boolean" })
@@ -17,7 +21,11 @@ export const userTable = sqliteTable("users", {
 });
 
 export const sessionTable = sqliteTable("sessions", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   token: text("token").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
@@ -30,7 +38,11 @@ export const sessionTable = sqliteTable("sessions", {
 });
 
 export const accountTable = sqliteTable("accounts", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
@@ -52,7 +64,11 @@ export const accountTable = sqliteTable("accounts", {
 });
 
 export const verificationTable = sqliteTable("verifications", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),

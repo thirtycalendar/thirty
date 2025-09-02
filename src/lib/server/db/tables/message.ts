@@ -5,7 +5,11 @@ import type { MessageRole } from "$lib/shared/types";
 import { chatTable } from ".";
 
 export const messageTable = sqliteTable("messages", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
 
   chatId: text("chat_id")
     .notNull()

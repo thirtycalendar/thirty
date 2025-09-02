@@ -7,7 +7,11 @@ import { birthdayNotification, timestamps } from "./utils";
 import { userTable } from ".";
 
 export const birthdayTable = sqliteTable("birthdays", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
 
   userId: text("user_id")
     .notNull()

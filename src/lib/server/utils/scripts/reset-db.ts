@@ -2,10 +2,10 @@
  * To keep migrations: --keep-migrations
  *
  * For Dev
- * pnpm dlx cross-env NODE_ENV=development pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
+ * pnpm dlx dotenv -e .env -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
  *
  * For Prod
- * pnpm dlx cross-env NODE_ENV=production pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
+ * pnpm dlx dotenv -e .env.prod -- pnpm dlx tsx ./src/lib/server/utils/scripts/reset-db.ts
  */
 
 import "dotenv/config";

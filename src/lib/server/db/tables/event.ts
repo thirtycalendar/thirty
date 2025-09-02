@@ -7,7 +7,11 @@ import { notification, timestamps } from "./utils";
 import { calendarTable, userTable } from ".";
 
 export const eventTable = sqliteTable("events", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),
 
@@ -39,7 +43,11 @@ export const eventTable = sqliteTable("events", {
 });
 
 export const eventAttendees = sqliteTable("event_attendees", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
 
   eventId: text("event_id")
     .notNull()
@@ -56,7 +64,11 @@ export const eventAttendees = sqliteTable("event_attendees", {
 });
 
 export const eventMetadata = sqliteTable("event_metadata", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => crypto.randomUUID()),
 
   eventId: text("event_id")
     .notNull()

@@ -1,4 +1,4 @@
-import { formatISO, startOfMonth } from "date-fns";
+import { format, startOfMonth } from "date-fns";
 import { createMiddleware } from "hono/factory";
 
 import { creditService, maybeGetCreditByUserId } from "$lib/server/services";
@@ -16,8 +16,8 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
     throw new Error("Use `checkChatCredits` after `logged-in` middleware.");
   }
 
-  const today = startOfMonth(new Date());
-  const monthStr = formatISO(today, { representation: "date" });
+  const today = new Date();
+  const month = startOfMonth(today);
 
   const subscriptions = await auth.api.subscriptions({
     query: { page: 1, limit: 1, active: true }
@@ -29,13 +29,14 @@ export const checkChatCredits = createMiddleware<Context>(async (c, next) => {
 
   const existingCredit = await maybeGetCreditByUserId(user.id);
 
-  const isCurrentMonth = existingCredit?.month === monthStr;
+  const isCurrentMonth =
+    existingCredit && format(existingCredit.month, "yyyy-MM") === format(today, "yyyy-MM");
 
   if (!existingCredit || !isCurrentMonth) {
     await creditService.create(user.id, {
       plan,
       count: 1,
-      month: monthStr,
+      month,
       userId: user.id
     });
 
