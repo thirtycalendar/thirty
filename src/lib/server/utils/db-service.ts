@@ -2,7 +2,11 @@ import type { Redis } from "@upstash/redis";
 
 import { eq, inArray } from "drizzle-orm";
 
-import { createVectorClient, VectorNotConfiguredError, type VectorClientConfig } from "./vector";
+import {
+  createVectorClient,
+  VectorNotConfiguredError,
+  type VectorClientConfig
+} from "./vector-service";
 
 export class NotFoundError extends Error {
   constructor(entity: string, id: string) {
