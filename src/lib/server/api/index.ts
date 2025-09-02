@@ -1,10 +1,10 @@
+import { NODE_ENV } from "$env/static/private";
 import { PUBLIC_BASE_URL } from "$env/static/public";
 
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
 
-import { isProd } from "$lib/shared/utils/is-prod";
 import type { ErrorResponse } from "$lib/shared/types";
 
 import type { Context } from "./context";
@@ -64,7 +64,7 @@ app.onError((err, c) => {
   return c.json<ErrorResponse>(
     {
       success: false,
-      message: isProd ? "Internal Server Error" : (err.stack ?? err.message)
+      message: NODE_ENV === "production" ? "Internal Server Error" : (err.stack ?? err.message)
     },
     500
   );
