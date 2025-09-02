@@ -10,8 +10,9 @@ CREATE TABLE `accounts` (
 	`refresh_token_expires_at` integer,
 	`scope` text,
 	`password` text,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
+	`deleted_at` text,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -20,11 +21,12 @@ CREATE TABLE `sessions` (
 	`id` text PRIMARY KEY NOT NULL,
 	`expires_at` integer NOT NULL,
 	`token` text NOT NULL,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL,
 	`ip_address` text,
 	`user_agent` text,
 	`user_id` text NOT NULL,
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
+	`deleted_at` text,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
@@ -36,8 +38,9 @@ CREATE TABLE `users` (
 	`email` text NOT NULL,
 	`email_verified` integer NOT NULL,
 	`image` text,
-	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
+	`deleted_at` text
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `users_id_unique` ON `users` (`id`);--> statement-breakpoint
@@ -47,8 +50,9 @@ CREATE TABLE `verifications` (
 	`identifier` text NOT NULL,
 	`value` text NOT NULL,
 	`expires_at` integer NOT NULL,
-	`created_at` integer,
-	`updated_at` integer
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
+	`deleted_at` text
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `verifications_id_unique` ON `verifications` (`id`);--> statement-breakpoint

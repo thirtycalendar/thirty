@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/private";
 
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import type { Calendar, CalendarForm } from "$lib/shared/types";
 
@@ -53,6 +53,6 @@ async function resetPrimaryCalendar(userId: string) {
   await kv.del(KV_CALENDARS(userId));
   await db
     .update(calendarTable)
-    .set({ isPrimary: false, updatedAt: sql`now()` })
+    .set({ isPrimary: false, updatedAt: new Date().toISOString() })
     .where(and(eq(calendarTable.userId, userId), eq(calendarTable.isPrimary, true)));
 }

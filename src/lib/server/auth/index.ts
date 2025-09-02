@@ -6,10 +6,14 @@ import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
+import { getRandomColor } from "$lib/shared/utils/colors";
+import type { CalendarForm, CreditForm } from "$lib/shared/types";
+
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables";
+import { cacheIPLocation, getIPLocation } from "../libs/ipwhois/utils";
 import { polarClient } from "../libs/polar/client";
-import { creditService } from "../services";
+import { calendarService, creditService, holidayCountryService } from "../services";
 import { googleScopes } from "./scopes";
 
 export const auth = betterAuth({
@@ -22,6 +26,10 @@ export const auth = betterAuth({
       verification: verificationTable
     }
   }),
+  session: {
+    expiresIn: 60 * 60 * 24 * 30,
+    freshAge: 60 * 60 * 24 * 1
+  },
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
@@ -30,6 +38,37 @@ export const auth = betterAuth({
       accessType: "offline",
       prompt: "consent",
       overrideUserInfoOnSignIn: true
+    }
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await cacheIPLocation(user.id);
+
+          const { timezone, countryCode } = await getIPLocation(user.id);
+
+          const calendar: CalendarForm = {
+            externalId: null,
+            source: "local",
+            name: user.name,
+            color: getRandomColor(),
+            timezone,
+            isPrimary: true
+          };
+
+          await calendarService.create(user.id, calendar);
+
+          const credit: CreditForm = {
+            userId: user.id,
+            month: new Date().toISOString()
+          };
+
+          await creditService.create(user.id, credit);
+
+          await holidayCountryService.addCountryByCode(user.id, countryCode);
+        }
+      }
     }
   },
   plugins: [

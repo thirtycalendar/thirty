@@ -279,7 +279,7 @@ export function createDbService<T extends { id: string; userId: string }, FormTy
 
     const [row] = await db
       .update(table)
-      .set({ ...updates, updatedAt: new Date() })
+      .set({ ...updates, updatedAt: new Date().toISOString() })
       .where(eq(table.id, id))
       .returning();
     if (!row) throw new NotFoundError("Row", id);

@@ -1,5 +1,7 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+import { timestamps } from "./utils";
+
 export const userTable = sqliteTable("users", {
   id: text("id")
     .primaryKey()
@@ -12,12 +14,8 @@ export const userTable = sqliteTable("users", {
     .$defaultFn(() => false)
     .notNull(),
   image: text("image"),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull()
+
+  ...timestamps
 });
 
 export const sessionTable = sqliteTable("sessions", {
@@ -28,13 +26,13 @@ export const sessionTable = sqliteTable("sessions", {
     .$defaultFn(() => crypto.randomUUID()),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   token: text("token").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" })
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+
+  ...timestamps
 });
 
 export const accountTable = sqliteTable("accounts", {
@@ -59,8 +57,8 @@ export const accountTable = sqliteTable("accounts", {
   }),
   scope: text("scope"),
   password: text("password"),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull()
+
+  ...timestamps
 });
 
 export const verificationTable = sqliteTable("verifications", {
@@ -72,10 +70,6 @@ export const verificationTable = sqliteTable("verifications", {
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
-    () => /* @__PURE__ */ new Date()
-  ),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
-    () => /* @__PURE__ */ new Date()
-  )
+
+  ...timestamps
 });
