@@ -1,0 +1,11 @@
+.vercel/
+.svelte-kit/
+.husky/
+.drizzle/
+
+# Package Managers
+package-lock.json
+pnpm-lock.yaml
+
+# Miscellaneous
+/static/

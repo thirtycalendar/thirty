@@ -1,11 +1,11 @@
+import "dotenv/config";
+
 import { defineConfig } from "drizzle-kit";
 
-const isProd = Deno.env.get("PUBLIC_IS_PROD") === "true";
+const isProd = process.env.NODE_ENV === "production";
 
-const url = isProd ? Deno.env.get("DB_URL_PROD")! : Deno.env.get("DB_URL_DEV")!;
-const authToken = isProd
-  ? Deno.env.get("DB_AUTH_TOKEN_PROD")!
-  : Deno.env.get("DB_AUTH_TOKEN_DEV")!;
+const url = isProd ? process.env.DB_URL_PROD! : process.env.DB_URL_DEV!;
+const authToken = isProd ? process.env.DB_AUTH_TOKEN_PROD! : process.env.DB_AUTH_TOKEN_DEV!;
 
 export default defineConfig({
   out: `.drizzle/migrations-${isProd ? "prod" : "dev"}`,

@@ -1,3 +1,3 @@
 {
-  "*": ["deno fmt", "deno lint src/"]
+  "*": ["pnpm format --write", "pnpm lint"]
 }
