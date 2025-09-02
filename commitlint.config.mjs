@@ -18,6 +18,7 @@ export default {
         "revert" // Reverts a previous commit
       ]
     ],
+    "scope-empty": [2, "always"], // no scopes allowed
     "subject-empty": [2, "never"], // Subject is required
     "subject-case": [2, "always", ["lower-case"]] // Subject in lower-case
   }
