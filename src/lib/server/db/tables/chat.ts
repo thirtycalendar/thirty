@@ -13,7 +13,7 @@ export const chatTable = sqliteTable("chats", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   name: text("name").notNull(),
 

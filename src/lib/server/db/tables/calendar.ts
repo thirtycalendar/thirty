@@ -17,7 +17,7 @@ export const calendarTable = sqliteTable("calendars", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   name: text("name").notNull(),
   color: text("color").$type<Color>().default("#4986e7").notNull(),

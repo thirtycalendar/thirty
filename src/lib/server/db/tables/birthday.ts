@@ -15,7 +15,7 @@ export const birthdayTable = sqliteTable("birthdays", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   name: text("name").notNull(),
   dob: text("dob").notNull(),

@@ -13,7 +13,7 @@ export const messageTable = sqliteTable("messages", {
 
   chatId: text("chat_id")
     .notNull()
-    .references(() => chatTable.id, { onDelete: "cascade" }),
+    .references(() => chatTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   content: text("content").notNull(),
   role: text("role").$type<MessageRole>().notNull(),

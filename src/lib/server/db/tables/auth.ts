@@ -34,7 +34,7 @@ export const sessionTable = sqliteTable("sessions", {
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" })
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" })
 });
 
 export const accountTable = sqliteTable("accounts", {
@@ -47,7 +47,7 @@ export const accountTable = sqliteTable("accounts", {
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),

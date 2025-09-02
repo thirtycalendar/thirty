@@ -12,7 +12,7 @@ CREATE TABLE `accounts` (
 	`password` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `accounts_id_unique` ON `accounts` (`id`);--> statement-breakpoint
@@ -25,7 +25,7 @@ CREATE TABLE `sessions` (
 	`ip_address` text,
 	`user_agent` text,
 	`user_id` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `sessions_id_unique` ON `sessions` (`id`);--> statement-breakpoint
@@ -63,8 +63,8 @@ CREATE TABLE `birthdays` (
 	`notificationSent` integer DEFAULT false NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `birthdays_id_unique` ON `birthdays` (`id`);--> statement-breakpoint
@@ -80,8 +80,8 @@ CREATE TABLE `calendars` (
 	`is_synced` integer DEFAULT true NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `calendars_id_unique` ON `calendars` (`id`);--> statement-breakpoint
@@ -91,8 +91,8 @@ CREATE TABLE `chats` (
 	`name` text NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `chats_id_unique` ON `chats` (`id`);--> statement-breakpoint
@@ -104,8 +104,8 @@ CREATE TABLE `credits` (
 	`month` text NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `credits_id_unique` ON `credits` (`id`);--> statement-breakpoint
@@ -119,8 +119,8 @@ CREATE TABLE `event_attendees` (
 	`notificationSent` integer DEFAULT false NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `event_attendees_id_unique` ON `event_attendees` (`id`);--> statement-breakpoint
@@ -131,8 +131,8 @@ CREATE TABLE `event_metadata` (
 	`ai_tags` text,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`event_id`) REFERENCES `events`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `event_metadata_id_unique` ON `event_metadata` (`id`);--> statement-breakpoint
@@ -158,9 +158,9 @@ CREATE TABLE `events` (
 	`notificationSent` integer DEFAULT false NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
-	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`calendar_id`) REFERENCES `calendars`(`id`) ON UPDATE no action ON DELETE cascade
+	`deleted_at` text,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE cascade ON DELETE cascade,
+	FOREIGN KEY (`calendar_id`) REFERENCES `calendars`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `events_id_unique` ON `events` (`id`);--> statement-breakpoint
@@ -170,7 +170,7 @@ CREATE TABLE `messages` (
 	`content` text NOT NULL,
 	`role` text NOT NULL,
 	`created_at` text NOT NULL,
-	FOREIGN KEY (`chat_id`) REFERENCES `chats`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`chat_id`) REFERENCES `chats`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `messages_id_unique` ON `messages` (`id`);--> statement-breakpoint
@@ -188,7 +188,7 @@ CREATE TABLE `tasks` (
 	`notificationSent` integer DEFAULT false NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
-	`deleted_at` text NOT NULL,
+	`deleted_at` text,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

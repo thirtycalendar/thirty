@@ -17,10 +17,10 @@ export const eventTable = sqliteTable("events", {
 
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
   calendarId: text("calendar_id")
     .notNull()
-    .references(() => calendarTable.id, { onDelete: "cascade" }),
+    .references(() => calendarTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   name: text("name").notNull(),
   color: text("color").$type<Color>().default("#4986e7").notNull(),
@@ -51,7 +51,7 @@ export const eventAttendees = sqliteTable("event_attendees", {
 
   eventId: text("event_id")
     .notNull()
-    .references(() => eventTable.id, { onDelete: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   email: text("email").notNull(),
   name: text("name"),
@@ -72,7 +72,7 @@ export const eventMetadata = sqliteTable("event_metadata", {
 
   eventId: text("event_id")
     .notNull()
-    .references(() => eventTable.id, { onDelete: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   aiSummary: text("ai_summary"),
   aiTags: text("ai_tags", { mode: "json" }).$type<string[] | null>(),
