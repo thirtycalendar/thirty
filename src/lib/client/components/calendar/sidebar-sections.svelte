@@ -1,7 +1,7 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
 
-  import { Add01Icon, ArrowDown01Icon, Settings01Icon } from "@hugeicons/core-free-icons";
+  import { Add01Icon, ArrowDown01Icon } from "@hugeicons/core-free-icons";
 
   import { toggleDraggableModal } from "$lib/client/components/utils";
   import {
@@ -122,15 +122,22 @@
       {#if sortedItems.length > 0}
         <div class="my-1" transition:slide>
           {#each sortedItems as item (item.id)}
-            <label
-              class="group btn btn-ghost btn-sm flex items-center justify-between px-2 py-1 font-normal"
+            <button
+              class="group btn btn-ghost btn-sm flex w-full items-center justify-between px-2 py-1 font-normal"
+              onclick={() => onSettings?.(item)}
             >
               <div class="flex items-center gap-2">
                 <input
                   type="checkbox"
                   class="checkbox checkbox-xs rounded-sm text-shadow-2xs"
                   checked={onChecked(item)}
-                  onchange={() => onChange(item)}
+                  onclick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onchange={(e) => {
+                    e.stopPropagation();
+                    onChange(item);
+                  }}
                   style={`--checkedColor: ${item.color}`}
                 />
 
@@ -138,22 +145,11 @@
                   {getItemName(item)}
                 </span>
               </div>
-
-              {#if onSettings}
-                <button
-                  class="btn btn-ghost btn-square btn-xs invisible opacity-75 group-hover:visible"
-                  onclick={() => onSettings(item)}
-                >
-                  <Icon icon={Settings01Icon} size={15} absoluteStrokeWidth />
-                </button>
-              {/if}
-            </label>
+            </button>
           {/each}
         </div>
       {:else}
-        <p class="text-primary-content/50 m-2 text-sm">
-          No {title.toLowerCase().replace(/s$/, "")} yet. Create one.
-        </p>
+        <p class="text-primary-content/50 m-2 text-sm">Nothing yet. Add one.</p>
       {/if}
     {/if}
   </div>
