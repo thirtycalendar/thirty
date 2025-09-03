@@ -1,13 +1,11 @@
-import { DemoLightImage, Favicon } from "$lib/client/assets";
-
 export const seoConfig = {
   title: (title: string, homePage?: boolean) =>
     homePage ? `Thirty - The AI Calendar` : `${title} | Thirty - The AI Calendar`,
-  url: (url: string) => `https://thirtycalendar.com/${url}`,
+  url: (url: string) => `${process.env.PUBLIC_BASE_URL}/${url}`,
   description:
     "Thirty is the AI calendar that talks to you. Schedule smarter, organize faster, and focus on what matters most. Join thousands using AI to manage their life.",
-  favicon: Favicon,
-  image: DemoLightImage,
+  favicon: `${process.env.PUBLIC_BASE_URL}/favicon.ico`,
+  image: `${process.env.PUBLIC_BASE_URL}/og-image.webp`,
   twitterHandle: "@itsithu"
 };
 
