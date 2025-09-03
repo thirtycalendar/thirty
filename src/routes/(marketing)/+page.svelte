@@ -32,9 +32,10 @@
 <div class="mx-auto my-16 max-w-6xl px-4">
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
-    alt="Dashboard Preview"
+    alt="Thirty - AI Calendar dashboard preview"
     class="ring-base-300 rounded-2xl shadow-2xl ring-8 sm:ring-10"
-    loading="lazy"
+    loading="eager"
+    fetchpriority="high"
   />
 </div>
 
