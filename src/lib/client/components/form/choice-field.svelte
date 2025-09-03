@@ -75,7 +75,7 @@
     type="button"
     bind:this={triggerButtonRef}
     class={cn(
-      "bg-base-100 hover:bg-base-200 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "bg-base-100 hover:bg-base-200 input flex w-full items-center justify-between border px-3 py-2 text-left text-sm outline-none focus:outline-none",
       error ? "border-error" : "border-base-300"
     )}
     onclick={() => (open = !open)}
@@ -100,7 +100,7 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class="border-base-300 bg-base-100 absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border p-3 shadow-xl"
+      class="border-base-300 bg-base-100 border-rounded absolute z-50 mt-1 max-h-60 w-full overflow-y-auto border p-3 shadow-xl"
       role="listbox"
       tabindex="-1"
     >

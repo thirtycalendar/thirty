@@ -128,7 +128,7 @@
       triggerButton?.select();
     }}
     class={cn(
-      "w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "input w-full cursor-pointer border text-left outline-none focus:outline-none",
       "hover:bg-base-200",
       error ? "border-error bg-error/5 text-error" : "border-base-300 bg-base-100"
     )}
@@ -145,7 +145,7 @@
   {#if open}
     <div
       bind:this={dropdown}
-      class="border-base-300 bg-base-100 absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border shadow-xl"
+      class="border-base-300 bg-base-100 border-rounded absolute z-50 mt-1 max-h-64 w-full overflow-auto border shadow-xl"
     >
       {#each filtered.slice(0, 100) as tz (tz.value)}
         <button

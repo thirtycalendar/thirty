@@ -239,7 +239,7 @@
       triggerButton?.select();
     }}
     class={cn(
-      "hover:bg-base-200 w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "input hover:bg-base-200 w-full cursor-pointer border text-left outline-none focus:outline-none",
       error ? "border-error text-error" : "border-base-300 bg-base-100"
     )}
     autocomplete="off"

@@ -42,7 +42,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.8} absoluteStrokeWidth />
+      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 gap-2">
@@ -52,7 +52,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={1.8} absoluteStrokeWidth />
+      <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 gap-2">
@@ -61,11 +61,11 @@
   </div>
 
   <div class="w-full">
-    <label class="w-full cursor-pointer">
+    <label class="flex w-full cursor-pointer items-center gap-3">
       <input
         name="isPrimary"
         type="checkbox"
-        class="checkbox checkbox-sm mr-2"
+        class="checkbox checkbox-sm"
         oninput={handleInput}
         checked={$formData.isPrimary}
       />

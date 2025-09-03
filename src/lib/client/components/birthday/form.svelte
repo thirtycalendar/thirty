@@ -53,7 +53,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={Calendar03Icon} strokeWidth={1.8} absoluteStrokeWidth />
+      <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
     <div class="flex flex-1 gap-2">
       <DateField name="dob" class="flex-[3]" {formData} {formErrors} />
@@ -64,7 +64,7 @@
 
   <div class="flex items-start gap-3">
     <div class="text-muted-foreground pt-1.5">
-      <Icon icon={TextAlignLeftIcon} strokeWidth={1.8} absoluteStrokeWidth />
+      <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
     <div class="flex-1">
       {#if isNote}

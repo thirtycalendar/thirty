@@ -40,8 +40,8 @@
   <h2 class="text-xl font-semibold">{birthday.name}</h2>
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-0.5">
-      <Icon icon={Calendar03Icon} strokeWidth={1.8} absoluteStrokeWidth />
+    <div class="pt-0.5">
+      <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 items-center gap-2">
@@ -51,20 +51,20 @@
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-0.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.8} absoluteStrokeWidth />
+    <div class="pt-0.5">
+      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 items-center gap-2">
-      <span class="capitalize">Color:</span>
+      <span class="font-medium capitalize">Color:</span>
       <div class="aspect-square w-5 rounded-full" style="background-color: {birthday.color}"></div>
     </div>
   </div>
 
   {#if birthday.note}
     <div class="flex items-start gap-3">
-      <div class="text-muted-foreground pt-0.5">
-        <Icon icon={TextAlignLeftIcon} strokeWidth={1.8} absoluteStrokeWidth />
+      <div class="pt-0.5">
+        <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
       </div>
 
       <div class="flex-1 whitespace-pre-wrap">{birthday.note}</div>
@@ -73,7 +73,7 @@
 
   <div class="mt-5 space-y-1">
     <div class="flex items-center">
-      <Icon icon={UndoIcon} size={14} strokeWidth={1.8} class="mr-2" absoluteStrokeWidth />
+      <Icon icon={UndoIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
 
       <p class="text-sm font-semibold">
         Last edited: {updated}

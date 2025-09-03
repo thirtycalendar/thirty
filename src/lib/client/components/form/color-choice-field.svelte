@@ -112,7 +112,7 @@
     type="button"
     bind:this={triggerButtonRef}
     class={cn(
-      "bg-base-100 hover:bg-base-200 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "input bg-base-100 hover:bg-base-200 flex w-full items-center justify-between border  text-left outline-none focus:outline-none",
       error ? "border-error" : "border-base-300"
     )}
     onclick={() => (open = !open)}
@@ -149,7 +149,7 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} border-base-300 bg-base-100 z-50 mt-1 w-55 rounded-xl border p-3 shadow-xl`}
+      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} border-base-300 bg-base-100 border-rounded z-50 mt-1 w-55 border p-3 shadow-xl`}
       role="listbox"
       tabindex="-1"
     >
@@ -174,7 +174,7 @@
               <Icon
                 icon={Tick02Icon}
                 size={16}
-                strokeWidth={4}
+                strokeWidth={2}
                 class="text-white drop-shadow-sm"
                 absoluteStrokeWidth
               />

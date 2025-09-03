@@ -204,7 +204,7 @@
       triggerButtonElement?.select();
     }}
     class={cn(
-      "bg-base-100 hover:bg-base-200 w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
+      "bg-base-100 hover:bg-base-200 input w-full cursor-pointer rounded-md border text-left text-sm outline-none focus:outline-none",
       error ? "border-error text-error" : "border-base-300"
     )}
     autocomplete="off"
@@ -215,7 +215,7 @@
     <div
       bind:this={timeSlotsDropdown}
       class={cn(
-        "bg-base-100 absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto rounded-xl border p-2 shadow-xl",
+        "bg-base-100 border-rounded absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto border p-2 shadow-xl",
         error ? "border-error" : "border-base-300",
         isRightDiv ? "right-0" : "left-0"
       )}

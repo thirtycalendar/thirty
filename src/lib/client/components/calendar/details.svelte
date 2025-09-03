@@ -36,19 +36,19 @@
   <h2 class="text-xl font-semibold">{calendar.name}</h2>
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-0.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.8} absoluteStrokeWidth />
+    <div class="pt-0.5">
+      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex flex-1 items-center gap-2">
-      <span class="capitalize">Color:</span>
+      <span class="font-medium capitalize">Color:</span>
       <div class="aspect-square w-5 rounded-full" style="background-color: {calendar.color}"></div>
     </div>
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-0.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={1.8} absoluteStrokeWidth />
+    <div class="pt-0.5">
+      <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
     <div class="flex-1">{calendar.timezone}</div>
@@ -56,8 +56,8 @@
 
   {#if calendar.isPrimary}
     <div class="flex items-start gap-3">
-      <div class="text-muted-foreground pt-0.5">
-        <Icon icon={CheckmarkCircle02Icon} strokeWidth={1.8} absoluteStrokeWidth />
+      <div class="pt-0.5">
+        <Icon icon={CheckmarkCircle02Icon} strokeWidth={1.7} absoluteStrokeWidth />
       </div>
 
       <div class="flex-1 capitalize">Primary calendar</div>
@@ -67,7 +67,7 @@
   <div class="mt-5 space-y-1">
     {#if calendar.source !== "local"}
       <div class="flex items-center">
-        <Icon icon={FileSyncIcon} size={14} strokeWidth={1.8} class="mr-2" absoluteStrokeWidth />
+        <Icon icon={FileSyncIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
 
         <p class="text-sm font-semibold">
           Synced from {capitalizeFirstLetter(calendar.source)}
@@ -76,7 +76,7 @@
     {/if}
 
     <div class="flex items-center">
-      <Icon icon={UndoIcon} size={14} strokeWidth={1.8} class="mr-2" absoluteStrokeWidth />
+      <Icon icon={UndoIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
 
       <p class="text-sm font-semibold">
         Last edited: {updated}
