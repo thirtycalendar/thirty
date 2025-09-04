@@ -16,6 +16,31 @@ body {
   border-bottom-right-radius: var(--modal-br, var(--radius-box));
 }
 
+@layer components {
+  .detail-section {
+    @apply space-y-3;
+  }
+
+  .detail-title {
+    @apply text-xl font-semibold;
+  }
+
+  .detail-badge {
+    @apply badge badge-outline badge-xs;
+  }
+
+  .error-text {
+    @apply text-error mt-1 text-sm;
+  }
+
+  .form-section {
+    @apply space-y-2;
+  }
+  .form-error {
+    @apply text-error mt-1 text-sm;
+  }
+}
+
 @plugin "daisyui" {
   themes:
     light --default,

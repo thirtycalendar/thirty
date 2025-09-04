@@ -15,7 +15,7 @@
   let { icon, iconClass = "pt-0.5", size = 20, children }: Props = $props();
 </script>
 
-<div class="flex items-start gap-3">
+<div class="flex items-center gap-3">
   <div class={iconClass}>
     <Icon {icon} strokeWidth={1.7} absoluteStrokeWidth {size} />
   </div>

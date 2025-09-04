@@ -3,7 +3,6 @@
     Calendar03Icon,
     CheckmarkCircle02Icon,
     Clock01Icon,
-    FileSyncIcon,
     GlobalRefreshIcon,
     MapPinpoint01Icon,
     TextAlignLeftIcon,
@@ -18,7 +17,6 @@
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
   import type { Event } from "$lib/shared/types";
 
-  import { Icon } from "../icons";
   import {
     calculateTimezoneDiffInTime,
     formatDuration,
@@ -28,6 +26,7 @@
   } from "./utils";
 
   import { ActionButtons } from ".";
+  import { DetailMetaRow, IconRow } from "..";
 
   interface Props {
     event: Event;
@@ -72,42 +71,30 @@
 
   <h2 class="text-xl font-semibold">{event.name}</h2>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={Clock01Icon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
-
-    <div class="flex-1">
-      <div class="my-1 block items-center gap-2 sm:flex">
-        <p class="font-medium">{formattedEventTime}</p>
-
-        {#if event.allDay}
-          <div class="badge badge-outline badge-xs">All Day</div>
-        {:else}
-          <div class="badge badge-outline badge-xs">
-            {totalDuration}
-          </div>
-        {/if}
-      </div>
-
-      {#if formattedLocalTime}
-        <p class="badge badge-outline badge-xs my-1">
-          {timezoneDiffInTime}{timezoneDiffInTime && " "}{userTimezone}
-        </p>
-
-        <div class="my-1 block items-center gap-2 sm:flex">
-          <p class="text-muted-foreground text-sm">{formattedLocalTime}</p>
-          <div class="badge badge-outline badge-xs">{userTimezone}</div>
-        </div>
+  <!-- Time -->
+  <IconRow icon={Clock01Icon}>
+    <div class="my-1 block items-center gap-2 sm:flex">
+      <p class="font-medium">{formattedEventTime}</p>
+      {#if event.allDay}
+        <div class="detail-badge">All Day</div>
+      {:else}
+        <div class="detail-badge">{totalDuration}</div>
       {/if}
     </div>
-  </div>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
+    {#if formattedLocalTime}
+      <p class="detail-badge my-1">
+        {timezoneDiffInTime}{timezoneDiffInTime && " "}{userTimezone}
+      </p>
+      <div class="my-1 block items-center gap-2 sm:flex">
+        <p class="text-muted-foreground text-sm">{formattedLocalTime}</p>
+        <div class="detail-badge">{userTimezone}</div>
+      </div>
+    {/if}
+  </IconRow>
 
+  <!-- Calendar -->
+  <IconRow icon={Calendar03Icon}>
     <div class="flex flex-1 items-center gap-2">
       <div
         class="aspect-square h-5 w-5 shrink-0 rounded-full"
@@ -119,59 +106,41 @@
       ></div>
       <span>{calendarName}</span>
     </div>
-  </div>
+  </IconRow>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
+  <!-- Timezone -->
+  <IconRow icon={GlobalRefreshIcon}>
     <div class="flex-1">{event.timezone}</div>
-  </div>
+  </IconRow>
 
+  <!-- Location -->
   {#if event.location}
-    <div class="flex items-start gap-3">
-      <div class="pt-1.5">
-        <Icon icon={MapPinpoint01Icon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
+    <IconRow icon={MapPinpoint01Icon}>
       <div class="flex-1">{event.location}</div>
-    </div>
+    </IconRow>
   {/if}
 
+  <!-- Description -->
   {#if event.description}
-    <div class="flex items-start gap-3">
-      <div class="pt-0.5">
-        <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
+    <IconRow icon={TextAlignLeftIcon}>
       <div class="flex-1 whitespace-pre-wrap">{event.description}</div>
-    </div>
+    </IconRow>
   {/if}
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={CheckmarkCircle02Icon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
-
+  <!-- Status -->
+  <IconRow icon={CheckmarkCircle02Icon}>
     <div class="flex-1 capitalize">Status: {event.status}</div>
-  </div>
+  </IconRow>
 
+  <!-- Meta rows -->
   <div class="mt-4 space-y-1">
-    {#if event.source !== "local"}
-      <div class="flex items-center">
-        <Icon icon={FileSyncIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
+    <DetailMetaRow icon={CheckmarkCircle02Icon}>
+      Synced from {capitalizeFirstLetter(event.source)}
+    </DetailMetaRow>
 
-        <p class="text-sm font-semibold">
-          Synced from {capitalizeFirstLetter(event.source)}
-        </p>
-      </div>
-    {/if}
-
-    <div class="flex items-center">
-      <Icon icon={UndoIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
-
-      <p class="text-sm font-semibold">
-        Last edited: {updated}
-      </p>
-    </div>
+    <DetailMetaRow icon={UndoIcon}>
+      Last edited: {updated}
+    </DetailMetaRow>
   </div>
 
   <ActionButtons id={event.id} bind:errorMessage />
