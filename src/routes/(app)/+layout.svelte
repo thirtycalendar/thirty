@@ -8,6 +8,7 @@
     Modals as CalendarModals,
     SidebarItems as CalendarSidebarItems
   } from "$lib/client/components/calendar";
+  import { Modals as EventModals } from "$lib/client/components/event";
   import { mainSidebarState, toggleMainSidebar } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
@@ -23,13 +24,14 @@
 <Toast />
 
 <CalendarModals />
+<EventModals />
 <BirthdayModals />
 
 <div class="bg-base-200 flex h-screen w-full">
   <!-- Sidebar -->
   <div
     class={cn(
-      "bg-base-200 z-40 overflow-y-auto transition-all duration-300",
+      "bg-base-200 z-5000 overflow-y-auto transition-all duration-300",
       "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static sm:h-full",
       $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
     )}

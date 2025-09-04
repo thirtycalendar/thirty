@@ -8,7 +8,7 @@
 <div class="toast toast-top toast-center z-5000">
   {#each $toasts as toast (toast.id)}
     <button
-      class="alert z-4000 {toast.isError ? 'alert-error' : 'bg-base-300'}"
+      class="alert z-4000 {toast.isError ? 'alert-error' : 'alert-info'}"
       onclick={() => removeToast(toast.id)}
     >
       <Icon icon={AlertCircleIcon} size={17} absoluteStrokeWidth />

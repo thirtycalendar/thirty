@@ -47,7 +47,6 @@
     <button
       class="btn btn-ghost btn-square btn-sm tooltip tooltip-bottom font-normal"
       onclick={goToToday}
-      data-tip="Today"
     >
       <Icon icon={CircleIcon} size={12} absoluteStrokeWidth />
     </button>

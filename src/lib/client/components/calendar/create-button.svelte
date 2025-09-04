@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Add01Icon } from "@hugeicons/core-free-icons";
 
-  import { toggleModal } from "$lib/client/components/utils";
+  import { toggleDraggableModal } from "$lib/client/components/utils";
   import { eventModalStore } from "$lib/client/stores/modal";
 
   import { Icon } from "../icons";
@@ -11,7 +11,7 @@
   <button
     class="btn btn-md bg-primary border-base-300 border shadow-none"
     onclick={() => {
-      toggleModal(eventModalStore.modalId);
+      toggleDraggableModal(eventModalStore.modalId);
     }}
   >
     <Icon icon={Add01Icon} />
@@ -23,7 +23,7 @@
   <button
     class="btn btn-md bg-base-200 border-base-300 border"
     onclick={() => {
-      toggleModal(eventModalStore.modalId);
+      toggleDraggableModal(eventModalStore.modalId);
     }}
   >
     <Icon icon={Add01Icon} />
