@@ -41,7 +41,7 @@
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-1.5">
+    <div class="pt-1.5">
       <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
@@ -51,7 +51,7 @@
   </div>
 
   <div class="flex items-start gap-3">
-    <div class="text-muted-foreground pt-1.5">
+    <div class="pt-1.5">
       <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
     </div>
 
