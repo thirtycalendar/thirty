@@ -1,5 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { env as publicEnv } from "$env/dynamic/public";
+import { PUBLIC_BASE_URL } from "$env/static/public";
 
 import { checkout, polar, portal, webhooks } from "@polar-sh/better-auth";
 
@@ -17,6 +18,7 @@ import { calendarService, creditService, holidayCountryService } from "../servic
 import { googleScopes } from "./scopes";
 
 export const auth = betterAuth({
+  trustedOrigins: [PUBLIC_BASE_URL],
   database: drizzleAdapter(db, {
     provider: "sqlite",
     schema: {
@@ -26,10 +28,6 @@ export const auth = betterAuth({
       verification: verificationTable
     }
   }),
-  session: {
-    expiresIn: 60 * 60 * 24 * 30,
-    freshAge: 60 * 60 * 24 * 1
-  },
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
