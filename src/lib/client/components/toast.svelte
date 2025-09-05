@@ -10,8 +10,8 @@
   {#each $toasts as toast (toast.id)}
     <button
       class={cn(
-        "alert z-4000 border",
-        toast.isError ? "alert-error border-error/75" : "bg-base-200 border-base-300"
+        "alert border-base-300 z-4000 border",
+        toast.isError ? "alert-error" : "bg-base-200"
       )}
       onclick={() => removeToast(toast.id)}
     >

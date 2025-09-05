@@ -13,7 +13,7 @@ Thirty is an open-source AI calendar built on familiar foundations. It’s not r
 
 - **Frontend**: Svelte 5 (SvelteKit), TypeScript, TailwindCSS, DaisyUI
 - **Backend**: Hono, Drizzle ORM
-- **Database**: Neon (PostgreSQL)
+- **Database**: Turso (SQLite)
 - **Authentication**: Better Auth
 - **Cache/Queues**: Upstash (Redis & Vector)
 - **Hosting/CDN**: Vercel, Bunny.net
@@ -26,7 +26,7 @@ Thirty is an open-source AI calendar built on familiar foundations. It’s not r
 
 - Node.js v24+
 - pnpm v10+
-- PostgreSQL (Neon recommended)
+- SQLite (Turso recommended)
 
 ### Clone and Install
 
