@@ -4,4 +4,3 @@ export { default as Details } from "./details.svelte";
 export { default as Edit } from "./edit.svelte";
 export { default as Form } from "./form.svelte";
 export { default as Modals } from "./modals.svelte";
-export { default as StickyBirthdayBlock } from "./sticky-birthday-block.svelte";

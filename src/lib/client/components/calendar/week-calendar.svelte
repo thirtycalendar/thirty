@@ -1,26 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get } from "svelte/store";
+
+  import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
   import { addDays, endOfDay, format, isToday, setHours, startOfDay, startOfWeek } from "date-fns";
 
+  import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { currentDate } from "$lib/client/stores/change-date";
   import {
     uncheckedBirthdays,
     uncheckedCalendars,
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
+  import { birthdayModalStore, eventModalStore, holidayModalStore } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
-  import { StickyBirthdayBlock } from "../birthday";
   import { getBirthdaysForDay, getVisibleBirthdays } from "../birthday/utils";
-  import { EventBlock, StickyEventBlock } from "../event";
+  import { EventBlock } from "../event";
   import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
-  import { StickyHolidayBlock } from "../holiday";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
   import { calculateAllDayLayout } from "./utils";
 
+  import { StickyBlock } from "..";
   import { CurrentTimeIndicator } from ".";
 
   interface Props {
@@ -64,6 +68,11 @@
   const { store: unchecked } = uncheckedCalendars;
   const { allDayEvents, timedEvents } = $derived.by(() => {
     return getVisibleEvents(events, weekStart, weekEnd, $unchecked);
+  });
+
+  const userHolidayCountries = $derived.by(() => {
+    const data = userHolidayCountriesQuery().data;
+    return get(data);
   });
 
   const allDayLayout = $derived.by(() => calculateAllDayLayout(allDayEvents, weekStart, weekEnd));
@@ -119,15 +128,45 @@
     {#each days as day, i (i + day.toISOString())}
       <div class="border-base-200 relative flex min-w-0 flex-col gap-1 border-r px-1">
         {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
-          <StickyHolidayBlock {holiday} />
+          <StickyBlock
+            item={holiday}
+            color={userHolidayCountries?.find((c) => c.id === holiday.countryId)?.color ??
+              "transparent"}
+            title={holiday.name}
+            onclick={(item) => {
+              if ("countryCode" in item) {
+                holidayModalStore.openModal(item);
+              }
+            }}
+            icon={Flag02Icon}
+          />
         {/each}
 
         {#each getBirthdaysForDay(visibleBirthdays, day) as birthday (birthday.id)}
-          <StickyBirthdayBlock {birthday} />
+          <StickyBlock
+            item={birthday}
+            color={birthday.color}
+            title={birthday.name}
+            onclick={(item) => {
+              if ("dob" in item) {
+                birthdayModalStore.openModal(item);
+              }
+            }}
+            icon={BirthdayCakeIcon}
+          />
         {/each}
 
         {#each allDayLayout.filter((e) => format(e.startDate, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as event (event.id)}
-          <StickyEventBlock {event} />
+          <StickyBlock
+            item={event}
+            color={event.color}
+            title={event.name}
+            onclick={(item) => {
+              if ("source" in item) {
+                eventModalStore.openModal(item);
+              }
+            }}
+          />
         {/each}
       </div>
     {/each}
