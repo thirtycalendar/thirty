@@ -9,6 +9,7 @@
     uncheckedCalendars,
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
+  import { cn } from "$lib/client/utils/cn";
 
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
@@ -98,7 +99,10 @@
     {#each days as day (day.toISOString())}
       <div class="flex items-center justify-center">
         <span
-          class={`flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+          class={cn(
+            "flex items-center gap-1",
+            isToday(day) ? "text-primary-content" : "text-primary-content/70"
+          )}
         >
           {#if isToday(day)}
             <span class="bg-primary-content h-2 w-2 rounded-full"></span>

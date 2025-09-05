@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Delete02Icon, Pen01Icon } from "@hugeicons/core-free-icons";
 
+  import { cn } from "../utils/cn";
   import { Icon } from "./icons";
 
   interface Props {
@@ -38,7 +39,7 @@
 </script>
 
 {#if confirmDelete}
-  <p class={`text-error text-right text-xs ${showEdit ? "mr-10" : "mr-2"}`}>{message}</p>
+  <p class={cn("text-error text-right text-xs", showEdit ? "mr-10" : "mr-2")}>{message}</p>
 {/if}
 
 <div class="flex justify-end">

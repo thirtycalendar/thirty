@@ -13,6 +13,7 @@
 
   import { calendarsQuery } from "$lib/client/data/queries";
   import { calendarModalStore } from "$lib/client/stores/modal";
+  import { cn } from "$lib/client/utils/cn";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { eventSchema } from "$lib/shared/schemas";
@@ -263,7 +264,7 @@
     >
       <Icon
         icon={ArrowRight01Icon}
-        class={`transition-transform duration-300 ${isMoreOptions && "rotate-90"}`}
+        class={cn("transition-transform duration-300", isMoreOptions && "rotate-90")}
         size={16}
         absoluteStrokeWidth
       />

@@ -149,7 +149,10 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class={`absolute ${isLeftDiv ? "left-0" : "right-0"} border-base-300 bg-base-100 border-rounded z-50 mt-1 w-55 border p-3 shadow-xl`}
+      class={cn(
+        "border-base-300 bg-base-100 border-rounded absolute z-50 mt-1 w-55 border p-3 shadow-xl",
+        isLeftDiv ? "left-0" : "right-0"
+      )}
       role="listbox"
       tabindex="-1"
     >
