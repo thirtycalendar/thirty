@@ -33,6 +33,8 @@
   } from "../form";
   import { Icon } from "../icons";
 
+  import { IconRow } from "..";
+
   interface Props {
     defaultValues: EventForm;
     onSubmit: (data: EventForm) => Promise<void>;
@@ -136,57 +138,51 @@
 </script>
 
 {#if $calendars}
-  <form onsubmit={handleSubmit()} class="space-y-2">
+  <form onsubmit={handleSubmit()} class="form-section">
     {#if !hasCalendars}
-      <p class="text-error mt-1 text-sm">You need to create a calendar before adding events.</p>
+      <p class="error-text">You need to create a calendar before adding events.</p>
     {/if}
 
     {#if errorMessage !== ""}
-      <p class="text-error mt-1 text-sm">{errorMessage}</p>
+      <p class="error-text">{errorMessage}</p>
     {/if}
 
     {#if isErrorMessage}
-      <p class="text-error mt-1 text-sm">{formErrorMessage}</p>
+      <p class="error-text">{formErrorMessage}</p>
     {/if}
 
+    <!-- Event Name -->
     <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
-    <div class="flex items-start gap-3">
-      <div class="pt-1.5">
-        <Icon icon={Clock01Icon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
-
-      <div class="flex-1">
-        {#if !isAllDay}
-          {#if isMultiDay}
-            <div class="space-y-2">
-              <div class="flex gap-2">
-                <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
-                <TimeField name="startTime" class="flex-[2]" {formData} {formErrors} />
-              </div>
-              <div class="flex gap-2">
-                <DateField name="endDate" {formData} {formErrors} class="flex-[3]" isDisablePast />
-                <TimeField name="endTime" class="flex-[2]" {formData} {formErrors} />
-              </div>
+    <!-- Event Time -->
+    <IconRow icon={Clock01Icon}>
+      {#if !isAllDay}
+        {#if isMultiDay}
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
+              <TimeField name="startTime" class="flex-[2]" {formData} {formErrors} />
             </div>
-          {:else}
-            <div class="flex items-center gap-2">
-              <DateField name="startDate" class="flex-[2]" {formData} {formErrors} />
-              <TimeField name="startTime" class="flex-1" {formData} {formErrors} />
-              <span class="text-muted-foreground">-</span>
-              <TimeField name="endTime" class="flex-1" {formData} {formErrors} />
+            <div class="flex gap-2">
+              <DateField name="endDate" class="flex-[3]" isDisablePast {formData} {formErrors} />
+              <TimeField name="endTime" class="flex-[2]" {formData} {formErrors} />
             </div>
-          {/if}
+          </div>
         {:else}
-          <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
+          <div class="flex items-center gap-2">
+            <DateField name="startDate" class="flex-[2]" {formData} {formErrors} />
+            <TimeField name="startTime" class="flex-1" {formData} {formErrors} />
+            <span class="text-muted-foreground">-</span>
+            <TimeField name="endTime" class="flex-1" {formData} {formErrors} />
+          </div>
         {/if}
-      </div>
-    </div>
+      {:else}
+        <DateField name="startDate" class="flex-[3]" {formData} {formErrors} />
+      {/if}
+    </IconRow>
 
-    <div class="flex items-start gap-3">
-      <div class="text-muted-foreground pt-1.5">
-        <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
+    <!-- Calendar & Color -->
+    <IconRow icon={Calendar03Icon}>
       <div class="flex flex-1 gap-2">
         <CalendarChoiceField
           name="calendarId"
@@ -198,65 +194,50 @@
         />
         <ColorChoiceField name="color" class="flex-1" {formData} {formErrors} />
       </div>
-    </div>
+    </IconRow>
 
-    <div class="flex items-center gap-3">
-      <div class="pt-1.5">
-        <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
+    <!-- Timezone -->
+    <IconRow icon={GlobalRefreshIcon}>
       <TimezoneField name="timezone" {formData} {formErrors} />
-    </div>
+    </IconRow>
 
-    <div class="flex items-center gap-3">
-      <div class="pt-1.5">
-        <Icon icon={MapPinpoint01Icon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
-      <div class="flex-1">
-        {#if isLocation}
-          <InputField
-            name="location"
-            placeholder="e.g., London, England"
-            {handleInput}
-            {formData}
-            {formErrors}
-          />
-        {:else}
-          <button
-            type="button"
-            class="w-full p-1.5 text-left text-sm"
-            onclick={() => (isLocation = true)}
-          >
-            Add <span class="hover:underline">location</span>
-          </button>
-        {/if}
-      </div>
-    </div>
+    <!-- Location -->
+    <IconRow icon={MapPinpoint01Icon}>
+      {#if isLocation}
+        <InputField name="location" placeholder="Location" {handleInput} {formData} {formErrors} />
+      {:else}
+        <button
+          type="button"
+          class="w-full p-1.5 text-left text-sm"
+          onclick={() => (isLocation = true)}
+        >
+          Add <span class="hover:underline">location</span>
+        </button>
+      {/if}
+    </IconRow>
 
-    <div class="flex items-start gap-3">
-      <div class="pt-1.5">
-        <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
-      <div class="flex-1">
-        {#if isDescription}
-          <TextareaField
-            name="description"
-            placeholder="Description"
-            {handleInput}
-            {formData}
-            {formErrors}
-          />
-        {:else}
-          <button
-            type="button"
-            class="w-full p-1.5 text-left text-sm"
-            onclick={() => (isDescription = true)}
-          >
-            Add <span class="hover:underline">description</span>
-          </button>
-        {/if}
-      </div>
-    </div>
+    <!-- Description -->
+    <IconRow icon={TextAlignLeftIcon} class="items-start">
+      {#if isDescription}
+        <TextareaField
+          name="description"
+          placeholder="Description"
+          {handleInput}
+          {formData}
+          {formErrors}
+        />
+      {:else}
+        <button
+          type="button"
+          class="w-full p-1.5 text-left text-sm"
+          onclick={() => (isDescription = true)}
+        >
+          Add <span class="hover:underline">description</span>
+        </button>
+      {/if}
+    </IconRow>
 
+    <!-- More Options -->
     <button
       type="button"
       class="my-3 flex w-full items-center gap-2 text-sm opacity-75"
@@ -274,11 +255,11 @@
     {#if isMoreOptions}
       <div class="space-y-3">
         <div>
-          <label class="flex cursor-pointer items-center">
+          <label class="flex cursor-pointer items-center gap-3">
             <input
               name="allDay"
               type="checkbox"
-              class="checkbox checkbox-sm mr-2"
+              class="checkbox checkbox-sm"
               oninput={handleInput}
               checked={$formData.allDay}
               disabled={isMultiDay}
@@ -287,10 +268,7 @@
           </label>
         </div>
 
-        <div class="flex items-center gap-3">
-          <div>
-            <Icon icon={CheckmarkCircle01Icon} strokeWidth={1.7} absoluteStrokeWidth />
-          </div>
+        <IconRow icon={CheckmarkCircle01Icon}>
           <FormChoiceField
             name="status"
             choiceList={EventStatuses}
@@ -298,10 +276,11 @@
             {formData}
             {formErrors}
           />
-        </div>
+        </IconRow>
       </div>
     {/if}
 
+    <!-- Form Actions -->
     <FormActionButtons
       {isCreate}
       isSaving={$isSubmitting || isMutationPending}

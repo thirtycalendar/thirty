@@ -14,7 +14,8 @@
     InputField,
     TextareaField
   } from "../form";
-  import { Icon } from "../icons";
+
+  import { IconRow } from "..";
 
   interface Props {
     defaultValues: BirthdayForm;
@@ -44,43 +45,34 @@
   });
 </script>
 
-<form onsubmit={handleSubmit()} class="space-y-2">
+<form onsubmit={handleSubmit()} class="form-section">
   {#if errorMessage !== ""}
-    <p class="text-error mt-1 text-sm">{errorMessage}</p>
+    <p class="error-text">{errorMessage}</p>
   {/if}
 
+  <!-- Name -->
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
-  <div class="flex items-start gap-3">
-    <div class="pt-1.5">
-      <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
+  <!-- Date of Birth & Color -->
+  <IconRow icon={Calendar03Icon}>
     <div class="flex flex-1 gap-2">
       <DateField name="dob" class="flex-[3]" {formData} {formErrors} />
-
       <ColorChoiceField name="color" class="flex-1" {formData} {formErrors} />
     </div>
-  </div>
+  </IconRow>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-1.5">
-      <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
-    <div class="flex-1">
-      {#if isNote}
-        <TextareaField name="note" placeholder="Note" {handleInput} {formData} {formErrors} />
-      {:else}
-        <button
-          type="button"
-          class="w-full p-1.5 text-left text-sm"
-          onclick={() => (isNote = true)}
-        >
-          Add <span class="hover:underline">note</span>
-        </button>
-      {/if}
-    </div>
-  </div>
+  <!-- Note -->
+  <IconRow icon={TextAlignLeftIcon} class="items-start">
+    {#if isNote}
+      <TextareaField name="note" placeholder="Note" {handleInput} {formData} {formErrors} />
+    {:else}
+      <button type="button" class="w-full p-1.5 text-left text-sm" onclick={() => (isNote = true)}>
+        Add <span class="hover:underline">note</span>
+      </button>
+    {/if}
+  </IconRow>
 
+  <!-- Form Actions -->
   <FormActionButtons
     {isCreate}
     isSaving={$isSubmitting || isMutationPending}

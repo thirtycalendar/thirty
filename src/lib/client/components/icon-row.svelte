@@ -14,11 +14,11 @@
     children: Snippet;
   }
 
-  let { icon, iconClass = "pt-0.5", size = 20, class: classCn, children }: Props = $props();
+  let { icon, iconClass, size = 20, class: classCn, children }: Props = $props();
 </script>
 
-<div class={cn("flex items-center gap-3", classCn)}>
-  <div class={iconClass}>
+<div class={cn("flex items-center justify-between gap-3", classCn)}>
+  <div class={cn(iconClass)}>
     <Icon {icon} strokeWidth={1.7} absoluteStrokeWidth {size} />
   </div>
   <div class="flex-1">
