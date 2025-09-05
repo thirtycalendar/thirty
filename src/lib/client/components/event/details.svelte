@@ -95,7 +95,7 @@
 
   <!-- Calendar -->
   <IconRow icon={Calendar03Icon}>
-    <div class="flex flex-1 items-center gap-2">
+    <div class="flex items-center gap-2">
       <div
         class="aspect-square h-5 w-5 shrink-0 rounded-full"
         style={`background: ${
@@ -110,26 +110,26 @@
 
   <!-- Timezone -->
   <IconRow icon={GlobalRefreshIcon}>
-    <div class="flex-1">{event.timezone}</div>
+    <div>{event.timezone}</div>
   </IconRow>
 
   <!-- Location -->
   {#if event.location}
     <IconRow icon={MapPinpoint01Icon}>
-      <div class="flex-1">{event.location}</div>
+      <div>{event.location}</div>
     </IconRow>
   {/if}
 
   <!-- Description -->
   {#if event.description}
-    <IconRow icon={TextAlignLeftIcon}>
-      <div class="flex-1 whitespace-pre-wrap">{event.description}</div>
+    <IconRow icon={TextAlignLeftIcon} class="items-start">
+      <div class="whitespace-pre-wrap">{event.description}</div>
     </IconRow>
   {/if}
 
   <!-- Status -->
   <IconRow icon={CheckmarkCircle02Icon}>
-    <div class="flex-1 capitalize">Status: {event.status}</div>
+    <div class="capitalize">Status: {event.status}</div>
   </IconRow>
 
   <!-- Meta rows -->
