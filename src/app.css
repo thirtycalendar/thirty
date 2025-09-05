@@ -57,12 +57,12 @@ body {
   prefersdark: true;
   color-scheme: "dark";
 
-  --color-base-100: oklch(20% 0 0); /* deep gray background */
-  --color-base-200: oklch(26% 0 0); /* card background */
-  --color-base-300: oklch(32% 0 0); /* hover/lift */
-  --color-base-content: oklch(92% 0 0); /* soft white text */
+  --color-base-100: oklch(20% 0 0);
+  --color-base-200: oklch(26% 0 0);
+  --color-base-300: oklch(32% 0 0);
+  --color-base-content: oklch(92% 0 0);
 
-  --color-primary: oklch(26% 0 0); /* button background */
+  --color-primary: oklch(26% 0 0);
   --color-primary-content: oklch(94% 0 0);
 
   --color-secondary: oklch(32% 0 0);
@@ -85,15 +85,6 @@ body {
 
   --color-error: oklch(62% 0.18 27);
   --color-error-content: oklch(94% 0 0);
-
-  --radius-selector: 0.5rem;
-  --radius-field: 0.5rem;
-  --radius-box: 0.75rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.22rem;
-  --border: 1px;
-  --depth: 0.25;
-  --noise: 0;
 }
 
 @plugin "daisyui/theme" {
@@ -102,10 +93,10 @@ body {
   prefersdark: false;
   color-scheme: "light";
 
-  --color-base-100: oklch(97% 0 0); /* warm off-white background */
-  --color-base-200: oklch(94% 0 0); /* card background */
-  --color-base-300: oklch(91% 0 0); /* hover/lift */
-  --color-base-content: oklch(15% 0 0); /* softer dark text */
+  --color-base-100: oklch(97% 0 0);
+  --color-base-200: oklch(94% 0 0);
+  --color-base-300: oklch(91% 0 0);
+  --color-base-content: oklch(15% 0 0);
 
   --color-primary: oklch(94% 0 0);
   --color-primary-content: oklch(15% 0 0);
@@ -130,7 +121,9 @@ body {
 
   --color-error: oklch(62% 0.18 27);
   --color-error-content: oklch(97% 0 0);
+}
 
+:root {
   --radius-selector: 0.5rem;
   --radius-field: 0.5rem;
   --radius-box: 0.75rem;
