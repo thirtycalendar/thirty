@@ -8,7 +8,8 @@
   import type { CalendarForm } from "$lib/shared/types";
 
   import { ColorChoiceField, FormActionButtons, InputField, TimezoneField } from "../form";
-  import { Icon } from "../icons";
+
+  import { IconRow } from "..";
 
   interface Props {
     defaultValues: CalendarForm;
@@ -33,47 +34,37 @@
   });
 </script>
 
-<form onsubmit={handleSubmit()} class="space-y-2">
+<form onsubmit={handleSubmit()} class="form-section">
   {#if errorMessage !== ""}
-    <p class="text-error mt-1 text-sm">{errorMessage}</p>
+    <p class="error-text">{errorMessage}</p>
   {/if}
 
+  <!-- Name -->
   <InputField name="name" placeholder="Add title" {handleInput} {formData} {formErrors} />
 
-  <div class="flex items-start gap-3">
-    <div class="pt-1.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
+  <!-- Color -->
+  <IconRow icon={PaintBoardIcon}>
+    <ColorChoiceField name="color" {formData} {formErrors} isLeftDiv />
+  </IconRow>
 
-    <div class="flex flex-1 gap-2">
-      <ColorChoiceField name="color" {formData} {formErrors} isLeftDiv />
-    </div>
-  </div>
+  <!-- Timezone -->
+  <IconRow icon={GlobalRefreshIcon}>
+    <TimezoneField name="timezone" {formData} {formErrors} />
+  </IconRow>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-1.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
+  <!-- Primary -->
+  <label class="flex w-full cursor-pointer items-center gap-3">
+    <input
+      name="isPrimary"
+      type="checkbox"
+      class="checkbox checkbox-sm"
+      oninput={handleInput}
+      checked={$formData.isPrimary}
+    />
+    <span class="text-sm">Primary</span>
+  </label>
 
-    <div class="flex flex-1 gap-2">
-      <TimezoneField name="timezone" {formData} {formErrors} />
-    </div>
-  </div>
-
-  <div class="w-full">
-    <label class="flex w-full cursor-pointer items-center gap-3">
-      <input
-        name="isPrimary"
-        type="checkbox"
-        class="checkbox checkbox-sm"
-        oninput={handleInput}
-        checked={$formData.isPrimary}
-      />
-
-      <span class="text-sm">Primary</span>
-    </label>
-  </div>
-
+  <!-- Form Actions -->
   <FormActionButtons
     {isCreate}
     isSaving={$isSubmitting || isMutationPending}
