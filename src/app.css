@@ -29,6 +29,10 @@ body {
     @apply badge badge-outline badge-xs;
   }
 
+  .detail-meta-section {
+    @apply mt-4 space-y-1;
+  }
+
   .error-text {
     @apply text-error mt-1 text-sm;
   }

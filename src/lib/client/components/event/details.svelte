@@ -25,8 +25,8 @@
     getEventDateObjects
   } from "./utils";
 
-  import { ActionButtons } from ".";
   import { DetailMetaRow, IconRow } from "..";
+  import { ActionButtons } from ".";
 
   interface Props {
     event: Event;
@@ -64,12 +64,12 @@
   let errorMessage = $derived(prevId !== event.id ? "" : "");
 </script>
 
-<div class="space-y-3">
+<div class="detail-section">
   {#if errorMessage !== ""}
-    <p class="text-error mt-1 text-sm">{errorMessage}</p>
+    <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="text-xl font-semibold">{event.name}</h2>
+  <h2 class="detail-title">{event.name}</h2>
 
   <!-- Time -->
   <IconRow icon={Clock01Icon}>
@@ -133,7 +133,7 @@
   </IconRow>
 
   <!-- Meta rows -->
-  <div class="mt-4 space-y-1">
+  <div class="detail-meta-section">
     <DetailMetaRow icon={CheckmarkCircle02Icon}>
       Synced from {capitalizeFirstLetter(event.source)}
     </DetailMetaRow>

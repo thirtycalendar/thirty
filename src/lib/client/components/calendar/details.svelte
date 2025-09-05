@@ -12,8 +12,7 @@
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import type { Calendar } from "$lib/shared/types";
 
-  import { Icon } from "../icons";
-
+  import { DetailMetaRow, IconRow } from "..";
   import { ActionButtons } from ".";
 
   interface Props {
@@ -28,60 +27,47 @@
   let errorMessage = $derived(prevId !== calendar.id ? "" : "");
 </script>
 
-<div class="space-y-3">
+<div class="detail-section">
   {#if errorMessage !== ""}
-    <p class="text-error mt-1 text-sm">{errorMessage}</p>
+    <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="text-xl font-semibold">{calendar.name}</h2>
+  <h2 class="detail-title">{calendar.name}</h2>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
+  <!-- Color -->
+  <IconRow icon={PaintBoardIcon}>
+    <div class="flex items-center gap-2">
+      <span class="font-medium">Color:</span>
+      <div
+        class="aspect-square w-5 rounded-full"
+        style={`background-color: ${calendar.color}`}
+      ></div>
     </div>
+  </IconRow>
 
-    <div class="flex flex-1 items-center gap-2">
-      <span class="font-medium capitalize">Color:</span>
-      <div class="aspect-square w-5 rounded-full" style="background-color: {calendar.color}"></div>
-    </div>
-  </div>
+  <!-- Timezone -->
+  <IconRow icon={GlobalRefreshIcon}>
+    <div>{calendar.timezone}</div>
+  </IconRow>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={GlobalRefreshIcon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
-
-    <div class="flex-1">{calendar.timezone}</div>
-  </div>
-
+  <!-- Primary -->
   {#if calendar.isPrimary}
-    <div class="flex items-start gap-3">
-      <div class="pt-0.5">
-        <Icon icon={CheckmarkCircle02Icon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
-
-      <div class="flex-1 capitalize">Primary calendar</div>
-    </div>
+    <IconRow icon={CheckmarkCircle02Icon}>
+      <div class="capitalize">Primary calendar</div>
+    </IconRow>
   {/if}
 
-  <div class="mt-5 space-y-1">
+  <!-- Meta rows -->
+  <div class="detail-meta-section">
     {#if calendar.source !== "local"}
-      <div class="flex items-center">
-        <Icon icon={FileSyncIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
-
-        <p class="text-sm font-semibold">
-          Synced from {capitalizeFirstLetter(calendar.source)}
-        </p>
-      </div>
+      <DetailMetaRow icon={FileSyncIcon}>
+        Synced from {capitalizeFirstLetter(calendar.source)}
+      </DetailMetaRow>
     {/if}
 
-    <div class="flex items-center">
-      <Icon icon={UndoIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
-
-      <p class="text-sm font-semibold">
-        Last edited: {updated}
-      </p>
-    </div>
+    <DetailMetaRow icon={UndoIcon}>
+      Last edited: {updated}
+    </DetailMetaRow>
   </div>
 
   <ActionButtons id={calendar.id} bind:errorMessage />

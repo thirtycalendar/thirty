@@ -10,8 +10,7 @@
 
   import type { Birthday } from "$lib/shared/types";
 
-  import { Icon } from "../icons";
-
+  import { DetailMetaRow, IconRow } from "..";
   import { ActionButtons } from ".";
 
   interface Props {
@@ -32,53 +31,44 @@
   let errorMessage = $derived(prevId !== birthday.id ? "" : "");
 </script>
 
-<div class="space-y-3">
+<div class="detail-section">
   {#if errorMessage !== ""}
-    <p class="text-error mt-1 text-sm">{errorMessage}</p>
+    <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="text-xl font-semibold">{birthday.name}</h2>
+  <h2 class="detail-title">{birthday.name}</h2>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={Calendar03Icon} strokeWidth={1.7} absoluteStrokeWidth />
-    </div>
-
-    <div class="flex flex-1 items-center gap-2">
+  <!-- Date of Birth -->
+  <IconRow icon={Calendar03Icon}>
+    <div class="flex items-center gap-2">
       <p class="font-medium">{dob}</p>
-      <div class="badge badge-outline badge-xs">{age}</div>
+      <div class="detail-badge">{age}</div>
     </div>
-  </div>
+  </IconRow>
 
-  <div class="flex items-start gap-3">
-    <div class="pt-0.5">
-      <Icon icon={PaintBoardIcon} strokeWidth={1.7} absoluteStrokeWidth />
+  <!-- Color -->
+  <IconRow icon={PaintBoardIcon}>
+    <div class="flex items-center gap-2">
+      <span class="font-medium">Color:</span>
+      <div
+        class="aspect-square w-5 rounded-full"
+        style={`background-color: ${birthday.color}`}
+      ></div>
     </div>
+  </IconRow>
 
-    <div class="flex flex-1 items-center gap-2">
-      <span class="font-medium capitalize">Color:</span>
-      <div class="aspect-square w-5 rounded-full" style="background-color: {birthday.color}"></div>
-    </div>
-  </div>
-
+  <!-- Note -->
   {#if birthday.note}
-    <div class="flex items-start gap-3">
-      <div class="pt-0.5">
-        <Icon icon={TextAlignLeftIcon} strokeWidth={1.7} absoluteStrokeWidth />
-      </div>
-
-      <div class="flex-1 whitespace-pre-wrap">{birthday.note}</div>
-    </div>
+    <IconRow icon={TextAlignLeftIcon} class="items-start">
+      <div class="whitespace-pre-wrap">{birthday.note}</div>
+    </IconRow>
   {/if}
 
-  <div class="mt-5 space-y-1">
-    <div class="flex items-center">
-      <Icon icon={UndoIcon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
-
-      <p class="text-sm font-semibold">
-        Last edited: {updated}
-      </p>
-    </div>
+  <!-- Meta rows -->
+  <div class="detail-meta-section">
+    <DetailMetaRow icon={UndoIcon}>
+      Last edited: {updated}
+    </DetailMetaRow>
   </div>
 
   <ActionButtons id={birthday.id} bind:errorMessage />
