@@ -65,7 +65,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="border-rounded border-base-300 bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg overflow-y-auto border p-1 shadow-md"
+    class="border-rounded border-base-300 bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg border p-1 shadow-md"
     use:draggable={{
       handle: headerEl,
       boundary: "window",
@@ -86,7 +86,9 @@
       ✕
     </button>
 
-    <div class="border-rounded border-base-200 bg-base-100 max-h-[85vh] rounded border p-[24px]">
+    <div
+      class="border-rounded border-base-200 bg-base-100 max-h-[85vh] overflow-y-auto rounded border p-[24px]"
+    >
       {#if title}
         <h3 class="mb-1 font-semibold">{title}</h3>
       {/if}
