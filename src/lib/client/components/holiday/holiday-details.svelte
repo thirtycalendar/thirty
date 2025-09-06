@@ -33,12 +33,12 @@
 
   <!-- Country info -->
   <IconRow icon={GlobalIcon}>
-    <div>{holiday.countryName} ({holiday.countryCode})</div>
+    <div>{holiday.countryName} ({holiday.countryCode.toUpperCase()})</div>
   </IconRow>
 
   <!-- Description -->
   {#if holiday.description}
-    <IconRow icon={TextAlignLeftIcon} class="items-start">
+    <IconRow icon={TextAlignLeftIcon} class="items-start" iconClass="pt-0.5">
       <div class="whitespace-pre-wrap">{holiday.description}</div>
     </IconRow>
   {/if}

@@ -10,9 +10,10 @@ import { countries } from "./countries";
 
 const API_KEY = CALENDARIFIC_API_KEY;
 
-const currentYear = new Date().getFullYear();
+// const currentYear = new Date().getFullYear();
 // Generate years: past 3 (inclusive) and next 5 (inclusive)
-const years = Array.from({ length: 9 }, (_, i) => currentYear - 3 + i);
+// const years = Array.from({ length: 9 }, (_, i) => currentYear - 3 + i);
+const years = [2025];
 
 type CalendarificHoliday = {
   name: string;

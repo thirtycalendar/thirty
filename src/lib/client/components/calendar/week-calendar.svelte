@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { get } from "svelte/store";
 
   import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
@@ -72,7 +71,7 @@
 
   const userHolidayCountries = $derived.by(() => {
     const data = userHolidayCountriesQuery().data;
-    return get(data);
+    return data;
   });
 
   const allDayLayout = $derived.by(() => calculateAllDayLayout(allDayEvents, weekStart, weekEnd));
@@ -130,8 +129,9 @@
         {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
           <StickyBlock
             item={holiday}
-            color={userHolidayCountries?.find((c) => c.id === holiday.countryId)?.color ??
-              "transparent"}
+            color={$userHolidayCountries?.find(
+              (c) => c.id.toLocaleLowerCase() === holiday.countryId.toLocaleLowerCase()
+            )?.color ?? "transparent"}
             title={holiday.name}
             onclick={(item) => {
               if ("countryCode" in item) {

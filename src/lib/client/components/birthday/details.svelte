@@ -59,7 +59,7 @@
 
   <!-- Note -->
   {#if birthday.note}
-    <IconRow icon={TextAlignLeftIcon} class="items-start">
+    <IconRow icon={TextAlignLeftIcon} class="items-start" iconClass="pt-0.5">
       <div class="whitespace-pre-wrap">{birthday.note}</div>
     </IconRow>
   {/if}

@@ -122,7 +122,7 @@
 
   <!-- Description -->
   {#if event.description}
-    <IconRow icon={TextAlignLeftIcon} class="items-start">
+    <IconRow icon={TextAlignLeftIcon} class="items-start" iconClass="pt-0.5">
       <div class="whitespace-pre-wrap">{event.description}</div>
     </IconRow>
   {/if}

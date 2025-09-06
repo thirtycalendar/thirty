@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { toggleModal } from "$lib/client/components/utils";
   import { allHolidayCountriesQuery } from "$lib/client/data/queries";
   import { holidayCountryModalStore } from "$lib/client/stores/modal";
   import { showToast } from "$lib/client/stores/toast";
@@ -9,6 +8,8 @@
 
   import { hdCountrySchema } from "$lib/shared/schemas/holiday";
   import type { HolidayCountryForm } from "$lib/shared/types";
+
+  import { toggleDraggableModal } from "../utils";
 
   import { HolidayCountryField } from ".";
 
@@ -42,7 +43,7 @@
       errorMessage = "";
 
       showToast(data.message);
-      toggleModal(holidayCountryModalStore.modalId);
+      toggleDraggableModal(holidayCountryModalStore.modalId);
     },
     onError: (message: Error["message"]) => {
       errorMessage = message;
