@@ -14,8 +14,6 @@
   import {
     addDays,
     addMonths,
-    endOfMonth,
-    endOfWeek,
     format as formatDate,
     isSameDay,
     isSameMonth,
@@ -72,10 +70,11 @@
 
   let getDays = $derived.by(() => {
     const start = startOfWeek(startOfMonth(visibleMonth), { weekStartsOn: 0 });
-    const end = endOfWeek(endOfMonth(visibleMonth), { weekStartsOn: 0 });
     const days: Date[] = [];
-    for (let d = start; d <= end; d = addDays(d, 1)) {
+    let d = start;
+    for (let i = 0; i < 42; i++) {
       days.push(d);
+      d = addDays(d, 1);
     }
     return days;
   });
@@ -297,7 +296,7 @@
     <div
       bind:this={calendarDropdown}
       use:portal
-      class="border-base-300 bg-base-100 z-[9999] mt-1 w-72 rounded-xl border p-3 shadow-xl"
+      class="border-base-300 bg-base-100 z-[9999] w-72 rounded-xl border p-3 shadow-xl"
       role="dialog"
       tabindex="-1"
       style="position: absolute; top: 0; left: 0;"
@@ -339,7 +338,7 @@
             role="gridcell"
             aria-selected={selected}
             class={cn(
-              "w-full rounded-md py-1 transition-colors outline-none",
+              "btn btn-sm btn-ghost w-full rounded-md py-1 transition-colors outline-none",
               selected ? "bg-base-300 text-base-content font-semibold" : "",
               !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
               isToday(day) && !selected ? "font-medium" : "",
