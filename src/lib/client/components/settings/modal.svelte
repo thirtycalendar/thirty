@@ -1,9 +1,58 @@
 <script lang="ts">
+  import {
+    CreditCardIcon,
+    FolderSyncIcon,
+    SecurityIcon,
+    Settings01Icon
+  } from "@hugeicons/core-free-icons";
+  import type { IconSvgElement } from "@hugeicons/svelte";
+
   import { settingsModalStore } from "$lib/client/stores/modal";
+  import { cn } from "$lib/client/utils/cn";
+
+  import { Icon } from "../icons";
 
   import { Modal } from "..";
 
   const { modalId } = settingsModalStore;
+
+  type Item = {
+    label: string;
+    icon: IconSvgElement;
+    onClick?: () => void;
+  }[];
+
+  const menuItems: Item = [
+    { label: "General", icon: Settings01Icon },
+    { label: "Billing", icon: CreditCardIcon },
+    { label: "Sync", icon: FolderSyncIcon },
+    { label: "Security", icon: SecurityIcon }
+  ];
+
+  let activeItem = $state("General");
 </script>
 
-<Modal id={modalId} class="modal-open">Hello</Modal>
+<Modal id={modalId} class="modal-open" modelBoxClass="p-0 m-0 !max-w-[650px]">
+  <div class="bg-base-200 flex">
+    <!-- Sidebar items -->
+    <div class="flex w-[180px] flex-col p-2">
+      {#each menuItems as item (item.label)}
+        <button
+          class={cn(
+            "btn flex w-full items-center justify-start gap-2 font-normal",
+            activeItem === item.label ? "btn-active" : "btn-ghost"
+          )}
+          onclick={() => (activeItem = item.label)}
+        >
+          <Icon icon={item.icon} size={17} absoluteStrokeWidth />
+          {item.label}
+        </button>
+      {/each}
+    </div>
+
+    <!-- Content -->
+    <div class="bg-base-100 border-rounded m-1 ml-0 min-h-[500px] flex-1 overflow-y-scroll p-2">
+      Content
+    </div>
+  </div>
+</Modal>

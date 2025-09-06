@@ -47,7 +47,8 @@ export default ts.config(
           case: "kebabCase",
           ignore: ["README.md"]
         }
-      ]
+      ],
+      "svelte/no-navigation-without-resolve": ["off"]
     }
   }
 );

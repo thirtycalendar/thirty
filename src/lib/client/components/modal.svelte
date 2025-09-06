@@ -9,10 +9,11 @@
     children: Snippet;
     title?: string;
     class?: string;
+    modelBoxClass?: string;
     onClose?: () => void;
   }
 
-  let { id, children, title, class: classCn, onClose }: Props = $props();
+  let { id, children, title, class: classCn, modelBoxClass, onClose }: Props = $props();
 
   function hide() {
     toggleModal(id);
@@ -21,7 +22,7 @@
 </script>
 
 <dialog id={String(id)} class={cn("modal z-6000", classCn)}>
-  <div class="modal-box border-base-200 max-h-[85vh] border">
+  <div class={cn("modal-box border-base-200 max-h-[85vh] border", modelBoxClass)}>
     <!-- <div class="modal-action"> -->
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2" onclick={hide}>
