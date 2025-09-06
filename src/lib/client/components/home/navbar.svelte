@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import { DiscordIcon } from "@hugeicons/core-free-icons";
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { LogoImage } from "../../assets";
+  import { LogoDarkImage, LogoWhiteImage } from "../../assets";
   import { Icon } from "../icons";
 
   import { GithubStarButton } from "..";
@@ -13,6 +15,16 @@
   let scrollY = $state(0);
 
   const scrolled = $derived(scrollY > 10);
+
+  let isDark = $state(false);
+
+  onMount(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    isDark = media.matches;
+    const listener = (e: MediaQueryListEvent) => (isDark = e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  });
 </script>
 
 <svelte:window bind:scrollY />
@@ -26,7 +38,11 @@
   <div class="flex items-center justify-between">
     <div>
       <a href="/">
-        <img src={LogoImage} alt="Thirty Logo" class="h-8 w-8" />
+        <img
+          src={isDark ? LogoWhiteImage : LogoDarkImage}
+          alt="Thirty Logo"
+          class="h-8 w-8 opacity-75 transition-all duration-300 hover:opacity-100"
+        />
       </a>
     </div>
 
