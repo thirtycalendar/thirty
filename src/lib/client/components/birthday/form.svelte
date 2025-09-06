@@ -2,6 +2,7 @@
   import { Calendar03Icon, TextAlignLeftIcon } from "@hugeicons/core-free-icons";
 
   import { birthdayModalStore } from "$lib/client/stores/modal";
+  import { cn } from "$lib/client/utils/cn";
   import { createForm } from "$lib/client/utils/create-form";
 
   import { birthdaySchema } from "$lib/shared/schemas/birthday";
@@ -62,7 +63,7 @@
   </IconRow>
 
   <!-- Note -->
-  <IconRow icon={TextAlignLeftIcon} class="items-start">
+  <IconRow icon={TextAlignLeftIcon} class={cn(isNote && "items-start")}>
     {#if isNote}
       <TextareaField name="note" placeholder="Note" {handleInput} {formData} {formErrors} />
     {:else}

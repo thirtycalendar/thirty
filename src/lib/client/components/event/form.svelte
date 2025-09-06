@@ -217,7 +217,7 @@
     </IconRow>
 
     <!-- Description -->
-    <IconRow icon={TextAlignLeftIcon} class="items-start">
+    <IconRow icon={TextAlignLeftIcon} class={cn(isDescription && "items-start")}>
       {#if isDescription}
         <TextareaField
           name="description"
