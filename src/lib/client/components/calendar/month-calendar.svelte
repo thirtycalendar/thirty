@@ -95,7 +95,9 @@
 
 <div class="flex h-full flex-col">
   <!-- Header -->
-  <div class="bg-base-100 sticky top-0 z-20 mb-1 grid grid-cols-7 text-xs sm:text-sm">
+  <div
+    class="bg-base-100 border-base-200 sticky top-0 z-20 grid grid-cols-7 border-b pb-1 text-xs sm:text-sm"
+  >
     {#each [...Array(7).keys()] as i (i)}
       {@const day = addDays(startOfWeek(new Date()), i)}
       <div class="flex items-center justify-center">
@@ -112,8 +114,9 @@
   </div>
 
   <!-- Month Grid -->
+  <!-- Month Grid -->
   <div
-    class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 border-t border-l"
+    class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 border-l"
     style="grid-template-rows: repeat({monthInfo.weekCount}, minmax(0, 1fr))"
   >
     {#each monthInfo.days as day (day.toISOString())}
