@@ -56,6 +56,7 @@
     "vite-plugin-devtools-json": "^1.0.0"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.4",
     "@googleapis/calendar": "^11.0.1",
     "@hono/zod-validator": "^0.7.2",
     "@hugeicons/core-free-icons": "^1.0.16",
