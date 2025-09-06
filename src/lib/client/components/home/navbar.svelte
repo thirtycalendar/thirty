@@ -23,7 +23,9 @@
     isDark = media.matches;
     const listener = (e: MediaQueryListEvent) => (isDark = e.matches);
     media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
+    return function cleanup() {
+      media.removeEventListener("change", listener);
+    };
   });
 </script>
 
@@ -31,23 +33,26 @@
 
 <div
   class={cn(
-    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-4xl rounded-xl border px-3 py-3 transition-all duration-300 sm:mx-auto",
+    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-4xl rounded-xl border px-3 py-3 transition-all duration-300 md:mx-auto",
     scrolled ? "border-base-200 shadow-md" : "border-transparent"
   )}
 >
   <div class="flex items-center justify-between">
-    <div>
-      <a href="/">
-        <img
-          src={isDark ? LogoWhiteImage : LogoDarkImage}
-          alt="Thirty Logo"
-          class="h-8 w-8 opacity-85 transition-all duration-300 hover:opacity-100"
-        />
-      </a>
-    </div>
+    <a href="/">
+      <img
+        src={isDark ? LogoWhiteImage : LogoDarkImage}
+        alt="Thirty Logo"
+        class="h-8 w-8 opacity-85 transition-all duration-300 hover:opacity-100"
+      />
+    </a>
 
     <div class="flex items-center gap-2">
-      <a href={discordLink} target="_blank" class="btn btn-ghost btn-square">
+      <a
+        href={discordLink}
+        target="_blank"
+        rel="noopener noreferrer external"
+        class="btn btn-ghost btn-square"
+      >
         <Icon icon={DiscordIcon} absoluteStrokeWidth />
       </a>
 

@@ -1,16 +1,18 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
+  import { cn } from "../utils/cn";
   import { toggleModal } from "./utils";
 
   interface Props {
     id: string | number;
     children: Snippet;
     title?: string;
+    class?: string;
     onClose?: () => void;
   }
 
-  let { id, children, title, onClose }: Props = $props();
+  let { id, children, title, class: classCn, onClose }: Props = $props();
 
   function hide() {
     toggleModal(id);
@@ -18,7 +20,7 @@
   }
 </script>
 
-<dialog id={String(id)} class="modal z-6000">
+<dialog id={String(id)} class={cn("modal z-6000", classCn)}>
   <div class="modal-box border-base-200 max-h-[85vh] border">
     <!-- <div class="modal-action"> -->
     <form method="dialog">

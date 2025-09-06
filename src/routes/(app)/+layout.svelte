@@ -10,6 +10,7 @@
   } from "$lib/client/components/calendar";
   import { Modals as EventModals } from "$lib/client/components/event";
   import { Modals as HolidayModals } from "$lib/client/components/holiday";
+  import { Modal as SettingModal } from "$lib/client/components/settings";
   import { mainSidebarState, toggleMainSidebar } from "$lib/client/stores/sidebar";
   import { initUserSession } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
@@ -28,6 +29,7 @@
 <EventModals />
 <BirthdayModals />
 <HolidayModals />
+<SettingModal />
 
 <div class="bg-base-200 flex h-screen w-full">
   <!-- Sidebar -->

@@ -3,7 +3,7 @@ import { get, writable } from "svelte/store";
 
 import type { Birthday, Calendar, Chat, Event, Holiday, HolidayCountry } from "$lib/shared/types";
 
-import { toggleDraggableModal } from "../components/utils";
+import { toggleDraggableModal, toggleModal } from "../components/utils";
 
 export const calendarModalStore = createModalStore<Calendar>("calendar", toggleDraggableModal);
 export const eventModalStore = createModalStore<Event>("event", toggleDraggableModal);
@@ -14,6 +14,7 @@ export const holidayCountryModalStore = createModalStore<HolidayCountry>(
   toggleDraggableModal
 );
 export const chatModalStore = createModalStore<Chat>("chat", toggleDraggableModal);
+export const settingsModalStore = createModalStore("settings", toggleModal);
 
 export function createModalStore<T extends { id: string }>(
   prefix: string,

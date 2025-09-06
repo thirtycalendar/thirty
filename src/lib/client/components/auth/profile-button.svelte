@@ -8,9 +8,11 @@
   import type { IconSvgElement } from "@hugeicons/svelte";
 
   import { createLogout } from "$lib/client/data/mutations";
+  import { settingsModalStore } from "$lib/client/stores/modal";
   import { session } from "$lib/client/stores/user-session";
 
   import { Icon } from "../icons";
+  import { toggleModal } from "../utils";
 
   const { mutate: handleLogout, isPending } = createLogout();
 
@@ -20,10 +22,14 @@
     onClick?: () => void;
   }[];
 
+  function handleSettings() {
+    toggleModal(settingsModalStore.modalId);
+  }
+
   const menuItems: Item = [
     { label: "Upgrade plan", icon: SparklesIcon },
     { label: "Discord", icon: DiscordIcon },
-    { label: "Settings", icon: Settings01Icon },
+    { label: "Settings", icon: Settings01Icon, onClick: handleSettings },
     { label: "Logout", icon: Logout05Icon, onClick: handleLogout }
   ];
 </script>

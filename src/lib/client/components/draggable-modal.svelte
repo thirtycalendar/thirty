@@ -6,18 +6,20 @@
   import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
 
   import { draggable, type DragPos } from "../actions/draggable";
+  import { cn } from "../utils/cn";
   import { Icon } from "./icons";
   import { toggleDraggableModal } from "./utils";
 
   interface Props {
     id: string | number;
     title?: string;
+    class?: string;
     position?: DragPos;
     children: Snippet;
     onClose?: () => void;
   }
 
-  let { id, title, position, children, onClose }: Props = $props();
+  let { id, title, class: classCn, position, children, onClose }: Props = $props();
 
   let boxEl: HTMLDivElement | undefined = $state();
   let headerEl: HTMLDivElement | undefined = $state();
@@ -56,7 +58,7 @@
 
 <div
   id={String(id)}
-  class="fixed inset-0 z-[6000] hidden"
+  class={cn("fixed inset-0 z-[6000] hidden", classCn)}
   role="presentation"
   onclick={onBackdropClick}
 >
