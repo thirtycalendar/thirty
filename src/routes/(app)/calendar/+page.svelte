@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Seo } from "$lib/client/components";
-  import { Navbar, WeekCalendar, YearCalendar } from "$lib/client/components/calendar";
+  import { DayCalendar, Navbar, WeekCalendar, YearCalendar } from "$lib/client/components/calendar";
   import { birthdaysQuery, eventsQuery, userHolidaysQuery } from "$lib/client/data/queries";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
 
@@ -23,7 +23,7 @@
       {:else if $currentCalendarView === "month"}
         <!--  -->
       {:else if $currentCalendarView === "day"}
-        <!--  -->
+        <DayCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
       {:else}
         <WeekCalendar events={$events} birthdays={$birthdays} holidays={$holidays} />
       {/if}
