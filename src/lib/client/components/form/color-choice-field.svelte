@@ -1,8 +1,17 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import {
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+    type Placement
+  } from "@floating-ui/dom";
   import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 
+  import { portal } from "$lib/client/actions/portal";
   import { cn } from "$lib/client/utils/cn";
 
   import { Colors } from "$lib/shared/constants";
@@ -13,21 +22,51 @@
   interface Props {
     name: string;
     class?: string;
-    isLeftDiv?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
+    placement?: Placement;
   }
 
-  let { name, class: classCn, isLeftDiv, formData, formErrors }: Props = $props();
+  let { name, class: classCn, formData, formErrors, placement = "bottom-start" }: Props = $props();
 
   let selectedColorHex = $derived($formData[name]);
   let error = $derived($formErrors[name]);
 
   let open = $state(false);
-  let dropdownRef = $state<HTMLDivElement | undefined>(undefined);
-  let triggerButtonRef = $state<HTMLButtonElement | undefined>(undefined);
+  let dropdownRef = $state<HTMLDivElement | null>(null);
+  let triggerButtonRef = $state<HTMLButtonElement | null>(null);
+
+  let cleanup: (() => void) | null = null;
+
+  function updatePosition() {
+    if (!triggerButtonRef || !dropdownRef) return;
+    computePosition(triggerButtonRef, dropdownRef, {
+      placement,
+      middleware: [offset(6), flip(), shift({ padding: 8 })]
+    }).then(({ x, y }) => {
+      Object.assign(dropdownRef!.style, {
+        left: `${x}px`,
+        top: `${y}px`
+      });
+    });
+  }
+
+  $effect(() => {
+    if (open && triggerButtonRef && dropdownRef) {
+      cleanup = autoUpdate(triggerButtonRef, dropdownRef, updatePosition, {
+        ancestorScroll: true,
+        ancestorResize: true,
+        elementResize: true,
+        animationFrame: false
+      });
+      updatePosition();
+    } else {
+      cleanup?.();
+      cleanup = null;
+    }
+  });
 
   function selectChoice(choiceHex: ColorType) {
     if (selectedColorHex === choiceHex) {
@@ -35,7 +74,6 @@
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
-
     $formData[name] = choiceHex;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
@@ -62,7 +100,6 @@
   function handleGridKeydown(event: KeyboardEvent, index: number) {
     const numCols = 6;
     const totalChoices = Colors.length;
-
     let nextIndex: number | null = null;
 
     switch (event.key) {
@@ -149,12 +186,11 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class={cn(
-        "bg-base-100 border-rounded border-base-300 absolute z-50 mt-1 w-55 rounded-2xl border p-3",
-        isLeftDiv ? "left-0" : "right-0"
-      )}
+      use:portal
+      class="bg-base-100 border-rounded border-base-300 z-[9999] w-55 rounded-2xl border p-3 shadow-lg"
       role="listbox"
       tabindex="-1"
+      style="position: absolute; top: 0; left: 0;"
     >
       <div class="grid auto-rows-fr grid-cols-6 gap-2">
         {#each Colors as choice, index (choice)}

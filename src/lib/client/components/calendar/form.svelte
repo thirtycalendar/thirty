@@ -44,7 +44,7 @@
 
   <!-- Color -->
   <IconRow icon={PaintBoardIcon}>
-    <ColorChoiceField name="color" {formData} {formErrors} isLeftDiv />
+    <ColorChoiceField name="color" {formData} {formErrors} />
   </IconRow>
 
   <!-- Timezone -->
