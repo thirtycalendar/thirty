@@ -22,13 +22,15 @@
     uncheckedCalendars,
     uncheckedHolidays
   } from "$lib/client/stores/local-storage";
+  import { birthdayModalStore, eventModalStore, holidayModalStore } from "$lib/client/stores/modal";
 
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../birthday/utils";
   import { getEventDateObjects } from "../event/utils";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
-  import { Icon } from "../icons";
+
+  import { StickyBlock } from "..";
 
   interface Props {
     events: Event[];
@@ -38,9 +40,7 @@
 
   let { events, birthdays, holidays }: Props = $props();
 
-  const MAX_EVENTS_PER_DAY = 3;
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const getDayString = (date: Date) => format(date, "yyyy-MM-dd");
+  const MAX_BLOCKS = 3;
 
   const monthInfo = $derived.by(() => {
     const monthStart = startOfMonth($currentDate);
@@ -53,7 +53,7 @@
 
   const { store: uncheckedHds } = uncheckedHolidays;
   const visibleHolidays = $derived.by(() => getVisibleHolidays(holidays, $uncheckedHds));
-  const { data: hdCountries } = userHolidayCountriesQuery();
+  const userHolidayCountries = $derived.by(() => userHolidayCountriesQuery().data);
 
   const { store: uncheckedBds } = uncheckedBirthdays;
   const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
@@ -73,7 +73,7 @@
       let cursor = startOfDay(eventStart < viewStart ? viewStart : eventStart);
 
       while (cursor < eventEnd && cursor <= viewEnd) {
-        const key = getDayString(cursor);
+        const key = format(cursor, "yyyy-MM-dd");
         if (!map[key]) map[key] = [];
         map[key].push(event);
         cursor = addDays(cursor, 1);
@@ -93,30 +93,71 @@
   });
 </script>
 
-<div class="flex h-full flex-col py-1">
-  <div class="bg-base-200 sticky top-0 z-10 grid grid-cols-7 text-sm">
-    {#each dayLabels as label, i (label)}
-      {@const today = i === new Date().getDay()}
-      <div
-        class={`relative flex h-8 items-center justify-center font-semibold ${today ? "text-primary-content" : "text-primary-content/70"}`}
-      >
-        {#if today}
-          <span class="bg-primary-content mr-1 h-2 w-2 rounded-full"></span>
-        {/if}
-        {label}
+<div class="flex h-full flex-col">
+  <!-- Header -->
+  <div class="bg-base-100 sticky top-0 z-20 mb-1 grid grid-cols-7 text-xs sm:text-sm">
+    {#each [...Array(7).keys()] as i (i)}
+      {@const day = addDays(startOfWeek(new Date()), i)}
+      <div class="flex items-center justify-center">
+        <span
+          class={`flex items-center gap-1 ${isToday(day) ? "text-primary-content" : "text-primary-content/70"}`}
+        >
+          {#if isToday(day)}
+            <span class="bg-primary-content h-2 w-2 rounded-full"></span>
+          {/if}
+          {format(day, "EEE")}
+        </span>
       </div>
     {/each}
   </div>
 
+  <!-- Month Grid -->
   <div
-    class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 rounded-2xl border-t border-l"
+    class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 border-t border-l"
     style="grid-template-rows: repeat({monthInfo.weekCount}, minmax(0, 1fr))"
   >
     {#each monthInfo.days as day (day.toISOString())}
-      {@const key = getDayString(day)}
+      {@const key = format(day, "yyyy-MM-dd")}
       {@const dayEvents = eventsByDay[key] || []}
+      {@const holidaysForDay = getHolidaysForDay(visibleHolidays, day)}
+      {@const birthdaysForDay = getBirthdaysForDay(visibleBirthdays, day)}
+
+      {@const blocks = [
+        ...holidaysForDay.map((holiday) => ({
+          type: "holiday" as const,
+          id: holiday.id,
+          title: holiday.name,
+          color:
+            $userHolidayCountries?.find(
+              (c) => c.id.toLocaleLowerCase() === holiday.countryId.toLocaleLowerCase()
+            )?.color ?? "transparent",
+          icon: Flag02Icon,
+          item: holiday
+        })),
+        ...birthdaysForDay.map((birthday) => ({
+          type: "birthday" as const,
+          id: birthday.id,
+          title: birthday.name,
+          color: birthday.color,
+          icon: BirthdayCakeIcon,
+          item: birthday
+        })),
+        ...dayEvents.map((event) => ({
+          type: "event" as const,
+          id: event.id,
+          title: event.name,
+          color: event.color,
+          icon: undefined,
+          item: event
+        }))
+      ]}
+
+      {@const visibleBlocks = blocks.slice(0, MAX_BLOCKS)}
+      {@const hiddenCount = blocks.length - visibleBlocks.length}
+
       <button
-        class="border-base-200 hover:bg-base-300/10 relative flex flex-col items-start border-r border-b px-1 py-1 text-left transition-colors"
+        class="border-base-200 relative flex min-w-0 flex-col gap-1 overflow-hidden border-r border-b px-1 py-1"
+        class:opacity-40={!isSameMonth(day, $currentDate)}
         onclick={() => {
           currentDate.set(day);
           setDayView();
@@ -128,62 +169,32 @@
             class:bg-accent={isToday(day)}
             class:text-accent-content={isToday(day)}
             class:text-base-content={!isToday(day) && isSameMonth(day, $currentDate)}
-            class:opacity-40={!isSameMonth(day, $currentDate)}
           >
             {format(day, "d")}
           </span>
         </div>
 
-        <div class="w-full flex-1 space-y-1 overflow-hidden text-[10px] leading-tight">
-          {#each getHolidaysForDay(visibleHolidays, day) as holiday (holiday.id)}
-            {@const match = $hdCountries?.filter((hdCountry) => hdCountry.id === holiday.countryId)}
-            {@const color = match ? match[0].color : "transparent"}
-            <div
-              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
-              style={`background-color: ${color}22; color: ${color};`}
-              title={holiday.name}
-            >
-              <div class="flex items-center gap-1">
-                <Icon icon={Flag02Icon} size={12} strokeWidth={1.2} absoluteStrokeWidth />
-                <p class="truncate">{holiday.name}</p>
-              </div>
-            </div>
-          {/each}
+        <!-- Visible Blocks -->
+        {#each visibleBlocks as block (block.type + block.id)}
+          <StickyBlock
+            item={block.item}
+            color={block.color}
+            title={block.title}
+            onclick={(item) => {
+              if (block.type === "holiday") holidayModalStore.openModal(item as Holiday);
+              if (block.type === "birthday") birthdayModalStore.openModal(item as Birthday);
+              if (block.type === "event") eventModalStore.openModal(item as Event);
+            }}
+            icon={block.icon}
+          />
+        {/each}
 
-          {#each getBirthdaysForDay(visibleBirthdays, day) as bd (bd.id)}
-            {@const hasBirthdaySuffix = /birthday$/i.test(bd.name.trim())}
-            {@const name = hasBirthdaySuffix ? bd.name : `${bd.name}'s birthday`}
-            {@const color = bd.color}
-
-            <div
-              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
-              style={`background-color: ${color}22; color: ${color};`}
-              title={`${name}'s birthday`}
-            >
-              <div class="flex items-center gap-1">
-                <Icon icon={BirthdayCakeIcon} size={12} strokeWidth={1.2} absoluteStrokeWidth />
-                <p class="truncate">{name}</p>
-              </div>
-            </div>
-          {/each}
-
-          {#each dayEvents.slice(0, MAX_EVENTS_PER_DAY) as event (event.id)}
-            {@const color = event.color}
-            <div
-              class="truncate rounded-full px-1.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
-              style={`background-color: ${color}22; color: ${color};`}
-              title={event.name}
-            >
-              {event.name}
-            </div>
-          {/each}
-
-          {#if dayEvents.length > MAX_EVENTS_PER_DAY}
-            <div class="text-base-content/80 pt-0.5 font-bold">
-              + {dayEvents.length - MAX_EVENTS_PER_DAY} more
-            </div>
-          {/if}
-        </div>
+        <!-- +X more indicator -->
+        {#if hiddenCount > 0}
+          <div class="text-base-content/80 pt-0.5 text-xs font-semibold">
+            +{hiddenCount} more
+          </div>
+        {/if}
       </button>
     {/each}
   </div>
