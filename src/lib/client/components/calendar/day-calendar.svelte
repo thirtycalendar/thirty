@@ -85,14 +85,18 @@
   });
 </script>
 
-<div class="flex h-full flex-col py-1">
-  <div class="bg-base-200 border-base-200 sticky top-0 z-10 border-b">
-    <div
-      class={`text-center font-semibold ${isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"}`}
-    >
-      <span class="flex items-center justify-center">
+<div class="flex h-full flex-col">
+  <!-- Header (same structure as week-calendar but single day) -->
+  <div class="sticky top-0 z-20 grid grid-cols-[50px_1fr] text-xs sm:text-sm">
+    <div></div>
+    <div class="flex items-center justify-center">
+      <span
+        class={`flex items-center gap-1 ${
+          isToday($currentDate) ? "text-primary-content" : "text-primary-content/70"
+        }`}
+      >
         {#if isToday($currentDate)}
-          <span class="bg-primary-content mr-1 h-2 w-2 rounded-full"></span>
+          <span class="bg-primary-content h-2 w-2 rounded-full"></span>
         {/if}
 
         {format($currentDate, "EEEE, MMM d")}
@@ -100,9 +104,10 @@
     </div>
   </div>
 
-  <div class="bg-base-200 border-base-200 grid grid-cols-[50px_1fr] border-b">
+  <!-- All-day row -->
+  <div class="border-base-200 grid grid-cols-[50px_1fr] border-b pb-1">
     <div></div>
-    <div class="flex min-w-0 flex-col gap-1 pb-1">
+    <div class="relative flex min-w-0 flex-col gap-1 px-1">
       {#each getHolidaysForDay(visibleHolidays, $currentDate) as holiday (holiday.id)}
         <StickyBlock
           item={holiday}
@@ -148,30 +153,37 @@
     </div>
   </div>
 
+  <!-- Timed grid -->
   <div
     bind:this={scrollContainer}
-    class="bg-base-100 relative flex-1 overflow-x-hidden overflow-y-auto rounded-2xl"
+    class="bg-base-100 relative grid flex-1 grid-cols-[50px_1fr] overflow-x-hidden overflow-y-auto"
   >
-    <div class="relative grid grid-cols-[50px_1fr]">
+    <div class="col-start-1 row-start-1 grid">
       {#each hours as hour (hour)}
         <div
-          class="text-primary-content/70 border-base-200 col-start-1 flex h-15 items-center justify-center border-r text-xs leading-none select-none"
+          class="text-primary-content/70 border-base-200 flex h-15 items-center justify-center border-r text-xs select-none"
         >
-          {format(setHours(new Date(), hour), "h a")}
+          <span>{format(setHours(new Date(), hour), "h a")}</span>
         </div>
-        <div class="border-base-200 col-start-2 border-b"></div>
+      {/each}
+    </div>
+
+    <div
+      class="border-base-200 relative grid grid-rows-24 border-r"
+      style="grid-column: 2; grid-row: 1;"
+    >
+      {#each hours as hour (hour)}
+        <div class="border-base-200 h-15 border-b"></div>
       {/each}
 
-      <div class="pointer-events-none relative col-span-1 col-start-2 row-span-full row-start-1">
-        <div class="pointer-events-auto absolute inset-0">
-          {#each timedEventChunks as { event, start, end, offset } (event.id)}
-            <EventBlock {event} {start} {end} {offset} />
-          {/each}
+      <div class="absolute inset-0">
+        {#each timedEventChunks as { event, start, end, offset } (event.id)}
+          <EventBlock {event} {start} {end} {offset} />
+        {/each}
 
-          {#if isToday($currentDate)}
-            <CurrentTimeIndicator day={$currentDate} />
-          {/if}
-        </div>
+        {#if isToday($currentDate)}
+          <CurrentTimeIndicator day={$currentDate} />
+        {/if}
       </div>
     </div>
   </div>
