@@ -4,14 +4,13 @@
       title: string;
       description: string;
       url: string;
-      favicon: string;
       image: string;
       twitterHandle: string;
     };
   }
 
   let { seo }: Props = $props();
-  let { title, description, url, favicon, image, twitterHandle } = seo;
+  let { title, description, url, image, twitterHandle } = seo;
 </script>
 
 <svelte:head>
@@ -21,7 +20,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href={url} />
-  <link rel="icon" href={favicon} />
 
   <!-- Open Graph Tags (Facebook, LinkedIn, etc.) -->
   <meta property="og:title" content={title} />

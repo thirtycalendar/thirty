@@ -6,7 +6,6 @@ export const seoConfig = {
   url: (url: string) => `${PUBLIC_BASE_URL}/${url}`,
   description:
     "Thirty is the AI calendar that talks to you. Schedule smarter, organize faster, and focus on what matters most. Join thousands using AI to manage their life.",
-  favicon: `${PUBLIC_BASE_URL}/favicon.ico`,
   image: `${PUBLIC_BASE_URL}/og-image.webp`,
   twitterHandle: "@itsithu"
 };

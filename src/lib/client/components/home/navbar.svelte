@@ -41,7 +41,7 @@
         <img
           src={isDark ? LogoWhiteImage : LogoDarkImage}
           alt="Thirty Logo"
-          class="h-8 w-8 opacity-75 transition-all duration-300 hover:opacity-100"
+          class="h-8 w-8 opacity-85 transition-all duration-300 hover:opacity-100"
         />
       </a>
     </div>

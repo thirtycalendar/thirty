@@ -11,7 +11,6 @@ export const load: PageServerLoad = async ({ request }) => {
     title: seoConfig.title("Auth"),
     url: seoConfig.url("auth"),
     description: seoConfig.description,
-    favicon: seoConfig.favicon,
     image: seoConfig.image,
     twitterHandle: seoConfig.twitterHandle
   };

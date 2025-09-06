@@ -7,7 +7,6 @@ export const load: PageServerLoad = () => {
     title: seoConfig.title("Terms of Service"),
     url: seoConfig.url("terms"),
     description: seoConfig.description,
-    favicon: seoConfig.favicon,
     image: seoConfig.image,
     twitterHandle: seoConfig.twitterHandle
   };
