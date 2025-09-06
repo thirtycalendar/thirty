@@ -1,6 +1,14 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import {
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+    type Placement
+  } from "@floating-ui/dom";
   import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
   import {
@@ -20,6 +28,7 @@
     subMonths
   } from "date-fns";
 
+  import { portal } from "$lib/client/actions/portal";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -32,19 +41,28 @@
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
+    placement?: Placement;
   }
 
-  let { name, class: classCn, isDisablePast = false, formData, formErrors }: Props = $props();
+  let {
+    name,
+    class: classCn,
+    isDisablePast = false,
+    formData,
+    formErrors,
+    placement = "bottom-start"
+  }: Props = $props();
 
-  let triggerButton = $state<HTMLInputElement | undefined>();
-  let calendarDropdown = $state<HTMLDivElement | undefined>();
+  let triggerButton = $state<HTMLInputElement | null>(null);
+  let calendarDropdown = $state<HTMLDivElement | null>(null);
   let open = $state(false);
   let filterText = $state("");
+
+  let cleanup: (() => void) | null = null;
 
   let parsedDate = $derived.by(() => {
     const raw = $formData[name];
     const parsed = parse(raw, "yyyy-MM-dd", new Date());
-
     return isValid(parsed) ? parsed : new Date();
   });
 
@@ -69,9 +87,35 @@
     const now = new Date();
     const sameYear = date.getFullYear() === now.getFullYear();
     const formatStr = sameYear ? "EEE d, MMM" : "EEE d, MMM yyyy";
-    const display = formatDate(date, formatStr);
+    return open ? filterText : formatDate(date, formatStr);
+  });
 
-    return open ? filterText : display;
+  function updatePosition() {
+    if (!triggerButton || !calendarDropdown) return;
+    computePosition(triggerButton, calendarDropdown, {
+      placement,
+      middleware: [offset(6), flip(), shift({ padding: 8 })]
+    }).then(({ x, y }) => {
+      Object.assign(calendarDropdown!.style, {
+        left: `${x}px`,
+        top: `${y}px`
+      });
+    });
+  }
+
+  $effect(() => {
+    if (open && triggerButton && calendarDropdown) {
+      cleanup = autoUpdate(triggerButton, calendarDropdown, updatePosition, {
+        ancestorScroll: true,
+        ancestorResize: true,
+        elementResize: true,
+        animationFrame: false
+      });
+      updatePosition();
+    } else {
+      cleanup?.();
+      cleanup = null;
+    }
   });
 
   function selectDay(day: Date) {
@@ -228,7 +272,6 @@
     value={inputValue}
     onfocus={() => {
       open = true;
-
       filterText = $formData[name] ? formatDate(parsedDate, "yyyy-MM-dd") : "";
     }}
     onblur={handleBlur}
@@ -253,7 +296,11 @@
   {#if open}
     <div
       bind:this={calendarDropdown}
-      class="border-base-300 bg-base-100 absolute z-50 mt-1 w-72 rounded-xl border p-3 shadow-xl"
+      use:portal
+      class="border-base-300 bg-base-100 z-[9999] mt-1 w-72 rounded-xl border p-3 shadow-xl"
+      role="dialog"
+      tabindex="-1"
+      style="position: absolute; top: 0; left: 0;"
     >
       <div class="mb-2 flex items-center justify-between px-2 text-sm font-semibold">
         <div>{formatDate(visibleMonth, "MMMM yyyy")}</div>

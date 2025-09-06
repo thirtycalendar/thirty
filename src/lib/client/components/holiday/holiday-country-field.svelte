@@ -1,8 +1,17 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import {
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+    type Placement
+  } from "@floating-ui/dom";
   import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 
+  import { portal } from "$lib/client/actions/portal";
   import { cn } from "$lib/client/utils/cn";
 
   import type { HolidayCountry } from "$lib/shared/types";
@@ -17,22 +26,28 @@
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
+    placement?: Placement;
   }
 
-  let { name, holidayCountries, class: classCn, formData, formErrors }: Props = $props();
+  let {
+    name,
+    holidayCountries,
+    class: classCn,
+    formData,
+    formErrors,
+    placement = "bottom-start"
+  }: Props = $props();
 
-  let triggerButton = $state<HTMLInputElement | undefined>();
-  let dropdown = $state<HTMLDivElement | undefined>();
+  let triggerButton = $state<HTMLInputElement | null>(null);
+  let dropdown = $state<HTMLDivElement | null>(null);
   let open = $state(false);
   let filterText = $state("");
+  let cleanup: (() => void) | null = null;
 
   const error = $derived($formErrors[name]);
 
   const countries = holidayCountries
-    .map((c) => ({
-      label: `${c.countryName} (${c.countryCode})`,
-      value: c.id
-    }))
+    .map((c) => ({ label: `${c.countryName} (${c.countryCode})`, value: c.id }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
   const filtered = $derived.by(() => {
@@ -43,9 +58,7 @@
   $effect(() => {
     const current = $formData[name];
     const valid = holidayCountries.some((c) => c.id === current);
-    if (!valid && holidayCountries.length > 0) {
-      $formData[name] = holidayCountries[0].id;
-    }
+    if (!valid && holidayCountries.length > 0) $formData[name] = holidayCountries[0].id;
   });
 
   function selectCountry(id: string) {
@@ -53,6 +66,11 @@
     open = false;
     filterText = "";
     triggerButton?.blur();
+  }
+
+  function getSelectedLabel() {
+    const selected = holidayCountries.find((c) => c.id === $formData[name]);
+    return selected ? `${selected.countryName} (${selected.countryCode})` : "";
   }
 
   function handleKeyDown(event: KeyboardEvent) {
@@ -67,12 +85,8 @@
         break;
       case "ArrowDown":
         event.preventDefault();
-        if (open) {
-          const first = dropdown?.querySelector('[role="option"]');
-          if (first instanceof HTMLElement) first.focus();
-        } else {
-          open = true;
-        }
+        if (open) (dropdown?.querySelector('[role="option"]') as HTMLElement | null)?.focus();
+        else open = true;
         break;
       case "Tab":
         if (open) {
@@ -86,11 +100,7 @@
   function handleBlur(event: FocusEvent) {
     setTimeout(() => {
       const related = event.relatedTarget as Node;
-      const isOutside = !triggerButton?.contains(related) && !dropdown?.contains(related);
-      if (isOutside) {
-        open = false;
-        if (!filterText.trim()) filterText = "";
-      }
+      if (!triggerButton?.contains(related) && !dropdown?.contains(related)) open = false;
     }, 100);
   }
 
@@ -102,10 +112,27 @@
     }
   }
 
-  function getSelectedLabel() {
-    const selected = holidayCountries.find((c) => c.id === $formData[name]);
-    return selected ? `${selected.countryName} (${selected.countryCode})` : "";
+  function updatePosition() {
+    if (!triggerButton || !dropdown) return;
+    computePosition(triggerButton, dropdown, {
+      placement,
+      middleware: [offset(6), flip(), shift({ padding: 8 })]
+    }).then(({ x, y }) => {
+      Object.assign(dropdown!.style, { left: `${x}px`, top: `${y}px` });
+    });
   }
+
+  $effect(() => {
+    if (open && triggerButton && dropdown) {
+      cleanup = autoUpdate(triggerButton, dropdown, updatePosition, {
+        ancestorScroll: true,
+        ancestorResize: true,
+        elementResize: true,
+        animationFrame: false
+      });
+      updatePosition();
+    } else cleanup?.();
+  });
 </script>
 
 <svelte:window onmousedown={handleClickOutside} />
@@ -128,8 +155,7 @@
       triggerButton?.select();
     }}
     class={cn(
-      "w-full cursor-pointer rounded-md border px-3 py-2 text-left text-sm outline-none",
-      "hover:bg-base-200",
+      "input hover:bg-base-200 w-full cursor-pointer border px-3 py-2 text-left text-sm outline-none focus:outline-none",
       error ? "border-error bg-error/5 text-error" : "border-base-300 bg-base-100"
     )}
     autocomplete="off"
@@ -145,7 +171,11 @@
   {#if open}
     <div
       bind:this={dropdown}
-      class="border-base-300 bg-base-100 absolute z-50 mt-1 max-h-64 w-full overflow-auto rounded-xl border shadow-xl"
+      use:portal
+      class="border-base-300 bg-base-100 border-rounded z-[9999] max-h-64 w-[260px] overflow-auto border shadow-xl"
+      role="listbox"
+      tabindex="-1"
+      style="position: absolute; top: 0; left: 0;"
     >
       {#each filtered.slice(0, 100) as country (country.value)}
         <button

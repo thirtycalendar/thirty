@@ -1,8 +1,17 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
 
+  import {
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+    type Placement
+  } from "@floating-ui/dom";
   import { ArrowDown01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 
+  import { portal } from "$lib/client/actions/portal";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Calendar } from "$lib/shared/types";
@@ -14,21 +23,59 @@
     calendars: Calendar[];
     placeholder?: string;
     class?: string;
+    placement?: Placement;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
   }
 
-  let { name, calendars, class: classCn, formData, formErrors }: Props = $props();
+  let {
+    name,
+    calendars,
+    placeholder = "Select a calendar",
+    class: classCn,
+    formData,
+    formErrors,
+    placement = "bottom-start"
+  }: Props = $props();
 
   let open = $state(false);
-  let dropdownRef = $state<HTMLDivElement>();
-  let triggerButtonRef = $state<HTMLButtonElement>();
+  let dropdownRef = $state<HTMLDivElement | null>(null);
+  let triggerButtonRef = $state<HTMLButtonElement | null>(null);
 
   let selectedCalendar = $derived.by(() => calendars.find((c) => c.id === $formData[name]));
-
   let error = $derived($formErrors[name]);
+
+  let cleanup: (() => void) | null = null;
+
+  function updatePosition() {
+    if (!triggerButtonRef || !dropdownRef) return;
+    computePosition(triggerButtonRef, dropdownRef, {
+      placement,
+      middleware: [offset(6), flip(), shift({ padding: 8 })]
+    }).then(({ x, y }) => {
+      Object.assign(dropdownRef!.style, {
+        left: `${x}px`,
+        top: `${y}px`
+      });
+    });
+  }
+
+  $effect(() => {
+    if (open && triggerButtonRef && dropdownRef) {
+      cleanup = autoUpdate(triggerButtonRef, dropdownRef, updatePosition, {
+        ancestorScroll: true,
+        ancestorResize: true,
+        elementResize: true,
+        animationFrame: false
+      });
+      updatePosition();
+    } else {
+      cleanup?.();
+      cleanup = null;
+    }
+  });
 
   function selectChoice(choice: Calendar) {
     if ($formData[name] === choice.id) {
@@ -36,7 +83,6 @@
       setTimeout(() => triggerButtonRef?.focus(), 0);
       return;
     }
-
     $formData[name] = choice.id;
     open = false;
     setTimeout(() => triggerButtonRef?.focus(), 0);
@@ -44,7 +90,6 @@
 
   function handleClickOutside(event: MouseEvent) {
     if (!open) return;
-
     const target = event.target as Node;
     if (!dropdownRef?.contains(target) && !triggerButtonRef?.contains(target)) {
       open = false;
@@ -67,7 +112,7 @@
     type="button"
     bind:this={triggerButtonRef}
     class={cn(
-      "bg-base-100 hover:bg-base-200 input flex w-full items-center justify-between border text-left outline-none focus:outline-none",
+      "input bg-base-100 hover:bg-base-200 flex  items-center justify-between border text-left outline-none focus:outline-none",
       error ? "border-error text-error" : "border-base-300"
     )}
     onclick={() => (open = !open)}
@@ -75,12 +120,16 @@
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {
         e.preventDefault();
         open = true;
+        setTimeout(() => {
+          const firstOption = dropdownRef?.querySelector<HTMLButtonElement>('[role="option"]');
+          firstOption?.focus();
+        }, 0);
       }
     }}
     aria-haspopup="listbox"
     aria-expanded={open}
   >
-    <span>{$formData[name] ? selectedCalendar?.name : "Select a calendar"}</span>
+    <span>{$formData[name] ? selectedCalendar?.name : placeholder}</span>
     <Icon
       icon={ArrowDown01Icon}
       size={16}
@@ -96,9 +145,11 @@
   {#if open}
     <div
       bind:this={dropdownRef}
-      class="border-base-300 bg-base-100 border-rounded absolute z-50 mt-1 max-h-60 w-full overflow-y-auto border p-3 shadow-xl"
+      use:portal
+      class="border-base-300 bg-base-100 border-rounded z-[9999] max-h-60 w-[240px] overflow-y-auto rounded-xl border p-3 shadow-lg"
       role="listbox"
       tabindex="-1"
+      style="position: absolute; top: 0; left: 0;"
     >
       <div class="space-y-0.5">
         {#each calendars as choice (choice.id)}
@@ -113,7 +164,6 @@
             onclick={() => selectChoice(choice)}
             role="option"
             aria-selected={$formData[name] === choice.id}
-            tabindex="0"
             onkeydown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();

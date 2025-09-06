@@ -2,6 +2,15 @@
   import type { Writable } from "svelte/store";
 
   import {
+    autoUpdate,
+    computePosition,
+    flip,
+    offset,
+    shift,
+    type Placement
+  } from "@floating-ui/dom";
+
+  import {
     addMinutes,
     format as formatDate,
     isSameHour,
@@ -14,26 +23,27 @@
     startOfDay
   } from "date-fns";
 
+  import { portal } from "$lib/client/actions/portal";
   import { cn } from "$lib/client/utils/cn";
 
   interface Props {
     name: string;
     class?: string;
-    isRightDiv?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formData: Writable<any>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     formErrors: Writable<any>;
+    placement?: Placement;
   }
 
-  let { name, class: classCn, isRightDiv = false, formData, formErrors }: Props = $props();
-
+  let { name, class: classCn, formData, formErrors, placement = "bottom-start" }: Props = $props();
   const timeSlotInterval = 15;
 
   let open = $state(false);
-  let triggerButtonElement: HTMLInputElement | undefined = $state();
-  let timeSlotsDropdown: HTMLDivElement | undefined = $state();
+  let triggerButtonElement = $state<HTMLInputElement | null>(null);
+  let timeSlotsDropdown = $state<HTMLDivElement | null>(null);
   let filterText = $state("");
+  let cleanup: (() => void) | null = null;
 
   const error = $derived($formErrors[name]);
 
@@ -53,16 +63,15 @@
     return allTimeSlots.filter((slot) => formatDate(slot, "h:mm aa").toLowerCase().includes(lower));
   });
 
+  const currentDate = $derived.by(() => parseTime($formData[name]));
+  const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
+
   function parseTime(timeString: string): Date {
     if (!timeString) return new Date();
     if (/^\d{1,2}:\d{2}$/.test(timeString)) timeString += ":00";
     const parsed = parse(timeString, "HH:mm:ss", new Date());
     return isValid(parsed) ? parsed : new Date();
   }
-
-  const currentDate = $derived.by(() => parseTime($formData[name]));
-
-  const inputValue = $derived.by(() => (open ? filterText : formatDate(currentDate, "h:mm aa")));
 
   function selectTime(date: Date) {
     $formData[name] = formatDate(date, "HH:mm:ss");
@@ -73,19 +82,12 @@
 
   function commitInput() {
     const input = (filterText || "").trim().toLowerCase();
-    if (!input) {
-      filterText = "";
-      open = false;
-      return;
-    }
+    if (!input) return ((filterText = ""), (open = false));
 
     let parsed: Date | null = null;
-
     if (/^\d+$/.test(input)) {
       const num = parseInt(input, 10);
-      if (num >= 0 && num < 24) {
-        parsed = setHours(setMinutes(setSeconds(new Date(), 0), 0), num);
-      }
+      if (num >= 0 && num < 24) parsed = setHours(setMinutes(setSeconds(new Date(), 0), 0), num);
     }
 
     if (!parsed && input) {
@@ -99,10 +101,7 @@
       }
     }
 
-    if (parsed) {
-      $formData[name] = formatDate(parsed, "HH:mm:ss");
-    }
-
+    if (parsed) $formData[name] = formatDate(parsed, "HH:mm:ss");
     filterText = "";
     open = false;
     triggerButtonElement?.blur();
@@ -111,17 +110,8 @@
   function handleBlur(event: FocusEvent) {
     setTimeout(() => {
       const related = event.relatedTarget as Node;
-      const isOutside =
-        !triggerButtonElement?.contains(related) && !timeSlotsDropdown?.contains(related);
-
-      if (isOutside) {
-        if (!filterText.trim()) {
-          filterText = "";
-          open = false;
-        } else {
-          commitInput();
-        }
-      }
+      if (!triggerButtonElement?.contains(related) && !timeSlotsDropdown?.contains(related))
+        commitInput();
     }, 100);
   }
 
@@ -138,11 +128,9 @@
         break;
       case "ArrowDown":
         event.preventDefault();
-        if (open) {
+        if (open)
           (timeSlotsDropdown?.querySelector('[role="option"]') as HTMLElement | null)?.focus();
-        } else {
-          open = true;
-        }
+        else open = true;
         break;
       case "Tab":
         if (open) commitInput();
@@ -173,14 +161,32 @@
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as Node;
     if (!triggerButtonElement?.contains(target) && !timeSlotsDropdown?.contains(target)) {
-      if (!filterText.trim()) {
-        filterText = "";
-        open = false;
-      } else {
-        commitInput();
-      }
+      if (!filterText.trim()) open = false;
+      else commitInput();
     }
   }
+
+  function updatePosition() {
+    if (!triggerButtonElement || !timeSlotsDropdown) return;
+    computePosition(triggerButtonElement, timeSlotsDropdown, {
+      placement,
+      middleware: [offset(6), flip(), shift({ padding: 8 })]
+    }).then(({ x, y }) => {
+      Object.assign(timeSlotsDropdown!.style, { left: `${x}px`, top: `${y}px` });
+    });
+  }
+
+  $effect(() => {
+    if (open && triggerButtonElement && timeSlotsDropdown) {
+      cleanup = autoUpdate(triggerButtonElement, timeSlotsDropdown, updatePosition, {
+        ancestorScroll: true,
+        ancestorResize: true,
+        elementResize: true,
+        animationFrame: false
+      });
+      updatePosition();
+    } else cleanup?.();
+  });
 </script>
 
 <svelte:window onmousedown={handleClickOutside} />
@@ -189,7 +195,6 @@
   <input
     type="text"
     aria-label="Time input"
-    aria-invalid={error ? "true" : "false"}
     bind:this={triggerButtonElement}
     value={inputValue}
     onfocus={() => {
@@ -204,22 +209,24 @@
       triggerButtonElement?.select();
     }}
     class={cn(
-      "bg-base-100 hover:bg-base-200 input w-full cursor-pointer rounded-md border text-left text-sm outline-none focus:outline-none",
-      error ? "border-error text-error" : "border-base-300"
+      "input hover:bg-base-200 w-full cursor-pointer border text-left text-sm outline-none focus:outline-none",
+      error ? "border-error text-error" : "border-base-300 bg-base-100"
     )}
     autocomplete="off"
     placeholder="hh:mm aa"
   />
 
-  {#if open && filteredTimeSlots.length > 0}
+  {#if open}
     <div
       bind:this={timeSlotsDropdown}
+      use:portal
       class={cn(
-        "bg-base-100 border-rounded absolute z-50 mt-1 max-h-60 w-48 overflow-y-auto border p-2 shadow-xl",
-        error ? "border-error" : "border-base-300",
-        isRightDiv ? "right-0" : "left-0"
+        "bg-base-100 border-rounded z-[9999] max-h-60 w-48 overflow-y-auto rounded-lg border p-2",
+        error ? "border-error" : "border-base-300"
       )}
       role="listbox"
+      tabindex="-1"
+      style="position: absolute; top: 0; left: 0;"
     >
       <div class="space-y-0.5">
         {#each filteredTimeSlots as slot (formatDate(slot, "HH:mm"))}
@@ -228,7 +235,6 @@
             type="button"
             role="option"
             aria-selected={isSelected}
-            data-selected={isSelected}
             class={cn(
               "w-full rounded-md px-3 py-1.5 text-left text-sm transition-colors focus:outline-none",
               isSelected
