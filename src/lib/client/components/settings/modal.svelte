@@ -13,6 +13,7 @@
   import { Icon } from "../icons";
 
   import { Modal } from "..";
+  import { General } from ".";
 
   const { modalId } = settingsModalStore;
 
@@ -29,7 +30,8 @@
     { label: "Security", icon: SecurityIcon }
   ];
 
-  let activeItem = $state("General");
+  type MenuItemLabel = (typeof menuItems)[number]["label"];
+  let activeItem = $state<MenuItemLabel>("General");
 </script>
 
 <Modal id={modalId} class="modal-open" modelBoxClass="p-0 m-0 !max-w-[650px]">
@@ -52,9 +54,15 @@
 
     <!-- Content -->
     <div
-      class="bg-base-100 border-rounded m-1 mt-0 min-h-[500px] flex-1 overflow-y-scroll p-2 sm:mt-1 sm:ml-0"
+      class="bg-base-100 border-rounded m-1 mt-0 min-h-[500px] flex-1 overflow-y-scroll px-4 py-3 sm:mt-1 sm:ml-0"
     >
-      Content
+      <p class="text-base-content/80 text-lg">{activeItem}</p>
+
+      {#if activeItem === "Billing"}
+        <!-- Billing -->
+      {:else}
+        <General />
+      {/if}
     </div>
   </div>
 </Modal>

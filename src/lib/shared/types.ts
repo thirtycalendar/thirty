@@ -95,6 +95,7 @@ export type WaitingListForm = z.infer<typeof waitingListSchema>;
 
 // Enums and Constants
 export type SubscriptionPlan = (typeof Const.SubscriptionPlans)[number];
+export type Theme = (typeof Const.Themes)[number];
 export type Color = (typeof Const.Colors)[number];
 export type Source = (typeof Const.Sources)[number];
 export type EventStatus = (typeof Const.EventStatuses)[number];

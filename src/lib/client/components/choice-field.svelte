@@ -98,7 +98,7 @@
   <button
     type="button"
     bind:this={triggerButtonRef}
-    class="input bg-base-100 hover:bg-base-200 border-base-300 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm outline-none focus:outline-none"
+    class="input bg-base-100 hover:bg-base-200 border-base-300 flex w-full items-center justify-between border px-3 py-2 text-left text-sm outline-none focus:outline-none"
     onclick={() => (open = !open)}
     onkeydown={(e) => {
       if ((e.key === "Enter" || e.key === " " || e.key === "ArrowDown") && !open) {

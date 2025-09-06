@@ -4,8 +4,10 @@ export const SubscriptionPlans = ["pro", "free"] as const;
 
 export const MessageLimitByPlan: Record<SubscriptionPlan, number> = {
   pro: 2000,
-  free: 20
+  free: 10
 };
+
+export const Themes = ["light", "dark"] as const;
 
 export const CalendarViews = ["year", "month", "week", "day"] as const;
 
