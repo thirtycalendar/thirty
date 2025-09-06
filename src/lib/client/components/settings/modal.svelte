@@ -33,13 +33,13 @@
 </script>
 
 <Modal id={modalId} class="modal-open" modelBoxClass="p-0 m-0 !max-w-[650px]">
-  <div class="bg-base-200 flex">
-    <!-- Sidebar items -->
-    <div class="flex w-[180px] flex-col p-2">
+  <div class="bg-base-200 flex flex-col sm:flex-row">
+    <!-- Sidebar -->
+    <div class="flex w-full flex-row flex-wrap p-2 sm:w-[180px] sm:flex-col">
       {#each menuItems as item (item.label)}
         <button
           class={cn(
-            "btn flex w-full items-center justify-start gap-2 font-normal",
+            "btn flex w-fit items-center justify-start gap-2 font-normal sm:w-full",
             activeItem === item.label ? "btn-active" : "btn-ghost"
           )}
           onclick={() => (activeItem = item.label)}
@@ -51,7 +51,9 @@
     </div>
 
     <!-- Content -->
-    <div class="bg-base-100 border-rounded m-1 ml-0 min-h-[500px] flex-1 overflow-y-scroll p-2">
+    <div
+      class="bg-base-100 border-rounded m-1 mt-0 min-h-[500px] flex-1 overflow-y-scroll p-2 sm:mt-1 sm:ml-0"
+    >
       Content
     </div>
   </div>

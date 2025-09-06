@@ -19,7 +19,7 @@
   </button>
 </div>
 
-<div class="absolute right-8 bottom-8 z-200 sm:hidden">
+<div class="absolute right-8 bottom-8 z-600 sm:hidden">
   <button
     class="btn btn-md bg-base-200 border-base-300 border"
     onclick={() => {
