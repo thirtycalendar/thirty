@@ -51,7 +51,9 @@
               <button
                 class={cn(
                   "btn btn-xs btn-square font-normal",
-                  isToday(day) ? "btn-accent" : "btn-ghost text-primary-content/70",
+                  isToday(day) && isSameMonth(day, month)
+                    ? "btn-accent"
+                    : "btn-ghost text-primary-content/70",
                   !isSameMonth(day, month) && "text-base-content/30"
                 )}
                 onclick={() => {
