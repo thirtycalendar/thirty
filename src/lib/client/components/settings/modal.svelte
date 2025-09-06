@@ -51,7 +51,7 @@
     <div
       class="bg-base-100 border-rounded m-1 mt-0 min-h-[500px] flex-1 overflow-y-scroll px-4 py-3 sm:mt-1 sm:ml-0"
     >
-      <p class="text-base-content/80 text-lg">{activeItem}</p>
+      <p class="text-base-content/80 mb-2 text-lg">{activeItem}</p>
 
       {#if activeItem === "Sync"}
         <Sync />

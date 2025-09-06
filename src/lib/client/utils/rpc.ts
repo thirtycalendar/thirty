@@ -1,9 +1,9 @@
-import { inferAdditionalFields } from "better-auth/client/plugins";
+import { polarClient } from "@polar-sh/better-auth";
+
 import { createAuthClient } from "better-auth/svelte";
 import { hc } from "hono/client";
 
 import type { AppType } from "$lib/server/api";
-import type { auth } from "$lib/server/auth";
 
 export const client = hc<AppType>("");
 
@@ -13,4 +13,4 @@ export const serverClient = (fetch: Window["fetch"]) => {
   return client;
 };
 
-export const authClient = createAuthClient({ plugins: [inferAdditionalFields<typeof auth>()] });
+export const authClient = createAuthClient({ plugins: [polarClient()] });
