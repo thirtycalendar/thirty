@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    CreditCardIcon,
-    FolderSyncIcon,
-    SecurityIcon,
-    Settings01Icon
-  } from "@hugeicons/core-free-icons";
+  import { CreditCardIcon, FolderSyncIcon, SecurityIcon } from "@hugeicons/core-free-icons";
   import type { IconSvgElement } from "@hugeicons/svelte";
 
   import { settingsModalStore } from "$lib/client/stores/modal";
@@ -13,7 +8,7 @@
   import { Icon } from "../icons";
 
   import { Modal } from "..";
-  import { General } from ".";
+  import { Billing, Security, Sync } from ".";
 
   const { modalId } = settingsModalStore;
 
@@ -24,14 +19,14 @@
   }[];
 
   const menuItems: Item = [
-    { label: "General", icon: Settings01Icon },
+    // { label: "General", icon: Settings01Icon },
     { label: "Billing", icon: CreditCardIcon },
     { label: "Sync", icon: FolderSyncIcon },
     { label: "Security", icon: SecurityIcon }
   ];
 
   type MenuItemLabel = (typeof menuItems)[number]["label"];
-  let activeItem = $state<MenuItemLabel>("General");
+  let activeItem = $state<MenuItemLabel>(menuItems[0].label);
 </script>
 
 <Modal id={modalId} class="modal-open" modelBoxClass="p-0 m-0 !max-w-[650px]">
@@ -58,10 +53,13 @@
     >
       <p class="text-base-content/80 text-lg">{activeItem}</p>
 
-      {#if activeItem === "Billing"}
-        <!-- Billing -->
+      {#if activeItem === "Sync"}
+        <Sync />
+      {:else if activeItem === "Security"}
+        <Security />
       {:else}
-        <General />
+        <!-- <General /> -->
+        <Billing />
       {/if}
     </div>
   </div>
