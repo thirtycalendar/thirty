@@ -22,8 +22,8 @@
 
   const persuasiveText = $derived.by(() =>
     isFree
-      ? `Upgrade to Pro and unlock ~${MessageLimitByPlan.pro} messages/month, faster sync, and a smoother experience.`
-      : `You're on Pro - enjoy ~${MessageLimitByPlan.pro} messages/month with uninterrupted productivity.`
+      ? `Free gives you ${limit} messages/month. Upgrade to Pro for unlimited messaging — no limits, no interruptions.`
+      : "You're on Pro — enjoy unlimited messaging with peace of mind every month."
   );
 
   onMount(async () => {
