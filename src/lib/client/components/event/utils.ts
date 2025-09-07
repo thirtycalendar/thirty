@@ -1,6 +1,14 @@
-import { differenceInMinutes, format, isSameDay, isSameYear, isWithinInterval } from "date-fns";
+import {
+  differenceInMilliseconds,
+  differenceInMinutes,
+  format,
+  isSameDay,
+  isSameYear,
+  isWithinInterval
+} from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
+import { toMs } from "$lib/shared/utils/ms";
 import { getValidTimeZone } from "$lib/shared/utils/timezone";
 import type { Event, EventChunk } from "$lib/shared/types";
 
@@ -156,14 +164,19 @@ export function formatLocalTimeDetails(
 }
 
 export function formatDuration(start: Date, end: Date) {
-  let minutes = differenceInMinutes(end, start);
-  if (minutes < 1) return "Less than a minute";
+  const totalMs = differenceInMilliseconds(end, start);
 
-  const days = Math.floor(minutes / (60 * 24));
-  minutes %= 60 * 24;
+  if (totalMs < toMs("1m")) return "Less than a minute";
 
-  const hours = Math.floor(minutes / 60);
-  minutes %= 60;
+  let remainingMs = totalMs;
+
+  const days = Math.floor(remainingMs / toMs("1d"));
+  remainingMs %= toMs("1d");
+
+  const hours = Math.floor(remainingMs / toMs("1h"));
+  remainingMs %= toMs("1h");
+
+  const minutes = Math.floor(remainingMs / toMs("1m"));
 
   const parts = [];
   if (days) parts.push(`${days} day${days > 1 ? "s" : ""}`);

@@ -2,13 +2,15 @@ import { env } from "$env/dynamic/private";
 
 import { Redis } from "@upstash/redis";
 
+import { toMs } from "$lib/shared/utils/ms";
+
 export const kvCacheTimes = {
-  calendar: 60 * 60,
-  event: 60 * 15,
-  birthday: 60 * 60 * 24,
-  task: 60 * 30,
-  holiday: 60 * 60 * 24,
-  chat: 60 * 15
+  calendar: toMs("1hs"),
+  event: toMs("15m"),
+  task: toMs("30m"),
+  birthday: toMs("1d"),
+  holiday: toMs("1d"),
+  chat: toMs("15m")
 } as const;
 
 export const kv = new Redis({

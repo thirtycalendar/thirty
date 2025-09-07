@@ -2,6 +2,8 @@ import { writable } from "svelte/store";
 
 import { authClient } from "$lib/client/utils/rpc";
 
+import { toMs } from "$lib/shared/utils/ms";
+
 type UserSession = {
   name: string;
   email: string;
@@ -9,7 +11,7 @@ type UserSession = {
 };
 
 const STORAGE_KEY = "user-session";
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const ONE_DAY_MS = toMs("1d");
 
 export const session = writable<UserSession | null>(null);
 
