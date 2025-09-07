@@ -21,10 +21,7 @@ export const syncRoute = new Hono<Context>().use(loggedIn).post("/google", async
     });
 
     if (!accessTokenExpiresAt || accessTokenExpiresAt <= new Date()) {
-      return errorResponse(
-        c,
-        "Your Google Calendar access has expired. Please sign in with Google again to keep syncing."
-      );
+      return errorResponse(c, "Your Google Calendar access has expired.");
     }
 
     await Promise.all([kv.del(KV_CALENDARS(user.id)), kv.del(KV_EVENTS(user.id))]);
@@ -34,10 +31,17 @@ export const syncRoute = new Hono<Context>().use(loggedIn).post("/google", async
 
     return c.json<SuccessResponse<null>>({
       success: true,
-      message: "Google Calendar successfully synced",
+      message: "Google Calendar successfully synced.",
       data: null
     });
   } catch (err: unknown) {
-    return errorResponse(c, err);
+    const error = err as Error;
+    let message = "Something went wrong while syncing your Google Calendar.";
+
+    if (error.message.includes("invalid authentication credentials")) {
+      message = "Your Google Calendar access has expired.";
+    }
+
+    return errorResponse(c, err, message);
   }
 });

@@ -29,19 +29,24 @@
         successMessage = "";
       }, 3000);
     },
-    onError: (message: Error["message"]) => {
-      errorMessage = message;
+    onError: (error) => {
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = String(error);
+      }
     },
     queryKeys: ["calendars", "events"]
   });
 
   async function handleReauth() {
-    await authClient.linkSocial({ provider: "google" });
+    await authClient.linkSocial({ provider: "google", callbackURL: "/calendar" });
   }
 </script>
 
 <SyncButton
   provider="Google"
+  calendar="Google Calendar"
   handleSync={mutate}
   isPending={$isPending}
   {handleReauth}
@@ -49,5 +54,4 @@
   {errorMessage}
 >
   <GoogleCalendar size={15} />
-  Sync with Google Calendar
 </SyncButton>

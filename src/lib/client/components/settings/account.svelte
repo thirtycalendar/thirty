@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { logoutMutation } from "$lib/client/data/mutations";
+  import { logoutAllMutation, logoutMutation } from "$lib/client/data/mutations";
   import { session } from "$lib/client/stores/user-session";
 
   const { mutate: handleLogout, isPending: logoutIsPending } = logoutMutation();
-  const { mutate: handleLogoutAll, isPending: logoutAllIsPending } = logoutMutation();
+  const { mutate: handleLogoutAll, isPending: logoutAllIsPending } = logoutAllMutation();
 </script>
 
 <div class="text-primary-content/80 mt-4 space-y-4">

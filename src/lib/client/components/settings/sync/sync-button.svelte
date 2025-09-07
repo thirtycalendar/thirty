@@ -3,6 +3,7 @@
 
   interface Props {
     provider: string;
+    calendar: string;
     successMessage: string;
     errorMessage: string;
     isPending: boolean;
@@ -13,6 +14,7 @@
 
   const {
     provider,
+    calendar,
     successMessage,
     errorMessage,
     isPending,
@@ -43,7 +45,12 @@
 <button class="btn btn-accent w-full font-normal" onclick={handleSync} disabled={isPending}>
   {#if isPending}
     <span class="loading loading-spinner loading-xs"></span>
-  {/if}
+    Syncing...
+  {:else}
+    <div class="flex items-center gap-2">
+      {@render children()}
 
-  {@render children()}
+      Sync with {calendar}
+    </div>
+  {/if}
 </button>
