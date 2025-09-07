@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CreditCardIcon, FolderSyncIcon, SecurityIcon } from "@hugeicons/core-free-icons";
+  import { CreditCardIcon, FolderSyncIcon, UserCircleIcon } from "@hugeicons/core-free-icons";
   import type { IconSvgElement } from "@hugeicons/svelte";
 
   import { settingsModalStore } from "$lib/client/stores/modal";
@@ -22,7 +22,7 @@
     // { label: "General", icon: Settings01Icon },
     { label: "Billing", icon: CreditCardIcon },
     { label: "Sync", icon: FolderSyncIcon },
-    { label: "Security", icon: SecurityIcon }
+    { label: "Account", icon: UserCircleIcon }
   ];
 
   type MenuItemLabel = (typeof menuItems)[number]["label"];
@@ -49,13 +49,13 @@
 
     <!-- Content -->
     <div
-      class="bg-base-100 border-rounded m-1 mt-0 min-h-[500px] flex-1 overflow-y-scroll px-4 py-3 sm:mt-1 sm:ml-0"
+      class="bg-base-100 border-rounded m-1 mt-0 min-h-[450px] flex-1 overflow-y-scroll px-4 py-3 sm:mt-1 sm:ml-0"
     >
       <p class="text-base-content/80 mb-2 text-lg">{activeItem}</p>
 
       {#if activeItem === "Sync"}
         <Sync />
-      {:else if activeItem === "Security"}
+      {:else if activeItem === "Account"}
         <Security />
       {:else}
         <!-- <General /> -->

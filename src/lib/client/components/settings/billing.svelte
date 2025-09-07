@@ -13,17 +13,17 @@
   const { data: credit } = creditsQuery();
   const usage: number = $derived($credit?.count ?? 0);
 
-  let planName = $state<SubscriptionPlan>("free");
+  let planName = $state<SubscriptionPlan>("pro");
   let renewalDate = $state("");
-  let price = $state(0);
+  // let price = $state(0);
 
-  const isFree = $derived.by(() => planName === "free");
+  const isFree = $derived.by(() => planName === "pro");
   const limit = $derived.by(() => MessageLimitByPlan[planName]);
 
   const persuasiveText = $derived.by(() =>
     isFree
-      ? `Free gives you ${limit} messages/month. Upgrade to Pro for unlimited messaging — no limits, no interruptions.`
-      : "You're on Pro — enjoy unlimited messaging with peace of mind every month."
+      ? "Upgrade to Pro for unlimited messaging — no limits, zero stress."
+      : "You're on Pro — unlimited messaging, zero stress."
   );
 
   onMount(async () => {
@@ -32,7 +32,7 @@
 
     planName = sub?.productId === PUBLIC_POLAR_PRODUCT_ID_PRO ? "pro" : "free";
     renewalDate = sub?.endsAt?.toISOString() ?? "";
-    price = sub?.amount ?? 0;
+    // price = sub?.amount ?? 0;
   });
 
   const {
@@ -60,43 +60,61 @@
   const isActionError = $derived.by(() => (isFree ? $isUpgradeError : $isPortalError));
 </script>
 
-<div class="text-primary-content/70 flex flex-col gap-3">
+<div class="text-primary-content/80 flex flex-col gap-5">
+  <!-- Plan status -->
   <div class="flex items-center justify-between">
     <div>
-      <p class="">
-        Current Plan ({capitalizeFirstLetter(planName)})
+      <p class="text-lg font-medium">
+        Plan:
+        <span class="text-primary-content font-semibold">
+          {capitalizeFirstLetter(planName)}
+        </span>
       </p>
-      <p class="text-sm">
-        {isFree ? "No renewal required" : `Active until ${renewalDate}`}
+      <p class="text-primary-content/60 mt-1 text-sm">
+        {isFree ? "No renewal required" : `Renews on ${renewalDate}`}
       </p>
     </div>
 
-    <div class="text-right">
-      <p class="text-2xl">
-        {isFree ? "$0" : `$${price}`}
-        <span class=" text-sm">/mo</span>
-      </p>
-    </div>
+    {#if !isFree}
+      <div class="text-right">
+        <p class="badge badge-success px-3 py-1 text-sm">Active</p>
+        <p class="text-primary-content/60 mt-1 text-xs">Billed monthly</p>
+      </div>
+    {/if}
   </div>
 
   {#if isFree}
-    <p class="text-sm">
-      {usage} of free {limit} messages remaining for this month.
-    </p>
+    <div class="bg-base-200 border-rounded px-3 py-2 text-sm">
+      <p>
+        You've used <span class="font-semibold">{usage}</span> of your
+        <span class="font-semibold">{limit}</span> free messages this month.
+      </p>
+      <p class="text-error mt-2">Only {limit - usage} left - don't run out!</p>
+    </div>
   {/if}
 
-  <p class="text-sm italic">{persuasiveText}</p>
+  <div class="text-center">
+    <p class="text-sm leading-relaxed italic">
+      {persuasiveText}
+    </p>
+  </div>
 
-  <div class="mt-3 flex flex-col gap-2">
+  <div class="mt-2 flex flex-col gap-2">
     <button
       onclick={isFree ? handleUpgrade : handleBilling}
-      class="btn btn-secondary w-full font-normal"
+      class="btn btn-secondary w-full font-medium shadow-md transition hover:shadow-lg"
       disabled={isActionPending && !isActionError}
     >
       {#if isActionPending}
-        <span class="loading loading-spinner loading-xs"></span>
+        <span class="loading loading-spinner loading-sm"></span>
       {/if}
       {isFree ? "Upgrade to Pro" : "Manage Billing"}
     </button>
+
+    {#if isFree}
+      <p class="text-primary-content/60 text-center text-xs">
+        Cancel anytime. Secure checkout powered by Polar.
+      </p>
+    {/if}
   </div>
 </div>
