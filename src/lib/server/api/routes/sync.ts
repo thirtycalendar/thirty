@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import type { Context } from "$lib/server/api/context";
 import { loggedIn } from "$lib/server/api/middlewares/logged-in";
 import { syncGoogleCalendars, syncGoogleEvents } from "$lib/server/services/sync/google";
+import { auth } from "$lib/server/auth";
 import { kv } from "$lib/server/libs/upstash/kv";
 import { KV_CALENDARS, KV_EVENTS } from "$lib/server/utils/kv-keys";
 
@@ -14,16 +15,26 @@ export const syncRoute = new Hono<Context>().use(loggedIn).post("/google", async
   try {
     const user = c.get("user") as User;
 
-    await kv.del(KV_CALENDARS(user.id));
-    await kv.del(KV_EVENTS(user.id));
+    const { accessToken, accessTokenExpiresAt } = await auth.api.getAccessToken({
+      body: { providerId: "google", userId: user.id },
+      headers: c.req.raw.headers
+    });
 
-    await syncGoogleCalendars(user.id);
+    if (!accessTokenExpiresAt || accessTokenExpiresAt <= new Date()) {
+      return errorResponse(
+        c,
+        "Your Google Calendar access has expired. Please sign in with Google again to keep syncing."
+      );
+    }
 
-    await syncGoogleEvents(user.id);
+    await Promise.all([kv.del(KV_CALENDARS(user.id)), kv.del(KV_EVENTS(user.id))]);
+
+    await syncGoogleCalendars(user.id, accessToken);
+    await syncGoogleEvents(user.id, accessToken);
 
     return c.json<SuccessResponse<null>>({
       success: true,
-      message: "Successfully synced all Google Calendars and Events",
+      message: "Google Calendar successfully synced",
       data: null
     });
   } catch (err: unknown) {

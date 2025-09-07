@@ -111,14 +111,6 @@ export interface IpLocationKV {
   timezone: string;
 }
 
-export interface GoogleSessionKV {
-  userId: string;
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpiresAt: string;
-  idToken: string;
-}
-
 // Auth
 export type User = typeof auth.$Infer.Session.user;
 export type Session = typeof auth.$Infer.Session.session;

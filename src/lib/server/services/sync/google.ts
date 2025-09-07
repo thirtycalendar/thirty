@@ -13,13 +13,13 @@ import type { CalendarForm, EventForm } from "$lib/shared/types";
 import { calendarService } from "../calendar";
 import { eventService } from "../event";
 
-export async function syncGoogleCalendars(userId: string) {
+export async function syncGoogleCalendars(userId: string, accessToken: string) {
   const lockKey = KV_SYNC_LOCK_CALENDARS(userId);
   if (await getLock(lockKey)) return;
   await setLock(lockKey, true, { ttl: 300 });
 
   try {
-    const { calendar } = await getGoogleClients(userId);
+    const { calendar } = await getGoogleClients(accessToken);
     const res = await calendar.calendarList.list();
     const list = res.data.items ?? [];
 
@@ -59,13 +59,13 @@ export async function syncGoogleCalendars(userId: string) {
   }
 }
 
-export async function syncGoogleEvents(userId: string) {
+export async function syncGoogleEvents(userId: string, accessToken: string) {
   const lockKey = KV_SYNC_LOCK_EVENTS(userId);
   if (await getLock(lockKey)) return;
   await setLock(lockKey, true, { ttl: 300 });
 
   try {
-    const { calendar } = await getGoogleClients(userId);
+    const { calendar } = await getGoogleClients(accessToken);
     const colorsRes = await calendar.colors.get();
     const colorMap = colorsRes.data.event ?? {};
 

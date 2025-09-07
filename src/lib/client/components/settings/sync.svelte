@@ -1,14 +1,8 @@
 <script lang="ts">
-  import { GoogleCalendar } from "../icons";
+  import { SyncGoogleCalendar } from ".";
 </script>
 
-<div>
-  <p class="text-primary-content/80 mb-2 font-medium">Google</p>
-  <button class="btn btn-accent w-full font-normal">
-    <GoogleCalendar size={15} />
-    Sync with Google Calendar
-  </button>
-</div>
+<SyncGoogleCalendar />
 
 <hr class="text-base-200 my-5" />
 

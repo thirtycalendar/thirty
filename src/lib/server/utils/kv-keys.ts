@@ -9,7 +9,6 @@ export const KV_BIRTHDAYS = (userId: string) => key("birthdays", userId);
 
 export const KV_CHATS = (userId: string) => key("chats", userId);
 export const KV_IP_LOCATION = (userId: string) => key("ip", "location", userId);
-export const KV_GOOGLE_TOKEN = (userId: string) => key("google", "token", userId);
 
 // Holiday-related keys
 export const KV_HOLIDAY_COUNTRIES = (userId: string) => key("holidays", "countries", userId);
