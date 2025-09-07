@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import { PUBLIC_POLAR_PRODUCT_ID_PRO } from "$env/static/public";
 
+  import { checkoutMutation, portalMutation } from "$lib/client/data/mutations";
   import { creditsQuery } from "$lib/client/data/queries/credit";
-  import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { authClient } from "$lib/client/utils/rpc";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
@@ -40,18 +40,14 @@
     isPending: isUpgradePending,
     isSuccess: isUpgradeSuccess,
     isError: isUpgradeError
-  } = createMutation({
-    mutationFn: () => authClient.checkout({ products: [PUBLIC_POLAR_PRODUCT_ID_PRO] })
-  });
+  } = checkoutMutation();
 
   const {
     mutate: handleBilling,
     isPending: isPortalPending,
     isSuccess: isPortalSuccess,
     isError: isPortalError
-  } = createMutation({
-    mutationFn: () => authClient.customer.portal()
-  });
+  } = portalMutation();
 
   const isActionPending = $derived.by(() =>
     isFree ? $isUpgradePending || $isUpgradeSuccess : $isPortalPending || $isPortalSuccess

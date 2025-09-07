@@ -114,7 +114,6 @@
   </div>
 
   <!-- Month Grid -->
-  <!-- Month Grid -->
   <div
     class="bg-base-100 border-base-200 grid flex-1 grid-cols-7 border-l"
     style="grid-template-rows: repeat({monthInfo.weekCount}, minmax(0, 1fr))"

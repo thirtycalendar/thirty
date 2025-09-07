@@ -24,7 +24,10 @@
   class="text-primary-content border-primary-content/10 flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-xl border p-0 text-left shadow-sm backdrop-blur-md select-none"
   style:background-color={bgColor}
   {title}
-  onclick={() => onClick(item)}
+  onclick={(e) => {
+    e.stopPropagation();
+    onClick(item);
+  }}
 >
   <div class="h-full w-1 shrink-0" style:background-color={color}></div>
   <div class="w-full min-w-0 overflow-hidden p-0.5 text-xs font-medium">

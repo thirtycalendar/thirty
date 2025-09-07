@@ -5,12 +5,12 @@
 
   import { cn } from "$lib/client/utils/cn";
 
+  import { discordLink } from "$lib/shared/config";
+
   import { LogoDarkImage, LogoWhiteImage } from "../../assets";
   import { Icon } from "../icons";
 
   import { GithubStarButton } from "..";
-
-  const discordLink = "https://discord.gg/Y8XQ4dV4UC";
 
   let scrollY = $state(0);
 

@@ -7,19 +7,23 @@
   } from "@hugeicons/core-free-icons";
   import type { IconSvgElement } from "@hugeicons/svelte";
 
-  import { logoutMutation } from "$lib/client/data/mutations";
+  import { checkoutMutation, logoutMutation } from "$lib/client/data/mutations";
   import { settingsModalStore } from "$lib/client/stores/modal";
   import { session } from "$lib/client/stores/user-session";
+
+  import { discordLink } from "$lib/shared/config";
 
   import { Icon } from "../icons";
   import { toggleModal } from "../utils";
 
-  const { mutate: handleLogout, isPending } = logoutMutation();
+  const { mutate: handleLogout, isPending: logoutIsPending } = logoutMutation();
+  const { mutate: handleUpgrade, isPending: checkoutIsPending } = checkoutMutation();
 
   type Item = {
     label: string;
     icon: IconSvgElement;
-    onClick?: () => void;
+    onclick?: () => void;
+    disabled?: boolean;
   }[];
 
   function handleSettings() {
@@ -27,10 +31,15 @@
   }
 
   const menuItems: Item = [
-    { label: "Upgrade plan", icon: SparklesIcon },
-    { label: "Discord", icon: DiscordIcon },
-    { label: "Settings", icon: Settings01Icon, onClick: handleSettings },
-    { label: "Logout", icon: Logout05Icon, onClick: handleLogout }
+    {
+      label: "Upgrade plan",
+      icon: SparklesIcon,
+      onclick: handleUpgrade,
+      disabled: $checkoutIsPending
+    },
+    { label: "Discord", icon: DiscordIcon, onclick: () => window.open(discordLink, "_blank") },
+    { label: "Settings", icon: Settings01Icon, onclick: handleSettings },
+    { label: "Logout", icon: Logout05Icon, onclick: handleLogout, disabled: $logoutIsPending }
   ];
 </script>
 
@@ -54,10 +63,10 @@
         <button
           class="btn btn-sm sm:btn-md btn-ghost flex w-full items-center justify-start gap-3 font-normal whitespace-nowrap"
           onclick={() => {
-            item.onClick?.();
+            item.onclick?.();
             (document.activeElement as HTMLElement)?.blur();
           }}
-          disabled={item.label === "Logout" && $isPending}
+          disabled={item.disabled}
         >
           <span>
             <Icon icon={item.icon} size={17} absoluteStrokeWidth />

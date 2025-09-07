@@ -1,5 +1,7 @@
 import { PUBLIC_BASE_URL } from "$env/static/public";
 
+export const discordLink = "https://discord.gg/Y8XQ4dV4UC";
+
 export const seoConfig = {
   title: (title: string, homePage?: boolean) =>
     homePage ? `Thirty - The AI Calendar` : `${title} | Thirty - The AI Calendar`,

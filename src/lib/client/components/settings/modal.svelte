@@ -15,7 +15,7 @@
   type Item = {
     label: string;
     icon: IconSvgElement;
-    onClick?: () => void;
+    onclick?: () => void;
   }[];
 
   const menuItems: Item = [
@@ -29,7 +29,7 @@
   let activeItem = $state<MenuItemLabel>(menuItems[0].label);
 </script>
 
-<Modal id={modalId} class="modal-open" modelBoxClass="p-0 m-0 !max-w-[650px]">
+<Modal id={modalId} modelBoxClass="p-0 m-0 !max-w-[650px]">
   <div class="bg-base-200 flex flex-col sm:flex-row">
     <!-- Sidebar -->
     <div class="flex w-full flex-row flex-wrap p-2 sm:w-[180px] sm:flex-col">

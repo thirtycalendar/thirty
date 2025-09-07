@@ -16,8 +16,8 @@
 </script>
 
 <div class={cn("flex items-center", classCn)}>
-  <Icon {icon} size={14} strokeWidth={1.7} class="mr-2" absoluteStrokeWidth />
-  <p class="text-sm font-semibold">
+  <Icon {icon} size={14} strokeWidth={1.3} class="mx-1" absoluteStrokeWidth />
+  <p class="text-sm">
     {@render children()}
   </p>
 </div>

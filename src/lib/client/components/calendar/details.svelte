@@ -37,7 +37,7 @@
   <!-- Color -->
   <IconRow icon={PaintBoardIcon}>
     <div class="flex items-center gap-2">
-      <span class="font-medium">Color:</span>
+      <span>Color:</span>
       <div
         class="aspect-square w-5 rounded-full"
         style={`background-color: ${calendar.color}`}
