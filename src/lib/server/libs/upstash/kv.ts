@@ -5,7 +5,7 @@ import { Redis } from "@upstash/redis";
 import { toMs } from "$lib/shared/utils/ms";
 
 export const kvCacheTimes = {
-  calendar: toMs("1hs"),
+  calendar: toMs("1h"),
   event: toMs("15m"),
   task: toMs("30m"),
   birthday: toMs("1d"),
