@@ -76,9 +76,9 @@
     <div class="my-1 block items-center gap-2 sm:flex">
       <p class="font-medium">{formattedEventTime}</p>
       {#if event.allDay}
-        <div class="detail-badge">All Day</div>
+        <div class="detail-badge whitespace-nowrap">All Day</div>
       {:else}
-        <div class="detail-badge">{totalDuration}</div>
+        <div class="detail-badge whitespace-nowrap">{totalDuration}</div>
       {/if}
     </div>
 
