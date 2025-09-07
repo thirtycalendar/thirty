@@ -13,11 +13,11 @@
   const { data: credit } = creditsQuery();
   const usage: number = $derived($credit?.count ?? 0);
 
-  let planName = $state<SubscriptionPlan>("pro");
+  let planName = $state<SubscriptionPlan>("free");
   let renewalDate = $state("");
   // let price = $state(0);
 
-  const isFree = $derived.by(() => planName === "pro");
+  const isFree = $derived.by(() => planName === "free");
   const limit = $derived.by(() => MessageLimitByPlan[planName]);
 
   const persuasiveText = $derived.by(() =>
@@ -60,24 +60,24 @@
   const isActionError = $derived.by(() => (isFree ? $isUpgradeError : $isPortalError));
 </script>
 
-<div class="text-primary-content/80 flex flex-col gap-5">
+<div class="text-primary-content/80 mt-2 flex flex-col gap-4">
   <!-- Plan status -->
   <div class="flex items-center justify-between">
     <div>
-      <p class="text-lg font-medium">
+      <p class="font-medium">
         Plan:
         <span class="text-primary-content font-semibold">
           {capitalizeFirstLetter(planName)}
         </span>
       </p>
-      <p class="text-primary-content/60 mt-1 text-sm">
+      <p class="text-primary-content/60 mt-1 text-xs">
         {isFree ? "No renewal required" : `Renews on ${renewalDate}`}
       </p>
     </div>
 
     {#if !isFree}
       <div class="text-right">
-        <p class="badge badge-success px-3 py-1 text-sm">Active</p>
+        <p class="badge badge-success badge-sm px-3 py-1">Active</p>
         <p class="text-primary-content/60 mt-1 text-xs">Billed monthly</p>
       </div>
     {/if}
@@ -93,6 +93,8 @@
     </div>
   {/if}
 
+  <hr class="text-base-200" />
+
   <div class="text-center">
     <p class="text-sm leading-relaxed italic">
       {persuasiveText}
@@ -102,7 +104,7 @@
   <div class="mt-2 flex flex-col gap-2">
     <button
       onclick={isFree ? handleUpgrade : handleBilling}
-      class="btn btn-secondary w-full font-medium shadow-md transition hover:shadow-lg"
+      class="btn btn-accent w-full font-medium shadow-md transition hover:shadow-lg"
       disabled={isActionPending && !isActionError}
     >
       {#if isActionPending}

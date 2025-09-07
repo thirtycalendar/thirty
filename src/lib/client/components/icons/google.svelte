@@ -2,11 +2,11 @@
   import { cn } from "$lib/client/utils/cn";
 
   interface Props {
-    size?: string;
+    size?: number;
     class?: string;
   }
 
-  let { size = "20", class: classCn }: Props = $props();
+  let { size = 20, class: classCn }: Props = $props();
 </script>
 
 <svg

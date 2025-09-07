@@ -8,7 +8,7 @@
   import { Icon } from "../icons";
 
   import { Modal } from "..";
-  import { Billing, Security, Sync } from ".";
+  import { Account, Billing, Sync } from ".";
 
   const { modalId } = settingsModalStore;
 
@@ -52,11 +52,12 @@
       class="bg-base-100 border-rounded m-1 mt-0 min-h-[450px] flex-1 overflow-y-scroll px-4 py-3 sm:mt-1 sm:ml-0"
     >
       <p class="text-base-content/80 mb-2 text-lg">{activeItem}</p>
+      <hr class="text-base-300 my-3" />
 
       {#if activeItem === "Sync"}
         <Sync />
       {:else if activeItem === "Account"}
-        <Security />
+        <Account />
       {:else}
         <!-- <General /> -->
         <Billing />
