@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { page } from "$app/state";
+
+  // import { page } from "$app/state";
 
   import { Toast } from "$lib/client/components";
   import { Modals as BirthdayModals } from "$lib/client/components/birthday";
@@ -11,14 +12,14 @@
   import { Modals as EventModals } from "$lib/client/components/event";
   import { Modals as HolidayModals } from "$lib/client/components/holiday";
   import { Modal as SettingsModal } from "$lib/client/components/settings";
-  import { mainSidebarState, toggleMainSidebar } from "$lib/client/stores/sidebar";
+  import { mainSidebarStore } from "$lib/client/stores/boolean-store";
   import { initUserSession } from "$lib/client/stores/user-session";
   import { cn } from "$lib/client/utils/cn";
 
   let { children } = $props();
 
-  const isOpen = $derived(mainSidebarState());
-  let pathSegment = $derived(page.url.pathname.split("/").filter(Boolean)[0]);
+  const { store: isOpen, toggle: toggleMainSidebar } = mainSidebarStore;
+  // const pathSegment = $derived(page.url.pathname.split("/").filter(Boolean)[0]);
 
   onMount(initUserSession);
 </script>
@@ -40,9 +41,9 @@
       $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
     )}
   >
-    {#if pathSegment === "calendar"}
-      <CalendarSidebarItems />
-    {/if}
+    <!-- {#if pathSegment === "calendar"} -->
+    <CalendarSidebarItems />
+    <!-- {/if} -->
   </div>
 
   <!-- Backdrop -->
@@ -56,6 +57,6 @@
 
   <!-- Main -->
   <div class="bg-base-100 m-2 flex flex-1 flex-col overflow-hidden rounded-xl p-3 shadow-md">
-    {@render children?.()}
+    {@render children()}
   </div>
 </div>

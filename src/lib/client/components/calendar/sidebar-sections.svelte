@@ -10,16 +10,16 @@
     userHolidayCountriesQuery
   } from "$lib/client/data/queries";
   import {
-    collapsedLists,
-    uncheckedBirthdays,
-    uncheckedCalendars,
-    uncheckedHolidays
-  } from "$lib/client/stores/checked-items";
-  import {
     birthdayModalStore,
     calendarModalStore,
     holidayCountryModalStore
   } from "$lib/client/stores/modal";
+  import {
+    collapsedLists,
+    uncheckedBirthdays,
+    uncheckedCalendars,
+    uncheckedHolidays
+  } from "$lib/client/stores/unchecked-store";
   import { cn } from "$lib/client/utils/cn";
 
   import type { Birthday, Calendar, HolidayCountry } from "$lib/shared/types";

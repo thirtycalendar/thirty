@@ -17,12 +17,12 @@
   import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { setDayView } from "$lib/client/stores/calendar-view";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { birthdayModalStore, eventModalStore, holidayModalStore } from "$lib/client/stores/modal";
   import {
     uncheckedBirthdays,
     uncheckedCalendars,
     uncheckedHolidays
-  } from "$lib/client/stores/checked-items";
-  import { birthdayModalStore, eventModalStore, holidayModalStore } from "$lib/client/stores/modal";
+  } from "$lib/client/stores/unchecked-store";
 
   import type { Birthday, Event, Holiday } from "$lib/shared/types";
 

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
 
+  import { mainSidebarStore } from "$lib/client/stores/boolean-store";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
   import { currentDate } from "$lib/client/stores/change-date";
-  import { toggleMainSidebar } from "$lib/client/stores/sidebar";
 
   import { ProfileButton } from "../auth";
   import { Icon } from "../icons";
@@ -18,7 +18,7 @@
   <div class="flex items-center gap-1">
     <button
       class="btn btn-ghost btn-square text-primary-content/70 hover:text-primary-content mx-2"
-      onclick={toggleMainSidebar}
+      onclick={mainSidebarStore.toggle}
     >
       <Icon icon={SidebarLeftIcon} absoluteStrokeWidth />
     </button>
