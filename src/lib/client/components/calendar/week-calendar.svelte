@@ -11,7 +11,7 @@
     uncheckedBirthdays,
     uncheckedCalendars,
     uncheckedHolidays
-  } from "$lib/client/stores/local-storage";
+  } from "$lib/client/stores/checked-items";
   import { birthdayModalStore, eventModalStore, holidayModalStore } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 

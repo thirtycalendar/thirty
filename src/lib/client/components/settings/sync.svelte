@@ -3,7 +3,7 @@
 </script>
 
 <div>
-  <p class="text-primary-content/70 mb-2 font-semibold">Google</p>
+  <p class="text-primary-content/80 mb-2 font-medium">Google</p>
   <button class="btn btn-accent w-full font-normal">
     <GoogleCalendar size={15} />
     Sync with Google Calendar
