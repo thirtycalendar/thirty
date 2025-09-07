@@ -7,14 +7,14 @@
   } from "@hugeicons/core-free-icons";
   import type { IconSvgElement } from "@hugeicons/svelte";
 
-  import { createLogout } from "$lib/client/data/mutations";
+  import { logoutMutation } from "$lib/client/data/mutations";
   import { settingsModalStore } from "$lib/client/stores/modal";
   import { session } from "$lib/client/stores/user-session";
 
   import { Icon } from "../icons";
   import { toggleModal } from "../utils";
 
-  const { mutate: handleLogout, isPending } = createLogout();
+  const { mutate: handleLogout, isPending } = logoutMutation();
 
   type Item = {
     label: string;
