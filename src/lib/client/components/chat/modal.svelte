@@ -1,19 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import {
-    ArrowShrink02Icon,
-    Cancel01Icon,
-    Message01Icon,
-    RectangularIcon,
-    Remove01Icon
-  } from "@hugeicons/core-free-icons";
+  import { Message01Icon } from "@hugeicons/core-free-icons";
 
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
 
-  let isOpen = $state(false);
+  import { Toolbar } from ".";
+
+  let isOpen = $state(true);
   let isMaximize = $state(false);
 
   function handleClose() {
@@ -61,55 +57,7 @@
     >
       <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
         <!-- Toolbar -->
-        <div class="flex shrink-0 items-center justify-end p-1">
-          <button
-            class={cn(
-              "btn btn-square btn-ghost opacity-65 hover:opacity-100",
-              isMaximize ? "btn-md" : "btn-sm"
-            )}
-            onclick={handleMinimize}
-          >
-            <Icon
-              icon={Remove01Icon}
-              class={cn(isMaximize ? "size-4" : "size-3")}
-              absoluteStrokeWidth
-            />
-          </button>
-          <button
-            class={cn(
-              "btn btn-square btn-ghost hidden opacity-65 hover:opacity-100 sm:flex",
-              isMaximize ? "btn-md" : "btn-sm"
-            )}
-            onclick={handleMaximize}
-          >
-            {#if isMaximize}
-              <Icon
-                icon={ArrowShrink02Icon}
-                class={cn(isMaximize ? "size-4" : "size-3")}
-                absoluteStrokeWidth
-              />
-            {:else}
-              <Icon
-                icon={RectangularIcon}
-                class={cn(isMaximize ? "size-4" : "size-3")}
-                absoluteStrokeWidth
-              />
-            {/if}
-          </button>
-          <button
-            class={cn(
-              "btn btn-square btn-ghost opacity-65 hover:opacity-100",
-              isMaximize ? "btn-md" : "btn-sm"
-            )}
-            onclick={handleClose}
-          >
-            <Icon
-              icon={Cancel01Icon}
-              class={cn(isMaximize ? "size-4" : "size-3")}
-              absoluteStrokeWidth
-            />
-          </button>
-        </div>
+        <Toolbar {isMaximize} {handleMinimize} {handleMaximize} {handleClose} />
 
         <!-- Chat container -->
         <div class="flex-1 overflow-y-auto px-1"></div>
