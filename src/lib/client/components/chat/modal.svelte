@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, type Snippet } from "svelte";
   import { browser } from "$app/environment";
 
   import { Message01Icon } from "@hugeicons/core-free-icons";
@@ -10,6 +10,12 @@
   import { Icon } from "../icons";
 
   import { Toolbar } from ".";
+
+  interface Props {
+    children: Snippet;
+  }
+
+  const { children }: Props = $props();
 
   let isOpen = $state(false);
   let isMaximize = $state(false);
@@ -118,7 +124,7 @@
     <div
       bind:this={chatEl}
       class={cn(
-        "border-base-300 bg-base-200 z-[9999] flex flex-col overflow-hidden rounded-lg border p-1 shadow-lg",
+        "!border-base-300 bg-base-200 border-rounded z-[9999] flex flex-col overflow-hidden border p-1 shadow-lg",
         isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed min-h-[550px] min-w-[350px]"
       )}
       style="
@@ -127,14 +133,16 @@
         transform: translate(-50%, -50%);
       "
     >
-      <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
+      <div class="bg-base-100 border-rounded flex min-h-0 flex-1 flex-col">
         <div
           bind:this={toolbarEl}
           class={cn(isMaximize ? "!cursor-default" : "!cursor-all-scroll")}
         >
           <Toolbar {isMaximize} {handleMinimize} {handleMaximize} {handleClose} />
         </div>
-        <div class="flex-1 overflow-y-auto px-1"></div>
+        <div class="flex-1 overflow-y-auto px-1">
+          {@render children()}
+        </div>
       </div>
     </div>
   {/if}

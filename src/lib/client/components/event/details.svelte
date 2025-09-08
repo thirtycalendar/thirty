@@ -3,6 +3,7 @@
     Calendar03Icon,
     CheckmarkCircle02Icon,
     Clock01Icon,
+    FileSyncIcon,
     GlobalRefreshIcon,
     MapPinpoint01Icon,
     TextAlignLeftIcon,
@@ -134,7 +135,7 @@
 
   <!-- Meta rows -->
   <div class="detail-meta-section">
-    <DetailMetaRow icon={CheckmarkCircle02Icon}>
+    <DetailMetaRow icon={FileSyncIcon}>
       Synced from {capitalizeFirstLetter(event.source)}
     </DetailMetaRow>
 

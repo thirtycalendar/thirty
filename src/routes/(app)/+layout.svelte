@@ -9,7 +9,7 @@
     Modals as CalendarModals,
     SidebarItems as CalendarSidebarItems
   } from "$lib/client/components/calendar";
-  import { Modal as ChatModal } from "$lib/client/components/chat";
+  import { Chat } from "$lib/client/components/chat";
   import { Modals as EventModals } from "$lib/client/components/event";
   import { Modals as HolidayModals } from "$lib/client/components/holiday";
   import { Modal as SettingsModal } from "$lib/client/components/settings";
@@ -27,7 +27,8 @@
 
 <Toast />
 
-<ChatModal />
+<Chat />
+
 <CalendarModals />
 <EventModals />
 <BirthdayModals />
