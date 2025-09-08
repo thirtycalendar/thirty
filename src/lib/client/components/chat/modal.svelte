@@ -6,13 +6,30 @@
     Remove01Icon
   } from "@hugeicons/core-free-icons";
 
+  import { cn } from "$lib/client/utils/cn";
+
   import { Icon } from "../icons";
 
   let isOpen = $state(true);
-  // let isMinimize = $state(false);
+  let isMaximize = $state(false);
+  let isMinimize = $state(true);
 
   function handleClose() {
     isOpen = false;
+    isMaximize = false;
+    isMinimize = true;
+  }
+
+  function handleMaximize() {
+    isOpen = true;
+    isMaximize = true;
+    isMinimize = false;
+  }
+
+  function handleMinimize() {
+    isOpen = false;
+    isMaximize = false;
+    isMinimize = true;
   }
 
   function handleChatIcon() {
@@ -24,25 +41,25 @@
   {#if isOpen}
     <!-- Chat modal -->
     <div
-      class="border-rounded bg-base-200 border-base-300 absolute right-0 bottom-0 h-screen w-screen border p-0.5 shadow-lg sm:max-h-[550px] sm:max-w-[350px]"
+      class={cn(
+        "border-base-300 bg-base-200 absolute right-0 bottom-0 flex h-screen w-screen flex-col rounded-lg border shadow-lg sm:max-h-[550px] sm:max-w-[350px]"
+      )}
     >
-      <div class="bg-base-100 border-rounded max-h-full w-full">
+      <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
         <!-- Toolbar -->
-        <div class="flex w-full cursor-all-scroll items-center justify-end p-1">
+        <div class="flex shrink-0 items-center justify-end p-1">
           <button
             class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
-            onclick={handleClose}
+            onclick={handleMinimize}
           >
             <Icon icon={Remove01Icon} size={13} absoluteStrokeWidth />
           </button>
-
           <button
             class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
-            onclick={handleClose}
+            onclick={handleMaximize}
           >
             <Icon icon={RectangularIcon} size={13} absoluteStrokeWidth />
           </button>
-
           <button
             class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
             onclick={handleClose}
@@ -52,7 +69,7 @@
         </div>
 
         <!-- Chat container -->
-        <div class="max-h-full overflow-y-scroll px-1">Content</div>
+        <div class="flex-1 overflow-y-auto px-1"></div>
       </div>
     </div>
   {/if}
