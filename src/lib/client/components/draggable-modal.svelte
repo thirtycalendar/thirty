@@ -3,11 +3,8 @@
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
 
-  import { DragDropHorizontalIcon } from "@hugeicons/core-free-icons";
-
   import { draggable, type DragPos } from "../actions/draggable";
   import { cn } from "../utils/cn";
-  import { Icon } from "./icons";
   import { toggleDraggableModal } from "./utils";
 
   interface Props {
@@ -67,7 +64,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="border-rounded base-border bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg p-1 shadow-md"
+    class="border-rounded base-border bg-base-200 fixed z-[101] max-h-full max-w-lg min-w-[450px] p-1 shadow-md"
     use:draggable={{
       handle: headerEl,
       boundary: "window",
@@ -80,20 +77,21 @@
       transform: translate(-50%, -50%);
     "
   >
-    <div bind:this={headerEl} class="flex !cursor-all-scroll items-center justify-center py-1">
-      <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
-    </div>
-
     <button
-      class="btn btn-sm btn-circle btn-ghost absolute top-10 right-2 opacity-65 hover:opacity-100"
+      class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2 opacity-65 hover:opacity-100"
       onclick={hide}
     >
       ✕
     </button>
 
     <div
-      class="border-rounded border-base-200 bg-base-100 max-h-[85vh] overflow-y-auto rounded border p-[24px]"
+      class="border-rounded border-base-200 bg-base-100 max-h-[85vh] overflow-y-auto rounded border p-5 pt-0"
     >
+      <div
+        bind:this={headerEl}
+        class="flex !cursor-all-scroll items-center justify-center pb-5"
+      ></div>
+
       {#if title}
         <h3 class="text-primary-content/80 mb-1 font-semibold">{title}</h3>
       {/if}
