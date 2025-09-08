@@ -22,7 +22,7 @@ body {
   }
 
   .detail-title {
-    @apply text-xl font-semibold;
+    @apply text-primary-content/85 text-xl font-semibold;
   }
 
   .detail-badge {
@@ -39,6 +39,10 @@ body {
 
   .form-section {
     @apply space-y-2;
+  }
+
+  .base-border {
+    @apply !border-base-300 border;
   }
 }
 

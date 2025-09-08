@@ -12,7 +12,7 @@
   import { addDays, format } from "date-fns";
 
   import { calendarsQuery } from "$lib/client/data/queries";
-  import { calendarModalStore } from "$lib/client/stores/modal";
+  import { eventModalStore } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
   import { createForm } from "$lib/client/utils/create-form";
 
@@ -285,7 +285,7 @@
       {isCreate}
       isSaving={$isSubmitting || isMutationPending}
       isDisabled={$isSubmitting || isMutationPending || isErrorMessage || !hasCalendars}
-      onCancel={calendarModalStore.stopEditing}
+      onCancel={eventModalStore.stopEditing}
     />
   </form>
 {/if}

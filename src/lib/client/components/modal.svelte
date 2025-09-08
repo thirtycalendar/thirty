@@ -22,10 +22,13 @@
 </script>
 
 <dialog id={String(id)} class={cn("modal z-9997", classCn)}>
-  <div class={cn("modal-box border-base-200 max-h-[85vh] border", modelBoxClass)}>
+  <div class={cn("modal-box base-border max-h-[85vh]", modelBoxClass)}>
     <!-- <div class="modal-action"> -->
     <form method="dialog">
-      <button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2" onclick={hide}>
+      <button
+        class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2 opacity-65 hover:opacity-100"
+        onclick={hide}
+      >
         ✕
       </button>
     </form>

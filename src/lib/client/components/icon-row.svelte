@@ -19,9 +19,9 @@
 
 <div class={cn("flex items-center justify-between gap-3", classCn)}>
   <div class={cn(iconClass)}>
-    <Icon {icon} strokeWidth={1.7} absoluteStrokeWidth {size} />
+    <Icon {icon} strokeWidth={1.7} class="opacity-80" absoluteStrokeWidth {size} />
   </div>
-  <div class="flex-1">
+  <div class="text-primary-content/80 flex-1">
     {@render children()}
   </div>
 </div>

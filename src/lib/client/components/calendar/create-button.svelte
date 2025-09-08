@@ -9,7 +9,7 @@
 
 <div class="z-200">
   <button
-    class="btn btn-sm sm:btn-md bg-primary border-base-300 border"
+    class="btn btn-sm sm:btn-md bg-primary base-border"
     onclick={() => {
       toggleDraggableModal(eventModalStore.modalId);
     }}

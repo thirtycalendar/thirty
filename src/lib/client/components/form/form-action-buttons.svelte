@@ -11,11 +11,16 @@
 
 <div class="flex justify-end gap-2 pt-4">
   {#if !isCreate}
-    <button type="button" class="btn btn-ghost font-bold" onclick={onCancel} disabled={isDisabled}>
+    <button
+      type="button"
+      class="btn btn-ghost hover:border-base-300 border font-medium"
+      onclick={onCancel}
+      disabled={isDisabled}
+    >
       Cancel
     </button>
   {/if}
-  <button type="submit" class="btn btn-base-300 font-bold" disabled={isDisabled}>
+  <button type="submit" class="btn btn-base-300 base-border font-medium" disabled={isDisabled}>
     {#if isSaving}
       <span class="loading loading-spinner loading-xs"></span>
     {/if}

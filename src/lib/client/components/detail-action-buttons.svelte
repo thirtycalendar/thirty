@@ -46,7 +46,7 @@
   {#if confirmDelete}
     <div>
       <button
-        class="btn btn-sm btn-neutral mr-1 text-xs"
+        class="btn btn-sm btn-neutral mr-1 text-xs opacity-80 hover:opacity-100"
         onclick={toggleConfirm}
         disabled={isPending}
       >
@@ -61,7 +61,7 @@
     </div>
   {:else}
     <button
-      class="btn btn-sm btn-square btn-ghost hover:bg-error"
+      class="btn btn-sm btn-square btn-ghost hover:bg-error opacity-80 hover:opacity-100"
       onclick={toggleConfirm}
       disabled={isPending}
     >
@@ -71,7 +71,7 @@
 
   {#if showEdit}
     <button
-      class="btn btn-sm btn-square btn-ghost"
+      class="btn btn-sm btn-square btn-ghost opacity-80 hover:opacity-100"
       onclick={onEdit}
       disabled={isPending || confirmDelete}
     >

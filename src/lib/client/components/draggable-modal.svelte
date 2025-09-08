@@ -67,7 +67,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="border-rounded border-base-300 bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg border p-1 shadow-md"
+    class="border-rounded base-border bg-base-200 fixed z-[101] max-h-full w-[91%] max-w-lg p-1 shadow-md"
     use:draggable={{
       handle: headerEl,
       boundary: "window",
@@ -84,7 +84,10 @@
       <Icon icon={DragDropHorizontalIcon} absoluteStrokeWidth />
     </div>
 
-    <button class="btn btn-sm btn-circle btn-ghost absolute top-10 right-2" onclick={hide}>
+    <button
+      class="btn btn-sm btn-circle btn-ghost absolute top-10 right-2 opacity-65 hover:opacity-100"
+      onclick={hide}
+    >
       ✕
     </button>
 
@@ -92,7 +95,7 @@
       class="border-rounded border-base-200 bg-base-100 max-h-[85vh] overflow-y-auto rounded border p-[24px]"
     >
       {#if title}
-        <h3 class="mb-1 font-semibold">{title}</h3>
+        <h3 class="text-primary-content/80 mb-1 font-semibold">{title}</h3>
       {/if}
       <div class="overflow-y-auto">
         {@render children()}

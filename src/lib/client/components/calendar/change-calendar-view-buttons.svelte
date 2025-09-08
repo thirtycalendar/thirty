@@ -13,10 +13,7 @@
 </script>
 
 <div class="dropdown dropdown-end">
-  <button
-    tabindex="0"
-    class="btn btn-sm sm:btn-md btn-primary border-base-300 flex items-center border"
-  >
+  <button tabindex="0" class="btn btn-sm sm:btn-md btn-primary base-border flex items-center">
     <span>{currentView && currentView[0].toUpperCase() + currentView.slice(1)}</span>
     <Icon icon={ArrowDown01Icon} class="ml-2" />
   </button>

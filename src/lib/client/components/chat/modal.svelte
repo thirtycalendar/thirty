@@ -124,7 +124,7 @@
     <div
       bind:this={chatEl}
       class={cn(
-        "!border-base-300 bg-base-200 border-rounded z-[9999] flex flex-col overflow-hidden border p-1 shadow-lg",
+        "base-border bg-base-200 border-rounded z-[9999] flex flex-col overflow-hidden p-1 shadow-lg",
         isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed min-h-[550px] min-w-[350px]"
       )}
       style="
@@ -148,7 +148,7 @@
   {/if}
 
   <button
-    class="btn btn-lg bg-primary border-base-300 btn-square fixed right-8 bottom-8 border shadow-lg"
+    class="btn btn-lg bg-primary base-border btn-square fixed right-8 bottom-8 shadow-lg"
     onclick={handleChatIcon}
   >
     <Icon icon={Message01Icon} absoluteStrokeWidth />
