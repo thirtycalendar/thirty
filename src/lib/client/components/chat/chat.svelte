@@ -10,8 +10,9 @@
   import { Modal } from ".";
 
   let input = $state("");
-  const chat = new Chat({});
   let textareaRef: HTMLTextAreaElement | null = null;
+
+  const chat = new Chat({});
 
   function oninput() {
     if (!textareaRef) return;

@@ -11,7 +11,7 @@ export default defineConfig({
     noExternal: ["@hugeicons/svelte", "@polar-sh/sdk", "@polar-sh/better-auth"]
   },
   optimizeDeps: {
-    include: ["@hugeicons/core-free-icons"],
+    include: ["@hugeicons/core-free-icons", "standardwebhooks"],
     exclude: ["@polar-sh/sdk/webhooks.ts"]
   }
 });

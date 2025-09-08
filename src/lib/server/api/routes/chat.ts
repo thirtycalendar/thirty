@@ -6,6 +6,7 @@ import { Hono } from "hono";
 import { chatService } from "$lib/server/services";
 import { db } from "$lib/server/db";
 import { messageTable } from "$lib/server/db/tables";
+import { streamChat } from "$lib/server/chat";
 
 import { chatSchema } from "$lib/shared/schemas";
 import type { Chat, Message, SuccessResponse, User } from "$lib/shared/types";
@@ -18,10 +19,9 @@ export const chatRoute = new Hono()
   .use(loggedIn)
   .post("/", checkChatCredits, async (c) => {
     try {
-      // const user = c.get("user") as User;
-      // const { messages, chatId } = await c.req.json();
+      const { messages } = await c.req.json();
 
-      return c.text("Steam...");
+      return streamChat(messages);
     } catch (err: unknown) {
       return errorResponse(c, err);
     }
