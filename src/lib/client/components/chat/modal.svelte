@@ -125,7 +125,7 @@
       bind:this={chatEl}
       class={cn(
         "base-border bg-base-200 border-rounded z-[9999] flex flex-col overflow-hidden p-1 shadow-lg",
-        isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed min-h-[550px] min-w-[350px]"
+        isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed h-[550px] w-[350px]"
       )}
       style="
         left: {position?.x ?? 0}px;

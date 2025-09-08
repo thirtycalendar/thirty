@@ -56,6 +56,7 @@
     "vite-plugin-devtools-json": "^1.0.0"
   },
   "dependencies": {
+    "@ai-sdk/svelte": "^3.0.35",
     "@floating-ui/dom": "^1.7.4",
     "@googleapis/calendar": "^11.0.1",
     "@hono/zod-validator": "^0.7.2",
