@@ -10,39 +10,39 @@
 
   import { Icon } from "../icons";
 
-  let isOpen = $state(true);
+  let isOpen = $state(false);
   let isMaximize = $state(false);
-  let isMinimize = $state(true);
 
   function handleClose() {
     isOpen = false;
     isMaximize = false;
-    isMinimize = true;
   }
 
   function handleMaximize() {
     isOpen = true;
     isMaximize = true;
-    isMinimize = false;
   }
 
   function handleMinimize() {
     isOpen = false;
     isMaximize = false;
-    isMinimize = true;
   }
 
   function handleChatIcon() {
     isOpen = true;
+    isMaximize = false;
   }
 </script>
 
-<div class="fixed right-8 bottom-8 z-[5000]">
+<div class="fixed z-[9999]" class:right-8={!isMaximize} class:bottom-8={!isMaximize}>
   {#if isOpen}
     <!-- Chat modal -->
     <div
       class={cn(
-        "border-base-300 bg-base-200 absolute right-0 bottom-0 flex h-screen w-screen flex-col rounded-lg border shadow-lg sm:max-h-[550px] sm:max-w-[350px]"
+        "border-base-300 bg-base-200 flex flex-col overflow-hidden rounded-lg border shadow-lg",
+        isMaximize
+          ? "fixed inset-0 h-screen w-screen"
+          : "absolute right-0 bottom-0 h-screen w-screen sm:max-h-[550px] sm:max-w-[350px]"
       )}
     >
       <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
