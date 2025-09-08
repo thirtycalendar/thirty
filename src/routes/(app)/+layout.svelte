@@ -38,9 +38,9 @@
   <!-- Sidebar -->
   <div
     class={cn(
-      "bg-base-200 z-9998 overflow-y-auto transition-all duration-300",
-      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static sm:h-full",
-      $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
+      "bg-base-200 z-9996 overflow-y-auto transition-all duration-300",
+      "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 md:static md:h-full",
+      $isOpen ? "translate-x-0" : "-translate-x-full md:w-0 md:p-0"
     )}
   >
     <!-- {#if pathSegment === "calendar"} -->
@@ -51,7 +51,7 @@
   <!-- Backdrop -->
   {#if $isOpen}
     <button
-      class="fixed inset-0 z-30 bg-black/40 sm:hidden"
+      class="fixed inset-0 z-30 bg-black/40 md:hidden"
       onclick={toggleMainSidebar}
       aria-label="backdrop"
     ></button>

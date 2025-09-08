@@ -21,7 +21,7 @@
   }
 </script>
 
-<dialog id={String(id)} class={cn("modal z-6000", classCn)}>
+<dialog id={String(id)} class={cn("modal z-9997", classCn)}>
   <div class={cn("modal-box border-base-200 max-h-[85vh] border", modelBoxClass)}>
     <!-- <div class="modal-action"> -->
     <form method="dialog">

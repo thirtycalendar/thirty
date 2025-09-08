@@ -58,7 +58,7 @@
 
 <div
   id={String(id)}
-  class={cn("fixed inset-0 z-[6000] hidden", classCn)}
+  class={cn("fixed inset-0 z-[9997] hidden", classCn)}
   role="presentation"
   onclick={onBackdropClick}
 >

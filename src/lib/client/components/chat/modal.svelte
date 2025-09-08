@@ -64,7 +64,7 @@
         <div class="flex shrink-0 items-center justify-end p-1">
           <button
             class={cn(
-              "btn btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65",
+              "btn btn-square btn-ghost opacity-65 hover:opacity-100",
               isMaximize ? "btn-md" : "btn-sm"
             )}
             onclick={handleMinimize}
@@ -77,7 +77,7 @@
           </button>
           <button
             class={cn(
-              "btn btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65",
+              "btn btn-square btn-ghost hidden opacity-65 hover:opacity-100 sm:flex",
               isMaximize ? "btn-md" : "btn-sm"
             )}
             onclick={handleMaximize}
