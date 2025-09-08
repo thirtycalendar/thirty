@@ -20,24 +20,20 @@
 
   function handleMaximize() {
     isOpen = true;
-    isMaximize = true;
+    isMaximize = !isMaximize;
   }
 
   function handleMinimize() {
-    if (isMaximize) {
-      isMaximize = false;
-    } else {
-      isOpen = false;
-    }
+    isOpen = false;
   }
 
   function handleChatIcon() {
     isOpen = true;
-    isMaximize = false;
+    isMaximize = window.innerWidth < 640;
   }
 </script>
 
-<div class="fixed z-[9999]" class:right-8={!isMaximize} class:bottom-8={!isMaximize}>
+<div class="fixed right-8 bottom-8 z-[9999]">
   {#if isOpen}
     <!-- Chat modal -->
     <div
@@ -45,29 +41,50 @@
         "border-base-300 bg-base-200 flex flex-col overflow-hidden rounded-lg border shadow-lg",
         isMaximize
           ? "fixed inset-0 h-screen w-screen"
-          : "fixed right-0 bottom-0 h-screen w-screen sm:absolute sm:max-h-[550px] sm:max-w-[350px]"
+          : "absolute right-0 bottom-0 min-h-[550px] min-w-[350px]"
       )}
     >
       <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
         <!-- Toolbar -->
         <div class="flex shrink-0 items-center justify-end p-1">
           <button
-            class="btn btn-xs btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65"
+            class={cn(
+              "btn btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65",
+              isMaximize ? "btn-md" : "btn-sm"
+            )}
             onclick={handleMinimize}
           >
-            <Icon icon={Remove01Icon} size={13} absoluteStrokeWidth />
+            <Icon
+              icon={Remove01Icon}
+              class={cn(isMaximize ? "size-4" : "size-3")}
+              absoluteStrokeWidth
+            />
           </button>
           <button
-            class="btn btn-xs btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65"
+            class={cn(
+              "btn btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65",
+              isMaximize ? "btn-md" : "btn-sm"
+            )}
             onclick={handleMaximize}
           >
-            <Icon icon={RectangularIcon} size={13} absoluteStrokeWidth />
+            <Icon
+              icon={RectangularIcon}
+              class={cn(isMaximize ? "size-4" : "size-3")}
+              absoluteStrokeWidth
+            />
           </button>
           <button
-            class="btn sm:btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
+            class={cn(
+              "btn btn-square btn-ghost opacity-65 hover:opacity-100",
+              isMaximize ? "btn-md" : "btn-sm"
+            )}
             onclick={handleClose}
           >
-            <Icon icon={Cancel01Icon} size={13} absoluteStrokeWidth />
+            <Icon
+              icon={Cancel01Icon}
+              class={cn(isMaximize ? "size-4" : "size-3")}
+              absoluteStrokeWidth
+            />
           </button>
         </div>
 
