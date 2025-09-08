@@ -24,8 +24,11 @@
   }
 
   function handleMinimize() {
-    isOpen = false;
-    isMaximize = false;
+    if (isMaximize) {
+      isMaximize = false;
+    } else {
+      isOpen = false;
+    }
   }
 
   function handleChatIcon() {
@@ -42,26 +45,26 @@
         "border-base-300 bg-base-200 flex flex-col overflow-hidden rounded-lg border shadow-lg",
         isMaximize
           ? "fixed inset-0 h-screen w-screen"
-          : "absolute right-0 bottom-0 h-screen w-screen sm:max-h-[550px] sm:max-w-[350px]"
+          : "fixed right-0 bottom-0 h-screen w-screen sm:absolute sm:max-h-[550px] sm:max-w-[350px]"
       )}
     >
       <div class="bg-base-100 flex min-h-0 flex-1 flex-col rounded-t-lg">
         <!-- Toolbar -->
         <div class="flex shrink-0 items-center justify-end p-1">
           <button
-            class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
+            class="btn btn-xs btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65"
             onclick={handleMinimize}
           >
             <Icon icon={Remove01Icon} size={13} absoluteStrokeWidth />
           </button>
           <button
-            class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
+            class="btn btn-xs btn-square btn-ghost opacity-0 hover:opacity-100 sm:opacity-65"
             onclick={handleMaximize}
           >
             <Icon icon={RectangularIcon} size={13} absoluteStrokeWidth />
           </button>
           <button
-            class="btn btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
+            class="btn sm:btn-xs btn-square btn-ghost opacity-65 hover:opacity-100"
             onclick={handleClose}
           >
             <Icon icon={Cancel01Icon} size={13} absoluteStrokeWidth />
