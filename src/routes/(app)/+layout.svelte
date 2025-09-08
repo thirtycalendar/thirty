@@ -9,6 +9,7 @@
     Modals as CalendarModals,
     SidebarItems as CalendarSidebarItems
   } from "$lib/client/components/calendar";
+  import { Modal as ChatModal } from "$lib/client/components/chat";
   import { Modals as EventModals } from "$lib/client/components/event";
   import { Modals as HolidayModals } from "$lib/client/components/holiday";
   import { Modal as SettingsModal } from "$lib/client/components/settings";
@@ -26,6 +27,7 @@
 
 <Toast />
 
+<ChatModal />
 <CalendarModals />
 <EventModals />
 <BirthdayModals />
@@ -36,7 +38,7 @@
   <!-- Sidebar -->
   <div
     class={cn(
-      "bg-base-200 z-5000 overflow-y-auto transition-all duration-300",
+      "bg-base-200 z-9999 overflow-y-auto transition-all duration-300",
       "fixed top-0 left-0 h-full w-[255px] p-2 pt-3 sm:static sm:h-full",
       $isOpen ? "translate-x-0" : "-translate-x-full sm:w-0 sm:p-0"
     )}
