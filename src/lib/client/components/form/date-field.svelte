@@ -17,7 +17,6 @@
     format as formatDate,
     isSameDay,
     isSameMonth,
-    isToday,
     isValid,
     parse,
     startOfDay,
@@ -338,10 +337,9 @@
             role="gridcell"
             aria-selected={selected}
             class={cn(
-              "btn btn-sm btn-ghost w-full rounded-md py-1 transition-colors outline-none",
+              "btn btn-sm btn-ghost w-full rounded-md py-1 font-normal transition-colors outline-none",
               selected ? "bg-base-300 text-base-content font-semibold" : "",
               !isSameMonth(day, visibleMonth) ? "text-base-content/30" : "",
-              isToday(day) && !selected ? "font-medium" : "",
               isDisablePast && day < startOfDay(new Date())
                 ? "cursor-not-allowed opacity-30"
                 : "hover:bg-base-200/60"

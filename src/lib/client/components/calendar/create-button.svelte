@@ -7,25 +7,14 @@
   import { Icon } from "../icons";
 </script>
 
-<div class="z-200 hidden sm:block">
+<div class="z-200">
   <button
-    class="btn btn-md bg-primary border-base-300 border shadow-none"
+    class="btn btn-sm sm:btn-md bg-primary border-base-300 border"
     onclick={() => {
       toggleDraggableModal(eventModalStore.modalId);
     }}
   >
     <Icon icon={Add01Icon} />
     <span class="hidden lg:block">Create</span>
-  </button>
-</div>
-
-<div class="absolute right-8 bottom-8 z-600 sm:hidden">
-  <button
-    class="btn btn-md bg-base-200 border-base-300 border"
-    onclick={() => {
-      toggleDraggableModal(eventModalStore.modalId);
-    }}
-  >
-    <Icon icon={Add01Icon} />
   </button>
 </div>
