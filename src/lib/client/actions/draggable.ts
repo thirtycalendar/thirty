@@ -47,6 +47,12 @@ export function draggable(node: HTMLElement, opts: Opts = {}) {
 
   function onPointerDown(e: PointerEvent) {
     if (e.button !== 0) return;
+
+    const target = e.target as HTMLElement;
+    if (target.closest("button, a, input, textarea, select, [role='button']")) {
+      return;
+    }
+
     dragging = true;
     try {
       handle!.setPointerCapture(e.pointerId);
