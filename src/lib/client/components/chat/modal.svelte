@@ -8,6 +8,7 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
+  import { isMaximize, isOpen } from "./utils";
 
   import { Toolbar } from ".";
 
@@ -16,9 +17,6 @@
   }
 
   const { children }: Props = $props();
-
-  let isOpen = $state(false);
-  let isMaximize = $state(false);
 
   let chatEl: HTMLDivElement | undefined = $state();
   let toolbarEl: HTMLDivElement | undefined = $state();
@@ -32,20 +30,20 @@
   }
 
   function handleClose() {
-    isOpen = false;
-    isMaximize = false;
+    isOpen.set(false);
+    isMaximize.set(false);
     resetPosition();
   }
 
   function handleMinimize() {
-    isOpen = false;
+    isOpen.set(false);
   }
 
   async function handleMaximize() {
-    isOpen = true;
-    isMaximize = !isMaximize;
+    isOpen.set(true);
+    isMaximize.update((v) => !v);
 
-    if (isMaximize) {
+    if ($isMaximize) {
       position = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     } else {
       resetPosition();
@@ -56,20 +54,20 @@
   }
 
   async function handleChatIcon() {
-    isOpen = true;
+    isOpen.set(true);
 
-    isMaximize = browser && window.innerWidth < 640;
+    isMaximize.set(browser && window.innerWidth < 640);
 
     await tick();
 
-    if (!isMaximize && chatEl) {
+    if (!$isMaximize && chatEl) {
       const rect = chatEl.getBoundingClientRect();
       defaultPosition = {
         x: window.innerWidth - rect.width / 2 - 10,
         y: window.innerHeight - rect.height / 2 - 10
       };
       position = { ...defaultPosition };
-    } else if (isMaximize) {
+    } else if ($isMaximize) {
       position = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     }
 
@@ -77,11 +75,11 @@
   }
 
   function updateMaximize() {
-    if (isOpen && browser) {
-      const wasMaximize = isMaximize;
-      isMaximize = window.innerWidth < 640;
+    if ($isOpen && browser) {
+      const wasMaximize = $isMaximize;
+      isMaximize.set(window.innerWidth < 640);
 
-      if (isMaximize !== wasMaximize) {
+      if ($isMaximize !== wasMaximize) {
         updateDraggable();
       }
     }
@@ -93,7 +91,7 @@
     draggableAction?.destroy();
     draggableAction = null;
 
-    if (!isOpen || isMaximize) return;
+    if (!$isOpen || $isMaximize) return;
 
     draggableAction = draggable(chatEl, {
       handle: toolbarEl,
@@ -120,12 +118,12 @@
 </script>
 
 <div class="fixed z-[9998]">
-  {#if isOpen}
+  {#if $isOpen}
     <div
       bind:this={chatEl}
       class={cn(
         "base-border bg-base-200 border-rounded z-[9999] flex flex-col overflow-hidden p-1 shadow-lg",
-        isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed h-[550px] w-[350px]"
+        $isMaximize ? "fixed inset-0 h-screen w-screen" : "fixed h-[550px] w-[350px]"
       )}
       style="
         left: {position?.x ?? 0}px;
@@ -136,9 +134,9 @@
       <div class="bg-base-100 border-rounded flex min-h-0 flex-1 flex-col">
         <div
           bind:this={toolbarEl}
-          class={cn(isMaximize ? "!cursor-default" : "!cursor-all-scroll")}
+          class={cn($isMaximize ? "!cursor-default" : "!cursor-all-scroll")}
         >
-          <Toolbar {isMaximize} {handleMinimize} {handleMaximize} {handleClose} />
+          <Toolbar {handleMinimize} {handleMaximize} {handleClose} />
         </div>
         <div class="flex-1 overflow-y-auto px-1">
           {@render children()}

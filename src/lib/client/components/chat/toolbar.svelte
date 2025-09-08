@@ -12,15 +12,15 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
+  import { isMaximize } from "./utils";
 
   interface Props {
-    isMaximize: boolean;
     handleMinimize: () => void;
     handleMaximize: () => void;
     handleClose: () => void;
   }
 
-  const { isMaximize = $bindable(), handleMinimize, handleMaximize, handleClose }: Props = $props();
+  const { handleMinimize, handleMaximize, handleClose }: Props = $props();
 </script>
 
 <div class="flex shrink-0 items-center justify-between p-1">
@@ -28,13 +28,13 @@
     <button
       class={cn(
         "btn btn-square btn-ghost opacity-90 hover:opacity-100",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleClose}
     >
       <Icon
         icon={DashboardSquare01Icon}
-        class={cn(isMaximize ? "size-4" : "size-3")}
+        class={cn($isMaximize ? "size-4" : "size-3")}
         absoluteStrokeWidth
       />
     </button>
@@ -42,24 +42,24 @@
     <button
       class={cn(
         "btn btn-square btn-ghost opacity-90 hover:opacity-100",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleClose}
     >
       <Icon
         icon={TransactionHistoryIcon}
-        class={cn(isMaximize ? "size-4" : "size-3")}
+        class={cn($isMaximize ? "size-4" : "size-3")}
         absoluteStrokeWidth
       />
     </button>
     <button
       class={cn(
         "btn btn-square btn-ghost opacity-90 hover:opacity-100",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleClose}
     >
-      <Icon icon={Add01Icon} class={cn(isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
+      <Icon icon={Add01Icon} class={cn($isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
     </button>
   </div>
 
@@ -67,29 +67,29 @@
     <button
       class={cn(
         "btn btn-square btn-ghost opacity-65 hover:opacity-100",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleMinimize}
     >
-      <Icon icon={Remove01Icon} class={cn(isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
+      <Icon icon={Remove01Icon} class={cn($isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
     </button>
     <button
       class={cn(
         "btn btn-square btn-ghost hidden opacity-65 hover:opacity-100 sm:flex",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleMaximize}
     >
-      {#if isMaximize}
+      {#if $isMaximize}
         <Icon
           icon={ArrowShrink02Icon}
-          class={cn(isMaximize ? "size-4" : "size-3")}
+          class={cn($isMaximize ? "size-4" : "size-3")}
           absoluteStrokeWidth
         />
       {:else}
         <Icon
           icon={RectangularIcon}
-          class={cn(isMaximize ? "size-4" : "size-3")}
+          class={cn($isMaximize ? "size-4" : "size-3")}
           absoluteStrokeWidth
         />
       {/if}
@@ -97,11 +97,11 @@
     <button
       class={cn(
         "btn btn-square btn-ghost opacity-65 hover:opacity-100",
-        isMaximize ? "btn-md" : "btn-sm"
+        $isMaximize ? "btn-md" : "btn-sm"
       )}
       onclick={handleClose}
     >
-      <Icon icon={Cancel01Icon} class={cn(isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
+      <Icon icon={Cancel01Icon} class={cn($isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
     </button>
   </div>
 </div>
