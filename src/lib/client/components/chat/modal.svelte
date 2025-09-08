@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import {
+    ArrowShrink02Icon,
     Cancel01Icon,
     Message01Icon,
     RectangularIcon,
@@ -31,6 +34,18 @@
     isOpen = true;
     isMaximize = window.innerWidth < 640;
   }
+
+  function updateMaximize() {
+    if (isOpen) {
+      isMaximize = window.innerWidth < 640;
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener("resize", updateMaximize);
+
+    return () => window.removeEventListener("resize", updateMaximize);
+  });
 </script>
 
 <div class="fixed right-8 bottom-8 z-[9999]">
@@ -67,11 +82,19 @@
             )}
             onclick={handleMaximize}
           >
-            <Icon
-              icon={RectangularIcon}
-              class={cn(isMaximize ? "size-4" : "size-3")}
-              absoluteStrokeWidth
-            />
+            {#if isMaximize}
+              <Icon
+                icon={ArrowShrink02Icon}
+                class={cn(isMaximize ? "size-4" : "size-3")}
+                absoluteStrokeWidth
+              />
+            {:else}
+              <Icon
+                icon={RectangularIcon}
+                class={cn(isMaximize ? "size-4" : "size-3")}
+                absoluteStrokeWidth
+              />
+            {/if}
           </button>
           <button
             class={cn(
