@@ -23,11 +23,11 @@ export const creditService = {
     if (existingRow) return existingRow;
 
     const plan = "free";
-    const count = MessageLimitByPlan[plan];
+    const remaining = MessageLimitByPlan[plan];
 
     const [newRow] = await db
       .insert(creditTable)
-      .values({ userId, plan, count, month })
+      .values({ userId, plan, remaining, month })
       .returning();
 
     if (!newRow) {
@@ -43,7 +43,7 @@ export const creditService = {
     const [updatedRow] = await db
       .update(creditTable)
       .set({
-        count: sql`${creditTable.count} - 1`,
+        remaining: sql`${creditTable.remaining} - 1`,
         updatedAt: new Date().toISOString()
       })
       .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
@@ -53,11 +53,11 @@ export const creditService = {
       throw new Error("Credit entry not found or update failed.");
     }
 
-    if (updatedRow.count < 0) {
+    if (updatedRow.remaining < 0) {
       await db
         .update(creditTable)
         .set({
-          count: 0
+          remaining: 0
         })
         .where(eq(creditTable.id, updatedRow.id));
       throw new Error("No credits left");
@@ -72,7 +72,7 @@ export const creditService = {
 
     const [row] = await db
       .update(creditTable)
-      .set({ plan, count: limit, updatedAt: new Date().toISOString() })
+      .set({ plan, remaining: limit, updatedAt: new Date().toISOString() })
       .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
       .returning();
 
@@ -82,7 +82,7 @@ export const creditService = {
 
     const [newRow] = await db
       .insert(creditTable)
-      .values({ userId, plan, count: limit, month })
+      .values({ userId, plan, remaining: limit, month })
       .returning();
 
     return newRow;

@@ -17,7 +17,7 @@ export const creditTable = sqliteTable("credits", {
     .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
   plan: text("plan").$type<SubscriptionPlan>().default("free").notNull(),
-  count: integer("count").default(0).notNull(),
+  remaining: integer("remaining").default(0).notNull(),
   month: text("month").notNull(),
 
   ...timestamps
