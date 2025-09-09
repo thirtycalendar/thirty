@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "tunnel": "pnpm dlx localtunnel --port 5173",
-    "tunnel:dev": "pnpm dlx localtunnel --port 5173 --subdomain thirty-calendar-dev || true",
+    "tunnel": "instatunnel connect 5173 --subdomain thirty",
     "deploy": "vercel --force",
     "prod": "vercel --force --prod",
     "build": "vite build",
