@@ -8,7 +8,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { getRandomColor } from "$lib/shared/utils/colors";
-import type { CalendarForm, CreditForm } from "$lib/shared/types";
+import type { CalendarForm } from "$lib/shared/types";
 
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables";
@@ -57,12 +57,7 @@ export const auth = betterAuth({
 
           await calendarService.create(user.id, calendar);
 
-          const credit: CreditForm = {
-            userId: user.id,
-            month: new Date().toISOString()
-          };
-
-          await creditService.create(user.id, credit);
+          await creditService.createInitial(user.id);
 
           await holidayCountryService.addCountryByCode(user.id, countryCode);
         }

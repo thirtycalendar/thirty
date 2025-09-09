@@ -11,13 +11,13 @@ import { streamChat } from "$lib/server/chat";
 import { chatSchema } from "$lib/shared/schemas";
 import type { Chat, Message, SuccessResponse, User } from "$lib/shared/types";
 
-import { checkChatCredits } from "../middlewares/check-chat-credit";
+import { checkCredit } from "../middlewares/check-credit";
 import { loggedIn } from "../middlewares/logged-in";
 import { errorResponse, requireParam } from "../utils";
 
 export const chatRoute = new Hono()
   .use(loggedIn)
-  .post("/", checkChatCredits, async (c) => {
+  .post("/", checkCredit, async (c) => {
     try {
       const { messages } = await c.req.json();
 
