@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { PUBLIC_POLAR_PRODUCT_ID_PRO } from "$env/static/public";
 
+  import { format, parseISO } from "date-fns";
+
   import { checkoutMutation, portalMutation } from "$lib/client/data/mutations";
   import { creditsQuery } from "$lib/client/data/queries/credit";
   import { authClient } from "$lib/client/utils/rpc";
@@ -31,7 +33,7 @@
     const sub = customer?.activeSubscriptions?.[0];
 
     planName = sub?.productId === PUBLIC_POLAR_PRODUCT_ID_PRO ? "pro" : "free";
-    renewalDate = sub?.endsAt?.toISOString() ?? "";
+    renewalDate = sub?.currentPeriodEnd?.toISOString() ?? "";
     // price = sub?.amount ?? 0;
   });
 
@@ -67,7 +69,9 @@
         </span>
       </p>
       <p class="text-primary-content/60 mt-1 text-xs">
-        {isFree ? "No renewal required" : `Renews on ${renewalDate}`}
+        {isFree
+          ? "No renewal required"
+          : `Renews on ${format(parseISO(renewalDate), "MMM d, yyyy")}`}
       </p>
     </div>
 
