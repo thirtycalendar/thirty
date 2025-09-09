@@ -27,27 +27,6 @@ export const creditService = {
     return row;
   },
 
-  async update(userId: string, { plan }: { plan: SubscriptionPlan }): Promise<Credit> {
-    const month = getCurrentMonth();
-    const limit = MessageLimitByPlan[plan];
-
-    const [row] = await db
-      .insert(creditTable)
-      .values({
-        userId,
-        plan,
-        count: limit,
-        month
-      })
-      .onConflictDoUpdate({
-        target: [creditTable.userId, creditTable.month],
-        set: { plan, count: limit, updatedAt: new Date().toISOString() }
-      })
-      .returning();
-
-    return row;
-  },
-
   async get(userId: string): Promise<Credit> {
     const month = getCurrentMonth();
 
@@ -70,6 +49,34 @@ export const creditService = {
       .returning();
 
     return newRow;
+  },
+
+  async update(userId: string, { plan }: { plan: SubscriptionPlan }): Promise<Credit> {
+    const month = getCurrentMonth();
+    const limit = MessageLimitByPlan[plan];
+
+    const [currentCredit] = await db
+      .select()
+      .from(creditTable)
+      .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
+      .limit(1);
+
+    if (currentCredit) {
+      const [updatedRow] = await db
+        .update(creditTable)
+        .set({ plan, count: limit, updatedAt: new Date().toISOString() })
+        .where(eq(creditTable.id, currentCredit.id))
+        .returning();
+
+      return updatedRow;
+    } else {
+      const [newRow] = await db
+        .insert(creditTable)
+        .values({ userId, plan, count: limit, month })
+        .returning();
+
+      return newRow;
+    }
   },
 
   async decrement(userId: string): Promise<void> {
