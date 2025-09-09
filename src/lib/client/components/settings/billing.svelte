@@ -13,14 +13,15 @@
   import type { SubscriptionPlan } from "$lib/shared/types";
 
   const { data: credit } = creditsQuery();
-  const usage: number = $derived($credit?.count ?? 0);
+  const usage = $derived.by(() => $credit?.count ?? 0);
+  const limit = $derived.by(() => MessageLimitByPlan[planName]);
+  const used = $derived.by(() => limit - usage);
 
   let planName = $state<SubscriptionPlan>("free");
   let renewalDate = $state("");
   // let price = $state(0);
 
   const isFree = $derived.by(() => planName === "free");
-  const limit = $derived.by(() => MessageLimitByPlan[planName]);
 
   const persuasiveText = $derived.by(() =>
     isFree
@@ -86,10 +87,10 @@
   {#if isFree}
     <div class="bg-base-200 border-rounded px-3 py-2 text-sm">
       <p>
-        You've used <span class="font-semibold">{usage}</span> of your
+        You've used <span class="font-semibold">{used}</span> of your
         <span class="font-semibold">{limit}</span> free messages this month.
       </p>
-      <p class="text-error mt-2">Only {limit - usage} left - don't run out!</p>
+      <p class="text-error mt-2">Only {usage} left - don't run out!</p>
     </div>
   {/if}
 

@@ -57,8 +57,6 @@ export const auth = betterAuth({
 
           await calendarService.create(user.id, calendar);
 
-          await creditService.createInitial(user.id);
-
           await holidayCountryService.addCountryByCode(user.id, countryCode);
         }
       }
@@ -83,12 +81,12 @@ export const auth = betterAuth({
             const plan =
               payload.data.productId === publicEnv.PUBLIC_POLAR_PRODUCT_ID_PRO ? "pro" : "free";
 
-            if (userId) await creditService.update(userId, { plan });
+            if (userId) await creditService.update(userId, plan);
           },
           onSubscriptionRevoked: async (payload) => {
             const userId = payload.data.customer.externalId;
 
-            if (userId) await creditService.update(userId, { plan: "free" });
+            if (userId) await creditService.update(userId, "free");
           }
         })
       ]

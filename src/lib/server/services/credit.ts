@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { MessageLimitByPlan } from "$lib/shared/constants";
 import type { Credit, SubscriptionPlan } from "$lib/shared/types";
@@ -11,81 +11,80 @@ function getCurrentMonth(): string {
 }
 
 export const creditService = {
-  async createInitial(userId: string): Promise<Credit> {
-    const month = getCurrentMonth();
-
-    const [row] = await db
-      .insert(creditTable)
-      .values({
-        userId,
-        plan: "free",
-        count: MessageLimitByPlan.free,
-        month
-      })
-      .returning();
-
-    return row;
-  },
-
   async get(userId: string): Promise<Credit> {
     const month = getCurrentMonth();
 
-    const [row] = await db
+    const [existingRow] = await db
       .select()
       .from(creditTable)
       .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
       .limit(1);
 
-    if (row) return row;
+    if (existingRow) return existingRow;
+
+    const plan = "free";
+    const count = MessageLimitByPlan[plan];
 
     const [newRow] = await db
       .insert(creditTable)
-      .values({
-        userId,
-        plan: "free",
-        count: MessageLimitByPlan.free,
-        month
-      })
+      .values({ userId, plan, count, month })
       .returning();
+
+    if (!newRow) {
+      throw new Error("Failed to create user credit");
+    }
 
     return newRow;
   },
 
-  async update(userId: string, { plan }: { plan: SubscriptionPlan }): Promise<Credit> {
+  async decrement(userId: string): Promise<Credit> {
+    const month = getCurrentMonth();
+
+    const [updatedRow] = await db
+      .update(creditTable)
+      .set({
+        count: sql`${creditTable.count} - 1`,
+        updatedAt: new Date().toISOString()
+      })
+      .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
+      .returning();
+
+    if (!updatedRow) {
+      throw new Error("Credit entry not found or update failed.");
+    }
+
+    if (updatedRow.count < 0) {
+      await db
+        .update(creditTable)
+        .set({
+          count: 0
+        })
+        .where(eq(creditTable.id, updatedRow.id));
+      throw new Error("No credits left");
+    }
+
+    return updatedRow;
+  },
+
+  async update(userId: string, plan: SubscriptionPlan): Promise<Credit> {
     const month = getCurrentMonth();
     const limit = MessageLimitByPlan[plan];
 
-    const [currentCredit] = await db
-      .select()
-      .from(creditTable)
-      .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
-      .limit(1);
-
-    if (currentCredit) {
-      const [updatedRow] = await db
-        .update(creditTable)
-        .set({ plan, count: limit, updatedAt: new Date().toISOString() })
-        .where(eq(creditTable.id, currentCredit.id))
-        .returning();
-
-      return updatedRow;
-    } else {
-      const [newRow] = await db
-        .insert(creditTable)
-        .values({ userId, plan, count: limit, month })
-        .returning();
-
-      return newRow;
-    }
-  },
-
-  async decrement(userId: string): Promise<void> {
-    const credit = await creditService.get(userId);
-    if (credit.count <= 0) throw new Error("No credits left");
-
-    await db
+    const [row] = await db
       .update(creditTable)
-      .set({ count: credit.count - 1, updatedAt: new Date().toISOString() })
-      .where(eq(creditTable.id, credit.id));
+      .set({ plan, count: limit, updatedAt: new Date().toISOString() })
+      .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
+      .returning();
+
+    if (row) {
+      return row;
+    }
+
+    const [newRow] = await db
+      .insert(creditTable)
+      .values({ userId, plan, count: limit, month })
+      .returning();
+
+    return newRow;
   }
 };
