@@ -51,15 +51,15 @@ body {
   }
 
   .ai-message h1 {
-    @apply mt-6 mb-4 text-2xl font-bold;
+    @apply my-3 font-bold;
   }
 
   .ai-message h2 {
-    @apply mt-5 mb-3 text-xl font-semibold;
+    @apply my-3 font-bold;
   }
 
   .ai-message h3 {
-    @apply mt-4 mb-2 text-lg font-semibold;
+    @apply my-3 font-bold;
   }
 
   .ai-message p {

@@ -14,18 +14,26 @@
 
   let input = $state("");
   let errorMessage = $state("");
+  let isToolCalling = $state(false);
+
   let textareaRef: HTMLTextAreaElement | null = null;
 
   const { mutate: handleUpgrade } = checkoutMutation();
 
   const chat = new Chat({
+    onToolCall: () => {
+      isToolCalling = true;
+    },
+    onFinish: () => {
+      isToolCalling = false;
+    },
     onError: (error) => {
       errorMessage = error.message;
     }
   });
 
   const isThinking = $derived(chat.status === "submitted");
-  const isResponding = $derived(chat.status === "streaming");
+  const isStreaming = $derived(chat.status === "streaming");
 
   function oninput() {
     if (!textareaRef) return;
@@ -35,7 +43,7 @@
 
   function onsubmit(e: Event) {
     e.preventDefault();
-    if (!input.trim() || isThinking || isResponding) return;
+    if (!input.trim() || isThinking || isStreaming) return;
 
     chat.sendMessage({ text: input });
     input = "";
@@ -86,9 +94,13 @@
           </div>
         {/each}
 
-        {#if isThinking}
-          <div class="my-2 animate-pulse">Thinking...</div>
-        {/if}
+        <div class="my-2 animate-pulse">
+          {#if isThinking}
+            Thinking...
+          {:else if isStreaming && isToolCalling}
+            Generating...
+          {/if}
+        </div>
       </div>
     </div>
 
@@ -134,7 +146,7 @@
         <button
           type="submit"
           class="btn btn-circle btn-secondary absolute right-2 bottom-4 p-2"
-          disabled={isResponding || isThinking || input === ""}
+          disabled={isStreaming || isThinking || input === ""}
         >
           <Icon icon={SentIcon} class="opacity-75 hover:opacity-100" />
         </button>
