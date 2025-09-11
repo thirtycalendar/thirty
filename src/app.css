@@ -44,6 +44,71 @@ body {
   .base-border {
     @apply !border-base-300 border;
   }
+
+  /* ----- ai messages ----- */
+  .ai-message {
+    @apply prose;
+  }
+
+  .ai-message h1 {
+    @apply mt-6 mb-4 text-2xl font-bold;
+  }
+
+  .ai-message h2 {
+    @apply mt-5 mb-3 text-xl font-semibold;
+  }
+
+  .ai-message h3 {
+    @apply mt-4 mb-2 text-lg font-semibold;
+  }
+
+  .ai-message p {
+    @apply my-3;
+  }
+
+  .ai-message ul {
+    @apply my-3 list-outside list-disc pl-6;
+  }
+
+  .ai-message ol {
+    @apply my-3 list-outside list-decimal pl-6;
+  }
+
+  .ai-message li {
+    @apply my-1;
+  }
+
+  .ai-message a {
+    @apply text-secondary hover:text-secondary/80 underline;
+  }
+
+  .ai-message blockquote {
+    @apply border-base-300 text-base-content/70 my-4 border-l-4 pl-4 italic;
+  }
+
+  .ai-message code {
+    @apply bg-base-200 rounded px-1 py-0.5 font-mono text-sm;
+  }
+
+  .ai-message pre {
+    @apply bg-base-200 my-4 overflow-x-auto rounded p-4 font-mono text-sm;
+  }
+
+  .ai-message table {
+    @apply my-4 w-full border-collapse text-sm;
+  }
+
+  .ai-message th {
+    @apply border-base-300 bg-base-200 border px-3 py-2 text-left;
+  }
+
+  .ai-message td {
+    @apply border-base-300 border px-3 py-2;
+  }
+
+  .ai-message hr {
+    @apply border-base-300 my-6 border-t;
+  }
 }
 
 @plugin "daisyui" {

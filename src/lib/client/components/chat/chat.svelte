@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Markdown from "svelte-markdown";
+
   import { Chat } from "@ai-sdk/svelte";
   import { SentIcon } from "@hugeicons/core-free-icons";
 
@@ -65,14 +67,20 @@
           <div class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}>
             {#each message.parts as part, i (i)}
               {#if part.type === "text"}
-                <div
-                  class={cn(
-                    message.role === "user" &&
+                {#if message.role === "user"}
+                  <!-- User bubble -->
+                  <div
+                    class={cn(
                       "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
-                  )}
-                >
-                  {part.text}
-                </div>
+                    )}
+                  >
+                    {part.text}
+                  </div>
+                {:else}
+                  <div class="ai-message">
+                    <Markdown source={part.text} />
+                  </div>
+                {/if}
               {/if}
             {/each}
           </div>
@@ -98,11 +106,16 @@
               <p>
                 <button
                   class="text-error cursor-pointer font-medium underline"
-                  onclick={handleUpgrade}>Upgrade to Pro</button
+                  onclick={handleUpgrade}
+                  type="button"
                 >
+                  Upgrade to Pro
+                </button>
                 for unlimited messages.
               </p>
-            {:else}{errorMessage}{/if}
+            {:else}
+              {errorMessage}
+            {/if}
           </div>
         {/if}
 

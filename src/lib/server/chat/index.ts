@@ -12,10 +12,7 @@ export async function streamChat(userId: string, messages: UIMessage[]) {
     system: chatSystemMessage,
     tools: createTools(userId),
     stopWhen: stepCountIs(10),
-    messages: convertToModelMessages(messages),
-    onChunk: (event) => {
-      console.log("event chunk", event.chunk);
-    }
+    messages: convertToModelMessages(messages)
   });
 
   return result.toUIMessageStreamResponse();
