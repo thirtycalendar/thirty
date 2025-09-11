@@ -2,6 +2,7 @@
   import { Chat } from "@ai-sdk/svelte";
   import { SentIcon } from "@hugeicons/core-free-icons";
 
+  import { checkoutMutation } from "$lib/client/data/mutations";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -10,9 +11,19 @@
   import { Modal } from ".";
 
   let input = $state("");
+  let errorMessage = $state("");
   let textareaRef: HTMLTextAreaElement | null = null;
 
-  const chat = new Chat({});
+  const { mutate: handleUpgrade } = checkoutMutation();
+
+  const chat = new Chat({
+    onError: (error) => {
+      errorMessage = error.message;
+    }
+  });
+
+  const isThinking = $derived(chat.status === "submitted");
+  const isResponding = $derived(chat.status === "streaming");
 
   function oninput() {
     if (!textareaRef) return;
@@ -22,7 +33,7 @@
 
   function onsubmit(e: Event) {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isThinking || isResponding) return;
 
     chat.sendMessage({ text: input });
     input = "";
@@ -44,21 +55,20 @@
   <div class="flex h-full flex-col">
     <!-- Messages -->
     <div class="flex-1 overflow-y-auto">
-      <div class="mx-auto w-full max-w-3xl p-2">
+      <div
+        class={cn(
+          "text-primary-content/80 mx-auto w-full max-w-3xl p-2",
+          $isMaximize ? "text-base" : "text-sm"
+        )}
+      >
         {#each chat.messages as message, i (i)}
-          <div
-            class={cn(
-              "text-primary-content/80 mb-2 flex",
-              $isMaximize ? "text-base" : "text-sm",
-              message.role === "user" ? "justify-end" : "justify-start"
-            )}
-          >
+          <div class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}>
             {#each message.parts as part, i (i)}
               {#if part.type === "text"}
                 <div
                   class={cn(
                     message.role === "user" &&
-                      "bg-base-200/50 text-base-content max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
+                      "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
                   )}
                 >
                   {part.text}
@@ -67,12 +77,35 @@
             {/each}
           </div>
         {/each}
+
+        {#if isThinking}
+          <div class="my-2 animate-pulse">Thinking...</div>
+        {/if}
       </div>
     </div>
 
     <!-- Input -->
     <form {onsubmit} class="sticky bottom-0 w-full p-1 pt-0">
       <div class="relative mx-auto w-full max-w-3xl">
+        {#if errorMessage}
+          <div
+            class={cn(
+              "badge-outline badge badge-error badge-soft my-2 w-full justify-start",
+              $isMaximize && "badge-lg"
+            )}
+          >
+            {#if errorMessage.includes("No credits left")}
+              <p>
+                <button
+                  class="text-error cursor-pointer font-medium underline"
+                  onclick={handleUpgrade}>Upgrade to Pro</button
+                >
+                for unlimited messages.
+              </p>
+            {:else}{errorMessage}{/if}
+          </div>
+        {/if}
+
         <textarea
           bind:this={textareaRef}
           bind:value={input}
@@ -85,7 +118,11 @@
           placeholder="Send a message..."
         ></textarea>
 
-        <button type="submit" class="btn btn-circle btn-secondary absolute right-2 bottom-4 p-2">
+        <button
+          type="submit"
+          class="btn btn-circle btn-secondary absolute right-2 bottom-4 p-2"
+          disabled={isResponding || isThinking || input === ""}
+        >
           <Icon icon={SentIcon} class="opacity-75 hover:opacity-100" />
         </button>
       </div>
