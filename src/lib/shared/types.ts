@@ -20,7 +20,7 @@ import type {
   calendarSchema,
   chatSchema,
   eventSchema,
-  hdCountrySchema,
+  holidayCountrySchema,
   taskSchema,
   waitingListSchema
 } from "./schemas";
@@ -63,7 +63,7 @@ export interface HolidayCountry {
   countryCode: string;
   color: Color;
 }
-export type HolidayCountryForm = z.infer<typeof hdCountrySchema>;
+export type HolidayCountryForm = z.infer<typeof holidayCountrySchema>;
 
 export interface Holiday {
   id: string;

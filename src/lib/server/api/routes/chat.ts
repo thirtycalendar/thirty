@@ -19,9 +19,11 @@ export const chatRoute = new Hono()
   .use(loggedIn)
   .post("/", checkCredit, async (c) => {
     try {
+      const user = c.get("user") as User;
+
       const { messages } = await c.req.json();
 
-      return streamChat(messages);
+      return streamChat(user.id, messages);
     } catch (err: unknown) {
       return errorResponse(c, err);
     }

@@ -6,7 +6,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { hdCountrySchema } from "$lib/shared/schemas/holiday";
+  import { holidayCountrySchema } from "$lib/shared/schemas/holiday";
   import type { HolidayCountryForm } from "$lib/shared/types";
 
   import { toggleDraggableModal } from "../utils";
@@ -22,7 +22,7 @@
   };
 
   const { formData, formErrors, isSubmitting, handleSubmit } = createForm({
-    schema: hdCountrySchema,
+    schema: holidayCountrySchema,
     defaultValues,
     onSubmit
   });

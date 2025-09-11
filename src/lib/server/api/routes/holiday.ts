@@ -11,7 +11,7 @@ import {
 } from "$lib/server/services";
 import { getIPLocation } from "$lib/server/libs/ipwhois/utils";
 
-import { hdCountrySchema } from "$lib/shared/schemas";
+import { holidayCountrySchema } from "$lib/shared/schemas";
 import type { Holiday, HolidayCountry, SuccessResponse, User } from "$lib/shared/types";
 
 import { errorResponse, requireParam } from "../utils";
@@ -79,7 +79,7 @@ export const holidayRoute = new Hono<Context>()
       return errorResponse(c, err);
     }
   })
-  .post("/country/add", zValidator("json", hdCountrySchema), async (c) => {
+  .post("/country/add", zValidator("json", holidayCountrySchema), async (c) => {
     try {
       const user = c.get("user") as User;
       const data = c.req.valid("json");
