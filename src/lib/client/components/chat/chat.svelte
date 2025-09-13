@@ -21,29 +21,27 @@
 
   const { mutate: handleUpgrade } = checkoutMutation();
 
-  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
+  const { data: messages, isPending } = getMessagesQuery($activeChatId);
 
-  const chat = new Chat({
-    get id() {
-      return $activeChatId === "" ? crypto.randomUUID() : $activeChatId;
-    },
-    get messages() {
-      return $messages?.map((m) => ({
+  const chat = $derived.by(() => {
+    return new Chat({
+      id: $activeChatId === "" ? crypto.randomUUID() : $activeChatId,
+      messages: $messages?.map((m) => ({
         id: m.id,
         role: m.role,
         createdAt: m.createdAt,
         parts: [{ type: "text" as const, text: m.content }]
-      }));
-    },
-    onToolCall: () => {
-      isToolCalling = true;
-    },
-    onFinish: () => {
-      isToolCalling = false;
-    },
-    onError: (error) => {
-      errorMessage = error.message;
-    }
+      })),
+      onToolCall: () => {
+        isToolCalling = true;
+      },
+      onFinish: () => {
+        isToolCalling = false;
+      },
+      onError: (error) => {
+        errorMessage = error.message;
+      }
+    });
   });
 
   const isThinking = $derived(chat.status === "submitted");
@@ -79,44 +77,52 @@
   <div class="flex h-full flex-col">
     <!-- Messages -->
     <div class="flex-1 overflow-y-auto">
-      {$isPending}
-      <div
-        class={cn(
-          "text-primary-content/80 mx-auto w-full max-w-3xl p-2",
-          $isMaximize ? "text-base" : "text-sm"
-        )}
-      >
-        {#each chat.messages as message, i (i)}
-          <div class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}>
-            {#each message.parts as part, i (i)}
-              {#if part.type === "text"}
-                {#if message.role === "user"}
-                  <!-- User bubble -->
-                  <div
-                    class={cn(
-                      "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
-                    )}
-                  >
-                    {part.text}
-                  </div>
-                {:else}
-                  <div class="ai-message">
-                    <Markdown source={part.text} />
-                  </div>
+      {#if $isPending}
+        <span
+          class={cn(
+            $isMaximize ? "loading-sm" : "loading-xs",
+            "text-primary-content/50 loading loading-spinner absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          )}
+        ></span>
+      {:else}
+        <div
+          class={cn(
+            $isMaximize ? "text-base" : "text-sm",
+            "text-primary-content/80 mx-auto w-full max-w-3xl p-2"
+          )}
+        >
+          {#each chat.messages as message, i (i)}
+            <div class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}>
+              {#each message.parts as part, i (i)}
+                {#if part.type === "text"}
+                  {#if message.role === "user"}
+                    <!-- User bubble -->
+                    <div
+                      class={cn(
+                        "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
+                      )}
+                    >
+                      {part.text}
+                    </div>
+                  {:else}
+                    <div class="ai-message">
+                      <Markdown source={part.text} />
+                    </div>
+                  {/if}
                 {/if}
-              {/if}
-            {/each}
-          </div>
-        {/each}
+              {/each}
+            </div>
+          {/each}
 
-        <div class="my-2 animate-pulse">
-          {#if isThinking}
-            Thinking...
-          {:else if isStreaming && isToolCalling}
-            Generating...
-          {/if}
+          <div class="my-2 animate-pulse">
+            {#if isThinking}
+              Thinking...
+            {:else if isStreaming && isToolCalling}
+              ...
+            {/if}
+          </div>
         </div>
-      </div>
+      {/if}
     </div>
 
     <!-- Input -->
