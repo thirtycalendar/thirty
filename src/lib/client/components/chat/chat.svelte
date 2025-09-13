@@ -5,10 +5,11 @@
   import { SentIcon } from "@hugeicons/core-free-icons";
 
   import { checkoutMutation } from "$lib/client/data/mutations";
+  import { getMessagesQuery } from "$lib/client/data/queries/chat";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
-  import { isMaximize } from "./utils";
+  import { activeChatId, isMaximize } from "./utils";
 
   import { Modal } from ".";
 
@@ -20,9 +21,19 @@
 
   const { mutate: handleUpgrade } = checkoutMutation();
 
+  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
+
   const chat = new Chat({
     get id() {
-      return "393d092f-1703-487f-bc85-75661f715c7d";
+      return $activeChatId === "" ? crypto.randomUUID() : $activeChatId;
+    },
+    get messages() {
+      return $messages?.map((m) => ({
+        id: m.id,
+        role: m.role,
+        createdAt: m.createdAt,
+        parts: [{ type: "text" as const, text: m.content }]
+      }));
     },
     onToolCall: () => {
       isToolCalling = true;
@@ -68,6 +79,7 @@
   <div class="flex h-full flex-col">
     <!-- Messages -->
     <div class="flex-1 overflow-y-auto">
+      {$isPending}
       <div
         class={cn(
           "text-primary-content/80 mx-auto w-full max-w-3xl p-2",
