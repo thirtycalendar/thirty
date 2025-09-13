@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { tick } from "svelte";
+
   import {
     Add01Icon,
     ArrowShrink02Icon,
@@ -9,7 +11,8 @@
     TransactionHistoryIcon
   } from "@hugeicons/core-free-icons";
 
-  import { chatHistoryModalStore } from "$lib/client/stores/modal";
+  import { getChatQuery } from "$lib/client/data/queries";
+  import { chatDetailsModalStore, chatHistoryModalStore } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -23,6 +26,14 @@
 
   const { handleMinimize, handleMaximize, handleClose }: Props = $props();
 
+  const { data: chat } = $derived.by(() => getChatQuery($activeChatId));
+
+  async function handleChatDetails() {
+    await tick();
+    chatDetailsModalStore.activeItem.set($chat);
+    chatDetailsModalStore.toggleModal();
+  }
+
   function handleChatHistory() {
     chatHistoryModalStore.toggleModal();
   }
@@ -34,19 +45,21 @@
 
 <div class="flex shrink-0 items-center justify-between p-1">
   <div class="flex items-center">
-    <button
-      class={cn(
-        "btn btn-square btn-ghost opacity-90 hover:opacity-100",
-        $isMaximize ? "btn-md" : "btn-sm"
-      )}
-      onclick={handleClose}
-    >
-      <Icon
-        icon={DashboardSquare01Icon}
-        class={cn($isMaximize ? "size-4" : "size-3")}
-        absoluteStrokeWidth
-      />
-    </button>
+    {#if $activeChatId !== ""}
+      <button
+        class={cn(
+          "btn btn-square btn-ghost opacity-90 hover:opacity-100",
+          $isMaximize ? "btn-md" : "btn-sm"
+        )}
+        onclick={handleChatDetails}
+      >
+        <Icon
+          icon={DashboardSquare01Icon}
+          class={cn($isMaximize ? "size-4" : "size-3")}
+          absoluteStrokeWidth
+        />
+      </button>
+    {/if}
 
     <button
       class={cn(

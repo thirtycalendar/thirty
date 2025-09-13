@@ -13,6 +13,21 @@ export function chatsQuery() {
   });
 }
 
+export function getChatQuery(id: string) {
+  return createQuery({
+    queryFn: async function () {
+      const res = await client.api.chat.get[":id"].$get({
+        param: { id }
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      return data.data;
+    },
+    queryKeys: ["chats", `${id}:chat`],
+    enabled: !!id
+  });
+}
+
 export function getMessagesQuery(chatId: string) {
   return createQuery({
     queryFn: async function () {

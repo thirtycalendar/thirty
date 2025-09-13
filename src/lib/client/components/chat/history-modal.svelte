@@ -27,7 +27,7 @@
   }
 </script>
 
-<Modal id={modalId} title="History">
+<Modal id={modalId} title="History" class="z-[9998]">
   {#if sortedChats.length > 0}
     {#each sortedChats as chat (chat.id)}
       <button

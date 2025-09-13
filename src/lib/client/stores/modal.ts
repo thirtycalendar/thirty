@@ -16,6 +16,7 @@ export const holidayCountryModalStore = createModalStore<HolidayCountry>(
 
 // Chat
 export const chatModalStore = createModalStore<Chat>("chat", toggleDraggableModal);
+export const chatDetailsModalStore = createModalStore<Chat>("chat-details", toggleModal);
 export const chatHistoryModalStore = createModalStore("chat-history", toggleModal);
 
 // Settings

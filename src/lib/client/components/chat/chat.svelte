@@ -24,9 +24,11 @@
   const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
   const chats = chatsQuery();
 
+  const generatedChatId = crypto.randomUUID();
+
   const chat = $derived.by(() => {
     return new Chat({
-      id: $activeChatId === "" ? crypto.randomUUID() : $activeChatId,
+      id: $activeChatId === "" ? generatedChatId : $activeChatId,
       messages: $messages?.map((m) => ({
         id: m.id,
         role: m.role,
@@ -39,6 +41,7 @@
       onFinish: async () => {
         isToolCalling = false;
 
+        activeChatId.set(generatedChatId);
         chats.refetch();
       },
       onError: (error) => {
