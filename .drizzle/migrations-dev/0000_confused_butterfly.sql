@@ -104,7 +104,7 @@ CREATE TABLE `credits` (
 	`id` text PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
 	`plan` text DEFAULT 'free' NOT NULL,
-	`count` integer DEFAULT 0 NOT NULL,
+	`remaining` integer DEFAULT 0 NOT NULL,
 	`month` text NOT NULL,
 	`created_at` text NOT NULL,
 	`updated_at` text NOT NULL,
@@ -171,9 +171,11 @@ CREATE UNIQUE INDEX `events_id_unique` ON `events` (`id`);--> statement-breakpoi
 CREATE TABLE `messages` (
 	`id` text PRIMARY KEY NOT NULL,
 	`chat_id` text NOT NULL,
-	`content` text NOT NULL,
+	`text` text NOT NULL,
 	`role` text NOT NULL,
 	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL,
+	`deleted_at` text,
 	FOREIGN KEY (`chat_id`) REFERENCES `chats`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint

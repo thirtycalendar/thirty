@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3e704ba1-2929-4a7f-b1a4-b507fa806409",
+  "id": "2c004e68-60ec-4de3-916f-b8fe6288eeb1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "accounts": {
@@ -716,8 +716,8 @@
           "autoincrement": false,
           "default": "'free'"
         },
-        "count": {
-          "name": "count",
+        "remaining": {
+          "name": "remaining",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -1190,8 +1190,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "content": {
-          "name": "content",
+        "text": {
+          "name": "text",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1209,6 +1209,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },

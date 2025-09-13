@@ -1,1 +1,0 @@
-ALTER TABLE `credits` RENAME COLUMN "count" TO "remaining";

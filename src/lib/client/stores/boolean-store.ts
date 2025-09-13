@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-export const mainSidebarStore = createBooleanStore("main-sidebar", false);
+export const mainSidebarStore = createBooleanStore("main-sidebar", true);
 export const emailHiddenStore = createBooleanStore("email-hidden", true);
 
 function createBooleanStore(
