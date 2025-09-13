@@ -5,7 +5,7 @@
   import { SentIcon } from "@hugeicons/core-free-icons";
 
   import { checkoutMutation } from "$lib/client/data/mutations";
-  import { chatsQuery, getMessagesQuery } from "$lib/client/data/queries/chat";
+  import { chatsQuery, getMessagesQuery } from "$lib/client/data/queries";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
