@@ -21,7 +21,7 @@
 
   const { mutate: handleUpgrade } = checkoutMutation();
 
-  const { data: messages, isPending } = getMessagesQuery($activeChatId);
+  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
 
   const chat = $derived.by(() => {
     return new Chat({

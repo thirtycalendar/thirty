@@ -12,7 +12,7 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
-  import { isMaximize } from "./utils";
+  import { activeChatId, isMaximize } from "./utils";
 
   interface Props {
     handleMinimize: () => void;
@@ -21,6 +21,10 @@
   }
 
   const { handleMinimize, handleMaximize, handleClose }: Props = $props();
+
+  function handleNewChat() {
+    activeChatId.set("");
+  }
 </script>
 
 <div class="flex shrink-0 items-center justify-between p-1">
@@ -57,7 +61,7 @@
         "btn btn-square btn-ghost opacity-90 hover:opacity-100",
         $isMaximize ? "btn-md" : "btn-sm"
       )}
-      onclick={handleClose}
+      onclick={handleNewChat}
     >
       <Icon icon={Add01Icon} class={cn($isMaximize ? "size-4" : "size-3")} absoluteStrokeWidth />
     </button>

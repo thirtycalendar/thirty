@@ -12,7 +12,6 @@ export function getMessagesQuery(chatId: string) {
       return data.data;
     },
     queryKeys: ["messages", `${chatId}:messages`],
-    staleTime: Number.POSITIVE_INFINITY,
     enabled: !!chatId
   });
 }
