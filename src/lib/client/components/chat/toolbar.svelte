@@ -9,6 +9,7 @@
     TransactionHistoryIcon
   } from "@hugeicons/core-free-icons";
 
+  import { chatHistoryModalStore } from "$lib/client/stores/modal";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -21,6 +22,10 @@
   }
 
   const { handleMinimize, handleMaximize, handleClose }: Props = $props();
+
+  function handleChatHistory() {
+    chatHistoryModalStore.toggleModal();
+  }
 
   function handleNewChat() {
     activeChatId.set("");
@@ -48,7 +53,7 @@
         "btn btn-square btn-ghost opacity-90 hover:opacity-100",
         $isMaximize ? "btn-md" : "btn-sm"
       )}
-      onclick={handleClose}
+      onclick={handleChatHistory}
     >
       <Icon
         icon={TransactionHistoryIcon}

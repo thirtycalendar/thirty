@@ -13,13 +13,21 @@ export const holidayCountryModalStore = createModalStore<HolidayCountry>(
   "holiday-country",
   toggleDraggableModal
 );
+
+// Chat
 export const chatModalStore = createModalStore<Chat>("chat", toggleDraggableModal);
+export const chatHistoryModalStore = createModalStore("chat-history", toggleModal);
+
+// Settings
 export const settingsModalStore = createModalStore("settings", toggleModal);
 
 export function createModalStore<T extends { id: string }>(
   prefix: string,
   toggleFn: (modalId: string | number) => void
 ) {
+  const modalId = `${prefix}-modal-id`;
+  const createModalId = `${prefix}-modal-id`;
+
   const activeItem = writable<T | null>(null);
   const isEditing = writable(false);
 
@@ -36,13 +44,18 @@ export function createModalStore<T extends { id: string }>(
     toggleFn(item.id);
   }
 
+  function toggleModal() {
+    toggleFn(modalId);
+  }
+
   return {
     prefix,
     activeItem,
     isEditing,
-    modalId: `${prefix}-modal-id`,
-    createModalId: `${prefix}-modal-id`,
+    modalId,
+    createModalId,
     openModal,
+    toggleModal,
     startEditing: () => isEditing.set(true),
     stopEditing: () => isEditing.set(false),
     toggleEditing: () => isEditing.update((v) => !v)
