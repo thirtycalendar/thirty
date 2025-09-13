@@ -36,7 +36,7 @@ export async function streamChat(userId: string, chatId: string, messages: UIMes
 
   await messageService.create({
     chatId,
-    content: userMessage,
+    text: userMessage,
     role: "user"
   });
   await chatService.update(chatId, { updatedAt: now });
@@ -50,7 +50,7 @@ export async function streamChat(userId: string, chatId: string, messages: UIMes
     onFinish: async (result) => {
       await messageService.create({
         chatId,
-        content: result.text,
+        text: result.text,
         role: "assistant"
       });
       await chatService.update(chatId, { updatedAt: now });

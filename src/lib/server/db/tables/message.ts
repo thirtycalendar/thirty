@@ -15,7 +15,7 @@ export const messageTable = sqliteTable("messages", {
     .notNull()
     .references(() => chatTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
 
-  content: text("content").notNull(),
+  text: text("text").notNull(),
   role: text("role").$type<MessageRole>().notNull(),
 
   createdAt: text("created_at")

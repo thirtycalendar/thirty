@@ -30,7 +30,7 @@
         id: m.id,
         role: m.role,
         createdAt: m.createdAt,
-        parts: [{ type: "text" as const, text: m.content }]
+        parts: [{ type: "text" as const, text: m.text }]
       })),
       onToolCall: () => {
         isToolCalling = true;
