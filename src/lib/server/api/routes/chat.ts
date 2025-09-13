@@ -21,9 +21,9 @@ export const chatRoute = new Hono()
     try {
       const user = c.get("user") as User;
 
-      const { messages } = await c.req.json();
+      const { chatId, messages } = await c.req.json();
 
-      return streamChat(user.id, messages);
+      return streamChat(user.id, chatId, messages);
     } catch (err: unknown) {
       return errorResponse(c, err);
     }
