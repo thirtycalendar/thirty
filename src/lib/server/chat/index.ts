@@ -2,23 +2,44 @@ import type { UIMessage } from "@ai-sdk/svelte";
 
 import { convertToModelMessages, stepCountIs, streamText } from "ai";
 
-// import { chatService } from "../services";
+import { chatService, messageService } from "../services";
 import { openRouterGpt4oMini } from "../utils/ai-models";
 import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
+import { generateChatName } from "./utils/generate-chat-name";
 
 export async function streamChat(userId: string, chatId: string, messages: UIMessage[]) {
+  const now = new Date().toISOString();
+
   const userMessage =
     messages.findLast((m) => m.role === "user")?.parts.find((p) => p.type === "text")?.text ?? "";
-  console.log("message:", userMessage);
 
-  // const now = new Date().toISOString();
+  const existingChat = await chatService.maybeGet(chatId);
+  if (!existingChat) {
+    await chatService.create(userId, {
+      id: chatId,
+      name: "New Chat",
+      userId,
+      updatedAt: now
+    });
 
-  // const existingChat = await chatService.maybeGet(chatId);
+    generateChatName(userMessage)
+      .then((name) => {
+        if (name) {
+          chatService
+            .update(chatId, { name })
+            .catch((err) => console.error("Error updating chat name:", err));
+        }
+      })
+      .catch((err) => console.error("Chat name generation error:", err));
+  }
 
-  // if (!existingChat) {
-  //   await chatService.create(userId, { id: chatId, name: "New Chat", userId, updatedAt: now });
-  // }
+  await messageService.create({
+    chatId,
+    content: userMessage,
+    role: "user"
+  });
+  await chatService.update(chatId, { updatedAt: now });
 
   const result = streamText({
     model: openRouterGpt4oMini,
@@ -26,8 +47,13 @@ export async function streamChat(userId: string, chatId: string, messages: UIMes
     tools: createTools(userId),
     stopWhen: stepCountIs(10),
     messages: convertToModelMessages(messages),
-    onFinish: (result) => {
-      console.log("text:::", result.text);
+    onFinish: async (result) => {
+      await messageService.create({
+        chatId,
+        content: result.text,
+        role: "assistant"
+      });
+      await chatService.update(chatId, { updatedAt: now });
     }
   });
 

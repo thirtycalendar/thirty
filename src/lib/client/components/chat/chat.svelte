@@ -21,6 +21,9 @@
   const { mutate: handleUpgrade } = checkoutMutation();
 
   const chat = new Chat({
+    get id() {
+      return "393d092f-1703-487f-bc85-75661f715c7d";
+    },
     onToolCall: () => {
       isToolCalling = true;
     },
