@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import Markdown from "svelte-markdown";
 
   import { Chat } from "@ai-sdk/svelte";
@@ -41,8 +42,10 @@
       onFinish: async () => {
         isToolCalling = false;
 
-        activeChatId.set(generatedChatId);
         chats.refetch();
+
+        await tick();
+        activeChatId.set(generatedChatId);
       },
       onError: (error) => {
         errorMessage = error.message;

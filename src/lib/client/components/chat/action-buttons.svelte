@@ -4,7 +4,7 @@
   import { createMutation } from "$lib/client/utils/query/create-mutation";
   import { client } from "$lib/client/utils/rpc";
 
-  import { toggleDraggableModal } from "../utils";
+  import { toggleModal } from "../utils";
 
   import { DetailActionButtons } from "..";
 
@@ -32,14 +32,14 @@
     onSuccess: (data) => {
       confirmDelete = false;
 
-      toggleDraggableModal(id);
+      toggleModal(id);
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {
       confirmDelete = false;
       errorMessage = message;
     },
-    queryKeys: ["calendars", "events"]
+    queryKeys: ["chats"]
   });
 
   function handleDelete() {
