@@ -32,6 +32,7 @@
     TimezoneField
   } from "../form";
   import { Icon } from "../icons";
+  import { draggedEventEnd, draggedEventStart } from "./utils";
 
   import { IconRow } from "..";
 
@@ -44,7 +45,7 @@
   }
 
   let {
-    defaultValues,
+    defaultValues = $bindable(),
     onSubmit,
     isMutationPending,
     errorMessage = $bindable(),
@@ -68,6 +69,9 @@
       isLocation = false;
       isDescription = false;
       isMoreOptions = false;
+
+      draggedEventStart.set(null);
+      draggedEventEnd.set(null);
     }
   });
 
@@ -102,6 +106,13 @@
         $formData.calendarId = fallbackCalendar.id;
         $formData.color = fallbackCalendar.color;
         $formData.timezone = fallbackCalendar.timezone;
+      }
+
+      if ($draggedEventStart && $draggedEventEnd) {
+        $formData.startDate = format($draggedEventStart, "yyyy-MM-dd");
+        $formData.startTime = format($draggedEventStart, "HH:mm:ss");
+        $formData.endDate = format($draggedEventEnd, "yyyy-MM-dd");
+        $formData.endTime = format($draggedEventEnd, "HH:mm:ss");
       }
     }
   });

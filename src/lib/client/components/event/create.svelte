@@ -11,13 +11,15 @@
   import { getRandomColor } from "$lib/shared/utils/colors";
   import type { EventForm } from "$lib/shared/types";
 
+  import { draggedEventEnd, draggedEventStart } from "./utils";
+
   import { Form } from ".";
 
   let errorMessage = $state("");
 
   const now = new Date();
 
-  const defaultValues: EventForm = {
+  let defaultValues: EventForm = $derived({
     calendarId: "",
     externalId: null,
     source: "local",
@@ -25,14 +27,14 @@
     description: null,
     location: null,
     color: getRandomColor(),
-    startDate: format(now, "yyyy-MM-dd"),
-    startTime: format(now, "HH:mm:ss"),
-    endDate: format(now, "yyyy-MM-dd"),
-    endTime: format(addMinutes(now, 30), "HH:mm:ss"),
+    startDate: format($draggedEventStart ? $draggedEventStart : now, "yyyy-MM-dd"),
+    startTime: format($draggedEventStart ? $draggedEventStart : now, "HH:mm:ss"),
+    endDate: format($draggedEventEnd ? $draggedEventEnd : now, "yyyy-MM-dd"),
+    endTime: format($draggedEventEnd ? $draggedEventEnd : addMinutes(now, 30), "HH:mm:ss"),
     timezone: "",
     allDay: false,
     status: "confirmed"
-  };
+  });
 
   const { data: calendars } = calendarsQuery();
 

@@ -1,3 +1,5 @@
+import { writable } from "svelte/store";
+
 import {
   differenceInMilliseconds,
   differenceInMinutes,
@@ -11,6 +13,9 @@ import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import { toMs } from "$lib/shared/utils/ms";
 import { getValidTimeZone } from "$lib/shared/utils/timezone";
 import type { Event, EventChunk } from "$lib/shared/types";
+
+export const draggedEventStart = writable<Date | null>(null);
+export const draggedEventEnd = writable<Date | null>(null);
 
 export function getVisibleEvents(events: Event[], start: Date, end: Date, unchecked: string[]) {
   const all: Event[] = [];

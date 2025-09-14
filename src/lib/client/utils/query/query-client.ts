@@ -15,7 +15,7 @@ const queryCache: Map<QueryKey, { data: any; updatedAt: number }> = globalScope.
 const defaultStaleTime = 1000 * 60;
 
 export function registerQuery(key: QueryKey, refetchFn: RefetchFn) {
-  console.log("Registering...:", key);
+  // console.log("Registering...:", key);
 
   if (!queryRegistry.has(key)) {
     queryRegistry.set(key, new Set());
@@ -24,7 +24,7 @@ export function registerQuery(key: QueryKey, refetchFn: RefetchFn) {
 }
 
 export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
-  console.log("Unregistering...:", key);
+  // console.log("Unregistering...:", key);
 
   const set = queryRegistry.get(key);
   if (!set) return;
@@ -35,7 +35,7 @@ export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
 
 export function refetchQueries(keys?: QueryKey[], force = true) {
   if (!keys) return;
-  console.log("Refetching...:", keys, "force:", force);
+  // console.log("Refetching...:", keys, "force:", force);
 
   for (const key of keys) {
     const fns = queryRegistry.get(key);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
 
   import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
@@ -19,7 +19,13 @@
 
   import { getBirthdaysForDay, getVisibleBirthdays } from "../birthday/utils";
   import { EventBlock } from "../event";
-  import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
+  import {
+    calculateEventOffsets,
+    draggedEventEnd,
+    draggedEventStart,
+    getEventDateObjects,
+    getVisibleEvents
+  } from "../event/utils";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
   import { calculateAllDayLayout, createDragCreate } from "./utils";
 
@@ -102,9 +108,12 @@
 
   const { state: dragState, onPointerDown, onPointerMove, onPointerUp } = createDragCreate(60, 15);
 
-  function handleNewEvent(start: Date, end: Date) {
-    console.log("Start:", start);
-    console.log("End:", end);
+  async function handleNewEvent(start: Date, end: Date) {
+    draggedEventStart.set(start);
+    draggedEventEnd.set(end);
+
+    await tick();
+    eventModalStore.toggleModal();
   }
 </script>
 

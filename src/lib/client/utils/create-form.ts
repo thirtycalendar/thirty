@@ -22,6 +22,7 @@ type CreateFormReturn<T> = {
   handleInput: (event: Event) => void;
   handleSubmit: () => (event: Event) => Promise<void>;
   setDisabledFields: (fields: (keyof T)[]) => void;
+  resetForm: (values?: T) => void;
 };
 
 export const createForm = <T>({
@@ -141,15 +142,7 @@ export const createForm = <T>({
         }
 
         if (resetOnSuccess) {
-          formData.update((current) => {
-            const updated = { ...current };
-            for (const key in defaultValues) {
-              if (!resetDisabledSet.has(key as keyof T)) {
-                updated[key as keyof T] = defaultValues[key as keyof T];
-              }
-            }
-            return updated;
-          });
+          resetForm(defaultValues);
         }
 
         onSuccess?.(data);
@@ -163,12 +156,30 @@ export const createForm = <T>({
     };
   }
 
+  function resetForm(values: T = defaultValues) {
+    formData.update((current) => {
+      const updated: T = { ...current };
+
+      for (const key in values) {
+        if (!resetDisabledSet.has(key as keyof T)) {
+          updated[key as keyof T] = values[key as keyof T];
+        }
+      }
+
+      return updated;
+    });
+
+    formErrors.set({});
+    submitted = false;
+  }
+
   return {
     formData,
     formErrors,
     isSubmitting,
     handleInput,
     handleSubmit,
-    setDisabledFields
+    setDisabledFields,
+    resetForm
   };
 };
