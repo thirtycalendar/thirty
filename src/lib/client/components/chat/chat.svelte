@@ -5,7 +5,14 @@
   import { SentIcon } from "@hugeicons/core-free-icons";
 
   import { checkoutMutation } from "$lib/client/data/mutations";
-  import { calendarsQuery, chatsQuery, getMessagesQuery } from "$lib/client/data/queries";
+  import {
+    birthdaysQuery,
+    calendarsQuery,
+    chatsQuery,
+    eventsQuery,
+    getMessagesQuery,
+    userHolidayCountriesQuery
+  } from "$lib/client/data/queries";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -25,8 +32,12 @@
 
   const chats = chatsQuery();
   const calendars = calendarsQuery();
+  const events = eventsQuery();
+  const birthdays = birthdaysQuery();
+  const userHolidayCountries = userHolidayCountriesQuery();
 
   const generatedChatId = crypto.randomUUID();
+  let toolsCalled = $state(new Set<string>());
 
   const chat = $derived.by(() => {
     return new Chat({
@@ -37,17 +48,30 @@
         createdAt: m.createdAt,
         parts: [{ type: "text" as const, text: m.text }]
       })),
-      onToolCall: () => {
+      onToolCall: (tool) => {
         isToolCalling = true;
+        toolsCalled.add(tool.toolCall.toolName);
       },
       onFinish: async () => {
         isToolCalling = false;
 
         chats.refetch();
 
-        calendars.refetch();
+        const names = [...toolsCalled];
+        if (names.some((n) => n.toLowerCase().includes("calendar"))) {
+          calendars.refetch();
+        }
+        if (names.some((n) => n.toLowerCase().includes("event"))) {
+          events.refetch();
+        }
+        if (names.some((n) => n.toLowerCase().includes("birthday"))) {
+          birthdays.refetch();
+        }
+        if (names.some((n) => n.toLowerCase().includes("holiday"))) {
+          userHolidayCountries.refetch();
+        }
 
-        activeChatId.set(generatedChatId);
+        toolsCalled.clear();
       },
       onError: (error) => {
         errorMessage = error.message;

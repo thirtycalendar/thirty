@@ -5,6 +5,7 @@
   import { client } from "$lib/client/utils/rpc";
 
   import { toggleModal } from "../utils";
+  import { activeChatId } from "./utils";
 
   import { DetailActionButtons } from "..";
 
@@ -33,6 +34,7 @@
       confirmDelete = false;
 
       toggleModal(id);
+      activeChatId.set("");
       showToast(data.message);
     },
     onError: (message: Error["message"]) => {
