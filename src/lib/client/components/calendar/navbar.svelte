@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
+  import { Search01Icon, SidebarLeftIcon } from "@hugeicons/core-free-icons";
 
   import { mainSidebarStore } from "$lib/client/stores/boolean-store";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
@@ -28,7 +28,7 @@
         {#if $currentCalendarView === "year"}
           {year}
         {:else}
-          {month} <span class="font-normal">{year}</span>
+          {month} <span class="hidden font-normal sm:block">{year}</span>
         {/if}
       </p>
     </div>
@@ -37,6 +37,12 @@
   </div>
 
   <div class="flex items-center gap-2">
+    <button
+      class="btn btn-ghost btn-square btn-sm sm:btn-md text-primary-content/70 hover:text-primary-content ml-2"
+    >
+      <Icon icon={Search01Icon} class="size-4 sm:size-5" absoluteStrokeWidth />
+    </button>
+
     <CreateButton />
 
     <div class="hidden items-center gap-2 sm:flex">
