@@ -38,8 +38,9 @@
   const birthdays = birthdaysQuery();
   const userHolidayCountries = userHolidayCountriesQuery();
 
-  const generatedChatId = crypto.randomUUID();
   let toolsCalled = $state(new Set<string>());
+
+  const generatedChatId = crypto.randomUUID();
 
   const chat = $derived.by(() => {
     return new Chat({
@@ -55,6 +56,7 @@
         toolsCalled.add(tool.toolCall.toolName);
       },
       onFinish: async () => {
+        activeChatId.set(generatedChatId);
         isToolCalling = false;
 
         chats.refetch();
