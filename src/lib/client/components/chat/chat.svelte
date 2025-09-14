@@ -5,7 +5,7 @@
   import { SentIcon } from "@hugeicons/core-free-icons";
 
   import { checkoutMutation } from "$lib/client/data/mutations";
-  import { chatsQuery, getMessagesQuery } from "$lib/client/data/queries";
+  import { calendarsQuery, chatsQuery, getMessagesQuery } from "$lib/client/data/queries";
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
@@ -22,7 +22,9 @@
   const { mutate: handleUpgrade } = checkoutMutation();
 
   const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
+
   const chats = chatsQuery();
+  const calendars = calendarsQuery();
 
   const generatedChatId = crypto.randomUUID();
 
@@ -42,6 +44,8 @@
         isToolCalling = false;
 
         chats.refetch();
+
+        calendars.refetch();
 
         activeChatId.set(generatedChatId);
       },
