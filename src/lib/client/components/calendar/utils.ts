@@ -63,12 +63,26 @@ export function createDragCreate(hourHeight = 60, interval = 15) {
     return Math.round(totalMinutes / interval) * interval;
   }
 
+  function yFromMinutes(minutes: number) {
+    const pixelsPerMinute = hourHeight / 60;
+    return minutes * pixelsPerMinute;
+  }
+
   function onPointerDown(e: PointerEvent, day?: Date) {
-    state.update(() => ({ startY: e.offsetY, endY: e.offsetY, day: day ?? null }));
+    const snappedMinutes = snapToInterval(e.offsetY);
+    const snappedY = yFromMinutes(snappedMinutes);
+    state.set({ startY: snappedY, endY: snappedY, day: day ?? null });
   }
 
   function onPointerMove(e: PointerEvent) {
-    state.update((s) => (s.startY !== null ? { ...s, endY: e.offsetY } : s));
+    state.update((s) => {
+      if (s.startY !== null) {
+        const snappedMinutes = snapToInterval(e.offsetY);
+        const snappedY = yFromMinutes(snappedMinutes);
+        return { ...s, endY: snappedY };
+      }
+      return s;
+    });
   }
 
   function onPointerUp(callback: (start: Date, end: Date) => void, currentDay?: Date) {
