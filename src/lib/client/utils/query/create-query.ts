@@ -13,6 +13,7 @@ type CreateQueryOptions<TData, TError> = {
   queryFn: () => Promise<TData>;
   queryKeys: string[];
   enabled?: boolean;
+  refetchOnWindowFocus?: boolean;
   onQuery?: () => void;
   onPending?: () => void;
   onSuccess?: (data: TData) => void;
@@ -25,6 +26,7 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
     queryFn,
     queryKeys,
     enabled = true,
+    refetchOnWindowFocus = false,
     onQuery,
     onPending,
     onSuccess,
@@ -40,12 +42,10 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
 
   const key = queryKeys.join("::");
 
-  // Use a function declaration for the refetch function
   function refetchFn() {
     fetchData(true);
   }
 
-  // Use a function declaration for the data fetching function
   async function fetchData(force = false) {
     onQuery?.();
 
@@ -70,8 +70,7 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
       error.set(null);
       isSuccess.set(true);
       onSuccess?.(result);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (err) {
       error.set(err as TError);
       isError.set(true);
       onError?.(err as TError);
@@ -86,17 +85,22 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
       fetchData();
     }
 
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") {
-        refetchFn();
-      }
-    }
+    let handleVisibilityChange: (() => void) | undefined;
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (refetchOnWindowFocus) {
+      handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+          refetchFn();
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    }
 
     return () => {
       unregisterQuery(key, refetchFn);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (handleVisibilityChange) {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      }
     };
   });
 

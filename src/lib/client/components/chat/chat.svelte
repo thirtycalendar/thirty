@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { tick } from "svelte";
   import Markdown from "svelte-markdown";
 
   import { Chat } from "@ai-sdk/svelte";
@@ -44,7 +43,6 @@
 
         chats.refetch();
 
-        await tick();
         activeChatId.set(generatedChatId);
       },
       onError: (error) => {
