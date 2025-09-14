@@ -15,7 +15,7 @@
   } from "$lib/client/data/queries";
   import { cn } from "$lib/client/utils/cn";
 
-  import { MAX_INPUT_LENGTH } from "$lib/shared/constants";
+  import { ChatGreetings, MAX_INPUT_LENGTH } from "$lib/shared/constants";
 
   import { Icon } from "../icons";
   import { activeChatId, isMaximize } from "./utils";
@@ -111,6 +111,8 @@
       onsubmit(e);
     }
   }
+
+  const greeting = ChatGreetings[Math.floor(Math.random() * ChatGreetings.length)];
 </script>
 
 <Modal>
@@ -131,36 +133,56 @@
             "text-primary-content/80 mx-auto w-full max-w-3xl p-2"
           )}
         >
-          {#each chat.messages as message, i (i)}
-            <div class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}>
-              {#each message.parts as part, i (i)}
-                {#if part.type === "text"}
-                  {#if message.role === "user"}
-                    <!-- User bubble -->
-                    <div
-                      class={cn(
-                        "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
-                      )}
-                    >
-                      {part.text}
-                    </div>
-                  {:else}
-                    <div class="ai-message">
-                      <Markdown source={part.text} />
-                    </div>
-                  {/if}
-                {/if}
-              {/each}
+          {#if chat.messages.length === 0}
+            <div
+              class={cn(
+                $isMaximize ? "bottom-35" : "bottom-28",
+                "absolute left-1/2 w-full -translate-x-1/2 -translate-y-2/3 text-center"
+              )}
+            >
+              <h2
+                class={cn(
+                  $isMaximize ? "text-2xl" : "text-lg",
+                  "text-primary-content/65 font-medium"
+                )}
+              >
+                {greeting}
+              </h2>
             </div>
-          {/each}
+          {:else}
+            {#each chat.messages as message, i (i)}
+              <div
+                class={cn("my-2 flex", message.role === "user" ? "justify-end" : "justify-start")}
+              >
+                {#each message.parts as part, i (i)}
+                  {#if part.type === "text"}
+                    {#if message.role === "user"}
+                      <!-- User bubble -->
+                      <div
+                        class={cn(
+                          "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
+                        )}
+                      >
+                        {part.text}
+                      </div>
+                    {:else}
+                      <div class="ai-message">
+                        <Markdown source={part.text} />
+                      </div>
+                    {/if}
+                  {/if}
+                {/each}
+              </div>
+            {/each}
 
-          <div class="my-2 animate-pulse">
-            {#if isThinking}
-              Thinking...
-            {:else if isStreaming && isToolCalling}
-              ...
-            {/if}
-          </div>
+            <div class="my-2 animate-pulse">
+              {#if isThinking}
+                Thinking...
+              {:else if isStreaming && isToolCalling}
+                ...
+              {/if}
+            </div>
+          {/if}
         </div>
       {/if}
     </div>

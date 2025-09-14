@@ -7,8 +7,6 @@ export const MessageLimitByPlan: Record<SubscriptionPlan, number> = {
   free: 10
 };
 
-export const MAX_INPUT_LENGTH = 255 as const;
-
 export const Themes = ["light", "dark"] as const;
 
 export const CalendarViews = ["year", "month", "week", "day"] as const;
@@ -50,4 +48,39 @@ export const Colors = [
   "#f691b2",
   "#cd74e6",
   "#a47ae2"
+] as const;
+
+export const MAX_INPUT_LENGTH = 255 as const;
+
+export const ChatGreetings = [
+  "How can I help?",
+  "What's on your calendar?",
+  "Need to schedule something?",
+  "Got an event in mind?",
+  "Add a new meeting?",
+  "Any birthdays coming up?",
+  "Should I remind you?",
+  "Planning holidays soon?",
+  "What's your next task?",
+  "Check upcoming events?",
+  "Set a reminder?",
+  "Whose birthday is it?",
+  "Organize your week?",
+  "Block focus time?",
+  "Review your calendar?",
+  "Plan some time off?",
+  "Create an event?",
+  "Reschedule something?",
+  "Clear your calendar?",
+  "Next important date?",
+  "Track deadlines?",
+  "Today's agenda?",
+  "Find free time?",
+  "Weekly overview?",
+  "Prepare for events?",
+  "Remind about holidays?",
+  "Celebrate something?",
+  "Log a birthday idea?",
+  "Sync your calendars?",
+  "Keep plans tidy?"
 ] as const;
