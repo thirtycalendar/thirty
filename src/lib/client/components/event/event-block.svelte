@@ -47,6 +47,7 @@
   `}
   title={event.name}
   onclick={() => eventModalStore.openModal(event)}
+  onpointerdown={(e) => e.stopPropagation()}
 >
   <div class="h-full w-1 shrink-0 rounded-l-md" style="background-color: {calendarColor};"></div>
   <div class="w-full overflow-hidden p-1 text-left">
