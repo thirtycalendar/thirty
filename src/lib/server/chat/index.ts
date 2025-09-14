@@ -2,6 +2,8 @@ import type { UIMessage } from "@ai-sdk/svelte";
 
 import { convertToModelMessages, stepCountIs, streamText } from "ai";
 
+import { MAX_INPUT_LENGTH } from "$lib/shared/constants";
+
 import { chatService, messageService } from "../services";
 import { openRouterGpt4oMini } from "../utils/ai-models";
 import { chatSystemMessage } from "./system-messages";
@@ -13,6 +15,10 @@ export async function streamChat(userId: string, chatId: string, messages: UIMes
 
   const userMessage =
     messages.findLast((m) => m.role === "user")?.parts.find((p) => p.type === "text")?.text ?? "";
+
+  if (userMessage.length > MAX_INPUT_LENGTH) {
+    throw new Error(`User message exceeds ${MAX_INPUT_LENGTH} characters.`);
+  }
 
   const existingChat = await chatService.maybeGet(chatId);
   if (!existingChat) {

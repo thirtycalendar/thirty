@@ -7,6 +7,8 @@ export const MessageLimitByPlan: Record<SubscriptionPlan, number> = {
   free: 10
 };
 
+export const MAX_INPUT_LENGTH = 255 as const;
+
 export const Themes = ["light", "dark"] as const;
 
 export const CalendarViews = ["year", "month", "week", "day"] as const;

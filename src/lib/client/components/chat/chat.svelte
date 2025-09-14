@@ -15,6 +15,8 @@
   } from "$lib/client/data/queries";
   import { cn } from "$lib/client/utils/cn";
 
+  import { MAX_INPUT_LENGTH } from "$lib/shared/constants";
+
   import { Icon } from "../icons";
   import { activeChatId, isMaximize } from "./utils";
 
@@ -58,23 +60,22 @@
         chats.refetch();
 
         const names = [...toolsCalled];
-        if (names.some((n) => n.toLowerCase().includes("calendar"))) {
-          calendars.refetch();
-        }
-        if (names.some((n) => n.toLowerCase().includes("event"))) {
-          events.refetch();
-        }
-        if (names.some((n) => n.toLowerCase().includes("birthday"))) {
-          birthdays.refetch();
-        }
-        if (names.some((n) => n.toLowerCase().includes("holiday"))) {
-          userHolidayCountries.refetch();
-        }
+        if (names.some((n) => n.toLowerCase().includes("calendar"))) calendars.refetch();
+        if (names.some((n) => n.toLowerCase().includes("event"))) events.refetch();
+        if (names.some((n) => n.toLowerCase().includes("birthday"))) birthdays.refetch();
+        if (names.some((n) => n.toLowerCase().includes("holiday"))) userHolidayCountries.refetch();
 
         toolsCalled.clear();
       },
       onError: (error) => {
-        errorMessage = error.message;
+        try {
+          const data = typeof error.message === "string" ? JSON.parse(error.message) : error;
+          errorMessage =
+            data.message?.split("\n")[0].replace(/^Error:\s*/, "") ?? "Something went wrong.";
+        } catch {
+          errorMessage =
+            error.message?.split("\n")[0].replace(/^Error:\s*/, "") ?? "Something went wrong.";
+        }
       }
     });
   });
@@ -90,14 +91,18 @@
 
   function onsubmit(e: Event) {
     e.preventDefault();
+    errorMessage = "";
+
     if (!input.trim() || isThinking || isStreaming) return;
+
+    if (input.length > MAX_INPUT_LENGTH) {
+      errorMessage = `Maximum ${MAX_INPUT_LENGTH} characters allowed.`;
+      return;
+    }
 
     chat.sendMessage({ text: input });
     input = "";
-
-    if (textareaRef) {
-      textareaRef.style.height = "auto";
-    }
+    if (textareaRef) textareaRef.style.height = "auto";
   }
 
   function onkeydown(e: KeyboardEvent) {
@@ -166,14 +171,14 @@
         {#if errorMessage}
           <div
             class={cn(
-              "badge-outline badge badge-error badge-soft my-2 w-full justify-start",
-              $isMaximize && "badge-lg"
+              "alert alert-error border-rounded border-base-300 text-base-content/75 my-2 w-full p-2",
+              $isMaximize ? "text-base" : "text-sm"
             )}
           >
             {#if errorMessage.includes("No credits left")}
               <p>
                 <button
-                  class="text-error cursor-pointer font-medium underline"
+                  class="cursor-pointer font-medium underline"
                   onclick={handleUpgrade}
                   type="button"
                 >
