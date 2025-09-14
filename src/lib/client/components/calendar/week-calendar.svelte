@@ -3,7 +3,16 @@
 
   import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
-  import { addDays, endOfDay, format, isToday, setHours, startOfDay, startOfWeek } from "date-fns";
+  import {
+    addDays,
+    endOfDay,
+    format,
+    isToday,
+    setHours,
+    setMinutes,
+    startOfDay,
+    startOfWeek
+  } from "date-fns";
 
   import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { currentDate } from "$lib/client/stores/change-date";
@@ -65,9 +74,9 @@
   const visibleBirthdays = $derived.by(() => getVisibleBirthdays(birthdays, $uncheckedBds));
 
   const { store: unchecked } = uncheckedCalendars;
-  const { allDayEvents, timedEvents } = $derived.by(() => {
-    return getVisibleEvents(events, weekStart, weekEnd, $unchecked);
-  });
+  const { allDayEvents, timedEvents } = $derived.by(() =>
+    getVisibleEvents(events, weekStart, weekEnd, $unchecked)
+  );
 
   const userHolidayCountries = $derived.by(() => {
     const data = userHolidayCountriesQuery().data;
@@ -104,13 +113,13 @@
   let dragEndY: number | null = $state(null);
   let dragDay: Date | null = $state(null);
 
-  const HOUR_HEIGHT = 60; // match your h-15 CSS (60px per hour)
-  const INTERVAL = 15; // 15 minutes
+  const HOUR_HEIGHT = 60; // px per hour
+  const INTERVAL = 15; // snap every 15 minutes
 
   function snapToInterval(y: number) {
     const minutesPerPixel = 60 / HOUR_HEIGHT; // 1px = X minutes
     const totalMinutes = y * minutesPerPixel;
-    const snappedMinutes = Math.floor(totalMinutes / INTERVAL) * INTERVAL;
+    const snappedMinutes = Math.round(totalMinutes / INTERVAL) * INTERVAL;
     return snappedMinutes;
   }
 
@@ -134,14 +143,21 @@
       const startMinutes = snapToInterval(startY);
       const endMinutes = snapToInterval(endY);
 
-      const startDate = new Date(dragDay);
-      startDate.setHours(Math.floor(startMinutes / 60), startMinutes % 60);
+      const startDate = setMinutes(
+        setHours(dragDay, Math.floor(startMinutes / 60)),
+        startMinutes % 60
+      );
+      const endDate = setMinutes(setHours(dragDay, Math.floor(endMinutes / 60)), endMinutes % 60);
 
-      const endDate = new Date(dragDay);
-      endDate.setHours(Math.floor(endMinutes / 60), endMinutes % 60);
+      const formattedStartDate = format(startDate, "yyyy-MM-dd");
+      const formattedStartTime = format(startDate, "HH:mm:ss");
+      const formattedEndDate = format(endDate, "yyyy-MM-dd");
+      const formattedEndTime = format(endDate, "HH:mm:ss");
 
-      console.log("Start:", startDate);
-      console.log("End:", endDate);
+      console.log("Start Date:", formattedStartDate);
+      console.log("Start Time:", formattedStartTime);
+      console.log("End Date:", formattedEndDate);
+      console.log("End Time:", formattedEndTime);
     }
 
     dragStartY = null;
@@ -181,13 +197,11 @@
           <StickyBlock
             item={holiday}
             color={$userHolidayCountries?.find(
-              (c) => c.id.toLocaleLowerCase() === holiday.countryId.toLocaleLowerCase()
+              (c) => c.id.toLowerCase() === holiday.countryId.toLowerCase()
             )?.color ?? "transparent"}
             title={holiday.name}
             onclick={(item) => {
-              if ("countryCode" in item) {
-                holidayModalStore.openModal(item);
-              }
+              if ("countryCode" in item) holidayModalStore.openModal(item);
             }}
             icon={Flag02Icon}
           />
@@ -199,9 +213,7 @@
             color={birthday.color}
             title={birthday.name}
             onclick={(item) => {
-              if ("dob" in item) {
-                birthdayModalStore.openModal(item);
-              }
+              if ("dob" in item) birthdayModalStore.openModal(item);
             }}
             icon={BirthdayCakeIcon}
           />
@@ -213,9 +225,7 @@
             color={event.color}
             title={event.name}
             onclick={(item) => {
-              if ("source" in item) {
-                eventModalStore.openModal(item);
-              }
+              if ("source" in item) eventModalStore.openModal(item);
             }}
           />
         {/each}
@@ -234,9 +244,7 @@
         <div
           class="text-primary-content/70 border-base-200 flex h-15 items-center justify-center border-r text-center text-xs select-none"
         >
-          <span class="relative">
-            {format(setHours(new Date(), hour), "h a")}
-          </span>
+          <span class="relative">{format(setHours(new Date(), hour), "h a")}</span>
         </div>
       {/each}
     </div>
@@ -256,11 +264,10 @@
 
         {#if dragStartY !== null && dragDay?.toDateString() === day.toDateString()}
           <div
-            class="bg-primary/70 border-primary-content/10 shaodw-md pointer-events-none absolute right-1 left-1 rounded-md border"
-            style="
-              top: {Math.min(dragStartY, dragEndY ?? dragStartY)}px;
-              height: {Math.abs((dragEndY ?? dragStartY) - dragStartY)}px;
-            "
+            class="bg-primary/70 border-primary-content/10 pointer-events-none absolute right-1 left-1 rounded-md border shadow-md"
+            style="top: {Math.min(dragStartY, dragEndY ?? dragStartY)}px; height: {Math.abs(
+              (dragEndY ?? dragStartY) - dragStartY
+            )}px;"
           ></div>
         {/if}
 
