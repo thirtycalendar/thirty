@@ -9,7 +9,8 @@ export function chatsQuery() {
       if (!data.success) throw new Error(data.message);
       return data.data;
     },
-    queryKeys: ["chats"]
+    queryKeys: ["chats"],
+    staleTime: Number.POSITIVE_INFINITY
   });
 }
 
@@ -24,7 +25,8 @@ export function getChatQuery(id: string) {
       return data.data;
     },
     queryKeys: ["chats", `${id}:chat`],
-    enabled: !!id
+    enabled: !!id,
+    staleTime: Number.POSITIVE_INFINITY
   });
 }
 
@@ -39,6 +41,7 @@ export function getMessagesQuery(chatId: string) {
       return data.data;
     },
     queryKeys: ["messages", `${chatId}:messages`],
-    enabled: !!chatId
+    enabled: !!chatId,
+    staleTime: Number.POSITIVE_INFINITY
   });
 }

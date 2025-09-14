@@ -4,6 +4,7 @@ import { writable } from "svelte/store";
 import {
   getCachedQuery,
   isQueryStale,
+  refetchQueries,
   registerQuery,
   setCachedQuery,
   unregisterQuery
@@ -42,8 +43,8 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
 
   const key = queryKeys.join("::");
 
-  function refetchFn() {
-    fetchData(true);
+  function refetchFn(force?: boolean) {
+    fetchData(Boolean(force));
   }
 
   async function fetchData(force = false) {
@@ -70,6 +71,10 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
       error.set(null);
       isSuccess.set(true);
       onSuccess?.(result);
+
+      // Notify other mounted observers to hydrate from cache (no network).
+      // They will call their refetchFn(false) and pick the cached value.
+      refetchQueries([key], false);
     } catch (err) {
       error.set(err as TError);
       isError.set(true);
@@ -81,6 +86,14 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
 
   onMount(() => {
     registerQuery(key, refetchFn);
+
+    const cached = getCachedQuery(key);
+    if (cached) {
+      data.set(cached.data);
+      isSuccess.set(true);
+      isPending.set(false);
+    }
+
     if (enabled) {
       fetchData();
     }
@@ -90,7 +103,7 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
     if (refetchOnWindowFocus) {
       handleVisibilityChange = () => {
         if (document.visibilityState === "visible") {
-          refetchFn();
+          refetchFn(true);
         }
       };
       document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -104,5 +117,5 @@ export function createQuery<TData, TError = unknown>(opts: CreateQueryOptions<TD
     };
   });
 
-  return { data, error, isPending, isSuccess, isError, refetch: refetchFn };
+  return { data, error, isPending, isSuccess, isError, refetch: () => refetchFn(true) };
 }

@@ -1,5 +1,5 @@
 type QueryKey = string;
-type RefetchFn = () => void;
+type RefetchFn = (force?: boolean) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalScope = globalThis as any;
@@ -33,15 +33,19 @@ export function unregisterQuery(key: QueryKey, refetchFn: RefetchFn) {
   if (set.size === 0) queryRegistry.delete(key);
 }
 
-export function refetchQueries(keys?: QueryKey[]) {
+export function refetchQueries(keys?: QueryKey[], force = true) {
   if (!keys) return;
-  console.log("Refetching...:", keys);
+  console.log("Refetching...:", keys, "force:", force);
 
   for (const key of keys) {
     const fns = queryRegistry.get(key);
     if (fns) {
       for (const fn of fns) {
-        fn();
+        try {
+          fn(force);
+        } catch (err) {
+          console.error("Error calling refetch fn for", key, err);
+        }
       }
     }
   }
