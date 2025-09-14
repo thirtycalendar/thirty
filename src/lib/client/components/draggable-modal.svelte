@@ -64,7 +64,7 @@
     role="dialog"
     aria-modal="true"
     aria-label={title}
-    class="border-rounded base-border bg-base-200 fixed z-[101] max-h-full max-w-lg min-w-[450px] p-1 shadow-md"
+    class="border-rounded base-border bg-base-200 fixed z-[101] max-h-full p-1 shadow-md"
     use:draggable={{
       handle: headerEl,
       boundary: "window",
@@ -75,6 +75,8 @@
       left: {position?.x ?? 0}px;
       top: {position?.y ?? 0}px;
       transform: translate(-50%, -50%);
+      width: min(450px, 90vw);
+      max-width: 100%;
     "
   >
     <button
