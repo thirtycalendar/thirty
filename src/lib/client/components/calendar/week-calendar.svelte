@@ -99,9 +99,59 @@
       }
     });
   });
+
+  let dragStartY: number | null = $state(null);
+  let dragEndY: number | null = $state(null);
+  let dragDay: Date | null = $state(null);
+
+  const HOUR_HEIGHT = 60; // match your h-15 CSS (60px per hour)
+  const INTERVAL = 15; // 15 minutes
+
+  function snapToInterval(y: number) {
+    const minutesPerPixel = 60 / HOUR_HEIGHT; // 1px = X minutes
+    const totalMinutes = y * minutesPerPixel;
+    const snappedMinutes = Math.floor(totalMinutes / INTERVAL) * INTERVAL;
+    return snappedMinutes;
+  }
+
+  function onPointerDown(e: PointerEvent, day: Date) {
+    dragStartY = e.offsetY;
+    dragDay = day;
+    dragEndY = dragStartY;
+  }
+
+  function onPointerMove(e: PointerEvent) {
+    if (dragStartY !== null) {
+      dragEndY = e.offsetY;
+    }
+  }
+
+  function onPointerUp() {
+    if (dragStartY !== null && dragEndY !== null && dragDay) {
+      const startY = Math.min(dragStartY, dragEndY);
+      const endY = Math.max(dragStartY, dragEndY);
+
+      const startMinutes = snapToInterval(startY);
+      const endMinutes = snapToInterval(endY);
+
+      const startDate = new Date(dragDay);
+      startDate.setHours(Math.floor(startMinutes / 60), startMinutes % 60);
+
+      const endDate = new Date(dragDay);
+      endDate.setHours(Math.floor(endMinutes / 60), endMinutes % 60);
+
+      console.log("Start:", startDate);
+      console.log("End:", endDate);
+    }
+
+    dragStartY = null;
+    dragEndY = null;
+    dragDay = null;
+  }
 </script>
 
 <div class="flex h-full flex-col">
+  <!-- Week header -->
   <div class="sticky top-0 z-20 grid grid-cols-[50px_repeat(7,1fr)] text-xs sm:text-sm">
     <div></div>
     {#each days as day (day.toISOString())}
@@ -122,6 +172,7 @@
     {/each}
   </div>
 
+  <!-- All-day events -->
   <div class="border-base-200 grid grid-cols-[50px_repeat(7,1fr)] border-b pb-1">
     <div></div>
     {#each days as day, i (i + day.toISOString())}
@@ -172,10 +223,12 @@
     {/each}
   </div>
 
+  <!-- Timed events -->
   <div
     bind:this={scrollContainer}
     class="bg-base-100 relative grid flex-1 grid-cols-[50px_repeat(7,1fr)] overflow-x-hidden overflow-y-auto"
   >
+    <!-- Hours -->
     <div class="col-start-1 row-start-1 grid">
       {#each hours as hour (hour)}
         <div
@@ -188,14 +241,28 @@
       {/each}
     </div>
 
+    <!-- Days -->
     {#each days as day, i (day.toISOString())}
       <div
         class="border-base-200 relative grid grid-rows-24 border-r"
         style="grid-column: {i + 2}; grid-row: 1;"
+        onpointerdown={(e) => onPointerDown(e, day)}
+        onpointermove={onPointerMove}
+        onpointerup={onPointerUp}
       >
         {#each hours as hour (hour)}
           <div class="border-base-200 h-15 border-b"></div>
         {/each}
+
+        {#if dragStartY !== null && dragDay?.toDateString() === day.toDateString()}
+          <div
+            class="bg-primary/70 border-primary-content/10 shaodw-md pointer-events-none absolute right-1 left-1 rounded-md border"
+            style="
+              top: {Math.min(dragStartY, dragEndY ?? dragStartY)}px;
+              height: {Math.abs((dragEndY ?? dragStartY) - dragStartY)}px;
+            "
+          ></div>
+        {/if}
 
         <div class="absolute inset-0">
           {#each timedEventChunks.filter((e) => format(e.day, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")) as { event, start, end, offset } (event.id + start.toISOString())}
