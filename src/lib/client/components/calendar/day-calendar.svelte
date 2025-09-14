@@ -3,7 +3,7 @@
 
   import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
-  import { endOfDay, format, isToday, setHours, setMinutes, startOfDay } from "date-fns";
+  import { endOfDay, format, isToday, setHours, startOfDay } from "date-fns";
 
   import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { currentDate } from "$lib/client/stores/change-date";
@@ -20,6 +20,7 @@
   import { EventBlock } from "../event";
   import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
+  import { createDragCreate } from "./utils";
 
   import { StickyBlock } from "..";
   import { CurrentTimeIndicator } from ".";
@@ -83,54 +84,11 @@
     });
   });
 
-  // Drag-to-create event logic
-  let dragStartY: number | null = $state(null);
-  let dragEndY: number | null = $state(null);
+  const { state: dragState, onPointerDown, onPointerMove, onPointerUp } = createDragCreate(60, 15);
 
-  const HOUR_HEIGHT = 60; // px per hour
-  const INTERVAL = 15; // snap every 15 minutes
-
-  function snapToInterval(y: number) {
-    const minutesPerPixel = 60 / HOUR_HEIGHT; // 1px = X minutes
-    const totalMinutes = y * minutesPerPixel;
-    const snappedMinutes = Math.round(totalMinutes / INTERVAL) * INTERVAL;
-    return snappedMinutes;
-  }
-
-  function onPointerDown(e: PointerEvent) {
-    dragStartY = e.offsetY;
-    dragEndY = dragStartY;
-  }
-
-  function onPointerMove(e: PointerEvent) {
-    if (dragStartY !== null) {
-      dragEndY = e.offsetY;
-    }
-  }
-
-  function onPointerUp() {
-    if (dragStartY !== null && dragEndY !== null) {
-      const startY = Math.min(dragStartY, dragEndY);
-      const endY = Math.max(dragStartY, dragEndY);
-
-      const startMinutes = snapToInterval(startY);
-      const endMinutes = snapToInterval(endY);
-
-      const startDate = setMinutes(
-        setHours($currentDate, Math.floor(startMinutes / 60)),
-        startMinutes % 60
-      );
-      const endDate = setMinutes(
-        setHours($currentDate, Math.floor(endMinutes / 60)),
-        endMinutes % 60
-      );
-
-      console.log("Start:", format(startDate, "yyyy-MM-dd HH:mm:ss"));
-      console.log("End:", format(endDate, "yyyy-MM-dd HH:mm:ss"));
-    }
-
-    dragStartY = null;
-    dragEndY = null;
+  function handleNewEvent(start: Date, end: Date) {
+    console.log("Start:", start);
+    console.log("End:", end);
   }
 </script>
 
@@ -221,22 +179,22 @@
       style="grid-column: 2; grid-row: 1;"
       onpointerdown={onPointerDown}
       onpointermove={onPointerMove}
-      onpointerup={onPointerUp}
+      onpointerup={() => onPointerUp(handleNewEvent, $currentDate)}
     >
       {#each hours as hour (hour)}
         <div class="border-base-200 h-15 border-b"></div>
       {/each}
 
       <!-- Drag selection overlay -->
-      {#if dragStartY !== null}
+      {#if $dragState.startY !== null}
         <div
-          class="bg-primary/70 border-primary-content/10 pointer-events-none absolute right-1 left-1 rounded-md border shadow-md"
-          style="top: {Math.min(dragStartY, dragEndY ?? dragStartY)}px; height: {Math.abs(
-            (dragEndY ?? dragStartY) - dragStartY
-          )}px;"
+          class="dragged-event-placeholder"
+          style="top: {Math.min(
+            $dragState.startY,
+            $dragState.endY ?? $dragState.startY
+          )}px; height: {Math.abs(($dragState.endY ?? $dragState.startY) - $dragState.startY)}px;"
         ></div>
       {/if}
-
       <!-- Events -->
       <div class="absolute inset-0">
         {#each timedEventChunks as { event, start, end, offset } (event.id)}

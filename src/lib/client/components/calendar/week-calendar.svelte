@@ -3,16 +3,7 @@
 
   import { BirthdayCakeIcon, Flag02Icon } from "@hugeicons/core-free-icons";
 
-  import {
-    addDays,
-    endOfDay,
-    format,
-    isToday,
-    setHours,
-    setMinutes,
-    startOfDay,
-    startOfWeek
-  } from "date-fns";
+  import { addDays, endOfDay, format, isToday, setHours, startOfDay, startOfWeek } from "date-fns";
 
   import { userHolidayCountriesQuery } from "$lib/client/data/queries";
   import { currentDate } from "$lib/client/stores/change-date";
@@ -30,7 +21,7 @@
   import { EventBlock } from "../event";
   import { calculateEventOffsets, getEventDateObjects, getVisibleEvents } from "../event/utils";
   import { getHolidaysForDay, getVisibleHolidays } from "../holiday/utils";
-  import { calculateAllDayLayout } from "./utils";
+  import { calculateAllDayLayout, createDragCreate } from "./utils";
 
   import { StickyBlock } from "..";
   import { CurrentTimeIndicator } from ".";
@@ -109,60 +100,11 @@
     });
   });
 
-  let dragStartY: number | null = $state(null);
-  let dragEndY: number | null = $state(null);
-  let dragDay: Date | null = $state(null);
+  const { state: dragState, onPointerDown, onPointerMove, onPointerUp } = createDragCreate(60, 15);
 
-  const HOUR_HEIGHT = 60; // px per hour
-  const INTERVAL = 15; // snap every 15 minutes
-
-  function snapToInterval(y: number) {
-    const minutesPerPixel = 60 / HOUR_HEIGHT; // 1px = X minutes
-    const totalMinutes = y * minutesPerPixel;
-    const snappedMinutes = Math.round(totalMinutes / INTERVAL) * INTERVAL;
-    return snappedMinutes;
-  }
-
-  function onPointerDown(e: PointerEvent, day: Date) {
-    dragStartY = e.offsetY;
-    dragDay = day;
-    dragEndY = dragStartY;
-  }
-
-  function onPointerMove(e: PointerEvent) {
-    if (dragStartY !== null) {
-      dragEndY = e.offsetY;
-    }
-  }
-
-  function onPointerUp() {
-    if (dragStartY !== null && dragEndY !== null && dragDay) {
-      const startY = Math.min(dragStartY, dragEndY);
-      const endY = Math.max(dragStartY, dragEndY);
-
-      const startMinutes = snapToInterval(startY);
-      const endMinutes = snapToInterval(endY);
-
-      const startDate = setMinutes(
-        setHours(dragDay, Math.floor(startMinutes / 60)),
-        startMinutes % 60
-      );
-      const endDate = setMinutes(setHours(dragDay, Math.floor(endMinutes / 60)), endMinutes % 60);
-
-      const formattedStartDate = format(startDate, "yyyy-MM-dd");
-      const formattedStartTime = format(startDate, "HH:mm:ss");
-      const formattedEndDate = format(endDate, "yyyy-MM-dd");
-      const formattedEndTime = format(endDate, "HH:mm:ss");
-
-      console.log("Start Date:", formattedStartDate);
-      console.log("Start Time:", formattedStartTime);
-      console.log("End Date:", formattedEndDate);
-      console.log("End Time:", formattedEndTime);
-    }
-
-    dragStartY = null;
-    dragEndY = null;
-    dragDay = null;
+  function handleNewEvent(start: Date, end: Date) {
+    console.log("Start:", start);
+    console.log("End:", end);
   }
 </script>
 
@@ -256,18 +198,19 @@
         style="grid-column: {i + 2}; grid-row: 1;"
         onpointerdown={(e) => onPointerDown(e, day)}
         onpointermove={onPointerMove}
-        onpointerup={onPointerUp}
+        onpointerup={() => onPointerUp(handleNewEvent)}
       >
         {#each hours as hour (hour)}
           <div class="border-base-200 h-15 border-b"></div>
         {/each}
 
-        {#if dragStartY !== null && dragDay?.toDateString() === day.toDateString()}
+        {#if $dragState.startY !== null && $dragState.day?.toDateString() === day.toDateString()}
           <div
-            class="bg-primary/70 border-primary-content/10 pointer-events-none absolute right-1 left-1 rounded-md border shadow-md"
-            style="top: {Math.min(dragStartY, dragEndY ?? dragStartY)}px; height: {Math.abs(
-              (dragEndY ?? dragStartY) - dragStartY
-            )}px;"
+            class="dragged-event-placeholder"
+            style="top: {Math.min(
+              $dragState.startY,
+              $dragState.endY ?? $dragState.startY
+            )}px; height: {Math.abs(($dragState.endY ?? $dragState.startY) - $dragState.startY)}px;"
           ></div>
         {/if}
 

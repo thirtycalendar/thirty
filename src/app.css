@@ -45,6 +45,10 @@ body {
     @apply !border-base-300 border;
   }
 
+  .dragged-event-placeholder {
+    @apply bg-primary/30 border-primary-content/5 pointer-events-none absolute right-1 left-1 rounded-md border;
+  }
+
   /* ----- ai messages ----- */
   .ai-message {
     @apply prose;
