@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { logoutAllMutation, logoutMutation } from "$lib/client/data/mutations";
+  import {
+    deleteAllChatsMutation,
+    logoutAllMutation,
+    logoutMutation
+  } from "$lib/client/data/mutations";
   import { session } from "$lib/client/stores/user-session";
 
+  const { mutate: handleDeleteAllChats, isPending: deleteAllChatsIsPending } =
+    deleteAllChatsMutation();
   const { mutate: handleLogout, isPending: logoutIsPending } = logoutMutation();
   const { mutate: handleLogoutAll, isPending: logoutAllIsPending } = logoutAllMutation();
 </script>
@@ -26,6 +32,20 @@
   <hr class="text-base-200" />
 
   <div class="flex items-center justify-between text-sm">
+    <p>Delete all chats</p>
+
+    <button
+      class="btn btn-sm btn-error btn-outline font-normal"
+      onclick={handleDeleteAllChats}
+      disabled={$deleteAllChatsIsPending}
+    >
+      Delete all
+    </button>
+  </div>
+
+  <hr class="text-base-200" />
+
+  <div class="flex items-center justify-between text-sm">
     <p>Log out of this device</p>
 
     <button
@@ -33,7 +53,7 @@
       onclick={handleLogout}
       disabled={$logoutIsPending || $logoutAllIsPending}
     >
-      Logout
+      Log out
     </button>
   </div>
 

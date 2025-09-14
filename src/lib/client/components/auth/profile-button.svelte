@@ -39,7 +39,7 @@
     },
     { label: "Discord", icon: DiscordIcon, onclick: () => window.open(discordLink, "_blank") },
     { label: "Settings", icon: Settings01Icon, onclick: handleSettings },
-    { label: "Logout", icon: Logout05Icon, onclick: handleLogout, disabled: $logoutIsPending }
+    { label: "Log out", icon: Logout05Icon, onclick: handleLogout, disabled: $logoutIsPending }
   ];
 </script>
 

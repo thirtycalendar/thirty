@@ -125,4 +125,19 @@ export const chatRoute = new Hono()
     } catch (err: unknown) {
       return errorResponse(c, err);
     }
+  })
+  .delete("/deleteAll", async (c) => {
+    try {
+      const user = c.get("user") as User;
+
+      await chatService.deleteAll(user.id);
+
+      return c.json<SuccessResponse<null>>({
+        success: true,
+        message: "Successfully deleted all chats",
+        data: null
+      });
+    } catch (err: unknown) {
+      return errorResponse(c, err);
+    }
   });
