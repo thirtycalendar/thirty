@@ -180,11 +180,16 @@
             </div>
           </div>
         {:else}
-          <div class="flex items-center gap-2">
-            <DateField name="startDate" class="flex-[2]" {formData} {formErrors} />
-            <TimeField name="startTime" class="flex-1" {formData} {formErrors} />
-            <span class="text-muted-foreground">-</span>
-            <TimeField name="endTime" class="flex-1" {formData} {formErrors} />
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div class="flex-1">
+              <DateField name="startDate" class="w-full" {formData} {formErrors} />
+            </div>
+
+            <div class="flex items-center gap-2">
+              <TimeField name="startTime" class="sm:w-22" {formData} {formErrors} />
+              <span class="text-muted-foreground">-</span>
+              <TimeField name="endTime" class="sm:w-22" {formData} {formErrors} />
+            </div>
           </div>
         {/if}
       {:else}

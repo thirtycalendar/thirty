@@ -125,15 +125,19 @@
       <div class="flex items-center justify-center">
         <span
           class={cn(
-            "flex items-center gap-1",
+            "flex flex-col items-center gap-1 sm:flex-row",
             isToday(day) ? "text-primary-content" : "text-primary-content/70"
           )}
         >
           {#if isToday(day)}
-            <span class="bg-primary-content h-2 w-2 rounded-full"></span>
+            <span class="bg-primary-content hidden h-2 w-2 rounded-full sm:block"></span>
           {/if}
-          {format(day, "EEE")}
-          {format(day, "d")}
+          <span>
+            {format(day, "EEE")}
+          </span>
+          <span>
+            {format(day, "d")}
+          </span>
         </span>
       </div>
     {/each}
