@@ -6,7 +6,8 @@ import {
   format,
   isSameDay,
   isSameYear,
-  isWithinInterval
+  isWithinInterval,
+  subDays
 } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
@@ -115,24 +116,27 @@ export function calculateEventOffsets(chunks: EventChunk[]) {
   return offsets;
 }
 
-export function formatEventTimeDetails(event: Event, start: Date, end: Date) {
+export function formatEventTimeDetails(event: Event, start: Date, end: Date): string {
   const now = new Date();
   const showYear = !isSameYear(now, start) || !isSameYear(now, end);
-  const formatString = event.allDay
-    ? showYear
-      ? "EEE, MMM d, yyyy"
-      : "EEE, MMM d"
-    : showYear
-      ? "EEE, MMM d, yyyy · h:mm a"
-      : "EEE, MMM d · h:mm a";
-
-  const startFormatted = formatInTimeZone(start, event.timezone, formatString);
 
   if (event.allDay) {
-    if (isSameDay(start, end)) return startFormatted;
-    const endFormatted = formatInTimeZone(end, event.timezone, formatString);
+    const formatString = showYear ? "EEE, MMM d, yyyy" : "EEE, MMM d";
+    const startFormatted = formatInTimeZone(start, event.timezone, formatString);
+
+    const adjustedEnd = subDays(end, 1);
+
+    if (isSameDay(start, adjustedEnd)) {
+      return startFormatted;
+    }
+
+    const endFormatted = formatInTimeZone(adjustedEnd, event.timezone, formatString);
     return `${startFormatted} - ${endFormatted}`;
   }
+
+  const formatString = showYear ? "EEE, MMM d, yyyy · h:mm a" : "EEE, MMM d · h:mm a";
+
+  const startFormatted = formatInTimeZone(start, event.timezone, formatString);
 
   if (isSameDay(start, end)) {
     const endFormatted = formatInTimeZone(end, event.timezone, "h:mm a");

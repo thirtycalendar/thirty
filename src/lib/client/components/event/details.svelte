@@ -85,13 +85,12 @@
       {/if}
     </div>
 
-    {#if formattedLocalTime}
-      <p class="detail-badge my-1">
-        {timezoneDiffInTime}{timezoneDiffInTime && " "}{userTimezone}
-      </p>
-      <div class="my-1 block items-center gap-2 sm:flex">
-        <p class="text-muted-foreground text-sm">{formattedLocalTime}</p>
-        <div class="detail-badge">{userTimezone}</div>
+    {#if formattedLocalTime && !event.allDay}
+      <div class="text-primary-content/75 mt-1 space-y-1 text-xs">
+        <p>{formattedLocalTime}</p>
+        <p>
+          {`${timezoneDiffInTime} current timezone. (${userTimezone})`}
+        </p>
       </div>
     {/if}
   </IconRow>
