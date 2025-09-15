@@ -13,9 +13,11 @@
   import { format } from "date-fns";
 
   import { calendarsQuery } from "$lib/client/data/queries";
+  import { cn } from "$lib/client/utils/cn";
 
   import { capitalizeFirstLetter } from "$lib/shared/utils/string";
   import { getValidTimeZone } from "$lib/shared/utils/timezone";
+  import { statusClassMap } from "$lib/shared/constants";
   import type { Event } from "$lib/shared/types";
 
   import {
@@ -130,14 +132,18 @@
 
   <!-- Status -->
   <IconRow icon={CheckmarkCircle02Icon}>
-    <div class="capitalize">Status: {event.status}</div>
+    <div class={cn("badge badge-soft capitalize", statusClassMap[event.status])}>
+      {event.status}
+    </div>
   </IconRow>
 
   <!-- Meta rows -->
   <div class="detail-meta-section">
-    <DetailMetaRow icon={FileSyncIcon}>
-      Synced from {capitalizeFirstLetter(event.source)}
-    </DetailMetaRow>
+    {#if event.source !== "local"}
+      <DetailMetaRow icon={FileSyncIcon}>
+        Synced from {capitalizeFirstLetter(event.source)}
+      </DetailMetaRow>
+    {/if}
 
     <DetailMetaRow icon={UndoIcon}>
       Last edited: {updated}

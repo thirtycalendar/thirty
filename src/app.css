@@ -22,15 +22,15 @@ body {
   }
 
   .detail-title {
-    @apply text-primary-content/85 text-xl font-semibold;
+    @apply text-primary-content/85 flex items-center gap-3 text-xl font-semibold;
   }
 
   .detail-badge {
-    @apply badge badge-outline badge-xs;
+    @apply badge badge-soft badge-xs;
   }
 
   .detail-meta-section {
-    @apply mt-4 space-y-1;
+    @apply mt-5 space-y-1;
   }
 
   .error-text {

@@ -1,4 +1,4 @@
-import type { SubscriptionPlan } from "./types";
+import type { EventStatus, SubscriptionPlan } from "./types";
 
 export const SubscriptionPlans = ["pro", "free"] as const;
 
@@ -14,6 +14,12 @@ export const CalendarViews = ["year", "month", "week", "day"] as const;
 export const Sources = ["local", "file", "google", "outlook", "apple"] as const;
 
 export const EventStatuses = ["confirmed", "cancelled", "tentative"] as const;
+
+export const statusClassMap: Record<EventStatus, string> = {
+  confirmed: "badge-success",
+  cancelled: "badge-error",
+  tentative: "badge-warning"
+};
 
 export const AttendeeStatuses = ["accepted", "declined", "tentative", "needsAction"] as const;
 

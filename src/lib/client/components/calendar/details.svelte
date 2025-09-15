@@ -3,7 +3,6 @@
     CheckmarkCircle02Icon,
     FileSyncIcon,
     GlobalRefreshIcon,
-    PaintBoardIcon,
     UndoIcon
   } from "@hugeicons/core-free-icons";
 
@@ -32,18 +31,10 @@
     <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="detail-title">{calendar.name}</h2>
-
-  <!-- Color -->
-  <IconRow icon={PaintBoardIcon}>
-    <div class="flex items-center gap-2">
-      <span>Color:</span>
-      <div
-        class="aspect-square w-5 rounded-full"
-        style={`background-color: ${calendar.color}`}
-      ></div>
-    </div>
-  </IconRow>
+  <h2 class="detail-title">
+    <div class="aspect-square w-5 rounded-full" style={`background-color: ${calendar.color}`}></div>
+    {calendar.name}
+  </h2>
 
   <!-- Timezone -->
   <IconRow icon={GlobalRefreshIcon}>

@@ -18,7 +18,7 @@
     <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="flex items-center gap-2 text-xl font-semibold">
+  <h2 class="detail-title">
     <div
       class="aspect-square w-5 rounded-full"
       style="background-color: {holidayCountry.color}"

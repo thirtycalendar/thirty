@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    Calendar03Icon,
-    PaintBoardIcon,
-    TextAlignLeftIcon,
-    UndoIcon
-  } from "@hugeicons/core-free-icons";
+  import { Calendar03Icon, TextAlignLeftIcon, UndoIcon } from "@hugeicons/core-free-icons";
 
   import { differenceInYears, format } from "date-fns";
 
@@ -36,24 +31,16 @@
     <p class="error-text">{errorMessage}</p>
   {/if}
 
-  <h2 class="detail-title">{birthday.name}</h2>
+  <h2 class="detail-title">
+    <div class="aspect-square w-5 rounded-full" style={`background-color: ${birthday.color}`}></div>
+    {birthday.name}
+  </h2>
 
   <!-- Date of Birth -->
   <IconRow icon={Calendar03Icon}>
     <div class="flex items-center gap-2">
       <p class="font-medium">{dob}</p>
       <div class="detail-badge">{age}</div>
-    </div>
-  </IconRow>
-
-  <!-- Color -->
-  <IconRow icon={PaintBoardIcon}>
-    <div class="flex items-center gap-2">
-      <span>Color:</span>
-      <div
-        class="aspect-square w-5 rounded-full"
-        style={`background-color: ${birthday.color}`}
-      ></div>
     </div>
   </IconRow>
 
