@@ -29,7 +29,7 @@
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Thirty - AI Calendar dashboard preview"
-    class="base-border border-rounded border shadow-xl"
+    class="base-border border-rounded border shadow-xl select-none"
     loading="eager"
     fetchpriority="high"
   />
