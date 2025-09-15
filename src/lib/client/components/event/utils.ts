@@ -217,3 +217,42 @@ export function calculateTimezoneDiffInTime(
 
   return `${formattedDiff} ${direction}`;
 }
+
+export function formatFilteredEventTime(event: Event): string {
+  const start = new Date(`${event.startDate}T${event.startTime}`);
+  const end = new Date(`${event.endDate}T${event.endTime}`);
+  const sameDay = format(start, "yyyy-MM-dd") === format(end, "yyyy-MM-dd");
+
+  if (event.allDay) {
+    if (sameDay) {
+      return format(start, "EEE d MMM yyyy");
+    }
+
+    const sameMonthYear = format(start, "MMM yyyy") === format(end, "MMM yyyy");
+
+    if (sameMonthYear) {
+      return `${format(start, "d")}–${format(end, "d MMM yyyy")}`;
+    }
+
+    return `${format(start, "d MMM yyyy")} – ${format(end, "d MMM yyyy")}`;
+  }
+
+  if (sameDay) {
+    const sameAmPm = format(start, "a") === format(end, "a");
+
+    if (sameAmPm) {
+      const startLabel = format(start, start.getMinutes() === 0 ? "h" : "h:mm");
+      const endLabel = format(end, end.getMinutes() === 0 ? "h a" : "h:mm a");
+      return `${startLabel} – ${endLabel}, ${format(start, "EEE d MMM yyyy")}`;
+    }
+
+    const startLabel = format(start, start.getMinutes() === 0 ? "h a" : "h:mm a");
+    const endLabel = format(end, end.getMinutes() === 0 ? "h a" : "h:mm a");
+    return `${startLabel} – ${endLabel}, ${format(start, "EEE d MMM yyyy")}`;
+  }
+
+  return `${format(start, start.getMinutes() === 0 ? "h a, EEE d MMM yyyy" : "h:mm a, EEE d MMM yyyy")} – ${format(
+    end,
+    end.getMinutes() === 0 ? "h a, EEE d MMM yyyy" : "h:mm a, EEE d MMM yyyy"
+  )}`;
+}
