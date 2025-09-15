@@ -41,12 +41,12 @@
   )}
 >
   <div class="flex items-center justify-between">
-    <a href="/">
-      <img
-        src={isDark ? LogoWhiteImage : LogoDarkImage}
-        alt="Thirty Logo"
-        class="h-8 w-8 opacity-85 transition-all duration-300 hover:opacity-100"
-      />
+    <a
+      href="/"
+      class="flex items-baseline gap-2 opacity-85 transition-all duration-300 hover:opacity-100"
+    >
+      <img src={isDark ? LogoWhiteImage : LogoDarkImage} alt="Thirty Logo" class="size-7" />
+      <span class="text-primary-content/75 text-[10px]">beta</span>
     </a>
 
     <div class="flex items-center gap-2">

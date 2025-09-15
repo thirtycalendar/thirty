@@ -18,18 +18,18 @@
 
 <Seo seo={data.seo} />
 
-<div class="mx-auto mt-15 mb-6 px-3 text-center sm:mt-16 sm:mb-8">
-  <h1 class="text-5xl font-bold sm:text-[120px]">The AI Calendar</h1>
-  <p class="mt-10 text-sm opacity-75 sm:text-xl">
+<div class="mx-auto px-3 text-center sm:mt-16 sm:mb-8">
+  <h1 class="md:text-10xl mt-12 text-6xl font-bold sm:mt-15 sm:text-[120px]">The AI Calendar</h1>
+  <p class="my-6 text-sm opacity-75 sm:my-10 sm:text-xl">
     Built to keep you in flow, Thirty is the best way to organize your work and life.
   </p>
 </div>
 
-<div class="mx-auto my-16 max-w-4xl px-4">
+<div class="mx-auto my-12 max-w-4xl px-4 sm:my-16">
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Thirty - AI Calendar dashboard preview"
-    class="base-border border-rounded border shadow-2xl"
+    class="base-border border-rounded border shadow-xl"
     loading="eager"
     fetchpriority="high"
   />

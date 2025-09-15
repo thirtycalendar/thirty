@@ -3,7 +3,7 @@
 
 # Thirty
 
-Thirty is an open-source AI calendar built on familiar foundations. It’s not reinventing the wheel, it's like your regular calendar, just smarter and more effortless with AI.
+Built to keep you in flow, Thirty is the best way to organize your work and life.
 
 </div>
 
