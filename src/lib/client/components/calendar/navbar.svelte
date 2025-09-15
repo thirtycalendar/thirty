@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { SidebarLeftIcon } from "@hugeicons/core-free-icons";
+  import { Search01Icon, SidebarLeftIcon } from "@hugeicons/core-free-icons";
 
   import { mainSidebarStore } from "$lib/client/stores/boolean-store";
   import { currentCalendarView } from "$lib/client/stores/calendar-view";
   import { currentDate } from "$lib/client/stores/change-date";
+  import { toggleSearch } from "$lib/client/stores/search";
 
   import { ProfileButton } from "../auth";
-  import { SearchButton } from "../event";
   import { Icon } from "../icons";
 
   import { ChangeCalendarViewButtons, ChangeDateButtons, CreateButton } from ".";
@@ -38,7 +38,12 @@
   </div>
 
   <div class="flex items-center gap-2">
-    <SearchButton />
+    <button
+      class="btn btn-ghost btn-square btn-sm sm:btn-md text-primary-content/70 hover:text-primary-content ml-2"
+      onclick={toggleSearch}
+    >
+      <Icon icon={Search01Icon} class="size-4 sm:size-5" absoluteStrokeWidth />
+    </button>
 
     <CreateButton />
 

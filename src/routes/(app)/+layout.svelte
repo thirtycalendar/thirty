@@ -3,7 +3,7 @@
 
   // import { page } from "$app/state";
 
-  import { Toast } from "$lib/client/components";
+  import { Search, Toast } from "$lib/client/components";
   import { Modals as BirthdayModals } from "$lib/client/components/birthday";
   import {
     Modals as CalendarModals,
@@ -26,6 +26,8 @@
 </script>
 
 <Toast />
+
+<Search />
 
 <Chat />
 <ChatModal />

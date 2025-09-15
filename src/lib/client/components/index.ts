@@ -6,6 +6,7 @@ export { default as DraggableModal } from "./draggable-modal.svelte";
 export { default as GithubStarButton } from "./github-star-button.svelte";
 export { default as IconRow } from "./icon-row.svelte";
 export { default as Legal } from "./legal.svelte";
+export { default as Search } from "./search.svelte";
 export { default as Modal } from "./modal.svelte";
 export { default as Seo } from "./seo.svelte";
 export { default as StickyBlock } from "./sticky-block.svelte";

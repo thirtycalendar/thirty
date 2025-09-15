@@ -1,29 +1,20 @@
 <script lang="ts">
-  import { Search01Icon } from "@hugeicons/core-free-icons";
-
   import { eventsQuery } from "$lib/client/data/queries";
   import { eventModalStore } from "$lib/client/stores/modal";
+  import { hideSearch, isSearchOpen, searchQuery, toggleSearch } from "$lib/client/stores/search";
 
   import type { Event } from "$lib/shared/types";
 
-  import { Icon } from "../icons";
-  import { formatFilteredEventTime } from "./utils";
+  import { formatFilteredEventTime } from "./event/utils";
+
+  let inputRef = $state<HTMLDivElement | null>(null);
+  let containerRef = $state<HTMLDivElement | null>(null);
 
   const { data: events } = eventsQuery();
 
-  let open = $state(false);
-  let query = $state("");
-  let containerRef = $state<HTMLDivElement | null>(null);
-  let triggerButtonRef = $state<HTMLButtonElement | null>(null);
-
-  function toggleSearch(): void {
-    open = !open;
-    query = "";
-  }
-
   function getResults(): Event[] {
     if (!$events) return [];
-    const q = query.toLowerCase().trim();
+    const q = $searchQuery.toLowerCase().trim();
     if (!q) return [];
 
     return $events
@@ -43,30 +34,23 @@
 
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as Node;
-    if (!containerRef?.contains(target) && !triggerButtonRef?.contains(target)) {
-      open = false;
+    if (!containerRef?.contains(target)) {
+      hideSearch();
     }
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape" && open) {
-      open = false;
-      triggerButtonRef?.focus();
-    }
+    if (event.key === "Escape") hideSearch();
   }
+
+  $effect(() => {
+    if ($isSearchOpen) inputRef?.focus();
+  });
 </script>
 
-<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
+<svelte:window onclick={handleClickOutside} on:keydown={handleKeydown} />
 
-<button
-  class="btn btn-ghost btn-square btn-sm sm:btn-md text-primary-content/70 hover:text-primary-content ml-2"
-  onclick={toggleSearch}
-  bind:this={triggerButtonRef}
->
-  <Icon icon={Search01Icon} class="size-4 sm:size-5" absoluteStrokeWidth />
-</button>
-
-{#if open}
+{#if $isSearchOpen}
   <div
     bind:this={containerRef}
     class="absolute inset-0 top-1/4 z-501 mx-2 flex items-start justify-center"
@@ -76,8 +60,9 @@
     >
       <input
         type="text"
-        bind:value={query}
+        bind:value={$searchQuery}
         placeholder="Search"
+        bind:this={inputRef}
         class="input input-lg sm:input-xl w-full rounded-none border-none focus:outline-0"
       />
 
@@ -97,7 +82,7 @@
             </li>
           {/each}
         </ul>
-      {:else if query}
+      {:else if $searchQuery}
         <div class="p-2 text-sm opacity-70">No results</div>
       {/if}
     </div>
