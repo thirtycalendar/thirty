@@ -21,7 +21,7 @@
 </script>
 
 <button
-  class="text-primary-content border-primary-content/10 flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-xl border p-0 text-left shadow-sm backdrop-blur-md select-none"
+  class="text-primary-content border-primary-content/10 focus:outline-primary-content flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-xl border p-0 text-left shadow-sm backdrop-blur-md select-none"
   style:background-color={bgColor}
   {title}
   onclick={(e) => {

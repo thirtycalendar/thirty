@@ -2,7 +2,7 @@
   import type { Snippet } from "svelte";
 
   import { cn } from "../utils/cn";
-  import { toggleModal } from "./utils";
+  import { hideToggleModal } from "./utils";
 
   interface Props {
     id: string | number;
@@ -16,7 +16,7 @@
   let { id, children, title, class: classCn, modelBoxClass, onClose }: Props = $props();
 
   function hide() {
-    toggleModal(id);
+    hideToggleModal(id);
     onClose?.();
   }
 </script>

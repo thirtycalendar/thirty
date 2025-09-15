@@ -5,7 +5,7 @@
 
   import { draggable, type DragPos } from "../actions/draggable";
   import { cn } from "../utils/cn";
-  import { toggleDraggableModal } from "./utils";
+  import { hideDraggableModal } from "./utils";
 
   interface Props {
     id: string | number;
@@ -27,7 +27,7 @@
   };
 
   export function hide() {
-    toggleDraggableModal(id);
+    hideDraggableModal(id);
     onClose?.();
 
     position = defaultPosition;
