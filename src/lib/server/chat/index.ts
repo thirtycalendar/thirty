@@ -10,7 +10,14 @@ import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
 
-export async function streamChat(userId: string, chatId: string, messages: UIMessage[]) {
+interface Props {
+  userId: string;
+  name: string;
+  chatId: string;
+  messages: UIMessage[];
+}
+
+export async function streamChat({ userId, name, chatId, messages }: Props) {
   const now = new Date().toISOString();
 
   const userMessage =
@@ -49,7 +56,7 @@ export async function streamChat(userId: string, chatId: string, messages: UIMes
 
   const result = streamText({
     model: openRouterGpt4oMini,
-    system: chatSystemMessage,
+    system: chatSystemMessage(name),
     tools: createTools(userId),
     stopWhen: stepCountIs(10),
     messages: convertToModelMessages(messages),
