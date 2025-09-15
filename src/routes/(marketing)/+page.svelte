@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Seo, WaitingList } from "$lib/client/components";
+  import { Seo } from "$lib/client/components";
   import { DemoDarkImage, DemoLightImage } from "$lib/client/assets";
 
   let { data } = $props();
@@ -18,22 +18,18 @@
 
 <Seo seo={data.seo} />
 
-<div class="mx-auto mt-12 mb-6 max-w-4xl px-3 text-center sm:mt-16 sm:mb-8">
-  <h1 class="text-4xl font-bold sm:text-8xl">The AI Calendar</h1>
-  <p class="mt-5 text-base opacity-75 sm:text-lg">
-    Not reinventing the wheel, just improving your workflow with AI.
+<div class="mx-auto mt-15 mb-6 px-3 text-center sm:mt-16 sm:mb-8">
+  <h1 class="text-5xl font-bold sm:text-[120px]">The AI Calendar</h1>
+  <p class="mt-10 text-sm opacity-75 sm:text-xl">
+    Built to keep you in flow, Thirty is the best way to organize your work and life.
   </p>
 </div>
 
-<div class="my-8 px-5">
-  <WaitingList />
-</div>
-
-<div class="mx-auto my-16 max-w-6xl px-4">
+<div class="mx-auto my-16 max-w-4xl px-4">
   <img
     src={isDark ? DemoDarkImage : DemoLightImage}
     alt="Thirty - AI Calendar dashboard preview"
-    class="ring-base-300 rounded-2xl shadow-2xl ring-8 sm:ring-10"
+    class="base-border border-rounded border shadow-2xl"
     loading="eager"
     fetchpriority="high"
   />

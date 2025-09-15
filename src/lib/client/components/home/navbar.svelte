@@ -1,16 +1,16 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { DiscordIcon } from "@hugeicons/core-free-icons";
+  import { DiscordIcon, GithubIcon } from "@hugeicons/core-free-icons";
 
   import { cn } from "$lib/client/utils/cn";
 
-  import { discordLink } from "$lib/shared/config";
+  import { discordLink, githubLink } from "$lib/shared/config";
 
   import { LogoDarkImage, LogoWhiteImage } from "../../assets";
   import { Icon } from "../icons";
 
-  import { GithubStarButton } from "..";
+  // import { GithubStarButton } from "..";
 
   let scrollY = $state(0);
 
@@ -33,7 +33,7 @@
 
 <div
   class={cn(
-    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-4xl rounded-xl border px-3 py-3 transition-all duration-300 md:mx-auto",
+    "bg-base-100 fixed inset-x-0 top-0 z-50 mx-2 mt-2 max-w-5xl rounded-xl border px-3 py-3 transition-all duration-300 md:mx-auto",
     scrolled ? "border-base-200 shadow-md" : "border-transparent"
   )}
 >
@@ -56,7 +56,21 @@
         <Icon icon={DiscordIcon} absoluteStrokeWidth />
       </a>
 
-      <GithubStarButton />
+      <!-- <GithubStarButton /> -->
+      <a
+        href={githubLink}
+        target="_blank"
+        rel="noopener noreferrer external"
+        class="btn btn-ghost btn-square"
+      >
+        <Icon icon={GithubIcon} size={18} absoluteStrokeWidth />
+      </a>
+
+      <button
+        class="btn bg-primary-content text-primary hover:bg-primary-content/90 transition-all"
+      >
+        Get Started
+      </button>
     </div>
   </div>
 </div>
