@@ -33,9 +33,7 @@ export function createMutation<Fn extends (...args: any[]) => Promise<any>, Erro
     let rollbackFn: (() => void | Promise<void>) | undefined;
 
     try {
-      if (onPending) {
-        await onPending();
-      }
+      if (onPending) await onPending();
 
       if (onMutate) {
         const maybeRollback = onMutate(...args);
@@ -47,25 +45,26 @@ export function createMutation<Fn extends (...args: any[]) => Promise<any>, Erro
       error.set(null);
       isSuccess.set(true);
 
-      if (onSuccess) {
-        await onSuccess(result);
-      }
+      if (onSuccess) await onSuccess(result);
     } catch (err) {
       error.set(err as ErrorType);
       isError.set(true);
 
       if (rollbackFn) {
-        await rollbackFn();
+        try {
+          await rollbackFn();
+        } catch (rollbackErr) {
+          console.error("Rollback failed:", rollbackErr);
+        }
       }
 
-      if (onError) {
-        await onError(err as ErrorType, ...args);
-      }
+      if (onError) await onError(err as ErrorType, ...args);
     } finally {
+      isPending.set(false);
+
       if (queryKeys) {
         refetchQueries(queryKeys);
       }
-      isPending.set(false);
     }
   }
 

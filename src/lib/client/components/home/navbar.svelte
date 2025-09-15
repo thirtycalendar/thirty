@@ -3,6 +3,7 @@
 
   import { DiscordIcon, GithubIcon } from "@hugeicons/core-free-icons";
 
+  import { authMutation } from "$lib/client/data/mutations";
   import { cn } from "$lib/client/utils/cn";
 
   import { discordLink, githubLink } from "$lib/shared/config";
@@ -17,6 +18,8 @@
   const scrolled = $derived(scrollY > 10);
 
   let isDark = $state(false);
+
+  const { mutate: handleAuth, isPending } = authMutation();
 
   onMount(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -67,7 +70,9 @@
       </a>
 
       <button
-        class="btn bg-primary-content text-primary hover:bg-primary-content/90 transition-all"
+        class="btn bg-primary-content text-primary hover:bg-primary-content/90 disabled: disabled:text-primary-content/30 transition-all"
+        onclick={handleAuth}
+        disabled={$isPending}
       >
         Get Started
       </button>
