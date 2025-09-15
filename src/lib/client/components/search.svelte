@@ -1,7 +1,14 @@
 <script lang="ts">
+  import { tick } from "svelte";
+
   import { eventsQuery } from "$lib/client/data/queries";
   import { eventModalStore } from "$lib/client/stores/modal";
-  import { hideSearch, isSearchOpen, searchQuery, toggleSearch } from "$lib/client/stores/search";
+  import {
+    hideSearch,
+    isSearchOpen,
+    searchQuery,
+    searchTriggered
+  } from "$lib/client/stores/search";
 
   import type { Event } from "$lib/shared/types";
 
@@ -28,15 +35,18 @@
   }
 
   function handleClick(event: Event) {
-    toggleSearch();
+    hideSearch();
     eventModalStore.openModal(event);
   }
 
   function handleClickOutside(event: MouseEvent) {
     const target = event.target as Node;
-    if (!containerRef?.contains(target)) {
+
+    if (!containerRef?.contains(target) && !$searchTriggered) {
       hideSearch();
     }
+
+    searchTriggered.set(false);
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -44,16 +54,18 @@
   }
 
   $effect(() => {
-    if ($isSearchOpen) inputRef?.focus();
+    if ($isSearchOpen && inputRef) {
+      tick().then(() => inputRef?.focus());
+    }
   });
 </script>
 
-<svelte:window onclick={handleClickOutside} on:keydown={handleKeydown} />
+<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
 {#if $isSearchOpen}
   <div
     bind:this={containerRef}
-    class="absolute inset-0 top-1/4 z-501 mx-2 flex items-start justify-center"
+    class="absolute inset-0 top-1/4 z-9997 mx-2 flex items-start justify-center"
   >
     <div
       class="bg-base-100 base-border border-rounded mx-2 w-full max-w-lg overflow-hidden shadow-xl"
@@ -75,9 +87,7 @@
                 onclick={() => handleClick(event)}
               >
                 <div class="text-sm font-medium sm:text-base">{event.name}</div>
-                <div class="text-xs opacity-50">
-                  {formatFilteredEventTime(event)}
-                </div>
+                <div class="text-xs opacity-50">{formatFilteredEventTime(event)}</div>
               </button>
             </li>
           {/each}
