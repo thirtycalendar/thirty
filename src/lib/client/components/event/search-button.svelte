@@ -2,6 +2,7 @@
   import { Search01Icon } from "@hugeicons/core-free-icons";
 
   import { eventsQuery } from "$lib/client/data/queries";
+  import { eventModalStore } from "$lib/client/stores/modal";
 
   import type { Event } from "$lib/shared/types";
 
@@ -32,6 +33,12 @@
       .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
       .slice(0, 10);
   }
+
+  function handleClick(event: Event) {
+    toggleSearch();
+
+    eventModalStore.openModal(event);
+  }
 </script>
 
 <button
@@ -55,13 +62,18 @@
 
       {#if getResults().length > 0}
         <ul class="max-h-80 space-y-2 overflow-y-auto">
-          {#each getResults() as e (e.id)}
-            <li class="hover:bg-base-200 cursor-pointer rounded p-2">
-              <div class="text-sm font-medium sm:text-base">{e.name}</div>
+          {#each getResults() as event (event.id)}
+            <li>
+              <button
+                class="hover:bg-base-200 w-full cursor-pointer p-2 px-3 text-start"
+                onclick={() => handleClick(event)}
+              >
+                <div class="text-sm font-medium sm:text-base">{event.name}</div>
 
-              <div class="text-xs opacity-50">
-                {formatFilteredEventTime(e)}
-              </div>
+                <div class="text-xs opacity-50">
+                  {formatFilteredEventTime(event)}
+                </div>
+              </button>
             </li>
           {/each}
         </ul>
