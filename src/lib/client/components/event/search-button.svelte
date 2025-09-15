@@ -11,8 +11,10 @@
 
   const { data: events } = eventsQuery();
 
-  let open = $state(true);
+  let open = $state(false);
   let query = $state("");
+  let containerRef = $state<HTMLDivElement | null>(null);
+  let triggerButtonRef = $state<HTMLButtonElement | null>(null);
 
   function toggleSearch(): void {
     open = !open;
@@ -36,20 +38,39 @@
 
   function handleClick(event: Event) {
     toggleSearch();
-
     eventModalStore.openModal(event);
   }
+
+  function handleClickOutside(event: MouseEvent) {
+    const target = event.target as Node;
+    if (!containerRef?.contains(target) && !triggerButtonRef?.contains(target)) {
+      open = false;
+    }
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Escape" && open) {
+      open = false;
+      triggerButtonRef?.focus();
+    }
+  }
 </script>
+
+<svelte:window onclick={handleClickOutside} onkeydown={handleKeydown} />
 
 <button
   class="btn btn-ghost btn-square btn-sm sm:btn-md text-primary-content/70 hover:text-primary-content ml-2"
   onclick={toggleSearch}
+  bind:this={triggerButtonRef}
 >
   <Icon icon={Search01Icon} class="size-4 sm:size-5" absoluteStrokeWidth />
 </button>
 
 {#if open}
-  <div class="absolute inset-0 top-1/4 z-501 mx-2 flex items-start justify-center">
+  <div
+    bind:this={containerRef}
+    class="absolute inset-0 top-1/4 z-501 mx-2 flex items-start justify-center"
+  >
     <div
       class="bg-base-100 base-border border-rounded mx-2 w-full max-w-lg overflow-hidden shadow-xl"
     >
@@ -69,7 +90,6 @@
                 onclick={() => handleClick(event)}
               >
                 <div class="text-sm font-medium sm:text-base">{event.name}</div>
-
                 <div class="text-xs opacity-50">
                   {formatFilteredEventTime(event)}
                 </div>
