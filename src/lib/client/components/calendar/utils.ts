@@ -92,13 +92,15 @@ export function createDragCreate(hourHeight = 60, interval = 15) {
         const startMinutes = snapToInterval(Math.min(s.startY, s.endY));
         const endMinutes = snapToInterval(Math.max(s.startY, s.endY));
 
-        const startDate = setMinutes(
-          setHours(day, Math.floor(startMinutes / 60)),
-          startMinutes % 60
-        );
-        const endDate = setMinutes(setHours(day, Math.floor(endMinutes / 60)), endMinutes % 60);
+        if (endMinutes - startMinutes >= 15) {
+          const startDate = setMinutes(
+            setHours(day, Math.floor(startMinutes / 60)),
+            startMinutes % 60
+          );
+          const endDate = setMinutes(setHours(day, Math.floor(endMinutes / 60)), endMinutes % 60);
 
-        callback(startDate, endDate);
+          callback(startDate, endDate);
+        }
       }
       return { startY: null, endY: null, day: null };
     });
