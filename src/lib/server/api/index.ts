@@ -20,7 +20,6 @@ import {
   userRoute,
   waitingListRoute
 } from "./routes";
-import { calendarificRoute } from "./routes/calendarific";
 
 const app = new Hono<Context>().basePath("/api");
 
@@ -40,7 +39,7 @@ const routes = app
   .route("/waitingList", waitingListRoute);
 
 // External routes
-app.route("/calendarific", calendarificRoute);
+// app.route("/calendarific", calendarificRoute);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
