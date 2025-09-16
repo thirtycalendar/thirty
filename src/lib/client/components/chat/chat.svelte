@@ -13,6 +13,7 @@
     getMessagesQuery,
     userHolidayCountriesQuery
   } from "$lib/client/data/queries";
+  import { creditsQuery } from "$lib/client/data/queries/credit";
   import { cn } from "$lib/client/utils/cn";
 
   import { ChatGreetings, MAX_INPUT_LENGTH } from "$lib/shared/constants";
@@ -33,6 +34,7 @@
   const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
 
   const chats = chatsQuery();
+  const credits = creditsQuery();
   const calendars = calendarsQuery();
   const events = eventsQuery();
   const birthdays = birthdaysQuery();
@@ -60,6 +62,7 @@
         isToolCalling = false;
 
         chats.refetch();
+        credits.refetch();
 
         const names = [...toolsCalled];
         if (names.some((n) => n.toLowerCase().includes("calendar"))) calendars.refetch();
@@ -159,7 +162,7 @@
                 {#each message.parts as part, i (i)}
                   {#if part.type === "text"}
                     {#if message.role === "user"}
-                      <!-- User bubble -->
+                      <!-- User message -->
                       <div
                         class={cn(
                           "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
@@ -177,7 +180,7 @@
               </div>
             {/each}
 
-            <div class="my-2 animate-pulse">
+            <div class="my-4 animate-pulse">
               {#if isThinking}
                 Thinking...
               {:else if isStreaming && isToolCalling}
