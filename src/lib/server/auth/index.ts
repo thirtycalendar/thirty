@@ -20,7 +20,7 @@ import { googleScopes } from "./scopes";
 export const auth = betterAuth({
   trustedOrigins: [PUBLIC_BASE_URL],
   database: drizzleAdapter(db, {
-    provider: "sqlite",
+    provider: "pg",
     schema: {
       user: userTable,
       session: sessionTable,

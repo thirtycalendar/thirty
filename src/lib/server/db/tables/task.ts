@@ -1,4 +1,4 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import type { Source, TaskStatus } from "$lib/shared/types";
 
@@ -6,12 +6,8 @@ import { notification, timestamps } from "./utils";
 
 import { userTable } from ".";
 
-export const taskTable = sqliteTable("tasks", {
-  id: text("id")
-    .primaryKey()
-    .unique()
-    .notNull()
-    .$defaultFn(() => crypto.randomUUID()),
+export const taskTable = pgTable("tasks", {
+  id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),
 
@@ -22,8 +18,7 @@ export const taskTable = sqliteTable("tasks", {
   name: text("name").notNull(),
   notes: text("notes"),
   colorId: text("color_id").notNull(),
-  due: text("due").notNull(),
-
+  due: timestamp("due", { withTimezone: true, mode: "string" }).notNull(),
   status: text("status").$type<TaskStatus>().default("pending").notNull(),
 
   ...notification,

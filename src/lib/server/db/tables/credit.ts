@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { date, integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import type { SubscriptionPlan } from "$lib/shared/types";
 
@@ -6,19 +6,16 @@ import { timestamps } from "./utils";
 
 import { userTable } from ".";
 
-export const creditTable = sqliteTable("credits", {
-  id: text("id")
-    .primaryKey()
-    .unique()
-    .notNull()
-    .$defaultFn(() => crypto.randomUUID()),
+export const creditTable = pgTable("credits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => userTable.id, { onDelete: "cascade" }),
 
   plan: text("plan").$type<SubscriptionPlan>().default("free").notNull(),
   remaining: integer("remaining").default(0).notNull(),
-  month: text("month").notNull(),
+  month: date("month").notNull(),
 
   ...timestamps
 });

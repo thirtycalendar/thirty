@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { boolean, date, jsonb, pgTable, text, time, uuid } from "drizzle-orm/pg-core";
 
 import type { Color, EventAttendeeStatus, EventStatus, Source } from "$lib/shared/types";
 
@@ -6,76 +6,64 @@ import { notification, timestamps } from "./utils";
 
 import { calendarTable, userTable } from ".";
 
-export const eventTable = sqliteTable("events", {
-  id: text("id")
-    .primaryKey()
-    .unique()
-    .notNull()
-    .$defaultFn(() => crypto.randomUUID()),
+export const eventTable = pgTable("events", {
+  id: uuid("id").primaryKey().defaultRandom(),
   externalId: text("external_id"),
   source: text("source").$type<Source>().default("local").notNull(),
 
   userId: text("user_id")
     .notNull()
-    .references(() => userTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  calendarId: text("calendar_id")
+    .references(() => userTable.id, { onDelete: "cascade" }),
+  calendarId: uuid("calendar_id")
     .notNull()
-    .references(() => calendarTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => calendarTable.id, { onDelete: "cascade" }),
 
   name: text("name").notNull(),
   color: text("color").$type<Color>().default("#4986e7").notNull(),
   description: text("description"),
   location: text("location"),
 
-  startDate: text("start_date").notNull(),
-  startTime: text("start_time").notNull(),
-  endDate: text("end_date").notNull(),
-  endTime: text("end_time").notNull(),
+  startDate: date("start_date").notNull(),
+  startTime: time("start_time", { precision: 0 }).notNull(),
+  endDate: date("end_date").notNull(),
+  endTime: time("end_time", { precision: 0 }).notNull(),
 
   timezone: text("timezone").default("UTC").notNull(),
-  allDay: integer("all_day", { mode: "boolean" }).default(false).notNull(),
+  allDay: boolean("all_day").default(false).notNull(),
   status: text("status").$type<EventStatus>().default("confirmed").notNull(),
-  recurrence: text("recurrence", { mode: "json" }).$type<string[] | null>(),
+  recurrence: jsonb("recurrence").$type<string[] | null>(),
 
   ...notification,
 
   ...timestamps
 });
 
-export const eventAttendees = sqliteTable("event_attendees", {
-  id: text("id")
-    .primaryKey()
-    .unique()
-    .notNull()
-    .$defaultFn(() => crypto.randomUUID()),
+export const eventAttendees = pgTable("event_attendees", {
+  id: uuid("id").primaryKey().defaultRandom(),
 
-  eventId: text("event_id")
+  eventId: uuid("event_id")
     .notNull()
-    .references(() => eventTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade" }),
 
   email: text("email").notNull(),
   name: text("name"),
   status: text("status").$type<EventAttendeeStatus>().default("needsAction").notNull(),
-  isSelf: integer("is_self", { mode: "boolean" }).default(false).notNull(),
+  isSelf: boolean("is_self").default(false).notNull(),
 
-  notificationSent: integer("notificationSent", { mode: "boolean" }).default(false).notNull(),
+  notificationSent: boolean("notificationSent").default(false).notNull(),
 
   ...timestamps
 });
 
-export const eventMetadata = sqliteTable("event_metadata", {
-  id: text("id")
-    .primaryKey()
-    .unique()
-    .notNull()
-    .$defaultFn(() => crypto.randomUUID()),
+export const eventMetadata = pgTable("event_metadata", {
+  id: uuid("id").primaryKey().defaultRandom(),
 
-  eventId: text("event_id")
+  eventId: uuid("event_id")
     .notNull()
-    .references(() => eventTable.id, { onDelete: "cascade", onUpdate: "cascade" }),
+    .references(() => eventTable.id, { onDelete: "cascade" }),
 
   aiSummary: text("ai_summary"),
-  aiTags: text("ai_tags", { mode: "json" }).$type<string[] | null>(),
+  aiTags: jsonb("ai_tags").$type<string[] | null>(),
 
   ...timestamps
 });
