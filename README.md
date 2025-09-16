@@ -13,7 +13,7 @@ Built to keep you in flow, Thirty is the best way to organize your work and life
 
 - **Frontend**: Svelte 5 (SvelteKit), TypeScript, TailwindCSS, DaisyUI
 - **Backend**: Hono, Drizzle ORM
-- **Database**: Turso (SQLite)
+- **Database**: Neon (PostgreSQL)
 - **Authentication**: Better Auth
 - **Cache/Queues**: Upstash (Redis & Vector)
 - **Hosting/CDN**: Vercel, Bunny.net
@@ -26,7 +26,7 @@ Built to keep you in flow, Thirty is the best way to organize your work and life
 
 - Node.js v24+
 - pnpm v10+
-- SQLite (Turso recommended)
+- PostgreSQL (Neon recommended)
 
 ### Clone and Install
 
