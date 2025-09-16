@@ -12,7 +12,7 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
-  import { activeChatId, isMaximize } from "./utils";
+  import { createNewChat, isMaximize } from "./utils";
 
   interface Props {
     handleMinimize: () => void;
@@ -27,7 +27,7 @@
   }
 
   function handleNewChat() {
-    activeChatId.set("");
+    createNewChat();
   }
 </script>
 

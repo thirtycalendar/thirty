@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Markdown from "svelte-markdown";
 
   import { Chat } from "@ai-sdk/svelte";
@@ -27,12 +28,10 @@
   let errorMessage = $state("");
   let isToolCalling = $state(false);
 
-  let textareaRef: HTMLTextAreaElement | null = null;
+  let textareaRef: HTMLTextAreaElement | null = $state(null);
+  let toolsCalled = $state(new Set<string>());
 
   const { mutate: handleUpgrade } = checkoutMutation();
-
-  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
-
   const chats = chatsQuery();
   const credits = creditsQuery();
   const calendars = calendarsQuery();
@@ -40,25 +39,32 @@
   const birthdays = birthdaysQuery();
   const userHolidayCountries = userHolidayCountriesQuery();
 
-  let toolsCalled = $state(new Set<string>());
+  onMount(() => {
+    if (!$activeChatId) {
+      activeChatId.set(crypto.randomUUID());
+    }
+  });
 
-  const generatedChatId = crypto.randomUUID();
+  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
 
   const chat = $derived.by(() => {
-    return new Chat({
-      id: $activeChatId === "" ? generatedChatId : $activeChatId,
-      messages: $messages?.map((m) => ({
+    const id = $activeChatId;
+    const existingMessages =
+      $messages?.map((m) => ({
         id: m.id,
         role: m.role,
         createdAt: m.createdAt,
         parts: [{ type: "text" as const, text: m.text }]
-      })),
+      })) ?? [];
+
+    return new Chat({
+      id,
+      messages: existingMessages,
       onToolCall: (tool) => {
         isToolCalling = true;
         toolsCalled.add(tool.toolCall.toolName);
       },
-      onFinish: async () => {
-        activeChatId.set(generatedChatId);
+      onFinish: () => {
         isToolCalling = false;
 
         chats.refetch();
@@ -162,7 +168,6 @@
                 {#each message.parts as part, i (i)}
                   {#if part.type === "text"}
                     {#if message.role === "user"}
-                      <!-- User message -->
                       <div
                         class={cn(
                           "bg-base-200/50 max-w-xs rounded-lg px-3 py-2 md:max-w-md lg:max-w-lg"
