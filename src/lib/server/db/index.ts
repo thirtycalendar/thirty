@@ -1,5 +1,12 @@
 import { DB_URL } from "$env/static/private";
 
 import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 
-export const db = drizzle(DB_URL);
+const pool = new Pool({
+  connectionString: DB_URL,
+  max: 50,
+  idleTimeoutMillis: 30000
+});
+
+export const db = drizzle({ client: pool });
