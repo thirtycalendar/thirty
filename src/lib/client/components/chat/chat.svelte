@@ -20,7 +20,7 @@
   import { ChatGreetings, MAX_INPUT_LENGTH } from "$lib/shared/constants";
 
   import { Icon } from "../icons";
-  import { activeChatId, isMaximize } from "./utils";
+  import { activeChatId, isMaximize, isNewChat } from "./utils";
 
   import { Modal } from ".";
 
@@ -45,7 +45,11 @@
     }
   });
 
-  const { data: messages, isPending } = $derived.by(() => getMessagesQuery($activeChatId));
+  const {
+    data: messages,
+    isPending,
+    refetch: refetchMessages
+  } = $derived.by(() => getMessagesQuery($activeChatId));
 
   const chat = $derived.by(() => {
     const id = $activeChatId;
@@ -66,6 +70,11 @@
       },
       onFinish: () => {
         isToolCalling = false;
+
+        if ($isNewChat) {
+          refetchMessages();
+        }
+        isNewChat.set(false);
 
         chats.refetch();
         credits.refetch();
