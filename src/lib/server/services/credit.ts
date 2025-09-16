@@ -1,3 +1,4 @@
+import { formatISO, startOfMonth } from "date-fns";
 import { and, eq, sql } from "drizzle-orm";
 
 import { MessageLimitByPlan } from "$lib/shared/constants";
@@ -7,7 +8,7 @@ import { db } from "../db";
 import { creditTable } from "../db/tables";
 
 function getCurrentMonth(): string {
-  return new Date().toISOString().slice(0, 7);
+  return formatISO(startOfMonth(new Date()), { representation: "date" });
 }
 
 export const creditService = {
@@ -22,7 +23,7 @@ export const creditService = {
 
     if (existingRow) return existingRow;
 
-    const plan = "free";
+    const plan: SubscriptionPlan = "free";
     const remaining = MessageLimitByPlan[plan];
 
     const [newRow] = await db
@@ -30,9 +31,7 @@ export const creditService = {
       .values({ userId, plan, remaining, month })
       .returning();
 
-    if (!newRow) {
-      throw new Error("Failed to create user credit");
-    }
+    if (!newRow) throw new Error("Failed to create user credit");
 
     return newRow;
   },
@@ -49,17 +48,10 @@ export const creditService = {
       .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
       .returning();
 
-    if (!updatedRow) {
-      throw new Error("Credit entry not found or update failed.");
-    }
+    if (!updatedRow) throw new Error("Credit entry not found or update failed.");
 
     if (updatedRow.remaining < 0) {
-      await db
-        .update(creditTable)
-        .set({
-          remaining: 0
-        })
-        .where(eq(creditTable.id, updatedRow.id));
+      await db.update(creditTable).set({ remaining: 0 }).where(eq(creditTable.id, updatedRow.id));
       throw new Error("No credits left");
     }
 
@@ -76,9 +68,7 @@ export const creditService = {
       .where(and(eq(creditTable.userId, userId), eq(creditTable.month, month)))
       .returning();
 
-    if (row) {
-      return row;
-    }
+    if (row) return row;
 
     const [newRow] = await db
       .insert(creditTable)

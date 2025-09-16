@@ -8,7 +8,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { getRandomColor } from "$lib/shared/utils/colors";
-import type { CalendarForm } from "$lib/shared/types";
 
 import { db } from "../db";
 import { accountTable, sessionTable, userTable, verificationTable } from "../db/tables";
@@ -44,20 +43,22 @@ export const auth = betterAuth({
         after: async (user) => {
           await cacheIPLocation(user.id);
 
-          const { timezone, countryCode } = await getIPLocation(user.id);
+          setImmediate(async () => {
+            const { timezone, countryCode } = await getIPLocation(user.id);
 
-          const calendar: CalendarForm = {
-            externalId: null,
-            source: "local",
-            name: user.name,
-            color: getRandomColor(),
-            timezone,
-            isPrimary: true
-          };
+            await calendarService.create(user.id, {
+              externalId: null,
+              source: "local",
+              name: user.name,
+              color: getRandomColor(),
+              timezone,
+              isPrimary: true
+            });
 
-          await calendarService.create(user.id, calendar);
+            await creditService.get(user.id);
 
-          await holidayCountryService.addCountryByCode(user.id, countryCode);
+            await holidayCountryService.addCountryByCode(user.id, countryCode);
+          });
         }
       }
     }
