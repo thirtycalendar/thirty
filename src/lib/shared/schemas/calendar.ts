@@ -15,5 +15,6 @@ export const calendarSchema = z.object({
     .string()
     .min(1, { message: "Timezone is required" })
     .describe("The timezone of the calendar, e.g., 'Asia/Yangon'."),
-  isPrimary: z.boolean().describe("Indicates if this is the user's primary calendar.")
+  isPrimary: z.boolean().describe("Indicates if this is the user's primary calendar."),
+  createdAt: z.string().optional().describe("Optional external ID if synced from another service.")
 });

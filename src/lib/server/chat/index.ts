@@ -58,7 +58,7 @@ export async function streamChat({ userId, name, chatId, messages }: Props) {
     model: openRouterGpt4oMini,
     system: chatSystemMessage(name),
     tools: createTools(userId),
-    stopWhen: stepCountIs(10),
+    stopWhen: stepCountIs(30),
     messages: convertToModelMessages(messages),
     onFinish: async (result) => {
       await messageService.create({

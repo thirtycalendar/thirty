@@ -1,3 +1,4 @@
+import { addMinutes } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { and, eq } from "drizzle-orm";
 
@@ -34,7 +35,9 @@ export async function syncGoogleCalendars(userId: string, accessToken: string) {
 
     const toCreate: CalendarForm[] = [];
 
-    for (const gCal of list) {
+    const baseTime = new Date();
+
+    for (const [index, gCal] of list.entries()) {
       const isSystem = /holiday@|contacts@|birthday@/.test(gCal.id ?? "");
       const isNotOwner = gCal.accessRole !== "owner";
       if (!gCal.id || existingIds.has(gCal.id) || isSystem || isNotOwner) continue;
@@ -47,7 +50,8 @@ export async function syncGoogleCalendars(userId: string, accessToken: string) {
         name: gCal.summary ?? "(Untitled Calendar)",
         color: getNearestColor(colorHex),
         timezone: gCal.timeZone ?? "UTC",
-        isPrimary: false
+        isPrimary: false,
+        createdAt: addMinutes(baseTime, index).toISOString()
       });
     }
 
