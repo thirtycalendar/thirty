@@ -33,7 +33,7 @@
   <div class="w-full min-w-0 overflow-hidden p-0.5 text-xs font-medium">
     {#if icon}
       <div class="flex min-w-0 items-center gap-1">
-        <Icon {icon} size={13} absoluteStrokeWidth />
+        <Icon {icon} size={13} class="shrink-0" absoluteStrokeWidth />
         <p class="truncate">{title}</p>
       </div>
     {:else}
