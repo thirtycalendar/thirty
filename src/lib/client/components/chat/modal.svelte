@@ -8,7 +8,7 @@
   import { cn } from "$lib/client/utils/cn";
 
   import { Icon } from "../icons";
-  import { activeChatId, isMaximize, isOpen } from "./utils";
+  import { createNewChat, isMaximize, isOpen } from "./utils";
 
   import { Toolbar } from ".";
 
@@ -34,7 +34,7 @@
     isMaximize.set(false);
     resetPosition();
 
-    activeChatId.set("");
+    createNewChat();
   }
 
   function handleMinimize() {
