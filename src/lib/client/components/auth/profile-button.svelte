@@ -45,7 +45,7 @@
 
 {#if $session}
   <div class="dropdown dropdown-end">
-    <button aria-label="User Profile" class="btn btn-circle">
+    <button tabindex="0" aria-label="User Profile" class="btn btn-circle">
       <img
         src={$session.image}
         referrerpolicy="no-referrer"
