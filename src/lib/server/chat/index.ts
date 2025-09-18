@@ -5,7 +5,7 @@ import { convertToModelMessages, stepCountIs, streamText } from "ai";
 import { MAX_INPUT_LENGTH } from "$lib/shared/constants";
 
 import { chatService, messageService } from "../services";
-import { openRouterGpt4oMini } from "../utils/ai-models";
+import { gemini2_5Pro } from "../utils/ai-models";
 import { chatSystemMessage } from "./system-messages";
 import { createTools } from "./tools";
 import { generateChatName } from "./utils/generate-chat-name";
@@ -55,7 +55,7 @@ export async function streamChat({ userId, name, chatId, messages }: Props) {
   await chatService.update(chatId, { updatedAt: now });
 
   const result = streamText({
-    model: openRouterGpt4oMini,
+    model: gemini2_5Pro,
     system: chatSystemMessage(name),
     tools: createTools(userId),
     stopWhen: stepCountIs(30),
