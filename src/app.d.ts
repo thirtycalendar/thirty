@@ -1,4 +1,5 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
+import type { AuthClient, DbClient } from "$lib/shared/types";
+
 // for information about these interfaces
 declare global {
 	namespace App {
@@ -7,6 +8,10 @@ declare global {
 			cf: CfProperties;
 			ctx: ExecutionContext;
 		}
+    interface Locals {
+      db: DbClient,
+      auth: AuthClient
+    }
 	}
 }
 
