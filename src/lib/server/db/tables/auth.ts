@@ -17,6 +17,7 @@ export const userTable = sqliteTable("users", {
 
 export const sessionTable = sqliteTable("sessions", {
   id: text("id").primaryKey(),
+
   userId: text("user_id")
     .notNull()
     .references(() => userTable.id, { onDelete: "cascade" }),
