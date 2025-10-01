@@ -1,9 +1,9 @@
 node_modules
 
+wrangler.jsonc
+
 # Output
 .output
-.vercel
-.netlify
 .wrangler
 /.svelte-kit
 /build
