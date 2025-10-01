@@ -6,11 +6,12 @@ Built to keep you in flow, Thirty is the best way to organize your work and life
 
 </div>
 
-> **Notice**: The `main` branch is a complete reboot of the project (now considered `v3`). The original [`v1`](https://github.com/thirtycalendar/thirty/blob/v1/) and [`v2`](https://github.com/thirtycalendar/thirty/blob/v2/) are available.
+> **Note**: The `main` branch represents the latest reboot of the project (`v3`).
+> You can still access previous versions at [`v1`](https://github.com/thirtycalendar/thirty/tree/v1/) and [`v2`](https://github.com/thirtycalendar/thirty/tree/v2/).
 
 ## Tech Stack
 
-- **Frontend**: Svelte 5 (SvelteKit), TypeScript, Tailwind CSS, DaisyUI
+- **Frontend**: Svelte 5 (SvelteKit), TypeScript, Tailwind CSS, shadcn-svelte
 - **Backend**: SvelteKit Remote Functions, Drizzle ORM
 - **Database**: Cloudflare D1
 - **Authentication**: Better Auth
