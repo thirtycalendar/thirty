@@ -10,5 +10,17 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB_PROD",
+      "database_name": "<db_name>",
+      "database_id": "<db_id>"
+    },
+    {
+      "binding": "DB_DEV",
+      "database_name": "<db_name>",
+      "database_id": "<db_id>"
+    }
+  ]
 }

@@ -40,6 +40,7 @@
     "commitlint": "^20.1.0",
     "dotenv": "^17.2.3",
     "dotenv-cli": "^10.0.0",
+    "drizzle-kit": "^0.31.5",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-svelte": "^3.0.0",
@@ -64,5 +65,8 @@
       "sharp",
       "workerd"
     ]
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.5"
   }
 }
