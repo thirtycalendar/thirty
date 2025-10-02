@@ -11,7 +11,7 @@ Built to keep you in flow, Thirty is the best way to organize your work and life
 
 ## Tech Stack
 
-- **Frontend**: Svelte 5 (SvelteKit), TypeScript, Tailwind CSS, shadcn-svelte
+- **Frontend**: Svelte 5 (SvelteKit), TypeScript, Tailwind CSS, DaisyUI
 - **Backend**: SvelteKit Remote Functions, Drizzle ORM
 - **Database**: Cloudflare D1
 - **Authentication**: Better Auth
