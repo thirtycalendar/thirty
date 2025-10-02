@@ -1,5 +1,5 @@
 <script>
-  import { GoogleIcon, LeftArrowIcon } from "$lib/client/icons";
+  import { ChevronLeftIcon, GoogleIcon } from "$lib/client/icons";
   import { googleAuth } from "$lib/client/queries/auth.remote";
 
   const greetings = ["Welcome", "Hello", "Hi"];
@@ -11,7 +11,7 @@
 </script>
 
 <a href="/" class="btn btn-ghost btn-square m-2">
-  <LeftArrowIcon />
+  <ChevronLeftIcon />
 </a>
 
 <div class="absolute top-1/3 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 p-5 sm:w-sm">
