@@ -1,17 +1,27 @@
 <script>
-  import { GoogleIcon } from "$lib/client/icons";
+  import { GoogleIcon, LeftArrowIcon } from "$lib/client/icons";
   import { googleAuth } from "$lib/client/queries/auth.remote";
+
+  const greetings = ["Welcome", "Hello", "Hi"];
+  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
   async function handleGoogleAuth() {
     await googleAuth();
   }
 </script>
 
-<div class="absolute top-1/3 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 p-5 sm:w-auto">
-  <div
-    class="bg-base-300/20 border-base border-rounded m-auto w-full space-y-5 p-8 text-center sm:w-[400px] md:p-10"
-  >
-    <input type="text" placeholder="me@example.com" class="input w-full outline-none" />
+<a href="/" class="btn btn-ghost btn-square m-2">
+  <LeftArrowIcon />
+</a>
+
+<div class="absolute top-1/3 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 p-5 sm:w-sm">
+  <div class="m-auto w-full text-center">
+    <h2 class="mb-4 text-xl font-semibold">{greeting}</h2>
+
+    <fieldset class="fieldset mb-4">
+      <legend class="fieldset-legend text-left">Email</legend>
+      <input type="text" placeholder="me@example.com" class="input w-full focus:outline-none" />
+    </fieldset>
 
     <button
       class="btn bg-primary-content hover:bg-accent-content/85 text-primary border-base w-full font-normal"
