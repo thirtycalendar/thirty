@@ -2,6 +2,19 @@
 
 @import "tailwindcss";
 
+.border-rounded {
+  border-top-left-radius: var(--modal-tl, var(--radius-box));
+  border-top-right-radius: var(--modal-tr, var(--radius-box));
+  border-bottom-left-radius: var(--modal-bl, var(--radius-box));
+  border-bottom-right-radius: var(--modal-br, var(--radius-box));
+}
+
+@layer components {
+  .border-base {
+    @apply !border-base-300 border;
+  }
+}
+
 @plugin "daisyui" {
   themes:
     light --default,
@@ -85,10 +98,10 @@
 
   --radius-selector: 0.3rem;
   --radius-field: 0.3rem;
-  --radius-box: 0.4rem;
+  --radius-box: 0.5rem;
 
   --size-selector: 0.15rem;
-  --size-field: 0.18rem;
+  --size-field: 0.2rem;
 
   --border: 0.5px;
   --depth: 0.15;
