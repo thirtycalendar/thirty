@@ -20,6 +20,4 @@ export const timestamps = {
     .$defaultFn(() => new Date())
     .notNull(),
   deletedAt: integer("deleted_at", { mode: "timestamp" })
-    .$defaultFn(() => new Date())
-    .notNull()
 };

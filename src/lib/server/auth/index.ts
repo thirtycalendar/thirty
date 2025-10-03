@@ -1,3 +1,5 @@
+import { env } from "$env/dynamic/private";
+
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
@@ -15,6 +17,15 @@ export function getAuth(db: DbClient) {
         account: accountTable,
         verification: verificationTable
       }
-    })
+    }),
+    socialProviders: {
+      google: {
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+        accessType: "offline",
+        prompt: "consent",
+        overrideUserInfoOnSignIn: true
+      }
+    }
   });
 }

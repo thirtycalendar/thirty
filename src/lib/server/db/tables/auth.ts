@@ -12,7 +12,8 @@ export const userTable = sqliteTable("users", {
     .notNull(),
   image: text("image"),
 
-  ...timestamps
+  createdAt: timestamps.createdAt,
+  updatedAt: timestamps.updatedAt
 });
 
 export const sessionTable = sqliteTable("sessions", {
@@ -27,7 +28,8 @@ export const sessionTable = sqliteTable("sessions", {
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
 
-  ...timestamps
+  createdAt: timestamps.createdAt,
+  updatedAt: timestamps.updatedAt
 });
 
 export const accountTable = sqliteTable("accounts", {
@@ -51,7 +53,8 @@ export const accountTable = sqliteTable("accounts", {
   idToken: text("id_token"),
   password: text("password"),
 
-  ...timestamps
+  createdAt: timestamps.createdAt,
+  updatedAt: timestamps.updatedAt
 });
 
 export const verificationTable = sqliteTable("verifications", {
@@ -61,5 +64,6 @@ export const verificationTable = sqliteTable("verifications", {
   value: text("value").notNull(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
 
-  ...timestamps
+  createdAt: timestamps.createdAt,
+  updatedAt: timestamps.updatedAt
 });
