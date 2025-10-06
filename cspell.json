@@ -1,5 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
   "version": "0.2",
-  "words": ["daisyui", "ianvs", "oklch", "prefersdark", "workerd"]
+  "words": [
+    "daisyui",
+    "ianvs",
+    "oklch",
+    "prefersdark",
+    "sithu",
+    "workerd"
+  ]
 }
